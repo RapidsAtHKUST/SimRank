@@ -1,2 +1,10 @@
 # SimRank
-SimRank (TopK Query)
+
+SimRank (TopK Query, single-pair query)
+
+## Submodules
+
+```zsh
+git submodule init
+git submodule update
+```

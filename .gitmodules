@@ -1,0 +1,9 @@
+[submodule "sparsehash"]
+	path = sparsehash
+	url = https://github.com/sparsehash/sparsehash.git
+[submodule "sparsehash-c11"]
+	path = sparsehash-c11
+	url = https://github.com/sparsehash/sparsehash-c11.git
+[submodule "SFMT"]
+	path = SFMT
+	url = https://github.com/MersenneTwister-Lab/SFMT.git
