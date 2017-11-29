@@ -7,3 +7,15 @@
 [submodule "SFMT"]
 	path = SFMT
 	url = https://github.com/MersenneTwister-Lab/SFMT.git
+[submodule "related_projects/simrank"]
+	path = related_projects/simrank
+	url = https://github.com/roukaour/simrank.git
+[submodule "related_projects/TreeWand"]
+	path = related_projects/TreeWand
+	url = https://github.com/fastsim2016/TreeWand.git
+[submodule "related_projects/LSim"]
+	path = related_projects/LSim
+	url = https://github.com/fastsim2016/LSim.git
+[submodule "related_projects/SimRankLowrank"]
+	path = related_projects/SimRankLowrank
+	url = https://github.com/amkatrutsa/SimRankLowrank.git
