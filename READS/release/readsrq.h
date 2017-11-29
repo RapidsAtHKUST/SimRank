@@ -1,22 +1,23 @@
 #ifndef __READSRQ__
 #define __READSRQ__
+
 #include <array>
 #include "sparsehash/sparse_hash_map"
 #include "timer.h"
+
 using namespace std;
 using google::sparse_hash_map;
 
-struct readsrq
-{
+struct readsrq {
 // data:
-	double c;
-	int r, n, t, qCnt, rq;
-	double rtime, t1, t2;
-	Timer tm;
+    double c;
+    int r, n, t, qCnt, rq;
+    double rtime, t1, t2;
+    Timer tm;
 
-	vector<array<int, 3> > *leaf;
-	vector<sparse_hash_map<int, array<int, 3> > > *inode;
-	// vector<dense_hash_map<int, array<int, 3> > > *inode;
+    vector<array<int, 3> > *leaf;
+    vector<sparse_hash_map<int, array<int, 3> > > *inode;
+    // vector<dense_hash_map<int, array<int, 3> > > *inode;
 
 /*
 leaf[i][x]: i-th simulation, leaf node x
@@ -31,19 +32,25 @@ inode[i][j][p]: i-th simulation, level j(starting from 0), node p
 .second[2]: right most leaf node
 */
 
-	vector<vector<int> > ef, eb;
+    vector<vector<int> > ef, eb;
 
 
-	char gName[125];
+    char gName[125];
 
 // method:
-	readsrq(char * gName_, int n_, int r_, int rq_, double c_, int t_);
-	~readsrq();
-	double queryOne(int x, int y);
-	void queryAll(int x, double * ansVal);
-	void queryK(int x, int k, int * ansNode);
-	void insEdge(int x, int y);
-	void delEdge(int x, int y);
+    readsrq(char *gName_, int n_, int r_, int rq_, double c_, int t_);
+
+    ~readsrq();
+
+    double queryOne(int x, int y);
+
+    void queryAll(int x, double *ansVal);
+
+    void queryK(int x, int k, int *ansNode);
+
+    void insEdge(int x, int y);
+
+    void delEdge(int x, int y);
 
 };
 
