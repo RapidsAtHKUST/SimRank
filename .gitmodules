@@ -28,3 +28,6 @@
 [submodule "related_projects/FastSim"]
 	path = related_projects/FastSim
 	url = https://github.com/fastsim2016/FastSim.git
+[submodule "related_projects/UniWalk"]
+	path = related_projects/UniWalk
+	url = https://github.com/songjs1993/UniWalk.git
