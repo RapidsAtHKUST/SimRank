@@ -19,3 +19,6 @@
 [submodule "related_projects/SimRankLowrank"]
 	path = related_projects/SimRankLowrank
 	url = https://github.com/amkatrutsa/SimRankLowrank.git
+[submodule "armadillo-code"]
+	path = armadillo-code
+	url = https://github.com/conradsnicta/armadillo-code.git

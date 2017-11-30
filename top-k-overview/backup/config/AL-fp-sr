@@ -1,0 +1,21 @@
+-qf true #queryInFile
+-C 0.8 #decayFactor
+-topk 50 #forTopKQuery
+-T 2 #IterationNum
+-bi false #onlyBuildIndex?
+-hi false #hasIndex?
+-m fpsr #methodName
+-g AL #graphName
+-en 71959 #edgeNum
+-vn 456 #vertexNum
+-iv 1.0 #initValue
+-rank 10 #SVDRank
+-fm false #guaranteeFirstMeeting?(ForMonteCarloMethods)
+-sn 100 #sampleNum
+-sqn 20 #sampleQueryNum
+-ud 0 #useDiskType(srgs:TSF,0,1,2)
+-ts 2 #topsimType(0,1,2)
+-es 1 #effisimType(0,1,2)
+-ks 1 #kronsimType(0,1)
+-psrt 1 #PSRType(0,1)
+-half true #whether half for accur, OIP, naiveSR

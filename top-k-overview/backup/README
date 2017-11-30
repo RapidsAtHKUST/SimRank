@@ -1,0 +1,12 @@
+This is the SimRank code.
+
+The code adopts Armadillo to do the matrix operations.
+
+The parameters are specified in ./config/
+
+The code is in ./core and ./include.
+
+The tools to analyze and to generate queries, datasets are in ./preZhi.
+
+Readers can: (1)run 'cmake .' to get the Makefile, then 'make' to get the executables files.
+(2) run 'make' using the hand-written Makefile.
