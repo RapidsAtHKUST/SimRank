@@ -22,3 +22,9 @@
 [submodule "armadillo-code"]
 	path = armadillo-code
 	url = https://github.com/conradsnicta/armadillo-code.git
+[submodule "related_projects/ISP"]
+	path = related_projects/ISP
+	url = https://github.com/fastsim2016/ISP.git
+[submodule "related_projects/FastSim"]
+	path = related_projects/FastSim
+	url = https://github.com/fastsim2016/FastSim.git
