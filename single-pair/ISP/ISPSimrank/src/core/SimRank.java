@@ -5,72 +5,65 @@ import java.util.*;
 import util.*;
 
 
-
-
-
 public class SimRank {
-	protected Graph g;
-	private double Sim_ab;
-	private double c;
-	private final int MAX_ITER = Config.depth;
-	private final int NUM_THREADS = 2;
-	
-	
-	public double getSim(int a, int b) {
-		if(a==b)
-			return 1.0;
-		Sim_ab = 0;
+    protected Graph g;
+    private double Sim_ab;
+    private double c;
+    private final int MAX_ITER = Config.depth;
+    private final int NUM_THREADS = 2;
+
+
+    public double getSim(int a, int b) {
+        if (a == b)
+            return 1.0;
+        Sim_ab = 0;
 //		System.out.println("Line 30: g.numNodes()" + g.numNodes());
-	
-		HashMap<Integer,HashMap<Integer,Double>> Qk_prev = new HashMap<Integer,HashMap<Integer,Double>>();
-		HashMap<Integer,Double> Q_0a = new HashMap<Integer,Double>();
-		Q_0a.put(b, 1.0);
-		Qk_prev.put(a, Q_0a);
-		boolean stop_iteration = true;
-		for (int k = 1; k < MAX_ITER; k++) {
 
-			//System.out.println("\nIter: " + k);
-			HashMap<Integer,HashMap<Integer,Double>> Qk = new HashMap<Integer,HashMap<Integer,Double>>();
-			for (Map.Entry<Integer, HashMap<Integer,Double>> row : Qk_prev.entrySet()) {
-			    int i = row.getKey();
-			    HashMap<Integer,Double> Qij = row.getValue();
-			    for (Map.Entry<Integer,Double> entry_ij : Qij.entrySet()) {
-			    	int j = entry_ij.getKey();
-			    	if (i!=j){
-				    	boolean updated = g.TiTj(entry_ij.getValue(), i, j, Qk);
-				    	if (updated)
-				    		stop_iteration = false;
-			    	}
-			    }
-			}
-			double M = 0;
-			for (Map.Entry<Integer, HashMap<Integer,Double>> row : Qk.entrySet()) {
-			    Integer i = row.getKey();
-			    HashMap<Integer,Double> Qij = row.getValue();
-			    if (Qij.containsKey(i)){
-			    	M += Qij.get(i);
-			    }
-			}
-			Sim_ab += Math.pow(c, k)*M;
+        HashMap<Integer, HashMap<Integer, Double>> Qk_prev = new HashMap<Integer, HashMap<Integer, Double>>();
+        HashMap<Integer, Double> Q_0a = new HashMap<Integer, Double>();
+        Q_0a.put(b, 1.0);
+        Qk_prev.put(a, Q_0a);
+        boolean stop_iteration = true;
+        for (int k = 1; k < MAX_ITER; k++) {
+
+            //System.out.println("\nIter: " + k);
+            HashMap<Integer, HashMap<Integer, Double>> Qk = new HashMap<Integer, HashMap<Integer, Double>>();
+            for (Map.Entry<Integer, HashMap<Integer, Double>> row : Qk_prev.entrySet()) {
+                int i = row.getKey();
+                HashMap<Integer, Double> Qij = row.getValue();
+                for (Map.Entry<Integer, Double> entry_ij : Qij.entrySet()) {
+                    int j = entry_ij.getKey();
+                    if (i != j) {
+                        boolean updated = g.TiTj(entry_ij.getValue(), i, j, Qk);
+                        if (updated)
+                            stop_iteration = false;
+                    }
+                }
+            }
+            double M = 0;
+            for (Map.Entry<Integer, HashMap<Integer, Double>> row : Qk.entrySet()) {
+                Integer i = row.getKey();
+                HashMap<Integer, Double> Qij = row.getValue();
+                if (Qij.containsKey(i)) {
+                    M += Qij.get(i);
+                }
+            }
+            Sim_ab += Math.pow(c, k) * M;
 //			Graph.printGraph(Qk);
-			Qk_prev = Qk;
+            Qk_prev = Qk;
 //			System.out.println("k="+k+"Sim(a,b) = "+Sim_ab);
-			if (stop_iteration)
-				break;
-		}
-		return Sim_ab;
-	}
-	
-	public SimRank(Graph g, double c) {
-		// c: damping_factor=0.75
-		this.c = c;
-		this.g = g;
-		
-	}
-	
+            if (stop_iteration)
+                break;
+        }
+        return Sim_ab;
+    }
 
-	
-	
+    public SimRank(Graph g, double c) {
+        // c: damping_factor=0.75
+        this.c = c;
+        this.g = g;
+
+    }
 
 
 //	private class SThread extends Thread {
@@ -119,8 +112,7 @@ public class SimRank {
 //			}
 //		}
 //	}
-	
-	
+
 
 }
 
