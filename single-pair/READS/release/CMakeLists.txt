@@ -10,4 +10,4 @@ set(SOURCE_FILES
 
 add_executable(READS ${SOURCE_FILES})
 target_compile_options(READS PRIVATE -O3 -w)
-target_include_directories(READS PRIVATE ../../sparsehash-c11)
+target_include_directories(READS PRIVATE ../../../sparsehash-c11)

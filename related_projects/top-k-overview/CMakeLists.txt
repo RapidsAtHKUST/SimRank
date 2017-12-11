@@ -16,7 +16,7 @@ add_executable(SRBenchMark ${DIR_SRCS} ${OTHER_FILES})
 
 # linear algebra, hash table
 target_compile_options(SRBenchMark PRIVATE -O3)
-target_include_directories(SRBenchMark PRIVATE ../armadillo-code/include)
-target_include_directories(SRBenchMark PRIVATE ../sparsehash-c11)
+target_include_directories(SRBenchMark PRIVATE ../../armadillo-code/include)
+target_include_directories(SRBenchMark PRIVATE ../../sparsehash-c11)
 target_include_directories(SRBenchMark PRIVATE include)
 target_link_libraries(SRBenchMark lapack blas pthread)
