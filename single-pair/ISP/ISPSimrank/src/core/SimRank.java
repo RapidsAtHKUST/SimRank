@@ -19,15 +19,15 @@ public class SimRank {
         Sim_ab = 0;
 //		System.out.println("Line 30: g.numNodes()" + g.numNodes());
 
-        HashMap<Integer, HashMap<Integer, Double>> Qk_prev = new HashMap<Integer, HashMap<Integer, Double>>();
-        HashMap<Integer, Double> Q_0a = new HashMap<Integer, Double>();
+        HashMap<Integer, HashMap<Integer, Double>> Qk_prev = new HashMap<>();
+        HashMap<Integer, Double> Q_0a = new HashMap<>();
         Q_0a.put(b, 1.0);
         Qk_prev.put(a, Q_0a);
         boolean stop_iteration = true;
         for (int k = 1; k < MAX_ITER; k++) {
 
             //System.out.println("\nIter: " + k);
-            HashMap<Integer, HashMap<Integer, Double>> Qk = new HashMap<Integer, HashMap<Integer, Double>>();
+            HashMap<Integer, HashMap<Integer, Double>> Qk = new HashMap<>();
             for (Map.Entry<Integer, HashMap<Integer, Double>> row : Qk_prev.entrySet()) {
                 int i = row.getKey();
                 HashMap<Integer, Double> Qij = row.getValue();

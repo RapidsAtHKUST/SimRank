@@ -9,5 +9,4 @@ public class KeyValuePair {
 		this.key = key;
 		this.value = value;
 	}
-
 }
