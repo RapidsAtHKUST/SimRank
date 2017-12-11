@@ -1,8 +1,17 @@
 # SimRank
 
-SimRank (TopK Query, single-pair query)
+SimRank (single-pair query)
+
+## Source Codes
+
+folder | detail
+--- | ---
+[SPS](SPS) | SPS implementations
+[SPS-Variants](SPS-Variants) | ISP(2010), Sling(2016), READS(2017)
 
 ## Submodules
+
+sparsehash-c11, sparepp, eigen, armadillo, SFMT(random generator)
 
 ```zsh
 git submodule init
