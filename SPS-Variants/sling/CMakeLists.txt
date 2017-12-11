@@ -9,7 +9,7 @@ set(SOURCE_FILES graph.h sling.h main.cpp ../../SFMT/SFMT.c)
 find_package(Threads REQUIRED)
 
 add_executable(sling ${SOURCE_FILES})
-target_include_directories(sling PRIVATE ../../sparsehash-c11)
+target_include_directories(sling PRIVATE ../../sparsehash-yche/include/)
 target_include_directories(sling PRIVATE ../../SFMT)
 target_link_libraries(sling PRIVATE ${CMAKE_THREAD_LIBS_INIT})
 

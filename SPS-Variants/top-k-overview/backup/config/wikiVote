@@ -1,0 +1,22 @@
+-qf true #queryInFile
+-C 0.8 #decayFactor
+-topk 50 #forTopKQuery
+-range 0.03 #forRangeQuery
+-T 10 #IterationNum
+-bi false #onlyBuildIndex?
+-hi false #hasIndex?
+-m www05 #methodName
+-g wikiVote #graphName
+-en 103689 #edgeNum
+-vn 7115 #vertexNum
+-iv 1.0 #initValue
+-rank 30 #SVDRank
+-fm true #guaranteeFirstMeeting?(ForMonteCarloMethods)
+-sn 500 #sampleNum
+-sqn 40 #sampleQueryNum
+-ud 0 #useDiskType(srgs:TSF,0,1,2)
+-ts 2 #topsimType(0,1,2)
+-es 1 #effisimType(0,1,2)
+-ks 1 #kronsimType(0,1)
+-psrt 1 #PSRType(0,1)
+-half true

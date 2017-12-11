@@ -11,6 +11,8 @@ folder | detail
 
 ## Submodules
 
+installed include files: [sparsehash-yche](sparsehash-yche)
+
 sparsehash-c11, sparepp, eigen, armadillo, SFMT(random generator)
 
 ```zsh
