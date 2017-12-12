@@ -48,8 +48,9 @@ ISP::ISP(string &file_path) {
         count_sparse_vec[dst_v] += 1;
         trans_mat[dst_v][src_v] = 1;
     }
+#ifdef DEBUG
     cout << lines << endl;
-
+#endif
     // 2nd: normalization transition matrix for each row
     uint32_t dst_v, count;
     for (auto &my_pair: count_sparse_vec) {
