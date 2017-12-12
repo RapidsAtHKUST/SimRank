@@ -4,12 +4,16 @@ project(SRBenchMark)
 set(CMAKE_CXX_STANDARD 11)
 
 # include the whole file
-aux_source_directory(./core DIR_SRCS)
-set(OTHER_FILES include/config.h include/FingerPrint.h include/FPSR.h include/gsinterface.h include/gsmanager.hpp include/KMSR.h include/KMSRIndex.h
-        include/meminfo.hpp include/mymkdir.h include/myqueue.hpp include/mytime.h include/naiveSR.h include/NISim.h include/OIPSimRank.h
-        include/OptSimMatSVD.h include/origNISim.h include/ParSRSimRank.h include/PartialSR.h include/random.h
-        include/rgsmanager.hpp include/rsamplegraph.hpp include/simmap.hpp include/SimMat.h include/SimMatEVD.h include/SimMatSVD.h
-        include/simrankmethod.h include/simrankvalue.hpp include/simrankvalue.hpp include/topsim.h include/TSF.h)
+aux_source_directory(. DIR_SRCS)
+aux_source_directory(./iterative DIR_SRCS)
+aux_source_directory(./random_walk DIR_SRCS)
+aux_source_directory(./linear_algebra DIR_SRCS)
+aux_source_directory(./tsf DIR_SRCS)
+set(OTHER_FILES config.h random_walk/FingerPrint.h random_walk/FPSR.h tsf/gsinterface.h tsf/gsmanager.hpp random_walk/KMSR.h random_walk/KMSRIndex.h
+        meminfo.hpp mymkdir.h myqueue.hpp mytime.h iterative/naiveSR.h linear_algebra/NISim.h iterative/OIPSimRank.h
+        linear_algebra/OptSimMatSVD.h linear_algebra/origNISim.h linear_algebra/ParSRSimRank.h iterative/PartialSR.h random.h
+        tsf/rgsmanager.hpp tsf/rsamplegraph.hpp random_walk/simmap.hpp linear_algebra/SimMat.h linear_algebra/SimMatEVD.h linear_algebra/SimMatSVD.h
+        simrankmethod.h simrankvalue.hpp simrankvalue.hpp random_walk/topsim.h tsf/TSF.h)
 
 # add the executable files
 add_executable(SRBenchMark ${DIR_SRCS} ${OTHER_FILES})
