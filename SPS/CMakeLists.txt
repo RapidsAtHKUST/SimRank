@@ -12,8 +12,9 @@ if (Boost_FOUND)
     message(${Boost_INCLUDE_DIRS})
     target_include_directories(online-sps PRIVATE ${Boost_INCLUDE_DIRS})
 endif ()
-target_include_directories(online-sps PRIVATE ../sparsehash-c11)
+target_include_directories(online-sps PRIVATE ../sparsehash-yche/include)
 target_include_directories(online-sps PRIVATE ../sparsepp)
-target_include_directories(online-sps PRIVATE ../eigen)
+# comment out irrelevant dependency
+# target_include_directories(online-sps PRIVATE ../eigen)
 
 target_compile_options(online-sps PRIVATE -O3)
