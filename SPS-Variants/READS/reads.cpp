@@ -1,13 +1,16 @@
 #include "reads.h"
-#include <math.h>
-#include <vector>
-#include <algorithm>
+
+#include <cmath>
 #include <cstdio>
 #include <cstring>
+
+#include <vector>
+#include <algorithm>
+#include "sparsehash/dense_hash_map"
+
 // #include "inBuf.h"
 // #include "outBuf.h"
 // #include "meminfo.h"
-#include "sparsehash/dense_hash_map"
 
 using google::dense_hash_map;
 using namespace std;
@@ -179,15 +182,11 @@ reads::reads(char *gName_, int n_, int r_, double c_, int t_) {
 
 }
 
+reads::~reads() = default;
 
-reads::~reads() {
-}
-
-double reads::queryOne(int x, int y) {
-}
+double reads::queryOne(int x, int y) {}
 
 void reads::queryAll(int x, double *ansVal) {
-
     memset(ansVal, 0, sizeof(double) * n);
     if (eb[x].empty()) {
         ansVal[x] = 1;

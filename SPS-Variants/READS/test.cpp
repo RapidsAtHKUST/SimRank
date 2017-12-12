@@ -6,8 +6,6 @@ using namespace std;
 
 // usage and example:
 // g++ reads*.h reads*.cpp timer.h -O3 -w -std=c++11 test.cpp -I . && ./a.out hp.data 3133
-
-
 int main(int argc, char **argv) {
     int n = atoi(argv[2]);
     int r = 100;
@@ -30,5 +28,4 @@ int main(int argc, char **argv) {
 
 
     delete[] ansVal;
-
 }

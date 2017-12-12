@@ -25,7 +25,6 @@ struct reads {
     void queryAll(int x, double *ansVal);
 
     void queryK(int x, int k, int *ansNode);
-
 };
 
 #endif

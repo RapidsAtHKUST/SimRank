@@ -1,15 +1,19 @@
 #include "readsd.h"
-#include <math.h>
-#include <vector>
-#include <algorithm>
+#include <cmath>
 #include <cstdio>
 #include <cstring>
+
+#include <vector>
+#include <algorithm>
+
+#include "sparsehash/sparse_hash_set"
+#include "sparsehash/dense_hash_map"
+
+#include "timer.h"
+
 // #include "inBuf.h"
 // #include "outBuf.h"
 // #include "meminfo.h"
-#include "timer.h"
-#include "sparsehash/sparse_hash_set"
-#include "sparsehash/dense_hash_map"
 
 using google::sparse_hash_set;
 using google::dense_hash_map;

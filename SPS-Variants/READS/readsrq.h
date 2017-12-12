@@ -2,7 +2,9 @@
 #define __READSRQ__
 
 #include <array>
+
 #include "sparsehash/sparse_hash_map"
+
 #include "timer.h"
 
 using namespace std;

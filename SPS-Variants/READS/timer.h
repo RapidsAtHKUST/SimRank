@@ -1,8 +1,9 @@
 #ifndef __TIMER_H__
 #define __TIMER_H__
 
-#include <cstdio>
 #include <sys/time.h>
+
+#include <cstdio>
 
 using namespace std;
 

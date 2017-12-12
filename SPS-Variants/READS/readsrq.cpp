@@ -1,21 +1,24 @@
 #include "readsrq.h"
-#include <math.h>
-#include <vector>
-#include <algorithm>
+
+#include <cmath>
 #include <cstdio>
 #include <cstring>
-// #include "inBuf.h"
-// #include "outBuf.h"
-// #include "meminfo.h"
-#include "timer.h"
+
+#include <vector>
+#include <algorithm>
+
 #include "sparsehash/sparse_hash_set"
 #include "sparsehash/dense_hash_map"
 #include "sparsehash/dense_hash_set"
 
+#include "timer.h"
+// #include "inBuf.h"
+// #include "outBuf.h"
+// #include "meminfo.h"
+
 using google::sparse_hash_set;
 using google::dense_hash_map;
 using google::dense_hash_set;
-
 
 readsrq::readsrq(char *gName_, int n_, int r_, int rq_, double c_, int t_) {
     sprintf(gName, "%s", gName_);
@@ -956,16 +959,9 @@ void readsrq::insEdge(int x, int y) {
 
 
             }
-
-
         }
-
-
     }
-
-
 }
-
 
 void readsrq::delEdge(int x, int y) {
     bool fy = 0;
