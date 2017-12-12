@@ -1,23 +1,32 @@
 #ifndef __GRAPH_H__
 #define __GRAPH_H__
-#include <iostream>
+
+#include <sys/stat.h>
+
 #include <cstdint>
 #include <cstdio>
 #include <chrono>  // for high_resolution_clock
+
+#include <iostream>
+#include <functional>
+#include <random>
 #include <algorithm>
-#include <Eigen/Dense>
-#include <Eigen/Sparse>
 #include <utility>
 #include <fstream>
-#include <boost/format.hpp> 
+
+#include <boost/format.hpp>
+#include <boost/graph/adjacency_list.hpp>
+#include <boost/multi_array.hpp>
+
+#include <Eigen/Dense>
+#include <Eigen/Sparse>
+
 #include <sparsepp/spp.h>
 #include <google/dense_hash_map>
-#include <boost/graph/adjacency_list.hpp> 
-#include <boost/multi_array.hpp>
+
 #include "file_serialization.h"
 #include "stat.h"
-#include <sys/stat.h>
-#include <functional>
+
 #define SPP_MIX_HASH
 using namespace boost;
 using namespace std;
@@ -25,22 +34,24 @@ using namespace Eigen;
 using spp::sparse_hash_map;
 using spp::sparse_hash_set;
 using google::dense_hash_map;
+
 // utility function
-inline bool file_exists (const std::string& name) {
-  struct stat buffer;   
-  return (stat (name.c_str(), &buffer) == 0); 
+inline bool file_exists(const std::string &name) {
+    struct stat buffer;
+    return (stat(name.c_str(), &buffer) == 0);
 }
+
 // graph data
 extern string EDGE_LIST_PATH;
 extern vector<string> DATA_NAME;
 
 // types definition
-typedef boost::adjacency_list<vecS, vecS, bidirectionalS> DirectedG; 
+typedef boost::adjacency_list<vecS, vecS, bidirectionalS> DirectedG;
 typedef pair<unsigned int, unsigned int> NodePair;
 typedef boost::multi_array<double, 2> SimRank_matrix;
 
 template<typename Iter, typename RandomGenerator>
-Iter select_randomly(Iter start, Iter end, RandomGenerator& g) {
+Iter select_randomly(Iter start, Iter end, RandomGenerator &g) {
     std::uniform_int_distribution<> dis(0, std::distance(start, end) - 1);
     std::advance(start, dis(g));
     return start;
@@ -53,18 +64,18 @@ Iter select_randomly(Iter start, Iter end) {
     return select_randomly(start, end, gen);
 }
 
-namespace std{
+namespace std {
     template<>
-    struct hash<NodePair>{
-        size_t operator()(NodePair const &p) const{ // hash function for a node pair
+    struct hash<NodePair> {
+        size_t operator()(NodePair const &p) const { // hash function for a node pair
             unsigned int combined_int;
             // symmetric pairing, we can assume p.second >= p.first
             // combined_int = p.second*(p.second+1)/2 + p.first;
 
             // elegant pair function
-            if(p.first >=p.second){
+            if (p.first >= p.second) {
                 combined_int = p.first * p.first + p.first + p.second;
-            }else{
+            } else {
                 combined_int = p.second * p.second + p.first;
             }
             auto hash_value = std::hash<unsigned int>{}(combined_int);
@@ -74,54 +85,60 @@ namespace std{
     };
 
     // string format for Node-pair
-    inline ostream& operator<<(std::ostream& os, const NodePair np){
+    inline ostream &operator<<(std::ostream &os, const NodePair np) {
         // os << np.first << ", " << np.second;
         os << format("(%s,%s)") % np.first % np.second;
         return os;
     }
 
 }
-struct eq_node_pair{
-    bool operator()(const NodePair & a, const NodePair &b) const{
+struct eq_node_pair {
+    bool operator()(const NodePair &a, const NodePair &b) const {
         return a.first == b.first && a.second == b.second;
     }
 };
 
 template<typename T>
-struct DensePairMap{
-    vector<sparse_hash_map<unsigned int, T, std::hash<unsigned int>>> v;
-    T &operator[](NodePair np){
+struct DensePairMap {
+    vector<sparse_hash_map<unsigned int, T, std::hash<unsigned int>>>
+            v;
+
+    T &operator[](NodePair np) {
         return v[np.first][np.second];
         // if(np.first <= np.second){
         // }else{
         //     return v[np.second][np.first];
         // }
     }
-    void add(size_t n){
-        v.insert(v.end(), n, sparse_hash_map<unsigned int, T, std::hash<unsigned int>>{});
+
+    void add(size_t n) {
+        v.insert(v.end(), n, sparse_hash_map<unsigned int, T, std::hash<unsigned int>>
+                {});
     }
-    size_t size(){
+
+    size_t size() {
         // return the size of 2d matrix
         size_t sum = 0;
-        for(auto &h:v){
+        for (auto &h:v) {
             sum += h.size();
         }
         return sum;
     }
-    void save(string fp){
+
+    void save(string fp) {
         /* use C-Style I/O binary format*/
-        const char* file_name = fp.c_str();
-        FILE* o_file = fopen(file_name, "wb");
-        if(!o_file){
+        const char *file_name = fp.c_str();
+        FILE *o_file = fopen(file_name, "wb");
+        if (!o_file) {
             cout << "error opening the file" << endl;
             return;
         }
         auto n = v.size();
         fwrite(&n, sizeof(size_t), 1, o_file); // write vertex number
         FileSerializer fs;
-        for(size_t i = 0; i<n;i++){
+        for (size_t i = 0; i < n; i++) {
             // write the hash map one by one
-            v[i].serialize(fs,o_file);
+            v[i].serialize(fs, o_file);
         }
         fclose(o_file);
         return;
@@ -137,20 +154,21 @@ struct DensePairMap{
         // }
         // o_file.close();
     }
-    void load(string fp){
+
+    void load(string fp) {
         /* C-style read binary file*/
-        const char* file_name = fp.c_str();
-        FILE* in_file = fopen(file_name, "rb");
+        const char *file_name = fp.c_str();
+        FILE *in_file = fopen(file_name, "rb");
         FileSerializer fs;
-        if(!in_file){
+        if (!in_file) {
             cout << "error opening the file" << endl;
             return;
         }
         size_t n;
-        fread(&n, sizeof(size_t),1, in_file);
+        fread(&n, sizeof(size_t), 1, in_file);
         add(n);
-        for(size_t i=0;i<n;i++){
-            v[i].unserialize(fs,in_file);
+        for (size_t i = 0; i < n; i++) {
+            v[i].unserialize(fs, in_file);
         }
         fclose(in_file);
         return;
@@ -168,7 +186,8 @@ struct DensePairMap{
         // }
         // i_file.close();
     }
-    void erase(NodePair& np){
+
+    void erase(NodePair &np) {
         v[np.first].erase(np.second);
     }
 };
@@ -182,38 +201,42 @@ struct DensePairMap{
 typedef sparse_hash_set<NodePair> PairSet;
 typedef sparse_hash_map<NodePair, double> PairHashMap;
 typedef sparse_hash_map<NodePair, bool> PairMarker;
-typedef sparse_hash_map<int,int> Owg;
+typedef sparse_hash_map<int, int> Owg;
 
 // graph function
 extern void load_graph(string path, DirectedG &g);
+
 extern void show_graph(DirectedG &g);
+
 extern string get_edge_list_path(string s);
-extern void indegree_mat(const DirectedG &g, SparseMatrix<float>& P);// column normalized adjacency matrix 
+
+extern void indegree_mat(const DirectedG &g, SparseMatrix<float> &P);// column normalized adjacency matrix
 
 // enhance Eigen I/O
-namespace Eigen{
-template<class Matrix>
-void write_binary(const char* filename, const Matrix& matrix){
-    std::ofstream out(filename,ios::out | ios::binary | ios::trunc);
-    typename Matrix::Index rows=matrix.rows(), cols=matrix.cols();
-    out.write((char*) (&rows), sizeof(typename Matrix::Index));
-    out.write((char*) (&cols), sizeof(typename Matrix::Index));
-    out.write((char*) matrix.data(), rows*cols*sizeof(typename Matrix::Scalar) );
-    out.close();
-}
-template<class Matrix>
-void read_binary(const char* filename, Matrix& matrix){
-    std::ifstream in(filename,ios::in | std::ios::binary);
-    typename Matrix::Index rows=0, cols=0;
-    in.read((char*) (&rows),sizeof(typename Matrix::Index));
-    in.read((char*) (&cols),sizeof(typename Matrix::Index));
-    matrix.resize(rows, cols);
-    in.read( (char *) matrix.data() , rows*cols*sizeof(typename Matrix::Scalar) );
-    in.close();
-}
+namespace Eigen {
+    template<class Matrix>
+    void write_binary(const char *filename, const Matrix &matrix) {
+        std::ofstream out(filename, ios::out | ios::binary | ios::trunc);
+        typename Matrix::Index rows = matrix.rows(), cols = matrix.cols();
+        out.write((char *) (&rows), sizeof(typename Matrix::Index));
+        out.write((char *) (&cols), sizeof(typename Matrix::Index));
+        out.write((char *) matrix.data(), rows * cols * sizeof(typename Matrix::Scalar));
+        out.close();
+    }
+
+    template<class Matrix>
+    void read_binary(const char *filename, Matrix &matrix) {
+        std::ifstream in(filename, ios::in | std::ios::binary);
+        typename Matrix::Index rows = 0, cols = 0;
+        in.read((char *) (&rows), sizeof(typename Matrix::Index));
+        in.read((char *) (&cols), sizeof(typename Matrix::Index));
+        matrix.resize(rows, cols);
+        in.read((char *) matrix.data(), rows * cols * sizeof(typename Matrix::Scalar));
+        in.close();
+    }
 } // Eigen::
 
 // sample in-neighbor
-extern int sample_in_neighbor(int a, DirectedG& g);
+extern int sample_in_neighbor(int a, DirectedG &g);
 
 #endif

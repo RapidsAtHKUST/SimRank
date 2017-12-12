@@ -2,7 +2,7 @@
 #define SLING_H 
 
 #include "sling_graph.h"
-#include <SFMT/SFMT.h>
+#include <SFMT.h>
 #include <utility>
 #include <deque>
 #include <map>

@@ -1,5 +1,6 @@
 #ifndef __TKDE17_SIM_H__
 #define __TKDE17_SIM_H__
+
 #include <iostream>
 #include <Eigen/Dense>
 #include <string>
@@ -23,10 +24,11 @@ typedef Triplet<float> Trip;
 
 extern string TKDE17_RESULT_DIR;
 
-void tkde17_sim(DirectedG & g, float c, float epsilon);
+void tkde17_sim(DirectedG &g, float c, float epsilon);
+
 int tkde17_sim();
 
-struct LinearSystemSim{
+struct LinearSystemSim {
     size_t maxIters = 100;
     float epsilon;
     float c;
@@ -36,16 +38,22 @@ struct LinearSystemSim{
     string g_name; // the graph name
     MatrixXf sim; // the simrank matrix
 
-    LinearSystemSim(){} // the default constructor
-    LinearSystemSim(string name, const DirectedG& g, float c_, float epsilon_);
+    LinearSystemSim() {} // the default constructor
+    LinearSystemSim(string name, const DirectedG &g, float c_, float epsilon_);
+
     // the major function for solving the linear system
     void run(const DirectedG &g);
+
     void Ax(SparseMatrix<float> &P, MatrixXf &x, MatrixXf &result);
-    string get_file_path(){ // file path to save and load
-        return TKDE17_RESULT_DIR + str(format("TKDE17_%s-%.3f-%.6f")  % 
-                g_name % c % epsilon);
+
+    string get_file_path() { // file path to save and load
+        return TKDE17_RESULT_DIR + str(format("TKDE17_%s-%.3f-%.6f") %
+                                       g_name % c % epsilon);
     }
+
     void save();
+
     void load();
 };
+
 #endif
