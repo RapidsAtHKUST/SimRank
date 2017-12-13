@@ -17,4 +17,10 @@ target_include_directories(naive_iter PRIVATE ../../sparsepp)
 target_compile_options(naive_iter PRIVATE -O3 -g)
 #target_compile_definitions(naive_iter PRIVATE DEBUG=1)
 
+set(REV_DIFFUSION_FILES ground_truth/main_serial_rev_naive_iter.cpp ground_truth/SerialRevNaiveSim.cpp ground_truth/SerialRevNaiveSim.h input_output.cpp)
+add_executable(naive_rev_iter ${REV_DIFFUSION_FILES})
+target_include_directories(naive_rev_iter PRIVATE ../../sparsepp)
+target_compile_options(naive_rev_iter PRIVATE -O3 -g)
+#target_compile_definitions(naive_rev_iter PRIVATE DEBUG=1)
+
 add_subdirectory(playground)
