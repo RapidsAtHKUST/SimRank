@@ -10,7 +10,7 @@ add_executable(isp_yche ${SOURCE_FILES})
 target_include_directories(isp_yche PRIVATE ../../sparsepp)
 target_include_directories(isp_yche PRIVATE ${Boost_INCLUDE_DIRS})
 target_compile_options(isp_yche PRIVATE -O3 -g)
-target_compile_definitions(isp_yche PRIVATE DEBUG=1)
+#target_compile_definitions(isp_yche PRIVATE DEBUG=1)
 
 set(GROUND_TRUTH_FILES ground_truth/main_serial_naive_iter.cpp ground_truth/SerialNaiveSim.cpp ground_truth/SerialNaiveSim.h input_output.cpp)
 add_executable(naive_iter ${GROUND_TRUTH_FILES})

@@ -94,21 +94,22 @@ void ISP::DiffuseFromSinglePos(double q_k_prev_row_col, uint32_t row, uint32_t c
         auto &row_in_neighbor_pairs = trans_mat[row];
         auto &col_in_neighbor_pairs = trans_mat[col];
 
-        //reserve memory for next position rows
-        q_k.reserve(row_in_neighbor_pairs.size() * 2);
         for (auto &row_in_neighbor_pair: row_in_neighbor_pairs) {
-            int row_in_neighbor;
+            u_int32_t row_in_neighbor;
             double row_in_neighbor_prob;
             std::tie(row_in_neighbor, row_in_neighbor_prob) = row_in_neighbor_pair;
             // initialize for next position row
-            q_k[row_in_neighbor] = sparse_hash_map<uint32_t, double>(col_in_neighbor_pairs.size() * 2);
+
+            if (!q_k.contains(row_in_neighbor)) {
+                q_k[row_in_neighbor] = sparse_hash_map<uint32_t, double>(col_in_neighbor_pairs.size() * 2);
+            }
             auto &next_row_spare_vec = q_k[row_in_neighbor];
 
             for (auto &col_in_neighbor_pair: col_in_neighbor_pairs) {
                 int col_in_neighbor;
                 double col_in_neighbor_prob;
                 std::tie(col_in_neighbor, col_in_neighbor_prob) = col_in_neighbor_pair;
-                next_row_spare_vec[col_in_neighbor] =
+                next_row_spare_vec[col_in_neighbor] +=
                         q_k_prev_row_col * row_in_neighbor_prob * col_in_neighbor_prob;
             }
         }
