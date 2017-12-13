@@ -5,8 +5,16 @@ set(CMAKE_CXX_STANDARD 11)
 
 find_package(Boost)
 
-set(SOURCE_FILES main.cpp ISP.cpp ISP.h pretty_print.h)
+set(SOURCE_FILES main.cpp ISP.cpp ISP.h pretty_print.h input_output.h input_output.cpp)
 add_executable(isp_yche ${SOURCE_FILES})
 target_include_directories(isp_yche PRIVATE ../../sparsepp)
 target_include_directories(isp_yche PRIVATE ${Boost_INCLUDE_DIRS})
 target_compile_options(isp_yche PRIVATE -O3 -g)
+
+set(GROUND_TRUTH_FILES ground_truth/main_serial_naive_iter.cpp ground_truth/SerialNaiveSim.cpp ground_truth/SerialNaiveSim.h input_output.cpp)
+add_executable(naive_iter ${GROUND_TRUTH_FILES})
+target_include_directories(naive_iter PRIVATE ../../sparsepp)
+target_compile_options(naive_iter PRIVATE -O3 -g)
+#target_compile_definitions(naive_iter PRIVATE DEBUG=1)
+
+add_subdirectory(playground)

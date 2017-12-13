@@ -24,8 +24,6 @@ private:
     sparse_hash_map<uint32_t, sparse_hash_map<uint32_t, double>> trans_mat; //read-only
 
 private:
-    vector<pair<uint32_t, uint32_t>> GetEdgeList(string &file_path);
-
     void DiffuseFromSinglePos(double q_k_prev_row_col, uint32_t row, uint32_t col,
                               sparse_hash_map<uint32_t, sparse_hash_map<uint32_t, double>> &q_k);
 
