@@ -106,9 +106,12 @@ void ISP::DiffuseFromSinglePos(double q_k_prev_row_col, uint32_t row, uint32_t c
             auto &next_row_spare_vec = q_k[row_in_neighbor];
 
             for (auto &col_in_neighbor_pair: col_in_neighbor_pairs) {
-                int col_in_neighbor;
+                u_int32_t col_in_neighbor;
                 double col_in_neighbor_prob;
                 std::tie(col_in_neighbor, col_in_neighbor_prob) = col_in_neighbor_pair;
+                // the following line can be removed, since by default is 0
+                if (!next_row_spare_vec.contains(col_in_neighbor))
+                    next_row_spare_vec[col_in_neighbor] = 0;
                 next_row_spare_vec[col_in_neighbor] +=
                         q_k_prev_row_col * row_in_neighbor_prob * col_in_neighbor_prob;
             }
