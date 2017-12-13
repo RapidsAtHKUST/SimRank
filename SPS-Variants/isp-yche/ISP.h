@@ -20,7 +20,7 @@ using spp::sparse_hash_map;
 using spp::sparse_hash_set;
 
 class ISP {
-private:
+public:
     sparse_hash_map<uint32_t, sparse_hash_map<uint32_t, double>> trans_mat; //read-only
 
 private:

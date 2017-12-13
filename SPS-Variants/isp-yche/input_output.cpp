@@ -24,9 +24,10 @@ vector<pair<uint32_t, uint32_t>> GetEdgeList(string &file_path) {
             ss << tmp_str;
             int first, second;
             ss >> first >> second;
-            assert(first != second); // no self-loop
             assert(first < INT32_MAX and second < INT32_MAX);
-            lines.emplace_back(first, second);
+//            assert(first != second); // no self-loop
+            if (first != second)
+                lines.emplace_back(first, second);
         }
     }
     return lines;

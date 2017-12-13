@@ -4,8 +4,6 @@
 
 #include "ISP.h"
 
-#include <cmath>
-
 #include <iostream>
 #include <fstream>
 
@@ -17,8 +15,8 @@ ISP::ISP(string &file_path) {
     auto count_sparse_vec = sparse_hash_map<uint32_t, uint32_t>();
     // 1st: accumulate count for each row(fixed dst_v)
     for (auto &my_pair: lines) {
-        auto dst_v = my_pair.second;
-        auto src_v = my_pair.first;
+        uint32_t src_v, dst_v;
+        std::tie(src_v, dst_v) = my_pair;
         if (!count_sparse_vec.contains(dst_v)) {
             count_sparse_vec.emplace(dst_v, 0);
             trans_mat[dst_v] = sparse_hash_map<uint32_t, double>();
