@@ -30,3 +30,16 @@ endif ()
 target_compile_options(APS PRIVATE -O3)
 # target_link_libraries(APS PRIVATE boost_serialization boost_program_options)
 target_link_libraries(APS PRIVATE ${Boost_LIBRARIES})
+
+# ground truth query
+add_executable(ground_truth main_ground_truth.cpp graph.cpp simrank.cpp)
+target_include_directories(ground_truth PRIVATE ../eigen)
+target_include_directories(ground_truth PRIVATE ../sparsepp)
+target_include_directories(ground_truth PRIVATE ../sparsehash-yche/include/)
+
+if (Boost_FOUND)
+    message(${Boost_INCLUDE_DIRS})
+    target_include_directories(ground_truth PRIVATE ${Boost_INCLUDE_DIRS})
+endif ()
+target_compile_options(ground_truth PRIVATE -O3)
+target_link_libraries(ground_truth PRIVATE ${Boost_LIBRARIES})
