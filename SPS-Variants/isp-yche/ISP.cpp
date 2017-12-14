@@ -61,7 +61,8 @@ ISP::ISP(string &file_path) {
          << duration_cast<milliseconds>(tmp_end - tmp_start).count() << " ms\n";
 }
 
-double ISP::ComputeSim(uint32_t u, uint32_t v, double c, int max_k) {
+double ISP::ComputeSim(uint32_t u, uint32_t v, double c, int max_k, double h) {
+    this->h = h;
     auto tmp_start = high_resolution_clock::now();
 
     if (u == v) { return 1.0; }
@@ -129,10 +130,18 @@ void ISP::DiffuseFromSinglePos(double q_k_prev_row_col, uint32_t row, uint32_t c
                 double col_in_neighbor_prob;
                 std::tie(col_in_neighbor, col_in_neighbor_prob) = col_in_neighbor_pair;
                 // the following line can be removed, since by default is 0
-                if (!next_row_spare_vec.contains(col_in_neighbor))
-                    next_row_spare_vec[col_in_neighbor] = 0;
-                next_row_spare_vec[col_in_neighbor] +=
-                        q_k_prev_row_col * row_in_neighbor_prob * col_in_neighbor_prob;
+                if (!next_row_spare_vec.contains(col_in_neighbor)) {
+                    auto inspect_res = q_k_prev_row_col * row_in_neighbor_prob * col_in_neighbor_prob;
+                    // threshold filtering
+                    if (inspect_res >= h) {
+                        next_row_spare_vec[col_in_neighbor] = 0;
+                        next_row_spare_vec[col_in_neighbor] +=
+                                q_k_prev_row_col * row_in_neighbor_prob * col_in_neighbor_prob;
+                    }
+                } else {
+                    next_row_spare_vec[col_in_neighbor] +=
+                            q_k_prev_row_col * row_in_neighbor_prob * col_in_neighbor_prob;
+                }
             }
         }
     }

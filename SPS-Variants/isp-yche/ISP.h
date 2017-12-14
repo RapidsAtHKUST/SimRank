@@ -24,13 +24,14 @@ public:
     sparse_hash_map<uint32_t, sparse_hash_map<uint32_t, double>> trans_mat; //read-only
 
 private:
+    double h;
     void DiffuseFromSinglePos(double q_k_prev_row_col, uint32_t row, uint32_t col,
                               sparse_hash_map<uint32_t, sparse_hash_map<uint32_t, double>> &q_k);
 
 public:
     explicit ISP(string &file_path);
 
-    double ComputeSim(uint32_t u, uint32_t v, double c, int max_k);
+    double ComputeSim(uint32_t u, uint32_t v, double c, int max_k, double h);
 };
 
 #endif //ISP_YCHE_ISP_H
