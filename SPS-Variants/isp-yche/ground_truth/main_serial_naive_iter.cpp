@@ -13,6 +13,6 @@ int main(int argc, char *argv[]) {
     string path_str = argv[1];
     SerialNaiveSim my_algo(path_str);
 
-    auto &my_mat = my_algo.ComputeSim(100, 0.001, 0.5);
+    auto &my_mat = my_algo.ComputeSim(100, 0.00001, 0.5);
     cout << my_mat << endl;
 }
