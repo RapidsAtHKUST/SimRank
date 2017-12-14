@@ -6,11 +6,13 @@
 #include <tuple>
 #include <algorithm>
 #include <iostream>
+#include <chrono>
 
 #include <sparsepp/spp.h>
 
 #include "../pretty_print.h"
 
+using namespace std::chrono;
 
 void SerialNaiveSim::InitGraph(string &file_path) {
     n = 0u;
@@ -81,6 +83,8 @@ SerialNaiveSim::SerialNaiveSim(string &file_path) {
 }
 
 vector<double> &SerialNaiveSim::ComputeSim(int max_iter, double eps, double c) {
+    auto tmp_start = high_resolution_clock::now();
+
     int prev_idx = 1;
     cur_idx = 0;
 
@@ -128,6 +132,9 @@ vector<double> &SerialNaiveSim::ComputeSim(int max_iter, double eps, double c) {
         cout << cur_sim_mat << endl;
 #endif
     }
+    auto tmp_end = high_resolution_clock::now();
+    cout << "all pair computation time:"
+         << duration_cast<milliseconds>(tmp_end - tmp_start).count() << " ms\n";
     return sim_mat_arr[cur_idx];
 }
 

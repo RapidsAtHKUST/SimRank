@@ -6,13 +6,23 @@
 
 #include <iostream>
 #include <fstream>
+#include <chrono>
 
 #include "pretty_print.h"
 #include "input_output.h"
 
+using namespace std::chrono;
+
 ISP::ISP(string &file_path) {
+    auto tmp_start = high_resolution_clock::now();
+
     auto lines = GetEdgeList(file_path);
     auto count_sparse_vec = sparse_hash_map<uint32_t, uint32_t>();
+
+    auto tmp_end = high_resolution_clock::now();
+    cout << "load edge list to memory time:"
+         << duration_cast<milliseconds>(tmp_end - tmp_start).count() << " ms\n";
+
     // 1st: accumulate count for each row(fixed dst_v)
     for (auto &my_pair: lines) {
         uint32_t src_v, dst_v;
@@ -46,9 +56,14 @@ ISP::ISP(string &file_path) {
         cout << endl;
     }
 #endif
+    tmp_end = high_resolution_clock::now();
+    cout << "total init time:"
+         << duration_cast<milliseconds>(tmp_end - tmp_start).count() << " ms\n";
 }
 
 double ISP::ComputeSim(uint32_t u, uint32_t v, double c, int max_k) {
+    auto tmp_start = high_resolution_clock::now();
+
     if (u == v) { return 1.0; }
 
     auto sim_u_v = 0.0;
@@ -85,6 +100,10 @@ double ISP::ComputeSim(uint32_t u, uint32_t v, double c, int max_k) {
         sim_u_v += pow(c, i) * m;
         q_k_prev = q_k;
     }
+
+    auto tmp_end = high_resolution_clock::now();
+    cout << "query computation time:"
+         << duration_cast<milliseconds>(tmp_end - tmp_start).count() << " ms\n";
     return sim_u_v;
 }
 

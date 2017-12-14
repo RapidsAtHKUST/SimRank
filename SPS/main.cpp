@@ -38,10 +38,11 @@ void test_bp(string data_name, double c, double epsilon, double delta, int x, in
 }
 
 int main(int args, char *argv[]) {
-    string data_name("ca-GrQc");
+    string data_name(argv[1]);
     double c = 0.6;
     double epsilon = 0.01;
     double delta = 0.01;
-    int x = 0, y = 1;
+
+    int x = atoi(argv[2]), y = atoi(argv[3]);
     test_bp(data_name, c, epsilon, delta, x, y);
 }
