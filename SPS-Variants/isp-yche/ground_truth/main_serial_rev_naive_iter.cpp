@@ -15,5 +15,5 @@ int main(int argc, char *argv[]) {
     SerialRevNaiveSim my_algo(path_str);
 
     auto &my_mat = my_algo.ComputeSim(100, 0.00001, 0.5);
-    cout << my_mat << endl;
+//    cout << my_mat << endl;
 }

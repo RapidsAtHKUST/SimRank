@@ -67,6 +67,7 @@ void SerialRevNaiveSim::InitGraph(string &file_path) {
     cout << dst_v << endl;
     cout << in_deg_arr << endl;
 #endif
+    cout << "total vertex number:" << n << endl;
 }
 
 SerialRevNaiveSim::SerialRevNaiveSim(string &file_path) {
