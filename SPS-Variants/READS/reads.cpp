@@ -3,6 +3,7 @@
 #include <cmath>
 #include <cstring>
 
+#include <queue>
 #include <algorithm>
 #include <iostream>
 
@@ -41,22 +42,27 @@ void reads::constructIndices() {
     vector<int> sta, tmp(n);
     int tmpCnt;
 
+    // r samples
     nt.resize(r);
     for (int i = 0; i < r; i++) { nt[i].resize(n); }
-
     for (int i = 0; i < r; i++) {
         q.resize(0);
         pos.assign(n, -1);
 
-        for (int j = 0, p; j < n; j++)
+        // 1st
+        for (int j = 0, p; j < n; j++) {
             if (!eb[j].empty()) {
                 if (pos[p = eb[j][rand() % eb[j].size()]] < 0) {
                     pos[p] = q.size();
                     q.emplace_back(p, -1);
                 }
                 nt[i][j] = pos[p];
-            } else nt[i][j] = -1;
+            } else {
+                nt[i][j] = -1;
+            }
+        }
 
+        // 2nd
         q0 = 0;
         q1 = q.size();
         for (int j = 0, p, rr; j < t - 1 && q0 < q1; j++) {
@@ -73,6 +79,7 @@ void reads::constructIndices() {
             q1 = q.size();
         }
 
+        // 3rd
         tmpCnt = 0;
         for (int j = 0, qid; j < n; j++)
             if (nt[i][j] > -1) {
@@ -94,6 +101,7 @@ void reads::constructIndices() {
             nt[i][tmp[j]] = pos[j];
     }
 
+    // randomly shuffle edges
     for (int i = 0; i < n; i++) {
         random_shuffle(ef[i].begin(), ef[i].end());
         random_shuffle(eb[i].begin(), eb[i].end());
@@ -107,13 +115,13 @@ void reads::serializeForSingleSource(Timer &timer, char *iName) {
     for (int i = 0; i < r; i++)
         for (int j = 0; j < n; j++)
             buf.insert(nt[i][j]);
-    // edge list part1: src list
+    // adjacency list part1: original graph
     for (int i = 0; i < n; i++) {
         buf.insert(ef[i].size());
         for (int j : ef[i])
             buf.insert(j);
     }
-    // edge list part2: dst list
+    // adjacency list part2: reversed graph
     for (int i = 0; i < n; i++) {
         buf.insert(eb[i].size());
         for (int j : eb[i])
@@ -124,11 +132,25 @@ void reads::serializeForSingleSource(Timer &timer, char *iName) {
 
 
 void reads::postProcessNextForSinglePair() {
-    // use the first element as the tree id
+    vector<bool> is_visited(n, false);
     for (auto &next_arr: nt) {
-        auto tree_id = next_arr[0];
-        for (auto &ele: next_arr) {
-            ele = tree_id;
+        // bfs to initialize next_arr
+        for (auto i = 0; i < n; i++) {
+            if (!is_visited[i] && next_arr[i] >= 0) {
+                // use the first element as the tree id
+                auto tree_id = next_arr[i];
+                is_visited[tree_id] = true;
+
+                auto cur_leaf_idx = tree_id;
+                int next_leaf_idx;
+                while (next_arr[cur_leaf_idx] != tree_id) {
+                    is_visited[cur_leaf_idx] = true;
+
+                    next_leaf_idx = next_arr[cur_leaf_idx];
+                    next_arr[cur_leaf_idx] = tree_id;
+                    cur_leaf_idx = next_leaf_idx;
+                }
+            }
         }
     }
 }
