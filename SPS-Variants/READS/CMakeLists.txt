@@ -3,19 +3,21 @@ project(release)
 
 set(CMAKE_CXX_STANDARD 11)
 
-set(SOURCE_FILES
-        inBuf.h outBuf.h meminfo.cpp meminfo.h timer.h
-        reads.cpp reads.h
-        readsd.cpp readsd.h
-        readsrq.cpp readsrq.h
-        test.cpp)
 
-add_executable(READS ${SOURCE_FILES})
-target_compile_options(READS PRIVATE -O3 -g -w)
-target_compile_definitions(READS PRIVATE STORE_INDEX=1)
-target_include_directories(READS PRIVATE ../../sparsehash-yche/include/)
+set(COMMON_FILES inBuf.h outBuf.h meminfo.cpp meminfo.h timer.h)
+set(STATIC_GRAPH_FILES reads.cpp reads.h)
 
-add_executable(READS_NAIVE ${SOURCE_FILES})
-target_compile_options(READS_NAIVE PRIVATE -O3 -g -w)
-target_include_directories(READS_NAIVE PRIVATE ../../sparsehash-yche/include/)
+add_executable(reads-ssource ${COMMON_FILES} ${STATIC_GRAPH_FILES} test.cpp)
+target_compile_options(reads-ssource PRIVATE -O3 -g -w)
+target_compile_definitions(reads-ssource PRIVATE STORE_INDEX=1)
+target_include_directories(reads-ssource PRIVATE ../../sparsehash-yche/include/)
+
+add_executable(reads-spair ${COMMON_FILES} ${STATIC_GRAPH_FILES} test_single_pair.cpp)
+target_compile_options(reads-spair PRIVATE -O3 -g -w)
+target_compile_definitions(reads-spair PRIVATE STORE_INDEX=1 SINGLE_PAIR=1)
+target_include_directories(reads-spair PRIVATE ../../sparsehash-yche/include/)
+
+add_executable(reads-ssource-navive ${COMMON_FILES} ${STATIC_GRAPH_FILES} test.cpp)
+target_compile_options(reads-ssource-navive PRIVATE -O3 -g -w)
+target_include_directories(reads-ssource-navive PRIVATE ../../sparsehash-yche/include/)
 

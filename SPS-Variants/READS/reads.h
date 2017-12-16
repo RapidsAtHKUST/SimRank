@@ -10,12 +10,24 @@ struct reads {
     double c;
     int r, n, t;
     char gName[125];
-    std::vector<std::vector<int> > nt, ef, eb;
+    std::vector<std::vector<int>> nt, ef, eb;
     Timer tm;
     int qCnt;
     double rtime, t1, t2;
 
-// method:
+// methods:
+private:
+    void loadGraph(char* gName);
+
+    void constructIndices();
+
+    void serializeForSingleSource(Timer &timer, char *iName);
+
+    void deserializeForSingleSource(char *iName);
+
+    void postProcessNextForSinglePair();
+
+public:
     reads(char *gName_, int n_, int r_, double c_, int t_);
 
     ~reads();
@@ -23,8 +35,6 @@ struct reads {
     double queryOne(int x, int y);
 
     void queryAll(int x, double *ansVal);
-
-    void queryK(int x, int k, int *ansNode);
 };
 
 #endif

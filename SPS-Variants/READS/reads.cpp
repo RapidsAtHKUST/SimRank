@@ -1,11 +1,11 @@
 #include "reads.h"
 
 #include <cmath>
-#include <cstdio>
 #include <cstring>
 
-#include <vector>
 #include <algorithm>
+#include <iostream>
+
 #include "sparsehash/dense_hash_map"
 
 #include "inBuf.h"
@@ -15,46 +15,9 @@
 using google::dense_hash_map;
 using namespace std;
 
-reads::reads(char *gName_, int n_, int r_, double c_, int t_) {
-    sprintf(gName, "%s", gName_);
-    n = n_, r = r_, c = c_, t = t_;
-    t1 = t2 = qCnt = 0;
-
-    char iName[125];
-    sprintf(iName, "%s.reads.%d_%d_%lf_%d", gName, n, r, c, t);
-
-#ifdef STORE_INDEX
-    if (fopen(iName, "rb") != NULL) {
-        // deserialization for index sturctures
-        inBuf buf(iName);
-        ef.resize(n);
-        eb.resize(n);
-        nt.resize(r);
-        for (int i = 0; i < r; i++) {
-            nt[i].resize(n);
-            for (int j = 0; j < n; j++)
-                buf.nextInt(nt[i][j]);
-        }
-
-        for (int i = 0, s; i < n; i++) {
-            buf.nextInt(s);
-            ef[i].resize(s);
-            for (int j = 0; j < s; j++)
-                buf.nextInt(ef[i][j]);
-        }
-        for (int i = 0, s; i < n; i++) {
-            buf.nextInt(s);
-            eb[i].resize(s);
-            for (int j = 0; j < s; j++)
-                buf.nextInt(eb[i][j]);
-        }
-        rtime = 0;
-        return;
-    }
-#endif
-
+void reads::loadGraph(char *gName) {
     FILE *fg = fopen(gName, "r");
-    if (fg == NULL) {
+    if (fg == nullptr) {
         printf("No graph %s\n", gName);
         exit(0);
     }
@@ -62,32 +25,26 @@ reads::reads(char *gName_, int n_, int r_, double c_, int t_) {
     Timer tm;
     ef.resize(n);
     eb.resize(n);
-
     for (int x, y; fscanf(fg, "%d%d", &x, &y) != EOF;) {
         ef[x].push_back(y);
         eb[y].push_back(x);
     }
-
     rtime = tm.getTime();
-
-//printf("loaded graph\n");
     fclose(fg);
+}
 
-    int q0, q1, q2;
-    vector<pair<int, int> > q;
+void reads::constructIndices() {
+    int q0, q1;
+    vector<pair<int, int>> q;
     vector<int> pos;
     auto cc = int(RAND_MAX * sqrt(c));
     vector<int> sta, tmp(n);
     int tmpCnt;
 
-
     nt.resize(r);
-    for (int i = 0; i < r; i++)
-        nt[i].resize(n);
-//printf("init\n");
+    for (int i = 0; i < r; i++) { nt[i].resize(n); }
 
     for (int i = 0; i < r; i++) {
-//printf("%d\n", i);
         q.resize(0);
         pos.assign(n, -1);
 
@@ -95,32 +52,26 @@ reads::reads(char *gName_, int n_, int r_, double c_, int t_) {
             if (!eb[j].empty()) {
                 if (pos[p = eb[j][rand() % eb[j].size()]] < 0) {
                     pos[p] = q.size();
-                    q.push_back(make_pair(p, -1));
+                    q.emplace_back(p, -1);
                 }
                 nt[i][j] = pos[p];
-//printf("%d ", p);
             } else nt[i][j] = -1;
-//printf("\n");
-
 
         q0 = 0;
         q1 = q.size();
         for (int j = 0, p, rr; j < t - 1 && q0 < q1; j++) {
-            int tt;
             for (; q0 < q1; q0++) {
                 if (!eb[q[q0].first].empty() && ((rr = rand()) < cc || j == 0)) {
                     p = eb[q[q0].first][rr % eb[q[q0].first].size()];
                     if (pos[p] < q1) {
                         pos[p] = q.size();
-                        q.push_back(make_pair(p, -1));
+                        q.emplace_back(p, -1);
                     }
                     q[q0].second = pos[p];
                 }
-//printf("%d ", rr);
             }
             q1 = q.size();
         }
-//printf("\n");
 
         tmpCnt = 0;
         for (int j = 0, qid; j < n; j++)
@@ -139,42 +90,120 @@ reads::reads(char *gName_, int n_, int r_, double c_, int t_) {
                 for (int k = sta.size() - 2; k >= 0; k--)
                     q[sta[k]].second = q[*sta.rbegin()].second;
             }
-
         for (int j = 0; j < tmpCnt; j++)
             nt[i][tmp[j]] = pos[j];
-
     }
 
     for (int i = 0; i < n; i++) {
         random_shuffle(ef[i].begin(), ef[i].end());
         random_shuffle(eb[i].begin(), eb[i].end());
     }
+}
 
-
-    // serialization for index structures
-#ifdef STORE_INDEX
+void reads::serializeForSingleSource(Timer &timer, char *iName) {
     tm.reset();
     outBuf buf(iName);
+    // next node of all the leaves
     for (int i = 0; i < r; i++)
         for (int j = 0; j < n; j++)
             buf.insert(nt[i][j]);
+    // edge list part1: src list
     for (int i = 0; i < n; i++) {
         buf.insert(ef[i].size());
         for (int j : ef[i])
             buf.insert(j);
     }
+    // edge list part2: dst list
     for (int i = 0; i < n; i++) {
         buf.insert(eb[i].size());
         for (int j : eb[i])
             buf.insert(j);
     }
     rtime += tm.getTime();
+}
+
+
+void reads::postProcessNextForSinglePair() {
+    // use the first element as the tree id
+    for (auto &next_arr: nt) {
+        auto tree_id = next_arr[0];
+        for (auto &ele: next_arr) {
+            ele = tree_id;
+        }
+    }
+}
+
+void reads::deserializeForSingleSource(char *iName) {
+    inBuf buf(iName);
+    ef.resize(n);
+    eb.resize(n);
+    nt.resize(r);
+    for (int i = 0; i < r; i++) {
+        nt[i].resize(n);
+        for (int j = 0; j < n; j++)
+            buf.nextInt(nt[i][j]);
+    }
+#ifdef SINGLE_PAIR
+    postProcessNextForSinglePair();
+#endif
+
+    for (int i = 0, s; i < n; i++) {
+        buf.nextInt(s);
+        ef[i].resize(s);
+        for (int j = 0; j < s; j++)
+            buf.nextInt(ef[i][j]);
+    }
+    for (int i = 0, s; i < n; i++) {
+        buf.nextInt(s);
+        eb[i].resize(s);
+        for (int j = 0; j < s; j++)
+            buf.nextInt(eb[i][j]);
+    }
+    rtime = 0;
+}
+
+reads::reads(char *gName_, int n_, int r_, double c_, int t_) {
+    sprintf(gName, "%s", gName_);
+    n = n_, r = r_, c = c_, t = t_;
+    t1 = t2 = qCnt = 0;
+
+    char iName[125];
+    sprintf(iName, "%s.reads.%d_%d_%lf_%d", gName, n, r, c, t);
+
+#ifdef STORE_INDEX
+    if (fopen(iName, "rb") != NULL) {
+        // with ready indices: deserialization for index structures
+        deserializeForSingleSource(iName);
+        return;
+    }
+#endif
+
+    // 1st: load graph
+    loadGraph(gName);
+
+    // 2nd: start constructing indices
+    constructIndices();
+
+    // 3rd: serialization for index structures
+#ifdef STORE_INDEX
+    serializeForSingleSource(tm, iName);
 #endif
 }
 
 reads::~reads() = default;
 
-double reads::queryOne(int x, int y) {}
+double reads::queryOne(int x, int y) {
+    if (x == y) { return 1; }
+
+    int match_count = 0;
+    for (auto i = 0; i < r; i++) {
+        if (nt[i][x] == nt[i][y]) {
+            cout << nt[i][x] << ", " << nt[i][y] << endl;
+            match_count++;
+        };
+    }
+    return static_cast<double>(match_count) * c / r;
+}
 
 void reads::queryAll(int x, double *ansVal) {
     memset(ansVal, 0, sizeof(double) * n);
