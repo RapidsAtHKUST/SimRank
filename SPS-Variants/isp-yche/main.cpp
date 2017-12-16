@@ -12,6 +12,6 @@ int main(int argc, char *argv[]) {
 //    cout << my_algo.ComputeSim(1, 2, c, 200) << endl;
 //    cout << my_algo.ComputeSim(1, 3, c, 200) << endl;
     double h = 0.000001;
-    cout << my_algo.ComputeSim(u, v, c, 50, h) << endl;
+    cout << my_algo.ComputeSim(u, v, c, 100, h) << endl;
     return 0;
 }
