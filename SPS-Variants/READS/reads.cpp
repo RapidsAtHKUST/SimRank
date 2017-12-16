@@ -8,8 +8,8 @@
 #include <algorithm>
 #include "sparsehash/dense_hash_map"
 
-// #include "inBuf.h"
-// #include "outBuf.h"
+#include "inBuf.h"
+#include "outBuf.h"
 // #include "meminfo.h"
 
 using google::dense_hash_map;
@@ -23,37 +23,35 @@ reads::reads(char *gName_, int n_, int r_, double c_, int t_) {
     char iName[125];
     sprintf(iName, "%s.reads.%d_%d_%lf_%d", gName, n, r, c, t);
 
-    // if (fopen(iName, "rb") != NULL)
-    // {
-    // 	printf("load ");
-    // 	inBuf buf(iName);
-    // 	ef.resize(n);
-    // 	eb.resize(n);
-    // 	nt.resize(r);
-    // 	for (int i = 0; i < r; i++)
-    // 	{
-    // 		nt[i].resize(n);
-    // 		for (int j = 0; j < n; j++)
-    // 			buf.nextInt(nt[i][j]);
-    // 	}
+#ifdef STORE_INDEX
+    if (fopen(iName, "rb") != NULL) {
+        // deserialization for index sturctures
+        inBuf buf(iName);
+        ef.resize(n);
+        eb.resize(n);
+        nt.resize(r);
+        for (int i = 0; i < r; i++) {
+            nt[i].resize(n);
+            for (int j = 0; j < n; j++)
+                buf.nextInt(nt[i][j]);
+        }
 
-    // 	for (int i = 0, s; i < n; i++)
-    // 	{
-    // 		buf.nextInt(s);
-    // 		ef[i].resize(s);
-    // 		for (int j = 0; j < s; j++)
-    // 			buf.nextInt(ef[i][j]);
-    // 	}
-    // 	for (int i = 0, s; i < n; i++)
-    // 	{
-    // 		buf.nextInt(s);
-    // 		eb[i].resize(s);
-    // 		for (int j = 0; j < s; j++)
-    // 			buf.nextInt(eb[i][j]);
-    // 	}
-    // 	rtime = 0;
-    // 	return;
-    // }
+        for (int i = 0, s; i < n; i++) {
+            buf.nextInt(s);
+            ef[i].resize(s);
+            for (int j = 0; j < s; j++)
+                buf.nextInt(ef[i][j]);
+        }
+        for (int i = 0, s; i < n; i++) {
+            buf.nextInt(s);
+            eb[i].resize(s);
+            for (int j = 0; j < s; j++)
+                buf.nextInt(eb[i][j]);
+        }
+        rtime = 0;
+        return;
+    }
+#endif
 
     FILE *fg = fopen(gName, "r");
     if (fg == NULL) {
@@ -71,8 +69,6 @@ reads::reads(char *gName_, int n_, int r_, double c_, int t_) {
     }
 
     rtime = tm.getTime();
-
-
 
 //printf("loaded graph\n");
     fclose(fg);
@@ -92,7 +88,6 @@ reads::reads(char *gName_, int n_, int r_, double c_, int t_) {
 
     for (int i = 0; i < r; i++) {
 //printf("%d\n", i);
-
         q.resize(0);
         pos.assign(n, -1);
 
@@ -155,31 +150,26 @@ reads::reads(char *gName_, int n_, int r_, double c_, int t_) {
         random_shuffle(eb[i].begin(), eb[i].end());
     }
 
-    return;
 
-
-    // tm.reset();
-    // outBuf buf(iName);
-
-    // for (int i = 0; i < r; i++)
-    // 	for (int j = 0; j < n; j++)
-    // 		buf.insert(nt[i][j]);
-
-    // for (int i = 0; i < n; i++)
-    // {
-    // 	buf.insert(ef[i].size());
-    // 	for (auto j = ef[i].begin(); j != ef[i].end(); j++)
-    // 		buf.insert(*j);
-    // }
-
-    // for (int i = 0; i < n; i++)
-    // {
-    // 	buf.insert(eb[i].size());
-    // 	for (auto j = eb[i].begin(); j != eb[i].end(); j++)
-    // 		buf.insert(*j);
-    // }
-    // rtime += tm.getTime();
-
+    // serialization for index structures
+#ifdef STORE_INDEX
+    tm.reset();
+    outBuf buf(iName);
+    for (int i = 0; i < r; i++)
+        for (int j = 0; j < n; j++)
+            buf.insert(nt[i][j]);
+    for (int i = 0; i < n; i++) {
+        buf.insert(ef[i].size());
+        for (auto j = ef[i].begin(); j != ef[i].end(); j++)
+            buf.insert(*j);
+    }
+    for (int i = 0; i < n; i++) {
+        buf.insert(eb[i].size());
+        for (auto j = eb[i].begin(); j != eb[i].end(); j++)
+            buf.insert(*j);
+    }
+    rtime += tm.getTime();
+#endif
 }
 
 reads::~reads() = default;
@@ -443,7 +433,3 @@ void reads::queryAll(int x, double *ansVal) {
         if (qCnt++ < 20) t2 += tm.getTime();
     }
 }
-
-
-
-
