@@ -35,12 +35,9 @@ void reads::loadGraph(char *gName) {
 }
 
 void reads::constructIndices() {
-    int q_cur, q_end;
     vector<pair<int, int>> q;
     vector<int> pos;
     auto cc = int(RAND_MAX * sqrt(c));
-    vector<int> sta, tmp(n);
-    int tmpCnt;
 
     // r samples
     nt.resize(r);
@@ -51,29 +48,29 @@ void reads::constructIndices() {
         // pos[p] current level position of vertex p
         pos.assign(n, -1);
 
-        // 1st
-        for (int j = 0, p; j < n; j++) {
+        // 1st: level 0 expansion without stopping
+        for (int j = 0, parent; j < n; j++) {
             if (!eb[j].empty()) {
-                p = eb[j][rand() % eb[j].size()];
-                // check if vertex p first occurring for level j+1
-                if (pos[p] < 0) {
-                    pos[p] = q.size();
-                    q.emplace_back(p, -1);
+                parent = eb[j][rand() % eb[j].size()];
+                // check if vertex parent first occurring for level j+1
+                if (pos[parent] < 0) {
+                    pos[parent] = q.size();
+                    q.emplace_back(parent, -1);
                 }
-                nt[i][j] = pos[p];
+                nt[i][j] = pos[parent];
             } else {
                 nt[i][j] = -1;
             }
         }
 
-        // 2nd: further expansion
-        q_cur = 0;
-        q_end = q.size();
+        // 2nd: further expansion of level [1, t)
+        auto q_cur = 0;
+        int q_end = q.size();
         for (int j = 0, p, rr; j < t - 1 && q_cur < q_end; j++) {
             for (; q_cur < q_end; q_cur++) {
-                auto &ele_adj_ref = eb[q[q_cur].first];
-                if (!ele_adj_ref.empty() && ((rr = rand()) < cc || j == 0)) {
-                    p = ele_adj_ref[rr % ele_adj_ref.size()];
+                auto &in_neighbors = eb[q[q_cur].first];
+                if (!in_neighbors.empty() && ((rr = rand()) < cc || j == 0)) {
+                    p = in_neighbors[rr % in_neighbors.size()];
                     // check if vertex p first occurring for level j+1
                     if (pos[p] < q_end) {
                         pos[p] = q.size();
@@ -85,8 +82,9 @@ void reads::constructIndices() {
             q_end = q.size();
         }
 
-        // 3rd
-        tmpCnt = 0;
+        // 3rd: link leaf nodes for later query puroose
+        auto tmpCnt = 0;
+        vector<int> sta, tmp(n);
         for (int j = 0, qid; j < n; j++)
             // check if vertex j has at least one in-neighbor
             if (nt[i][j] > -1) {
@@ -139,26 +137,24 @@ void reads::serializeForSingleSource(Timer &timer, char *iName) {
     rtime += tm.getTime();
 }
 
-
 void reads::postProcessNextForSinglePair() {
-    vector<bool> is_visited(n, false);
+    vector<bool> is_visited(n);
+
     for (auto &next_arr: nt) {
         // bfs to initialize next_arr
+        for (auto i = 0; i < n; i++) { is_visited[i] = false; }
         for (auto i = 0; i < n; i++) {
-            if (!is_visited[i] && next_arr[i] >= 0) {
+            if (!is_visited[i] && next_arr[i] > -1) {
                 // use the first element as the tree id
-                auto tree_id = next_arr[i];
-                is_visited[tree_id] = true;
-
-                auto cur_leaf_idx = tree_id;
-                int next_leaf_idx;
-                while (next_arr[cur_leaf_idx] != tree_id) {
+                auto tree_id = i;
+                auto cur_leaf_idx = i;
+                do {
                     is_visited[cur_leaf_idx] = true;
 
-                    next_leaf_idx = next_arr[cur_leaf_idx];
+                    auto next_leaf_idx = next_arr[cur_leaf_idx];
                     next_arr[cur_leaf_idx] = tree_id;
                     cur_leaf_idx = next_leaf_idx;
-                }
+                } while (cur_leaf_idx != tree_id);
             }
         }
     }
