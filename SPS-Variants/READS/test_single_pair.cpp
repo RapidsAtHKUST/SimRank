@@ -12,7 +12,7 @@ using namespace std;
 // g++ reads*.h reads*.cpp timer.h -O3 -w -std=c++11 test.cpp -I . && ./a.out hp.data 3133
 int main(int argc, char **argv) {
     int n = atoi(argv[2]);
-    int r = 1000;
+    int r = 10000;
     double c = 0.6;
     int t = 10;
     int rq = 10;

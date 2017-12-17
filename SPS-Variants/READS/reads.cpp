@@ -224,7 +224,8 @@ double reads::queryOne(int x, int y) {
 
     int match_count = 0;
     for (auto i = 0; i < r; i++) {
-        if (nt[i][x] == nt[i][y]) {
+        // nt[i][x] means no in-neighbor for vertex x
+        if (nt[i][x] == nt[i][y] && nt[i][x] != -1 && nt[i][y] != -1) {
             match_count++;
         };
     }
