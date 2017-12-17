@@ -15,6 +15,14 @@ inline bool cmpTuple(const tuple<int, int, int, double> &t1, const tuple<int, in
     } else return std::get<0>(t1) < std::get<0>(t2);
 }
 
+// TODO
+inline bool cmp(const pair<pair<int, int>, double> &p1, const pair<pair<int, int>, double> &p2) {
+    if (p1.second == p2.second) {
+        if (p1.first.first == p2.first.first) return p1.first.second < p2.first.second;
+        else return p1.first > p2.first;
+    } else return p1.second > p2.second;
+}
+
 class Rand {
 private:
     sfmt_t *sfmt;

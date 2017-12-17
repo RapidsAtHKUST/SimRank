@@ -242,7 +242,7 @@ void Sling::calcD(double eps) {
     mutex lock;
     vector<thread> threads;
     for (int i = 0; i < NUMTHREAD - 1; ++i)
-        threads.push_back(thread(__Sling_t_calcD, this, eps, &lock, &cursor, i));
+        threads.emplace_back(__Sling_t_calcD, this, eps, &lock, &cursor, i);
     t_calcD(eps, &lock, &cursor, NUMTHREAD - 1);
     for (int t = 0; t < NUMTHREAD - 1; ++t)
         threads[t].join();
@@ -375,14 +375,14 @@ void __Sling_t_backward(Sling *sim, double eps, mutex *tasklock, int *cursor, in
 
 void Sling::backward(double eps) {
     int plockNum = (g->n - 1) / BLOCKSIZE + 1;
-    mutex *plock = new mutex[plockNum];
+    auto *plock = new mutex[plockNum];
     mutex tasklock;
     int cursor = 0;
-    if (!p.empty()) p.clear();
-    p.reserve(2339768660l);
+    if (!p.empty()) { p.clear(); }
+//    p.reserve(2339768660l);
     vector<thread> threads;
     for (int i = 0; i < NUMTHREAD - 1; ++i)
-        threads.push_back(thread(__Sling_t_backward, this, eps, &tasklock, &cursor, i, plock));
+        threads.emplace_back(__Sling_t_backward, this, eps, &tasklock, &cursor, i, plock);
     t_backward(eps, &tasklock, &cursor, NUMTHREAD - 1, plock);
     for (int t = 0; t < NUMTHREAD - 1; ++t)
         threads[t].join();
@@ -416,98 +416,46 @@ vector<double> Sling::pushback_q(map<pair<int, int>, double, PairCmp>::iterator 
     for (; start !=
            end;
            ++start) {
-        p[start->first.second] = start->
-                second * d[start->first.second];
-        q.
-                push_back(start
-                                  ->first.second);
+        p[start->first.second] = start->second * d[start->first.second];
+        q.push_back(start->first.second);
     }
-    for (
-            int i = 0;
-            i < T;
-            ++i) {
-        if (q.
-                size()
-            < TTT) {
-            while (!q.
-                    empty()
-                    ) {
+    for (int i = 0; i < T; ++i) {
+        if (q.size() < TTT) {
+            while (!q.empty()) {
                 int u = q.front();
-                q.
-                        pop_front();
-                for (
-                        auto vitr = g->edge[u].begin();
-                        vitr != g->edge[u].
-                                end();
-                        ++vitr) {
+                q.pop_front();
+                for (auto vitr = g->edge[u].begin(); vitr != g->edge[u].end(); ++vitr) {
                     int v = *vitr;
                     double x = pp[v] += sqrtc * p[u] / (double) g->inedge[v].size();
-                    if (x >
-                        eps && x
-                               <= eps +
-                                  sqrtc * p[u]
-                                  / (double) g->inedge[v].
-                                          size()
-                            ) {
-                        qq.
-                                push_back(v);
+                    if (x > eps && x <= eps + sqrtc * p[u] / (double) g->inedge[v].size()) {
+                        qq.push_back(v);
                     }
                 }
             }
-            p.
-                    swap(pp);
-            pp.
-                    clear();
-            pp.
-                    resize(g
-                                   ->n, 0.);
-            q.
-                    swap(qq);
-            qq.
-                    clear();
+            p.swap(pp);
+            pp.clear();
+            pp.resize(g->n, 0.);
+            q.swap(qq);
+            qq.clear();
         } else {
-            for (
-                    auto uitr = p.begin();
-                    uitr != p.
-                            end();
-                    ++uitr) {
+            for (auto uitr = p.begin(); uitr != p.end(); ++uitr) {
                 int u = *uitr;
                 if (p[u] < eps) continue;
-                for (
-                        auto vitr = g->edge[u].begin();
-                        vitr != g->edge[u].
-                                end();
-                        ++vitr) {
+                for (auto vitr = g->edge[u].begin(); vitr != g->edge[u].end(); ++vitr) {
                     int v = *vitr;
-                    pp[v] +=
-                            sqrtc * p[u]
-                            / (double) g->inedge[v].
-                                    size();
+                    pp[v] += sqrtc * p[u] / (double) g->inedge[v].size();
                 }
             }
-            p.
-                    swap(pp);
-            pp.
-                    clear();
-            pp.
-                    resize(g
-                                   ->n, 0.);
+            p.swap(pp);
+            pp.clear();
+            pp.resize(g->n, 0.);
         }
     }
-    return
-            p;
-}
-
-// TODO
-bool cmp(const pair<pair<int, int>, double> &p1, const pair<pair<int, int>, double> &p2) {
-    if (p1.second == p2.second) {
-        if (p1.first.first == p2.first.first) return p1.first.second < p2.first.second;
-        else return p1.first > p2.first;
-    } else return p1.second > p2.second;
+    return p;
 }
 
 double Sling::simrank(int u, int v) {
-    assert(!p.empty() && d != NULL);
+    assert(!p.empty() && d != nullptr);
     if (u == v) return 1.;
     google::sparse_hash_map<pair<int, int>, double, PairHash> pu;
     gmap<pair<int, int>, double, PairHash> pv;
