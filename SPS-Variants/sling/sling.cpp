@@ -380,6 +380,7 @@ void Sling::backward(double eps) {
     int cursor = 0;
     if (!p.empty()) { p.clear(); }
 //    p.reserve(2339768660l);
+    p.reserve(233976866l);
     vector<thread> threads;
     for (int i = 0; i < NUMTHREAD - 1; ++i)
         threads.emplace_back(__Sling_t_backward, this, eps, &tasklock, &cursor, i, plock);
