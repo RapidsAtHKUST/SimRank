@@ -14,8 +14,8 @@ class Graph {
 public:
     int n;                          // # of nodes
     int m;                          // # of edges
-    std::vector<int> *edge;         // list of edges, original graph
-    std::vector<int> *inedge;       // list of in-neighbors, reversed graph
+    std::vector<int> *edge;         // list of edges
+    std::vector<int> *inedge;       // list of in-neighbors
 
     Graph() {
         n = m = 0;
@@ -28,31 +28,30 @@ public:
         delete[] inedge;
     }
 
-    void inputGraph(string &file_path) {
-        auto edge_lst = GetEdgeList(file_path);
-
-        n = 0;
-        for (auto edge: edge_lst) {
-            n = max<int>(n, edge.first);
-            n = max<int>(n, edge.second);
-        }
-        n += 1;
-        m = static_cast<int>(edge_lst.size());
-        cout << "total vertex#:" << n << endl;
-        cout << "total edge#:" << m << endl;
-
+    void inputGraph(FILE *f) {
+        fscanf(f, "%d%d", &n, &m);
         edge = new std::vector<int>[n];
         inedge = new std::vector<int>[n];
         for (int i = 0; i < m; ++i) {
-            int src, dst;
-            std::tie(src, dst) = edge_lst[i];
-            edge[src].push_back(dst);
-            inedge[dst].push_back(src);
+//            std::cerr << i << '/' << m << std::endl;
+            int x, y;
+            fscanf(f, "%d%d", &x, &y);
+            edge[x].push_back(y);
+            inedge[y].push_back(x);
         }
-
         for (int i = 0; i < n; ++i) {
             sort(edge[i].begin(), edge[i].end());
             sort(inedge[i].begin(), inedge[i].end());
+        }
+    }
+
+    void outputGraph(FILE *f) {
+        fprintf(f, "%d %d\n", &n, &m);
+        for (int i = 0; i < n; ++i) {
+            for (int j = 0; j < edge[i].size(); ++j) {
+                fprintf(f, "%d ", edge[i][j]);
+            }
+            fprintf(f, "\n");
         }
     }
 };
