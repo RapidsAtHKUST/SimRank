@@ -35,7 +35,7 @@ void reads::loadGraph(char *gName) {
 }
 
 void reads::constructIndices() {
-    int q0, q1;
+    int q_cur, q_end;
     vector<pair<int, int>> q;
     vector<int> pos;
     auto cc = int(RAND_MAX * sqrt(c));
@@ -47,12 +47,16 @@ void reads::constructIndices() {
     for (int i = 0; i < r; i++) { nt[i].resize(n); }
     for (int i = 0; i < r; i++) {
         q.resize(0);
+        // used for coupling or merging, if pos[p] becomes current level position, a coupling occurs; otherwise not
+        // pos[p] current level position of vertex p
         pos.assign(n, -1);
 
         // 1st
         for (int j = 0, p; j < n; j++) {
             if (!eb[j].empty()) {
-                if (pos[p = eb[j][rand() % eb[j].size()]] < 0) {
+                p = eb[j][rand() % eb[j].size()];
+                // check if vertex p first occurring for level j+1
+                if (pos[p] < 0) {
                     pos[p] = q.size();
                     q.emplace_back(p, -1);
                 }
@@ -62,30 +66,33 @@ void reads::constructIndices() {
             }
         }
 
-        // 2nd
-        q0 = 0;
-        q1 = q.size();
-        for (int j = 0, p, rr; j < t - 1 && q0 < q1; j++) {
-            for (; q0 < q1; q0++) {
-                if (!eb[q[q0].first].empty() && ((rr = rand()) < cc || j == 0)) {
-                    p = eb[q[q0].first][rr % eb[q[q0].first].size()];
-                    if (pos[p] < q1) {
+        // 2nd: further expansion
+        q_cur = 0;
+        q_end = q.size();
+        for (int j = 0, p, rr; j < t - 1 && q_cur < q_end; j++) {
+            for (; q_cur < q_end; q_cur++) {
+                auto &ele_adj_ref = eb[q[q_cur].first];
+                if (!ele_adj_ref.empty() && ((rr = rand()) < cc || j == 0)) {
+                    p = ele_adj_ref[rr % ele_adj_ref.size()];
+                    // check if vertex p first occurring for level j+1
+                    if (pos[p] < q_end) {
                         pos[p] = q.size();
                         q.emplace_back(p, -1);
                     }
-                    q[q0].second = pos[p];
+                    q[q_cur].second = pos[p];
                 }
             }
-            q1 = q.size();
+            q_end = q.size();
         }
 
         // 3rd
         tmpCnt = 0;
         for (int j = 0, qid; j < n; j++)
+            // check if vertex j has at least one in-neighbor
             if (nt[i][j] > -1) {
-                for (sta.resize(1), sta[0] = nt[i][j]; q[*sta.rbegin()].second >= 0;)
+                for (sta.resize(1), sta[0] = nt[i][j]; q[*sta.rbegin()].second >= 0;) {
                     sta.push_back(q[*sta.rbegin()].second);
-
+                }
                 if ((qid = -q[*sta.rbegin()].second - 2) < 0) {
                     q[*sta.rbegin()].second = -tmpCnt - 2;
                     tmp[tmpCnt] = pos[tmpCnt] = j;
@@ -94,11 +101,13 @@ void reads::constructIndices() {
                     nt[i][tmp[qid]] = j;
                     tmp[qid] = j;
                 }
-                for (int k = sta.size() - 2; k >= 0; k--)
+                for (int k = sta.size() - 2; k >= 0; k--) {
                     q[sta[k]].second = q[*sta.rbegin()].second;
+                }
             }
-        for (int j = 0; j < tmpCnt; j++)
+        for (int j = 0; j < tmpCnt; j++) {
             nt[i][tmp[j]] = pos[j];
+        }
     }
 
     // randomly shuffle edges
@@ -220,7 +229,6 @@ double reads::queryOne(int x, int y) {
     int match_count = 0;
     for (auto i = 0; i < r; i++) {
         if (nt[i][x] == nt[i][y]) {
-            cout << nt[i][x] << ", " << nt[i][y] << endl;
             match_count++;
         };
     }
