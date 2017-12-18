@@ -37,7 +37,8 @@ class Sling {
 
 private:
     const static int BLOCKSIZE = 1000;
-    const static int NUMTHREAD = 2;
+    static int NUMTHREAD;
+//    const static int NUMTHREAD = 2;
 
     Graph *g;
     double c;

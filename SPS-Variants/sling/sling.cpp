@@ -7,6 +7,7 @@ const double Sling::EPS = .025;
 const double Sling::BACKEPS = 7.28e-4; //EPS / 23.;
 const double Sling::DEPS = 5e-3; //EPS * 3. * 3. / 23.;
 const double Sling::K = 10.;
+int Sling::NUMTHREAD = std::thread::hardware_concurrency();
 
 void Sling::init() {
     first = new bool[g->n];
@@ -217,7 +218,7 @@ void Sling::t_calcD(double eps, mutex *lock, int *cursor, int tid) {
         lock->lock();
         i = *cursor;
         u = ((*cursor) += BLOCKSIZE);
-        cerr << "Thread " << tid << " gets tasks " << i << " to " << u - 1 << endl;
+//        cerr << "Thread " << tid << " gets tasks " << i << " to " << u - 1 << endl;
         lock->unlock();
         if (i >= g->n)
             return;
@@ -302,7 +303,7 @@ void Sling::t_backward(double eps, mutex *tasklock, int *cursor, int tid, mutex 
         tasklock->lock();
         s = *cursor;
         t = ((*cursor) += BLOCKSIZE);
-        cerr << "Thread " << tid << " gets tasks " << s << " to " << t - 1 << endl;
+//        cerr << "Thread " << tid << " gets tasks " << s << " to " << t - 1 << endl;
         tasklock->unlock();
         if (s >= g->n) return;
         if (t > g->n) t = g->n;
@@ -379,8 +380,8 @@ void Sling::backward(double eps) {
     mutex tasklock;
     int cursor = 0;
     if (!p.empty()) { p.clear(); }
-//    p.reserve(2339768660l);
-    p.reserve(233976866l);
+    p.reserve(2339768660l);
+//    p.reserve(233976866l);
     vector<thread> threads;
     for (int i = 0; i < NUMTHREAD - 1; ++i)
         threads.emplace_back(__Sling_t_backward, this, eps, &tasklock, &cursor, i, plock);
