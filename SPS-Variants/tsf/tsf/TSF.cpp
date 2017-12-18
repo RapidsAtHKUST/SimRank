@@ -1,6 +1,7 @@
-#include "TSF.h"
-
 #include <iostream>
+
+#include "TSF.h"
+#include "../util/random.h"
 
 void TSF::run(int qv, int k) {
     Time timer;
@@ -19,7 +20,9 @@ void TSF::run(int qv, int k) {
     }
     printf("Begin query ....\n");
     timer.start();
+
     query(qv, k);
+
     timer.stop();
     printf("End query cost = %.5lfs\n", timer.getElapsedTime());
 }
@@ -49,9 +52,6 @@ void TSF::query(int qv, int k) {
                     break;
                 }
             }
-        }
-        if ((sid + 1) % 100 == 0) {
-            printf("%d samples are simulated.\n", sid + 1);
         }
 
         /* 2. core: compute the similarity */
@@ -128,7 +128,6 @@ void TSF::initialize() {
                 /* insert sampled edge (sid, i, graph[i][rnum % graph[i].size()]) into a centralized index management*/
                 if (graphSrc[i] != graphSrc[i + 1]) {
                     int idx = rnum % (graphSrc[i + 1] - graphSrc[i]);
-                    //                printf("sampled edge in initialzation: (%d, %d)\n", i, graph[i][idx]);
                     gsm->insertEdge(sid, i, graphDst[graphSrc[i] + idx]);
                 }
             }

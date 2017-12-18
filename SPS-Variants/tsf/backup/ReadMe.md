@@ -1,11 +1,3 @@
-## Play
-
-```zsh
-cmake-build-debug/tsf ../READS/datasets/cloud_walker.txt
-```
-
-however, sim value not correct
-
 ## One-Way Graph Index
 
 ```cpp

@@ -5,15 +5,17 @@
 #ifndef __SIMRANKMETHOD_H__
 #define __SIMRANKMETHOD_H__
 
-#include "config.h"
+#include <vector>
 #include "simrankvalue.hpp"
+
+using namespace std;
 
 class SimRankMethod {
 public:
     SimRankMethod(int maxsteps, int samplenum, double decayfactor) :
             maxSteps(maxsteps), sampleNum(samplenum), decayFactor(decayfactor) { firstRun = true; }
 
-    virtual ~SimRankMethod() {};
+    virtual ~SimRankMethod() = default;;
 
     virtual void run(int qv, int k) = 0;
 

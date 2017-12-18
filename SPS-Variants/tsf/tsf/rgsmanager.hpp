@@ -1,13 +1,18 @@
 #ifndef __RGSMANAGER_H__
 #define __RGSMANAGER_H__
 
-#include "../config.h"
-#include "gsinterface.h"
+#include <cmath>
+
+#include <map>
+#include <algorithm>
+
 #include "rsamplegraph.hpp"
+#include "simrankvalue.hpp"
+#include "../util/mytime.h"
 
 using namespace std;
 
-class RGSManager : public GSInterface {
+class RGSManager {
 public:
     RGSManager(int sn, int mvid, bool isfm) :
             sampleGraphNum(sn), maxVertexId(mvid), isFm(isfm) {
@@ -17,18 +22,22 @@ public:
         }
     }
 
-    ~RGSManager() override {
+    ~RGSManager() {
         for (int i = 0; i < sampleGraphNum; ++i)
             delete rsg[i];
         delete[] rsg;
     }
 
-    void insertEdge(int sid, int src, int dst) override {
+    void insertEdge(int sid, int src, int dst) {
         /*revserse the edge (src, dst) here. */
+#ifdef SINGLE_SOURCE
         rsg[sid]->addEdge(dst, src);
+#else
+        rsg[sid]->addEdge(src, dst);
+#endif
     }
 
-    void analysis() override {
+    void analysis() {
         double totalMemCost = 0;
         for (int i = 0; i < sampleGraphNum; ++i) {
             rsg[i]->preprocess();
@@ -38,7 +47,7 @@ public:
     }
 
     void computeSimrank(int sid, vector<SimRankValue> &sim, map<int, vector<pair<int, int>> *> &timestamp, int maxSteps,
-                        double df, int qv, int sqn) override {
+                        double df, int qv, int sqn) {
         map<int, vector<pair<int, int> > *> meetmap;
 
         double buildCost = 0.0;
@@ -139,11 +148,13 @@ public:
         }
     }
 
+public:
+    RSampleGraph **rsg;
+
 private:
     int sampleGraphNum;
     int maxVertexId;
     bool isFm;
-    RSampleGraph **rsg;
 };
 
 #endif

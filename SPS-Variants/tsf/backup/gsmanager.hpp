@@ -1,7 +1,7 @@
 #ifndef __GSMANAGER_H__
 #define __GSMANAGER_H__
 
-#include "../config.h"
+#include "config.h"
 #include "gsinterface.h"
 
 /**

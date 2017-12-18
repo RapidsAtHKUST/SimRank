@@ -1,9 +1,7 @@
 #ifndef __TSF_H__
 #define __TSF_H__
 
-#include "../config.h"
-#include "../simrankmethod.h"
-#include "gsmanager.hpp"
+#include "simrankmethod.h"
 #include "rgsmanager.hpp"
 
 class TSF : public SimRankMethod {
@@ -19,11 +17,13 @@ public:
         delete gsm;
     }
 
+    double querySinglePair(int u, int v);
+
     virtual void run(int qv, int k);
 
-    void update(int src, int dst) {
-        gsm->update(src, dst);
-    }
+//    void update(int src, int dst) {
+//        gsm->update(src, dst);
+//    }
 
     void setSampleQueryNum(int sqn) { sampleQueryNum = sqn; }
 
@@ -53,7 +53,7 @@ private:
     int *graphDst;
     int uDisk;
     int maxVertexId;
-    GSInterface *gsm;
+    RGSManager *gsm;
 };
 
 #endif

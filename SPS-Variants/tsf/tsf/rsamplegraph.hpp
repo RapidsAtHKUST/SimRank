@@ -8,12 +8,15 @@
 #ifndef __RSAMPLEGRAPH_HPP__
 #define __RSAMPLEGRAPH_HPP__
 
+#include <cstring>
+#include <queue>
+
 /**
  * Store a one-way graph
  */
 class RSampleGraph {
 public:
-    RSampleGraph() : src(NULL), dst(NULL), maxVertexId(0), edgeNum(0) {}
+    RSampleGraph() : src(nullptr), dst(nullptr), maxVertexId(0), edgeNum(0) {}
 
     explicit RSampleGraph(int mid) : maxVertexId(mid), edgeNum(0) {
         src = new int[maxVertexId];
@@ -26,8 +29,8 @@ public:
     }
 
     void preprocess() {
-        int *cnt = new int[maxVertexId + 1];
-        int *tmp = new int[edgeNum];
+        auto *cnt = new int[maxVertexId + 1];
+        auto *tmp = new int[edgeNum];
         memset(cnt, 0, sizeof(int) * (maxVertexId + 1));
 
         /* sorting */
@@ -42,8 +45,7 @@ public:
             if (cnt[i] == 0) leafNum++;
             cnt[i] += cnt[i - 1];
         }/* NOTE: this is end point*/
-        if (cnt[0] == 0) leafNum++;
-        //     printf("\tvid=%d, cnt=%d\n", 0, cnt[0]);
+
         for (i = 0; i < edgeNum; ++i) {
             --cnt[src[i]];
             tmp[cnt[src[i]]] = dst[i];

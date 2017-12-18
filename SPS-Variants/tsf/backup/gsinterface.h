@@ -5,8 +5,8 @@
 #ifndef __GSINTERFACE_H__
 #define __GSINTERFACE_H__
 
-#include "../config.h"
-#include "../simrankvalue.hpp"
+#include "config.h"
+#include "../tsf/simrankvalue.hpp"
 
 class GSInterface {
 public:

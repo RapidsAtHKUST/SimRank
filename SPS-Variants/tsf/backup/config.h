@@ -13,8 +13,8 @@
 #include <algorithm>
 #include <utility>
 
-#include "mytime.h"
-#include "random.h"
+#include "../util/mytime.h"
+#include "../util/random.h"
 
 using namespace std;
 

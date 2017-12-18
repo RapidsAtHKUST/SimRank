@@ -79,5 +79,7 @@ void InitGraph(string &file_path, vector<int> &off, vector<int> &dst_v) {
         cur_off_ref += 1;
     }
 
+#ifdef DEBUG
     cout << "total vertex number:" << n << endl;
+#endif
 }
