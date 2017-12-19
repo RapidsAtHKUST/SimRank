@@ -18,7 +18,7 @@ target_include_directories(blpmc PRIVATE ../sparsehash-yche/include)
 target_include_directories(blpmc PRIVATE ../sparsepp)
 # comment out irrelevant dependency
 # target_include_directories(blpmc PRIVATE ../eigen)
-target_compile_options(blpmc PRIVATE -O3)
+target_compile_options(blpmc PRIVATE -O3 -g)
 
 
 # compile for FLPMC
@@ -35,4 +35,4 @@ target_include_directories(flpmc PRIVATE ../sparsehash-yche/include)
 target_include_directories(flpmc PRIVATE ../sparsepp)
 # comment out irrelevant dependency
 # target_include_directories(flpmc PRIVATE ../eigen)
-target_compile_options(flpmc PRIVATE -O3)
+target_compile_options(flpmc PRIVATE -O3 -g)
