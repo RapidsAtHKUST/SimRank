@@ -1,0 +1,42 @@
+[
+{
+  "directory": "/homes/ywangby/workspace/yche/git-repos/SimRank/LPMC",
+  "command": "/bin/c++   -I/usr/local/include -I/homes/ywangby/workspace/yche/git-repos/SimRank/LPMC/../include -I/homes/ywangby/workspace/yche/git-repos/SimRank/LPMC/../sparsehash-yche/include -I/homes/ywangby/workspace/yche/git-repos/SimRank/LPMC/../sparsepp    -O3 -g -std=gnu++11 -o CMakeFiles/flpmc.dir/graph.cpp.o -c /homes/ywangby/workspace/yche/git-repos/SimRank/LPMC/graph.cpp",
+  "file": "/homes/ywangby/workspace/yche/git-repos/SimRank/LPMC/graph.cpp"
+},
+{
+  "directory": "/homes/ywangby/workspace/yche/git-repos/SimRank/LPMC",
+  "command": "/bin/c++   -I/usr/local/include -I/homes/ywangby/workspace/yche/git-repos/SimRank/LPMC/../include -I/homes/ywangby/workspace/yche/git-repos/SimRank/LPMC/../sparsehash-yche/include -I/homes/ywangby/workspace/yche/git-repos/SimRank/LPMC/../sparsepp    -O3 -g -std=gnu++11 -o CMakeFiles/flpmc.dir/stat.cpp.o -c /homes/ywangby/workspace/yche/git-repos/SimRank/LPMC/stat.cpp",
+  "file": "/homes/ywangby/workspace/yche/git-repos/SimRank/LPMC/stat.cpp"
+},
+{
+  "directory": "/homes/ywangby/workspace/yche/git-repos/SimRank/LPMC",
+  "command": "/bin/c++   -I/usr/local/include -I/homes/ywangby/workspace/yche/git-repos/SimRank/LPMC/../include -I/homes/ywangby/workspace/yche/git-repos/SimRank/LPMC/../sparsehash-yche/include -I/homes/ywangby/workspace/yche/git-repos/SimRank/LPMC/../sparsepp    -O3 -g -std=gnu++11 -o CMakeFiles/flpmc.dir/local_push.cpp.o -c /homes/ywangby/workspace/yche/git-repos/SimRank/LPMC/local_push.cpp",
+  "file": "/homes/ywangby/workspace/yche/git-repos/SimRank/LPMC/local_push.cpp"
+},
+{
+  "directory": "/homes/ywangby/workspace/yche/git-repos/SimRank/LPMC",
+  "command": "/bin/c++   -I/usr/local/include -I/homes/ywangby/workspace/yche/git-repos/SimRank/LPMC/../include -I/homes/ywangby/workspace/yche/git-repos/SimRank/LPMC/../sparsehash-yche/include -I/homes/ywangby/workspace/yche/git-repos/SimRank/LPMC/../sparsepp    -O3 -g -std=gnu++11 -o CMakeFiles/flpmc.dir/flpmc.cpp.o -c /homes/ywangby/workspace/yche/git-repos/SimRank/LPMC/flpmc.cpp",
+  "file": "/homes/ywangby/workspace/yche/git-repos/SimRank/LPMC/flpmc.cpp"
+},
+{
+  "directory": "/homes/ywangby/workspace/yche/git-repos/SimRank/LPMC",
+  "command": "/bin/c++   -I/usr/local/include -I/homes/ywangby/workspace/yche/git-repos/SimRank/LPMC/../include -I/homes/ywangby/workspace/yche/git-repos/SimRank/LPMC/../sparsehash-yche/include -I/homes/ywangby/workspace/yche/git-repos/SimRank/LPMC/../sparsepp    -O3 -g -std=gnu++11 -o CMakeFiles/blpmc.dir/bprw.cpp.o -c /homes/ywangby/workspace/yche/git-repos/SimRank/LPMC/bprw.cpp",
+  "file": "/homes/ywangby/workspace/yche/git-repos/SimRank/LPMC/bprw.cpp"
+},
+{
+  "directory": "/homes/ywangby/workspace/yche/git-repos/SimRank/LPMC",
+  "command": "/bin/c++   -I/usr/local/include -I/homes/ywangby/workspace/yche/git-repos/SimRank/LPMC/../include -I/homes/ywangby/workspace/yche/git-repos/SimRank/LPMC/../sparsehash-yche/include -I/homes/ywangby/workspace/yche/git-repos/SimRank/LPMC/../sparsepp    -O3 -g -std=gnu++11 -o CMakeFiles/blpmc.dir/graph.cpp.o -c /homes/ywangby/workspace/yche/git-repos/SimRank/LPMC/graph.cpp",
+  "file": "/homes/ywangby/workspace/yche/git-repos/SimRank/LPMC/graph.cpp"
+},
+{
+  "directory": "/homes/ywangby/workspace/yche/git-repos/SimRank/LPMC",
+  "command": "/bin/c++   -I/usr/local/include -I/homes/ywangby/workspace/yche/git-repos/SimRank/LPMC/../include -I/homes/ywangby/workspace/yche/git-repos/SimRank/LPMC/../sparsehash-yche/include -I/homes/ywangby/workspace/yche/git-repos/SimRank/LPMC/../sparsepp    -O3 -g -std=gnu++11 -o CMakeFiles/blpmc.dir/main.cpp.o -c /homes/ywangby/workspace/yche/git-repos/SimRank/LPMC/main.cpp",
+  "file": "/homes/ywangby/workspace/yche/git-repos/SimRank/LPMC/main.cpp"
+},
+{
+  "directory": "/homes/ywangby/workspace/yche/git-repos/SimRank/LPMC",
+  "command": "/bin/c++   -I/usr/local/include -I/homes/ywangby/workspace/yche/git-repos/SimRank/LPMC/../include -I/homes/ywangby/workspace/yche/git-repos/SimRank/LPMC/../sparsehash-yche/include -I/homes/ywangby/workspace/yche/git-repos/SimRank/LPMC/../sparsepp    -O3 -g -std=gnu++11 -o CMakeFiles/blpmc.dir/stat.cpp.o -c /homes/ywangby/workspace/yche/git-repos/SimRank/LPMC/stat.cpp",
+  "file": "/homes/ywangby/workspace/yche/git-repos/SimRank/LPMC/stat.cpp"
+}
+]

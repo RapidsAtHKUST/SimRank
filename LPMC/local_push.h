@@ -19,7 +19,7 @@
 using boost::format;
 const string LOCAL_PUSH_DIR = "./datasets/local_push/";
 
-extern double cal_rmax(DirectedG &g, double c, double epsilon, double delta);//calculate r_,max
+extern double cal_rmax(DirectedG &g, double c, double epsilon, double delta); //calculate r_,max
 
 extern double cal_rmax(double c, double epsilon); // the r_max for general case
 

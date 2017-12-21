@@ -19,8 +19,8 @@
 #include <boost/graph/adjacency_list.hpp>
 #include <boost/multi_array.hpp>
 
-//#include <Eigen/Dense>
-//#include <Eigen/Sparse>
+#include <Eigen/Dense>
+#include <Eigen/Sparse>
 #include <sparsepp/spp.h>
 #include <sparsehash/dense_hash_map>
 
@@ -30,7 +30,7 @@
 #define SPP_MIX_HASH
 using namespace boost;
 using namespace std;
-//using namespace Eigen;
+using namespace Eigen;
 using spp::sparse_hash_map;
 using spp::sparse_hash_set;
 using google::dense_hash_map;
@@ -208,31 +208,31 @@ extern void show_graph(DirectedG &g);
 
 extern string get_edge_list_path(string s);
 
-//extern void indegree_mat(const DirectedG &g, SparseMatrix<float> &P);// column normalized adjacency matrix
+extern void indegree_mat(const DirectedG &g, SparseMatrix<float> &P);// column normalized adjacency matrix
 
 // enhance Eigen I/O
-//namespace Eigen {
-//    template<class Matrix>
-//    void write_binary(const char *filename, const Matrix &matrix) {
-//        std::ofstream out(filename, ios::out | ios::binary | ios::trunc);
-//        typename Matrix::Index rows = matrix.rows(), cols = matrix.cols();
-//        out.write((char *) (&rows), sizeof(typename Matrix::Index));
-//        out.write((char *) (&cols), sizeof(typename Matrix::Index));
-//        out.write((char *) matrix.data(), rows * cols * sizeof(typename Matrix::Scalar));
-//        out.close();
-//    }
-//
-//    template<class Matrix>
-//    void read_binary(const char *filename, Matrix &matrix) {
-//        std::ifstream in(filename, ios::in | std::ios::binary);
-//        typename Matrix::Index rows = 0, cols = 0;
-//        in.read((char *) (&rows), sizeof(typename Matrix::Index));
-//        in.read((char *) (&cols), sizeof(typename Matrix::Index));
-//        matrix.resize(rows, cols);
-//        in.read((char *) matrix.data(), rows * cols * sizeof(typename Matrix::Scalar));
-//        in.close();
-//    }
-//} // Eigen::
+namespace Eigen {
+    template<class Matrix>
+    void write_binary(const char *filename, const Matrix &matrix) {
+        std::ofstream out(filename, ios::out | ios::binary | ios::trunc);
+        typename Matrix::Index rows = matrix.rows(), cols = matrix.cols();
+        out.write((char *) (&rows), sizeof(typename Matrix::Index));
+        out.write((char *) (&cols), sizeof(typename Matrix::Index));
+        out.write((char *) matrix.data(), rows * cols * sizeof(typename Matrix::Scalar));
+        out.close();
+    }
+
+    template<class Matrix>
+    void read_binary(const char *filename, Matrix &matrix) {
+        std::ifstream in(filename, ios::in | std::ios::binary);
+        typename Matrix::Index rows = 0, cols = 0;
+        in.read((char *) (&rows), sizeof(typename Matrix::Index));
+        in.read((char *) (&cols), sizeof(typename Matrix::Index));
+        matrix.resize(rows, cols);
+        in.read((char *) matrix.data(), rows * cols * sizeof(typename Matrix::Scalar));
+        in.close();
+    }
+} // Eigen::
 
 // sample in-neighbor
 extern int sample_in_neighbor(int a, DirectedG &g);
