@@ -261,7 +261,7 @@ int BackPush::sample_one_pair(NodePair np) {
         }
         // a != b
         // cout << prob << endl;
-        prob = rand_gen.drand();
+        prob = rand_gen.double_rand();
 
         if (prob < c) {
             // keep on moving
@@ -323,12 +323,3 @@ data_item residual_set::pop() { // pop a random element
     sum -= d.residual;
     return d;
 }
-
-
-
-
-
-
-
-
-

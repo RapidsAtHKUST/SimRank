@@ -145,7 +145,6 @@ public:
 
 #endif
 
-
     double keep_push_cost(unique_max_heap &heap); // compute the cost is we push one-step further
     double change_to_MC_cost(unique_max_heap &heap); // compute the cost if we turn to random walk  
     size_t number_of_walkers(double sum); // compute the number of random walkers, given current sum

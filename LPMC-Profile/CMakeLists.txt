@@ -13,7 +13,7 @@ if (OPENMP_FOUND)
 endif ()
 
 # compile for BLPMC
-set(BLPMC_SOURCE_FILES bprw.cpp bprw.h file_serialization.h graph.cpp graph.h main.cpp stat.cpp stat.h ../SFMT/SFMT.c)
+set(BLPMC_SOURCE_FILES bprw.cpp bprw.h util/file_serialization.h graph.cpp graph.h main.cpp util/stat.cpp util/stat.h ../SFMT/SFMT.c util/sfmt_based_rand.h)
 
 add_executable(blpmc ${BLPMC_SOURCE_FILES})
 
@@ -41,7 +41,7 @@ target_compile_options(blpmc-std PRIVATE -O3 -g -DSFMT_MEXP=607 -msse2 -DHAVE_SS
 target_compile_definitions(blpmc-std PRIVATE -DDEBUG=1)
 
 # compile for BLPMC-ap, all pair just for profiling
-add_executable(blpmc-ap bprw.cpp bprw.h file_serialization.h graph.cpp graph.h main_test_all_pair.cpp stat.cpp stat.h ../SFMT/SFMT.c)
+add_executable(blpmc-ap bprw.cpp bprw.h util/file_serialization.h graph.cpp graph.h playground/main_test_all_pair.cpp util/stat.cpp util/stat.h ../SFMT/SFMT.c)
 if (Boost_FOUND)
     message(${Boost_INCLUDE_DIRS})
     target_include_directories(blpmc-ap PRIVATE ${Boost_INCLUDE_DIRS})
@@ -53,7 +53,7 @@ target_compile_options(blpmc-ap PRIVATE -O3 -g -DSFMT_MEXP=607 -msse2 -DHAVE_SSE
 target_compile_definitions(blpmc-ap PRIVATE -DSFMT=1)
 
 # compile for FLPMC
-set(FLPMC_SOURCE_FILES file_serialization.h graph.cpp graph.h stat.cpp stat.h local_push.h local_push.cpp flpmc.cpp flpmc.h ../SFMT/SFMT.c)
+set(FLPMC_SOURCE_FILES util/file_serialization.h graph.cpp graph.h util/stat.cpp util/stat.h local_push.h local_push.cpp flpmc.cpp flpmc.h ../SFMT/SFMT.c)
 
 add_executable(flpmc ${FLPMC_SOURCE_FILES})
 
@@ -64,7 +64,7 @@ endif ()
 target_include_directories(flpmc PRIVATE ../sparsehash-yche/include)
 target_include_directories(flpmc PRIVATE ../sparsepp)
 target_include_directories(flpmc PRIVATE ../SFMT)
-target_compile_options(flpmc PRIVATE -O3 -g)
+target_compile_options(flpmc PRIVATE -O3 -g -DSFMT_MEXP=607 -msse2 -DHAVE_SSE2)
 target_link_libraries(flpmc PRIVATE ${Boost_LIBRARIES})
 #target_compile_definitions(flpmc PRIVATE -DSFMT=1)
 
