@@ -1,4 +1,8 @@
 //
+// Created by yche on 12/20/17.
+//
+
+//
 // Created by yche on 11/19/17.
 //
 
@@ -30,22 +34,31 @@ int main(int argc, char *argv[]) {
 //    sling_algo.calcD(0.005);
     sling_algo.calcD(0.002);
     tmp_end = std::chrono::high_resolution_clock::now();
-    cout << "finish calcD " << duration_cast<microseconds>(tmp_end - tmp_start).count() << " us\n";
+    cout << "finish calcD " << float(duration_cast<microseconds>(tmp_end - tmp_start).count()) / (pow(10, 6))
+         << " s\n";
 
     tmp_start = std::chrono::high_resolution_clock::now();
 //    sling_algo.backward(0.000725);
     sling_algo.backward(0.00029);
-    tmp_end = std::chrono::high_resolution_clock::now();
-    cout << "finish backward " << duration_cast<microseconds>(tmp_end - tmp_start).count() << " us\n";
 
-    int u = atoi(argv[3]);
-    int v = atoi(argv[4]);
+    tmp_end = std::chrono::high_resolution_clock::now();
+    cout << "finish backward " << float(duration_cast<microseconds>(tmp_end - tmp_start).count()) / (pow(10, 6))
+         << " s\n";
+
+//    int u = atoi(argv[3]);
+//    int v = atoi(argv[4]);
 
     tmp_start = std::chrono::high_resolution_clock::now();
-    double result = sling_algo.simrank(u, v);
+#pragma omp parallel for schedule(dynamic, 1)
+    for (auto u = 0; u < sling_algo.g->n; u++) {
+        for (auto v = u; v < sling_algo.g->n; v++) {
+            sling_algo.simrank(u, v);
+        }
+    }
+
     tmp_end = std::chrono::high_resolution_clock::now();
 
-    cout << result << std::endl;
+//    cout << result << std::endl;
     cout << "query time:"
-         << duration_cast<microseconds>(tmp_end - tmp_start).count() << " us\n";
+         << float(duration_cast<microseconds>(tmp_end - tmp_start).count()) / (pow(10, 6)) << " s\n";
 }

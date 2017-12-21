@@ -15,9 +15,10 @@ using namespace std::chrono;
 
 int main(int argc, char *argv[]) {
     auto decayFactor = 0.6;
-    auto stepNum = 15;
+    auto stepNum = 11;
     auto sampleNum = 100;
-    auto sampleQueryNum = 100;
+    auto sampleQueryNum = 43;
+//    auto sampleQueryNum = 5000;
 
     vector<int> graph_src_vec;
     vector<int> graph_dst_vec;

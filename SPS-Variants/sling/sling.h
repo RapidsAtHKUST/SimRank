@@ -40,7 +40,6 @@ private:
     static int NUMTHREAD;
 //    const static int NUMTHREAD = 2;
 
-    Graph *g;
     double c;
     double sqrtc;
     double sqrtct[20];
@@ -72,6 +71,8 @@ private:
     void t_backward(double eps, mutex *tasklock, int *cursor, int tid, mutex *plock);
 
 public:
+    Graph *g;
+
     vector<tuple<int, int, int, double>> p;
     vector<long long> pstart;
     double *d;
