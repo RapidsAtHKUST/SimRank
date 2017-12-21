@@ -102,7 +102,7 @@ vector<double> &SerialRevNaiveSim::ComputeSim(int max_iter, double eps, double c
         for (int a = 0u; a < n; a++) { cur_sim_mat[a * n + a] = 1.0; }
 
         // prepare cur_sim_mat
-#pragma omp parallel for
+#pragma omp parallel for schedule(dynamic, 1)
         for (auto a = 0; a < n; a++) {
             for (auto b = 0; b < n; b++) {
                 // back propagation from position (a,b)

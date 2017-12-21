@@ -106,9 +106,11 @@ vector<double> &SerialNaiveSim::ComputeSim(int max_iter, double eps, double c) {
         for (int a = 0u; a < n; a++) { cur_sim_mat[a * n + a] = 1.0; }
 
         // prepare cur_sim_mat
+//#pragma omp parallel
         for (auto a = 0; a < n; a++) {
             for (auto b = 0; b < n; b++) {
                 // diffuse from position (a,b)
+//#pragma omp for
                 for (auto off_a = off[a]; off_a < off[a + 1]; off_a++) {
                     auto nei_a = dst_v[off_a];
                     for (auto off_b = off[b]; off_b < off[b + 1]; off_b++) {
