@@ -31,14 +31,19 @@ int main(int argc, char *argv[]) {
     cout << "indexing..." << endl;
 
     tmp_start = std::chrono::high_resolution_clock::now();
-    sling_algo.calcD(0.005);
+//    sling_algo.calcD(0.005);
+    sling_algo.calcD(0.002);
     tmp_end = std::chrono::high_resolution_clock::now();
-    cout << "finish calcD " << duration_cast<microseconds>(tmp_end - tmp_start).count() << " us\n";
+    cout << "finish calcD " << float(duration_cast<microseconds>(tmp_end - tmp_start).count()) / (pow(10, 6))
+         << " s\n";
 
     tmp_start = std::chrono::high_resolution_clock::now();
-    sling_algo.backward(0.000725);
+//    sling_algo.backward(0.000725);
+    sling_algo.backward(0.00029);
+
     tmp_end = std::chrono::high_resolution_clock::now();
-    cout << "finish backward " << duration_cast<microseconds>(tmp_end - tmp_start).count() << " us\n";
+    cout << "finish backward " << float(duration_cast<microseconds>(tmp_end - tmp_start).count()) / (pow(10, 6))
+         << " s\n";
 
 //    int u = atoi(argv[3]);
 //    int v = atoi(argv[4]);
@@ -55,5 +60,5 @@ int main(int argc, char *argv[]) {
 
 //    cout << result << std::endl;
     cout << "query time:"
-         << duration_cast<microseconds>(tmp_end - tmp_start).count() << " us\n";
+         << float(duration_cast<microseconds>(tmp_end - tmp_start).count()) / (pow(10, 6)) << " s\n";
 }

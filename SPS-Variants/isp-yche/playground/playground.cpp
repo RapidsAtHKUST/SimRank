@@ -25,5 +25,16 @@ void PlaySpareHashMap() {
 }
 
 int main() {
-    PlaySpareHashMap();
+//    PlaySpareHashMap();
+
+    auto my_vec = vector<int>{0, 1, 2, 5};
+    auto iter_beg = begin(my_vec);
+    auto iter_end = end(my_vec);
+    cout << "size:" << std::distance(iter_beg, iter_end) << endl;
+
+    for (auto i = 0; i < my_vec.size(); i++) {
+        auto iter = begin(my_vec);
+        std::advance(iter, i);
+        cout << *iter << endl;
+    }
 }
