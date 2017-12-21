@@ -19,6 +19,11 @@ struct heap_data {
         g_ptr = &g;
     }
 
+//    heap_data(NodePair np_, double residual_) {
+//        np = np_;
+//        residual = residual_;
+//    }
+
     bool operator<(heap_data const &rhs) const { // doesn't change the memebr
         // return residual < rhs.residual;
         return get_priority() < rhs.get_priority();
@@ -26,7 +31,9 @@ struct heap_data {
 
     double get_priority() const {
         auto indeg_a = in_degree(np.first, *g_ptr);
+//        auto indeg_a = in_degree(np.first, *global_g_ptr);
         auto indeg_b = in_degree(np.second, *g_ptr);
+//        auto indeg_b = in_degree(np.second, *global_g_ptr);
         auto total_indeg = indeg_a * indeg_b;
         if (total_indeg == 0 || np.first == np.second) {
             // no in-neighbor or singleton nodes 
