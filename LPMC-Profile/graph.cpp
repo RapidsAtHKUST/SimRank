@@ -74,6 +74,7 @@ string get_edge_list_path(string s) {
 //    }
 //}
 
+#if !defined(SFMT)
 int sample_in_neighbor(int a, DirectedG &g) {
     // sample one in-neighbor of node a in g
     auto in_deg = in_degree(a, g);
@@ -85,3 +86,17 @@ int sample_in_neighbor(int a, DirectedG &g) {
         return -1;
     }
 }
+#else
+
+int sample_in_neighbor(int a, DirectedG &g, SFMTRand &sfmt_rand_gen) {
+    auto in_deg = in_degree(a, g);
+    if (in_deg > 0) {
+        DirectedG::in_edge_iterator in_edge_iter, in_edge_end;
+        tie(in_edge_iter, in_edge_end) = in_edges(a, g);
+        return source(*select_randomly_sfmt(in_edge_iter, in_edge_end, sfmt_rand_gen), g);
+    } else {
+        return -1;
+    }
+}
+
+#endif

@@ -31,7 +31,7 @@ void test_bp(string data_name, double c, double epsilon, double delta) {
     {
         auto bprw = BackPush(data_name, g, c, epsilon, delta);
 #pragma omp for schedule(dynamic, 1)
-        for (auto i = 0u; i < 100; i++) {
+        for (auto i = 0u; i < n; i++) {
             for (auto j = i; j < n; j++) {
                 auto q = pair<uint32_t, uint32_t>(i, j);
                 bprw.query_one2one(q);

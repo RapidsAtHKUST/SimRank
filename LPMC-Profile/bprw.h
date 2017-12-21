@@ -46,7 +46,7 @@ struct data_item {
     NodePair np;
     double residual;
 
-    data_item() {}
+    data_item() = default;
 
     data_item(NodePair np_, double r_) : np(np_), residual(r_) {}
 };
@@ -122,6 +122,9 @@ struct BackPush { // Backward Push
     double fail_prob; // delta
     unique_max_heap heap; // the heap contains residuals
     residual_set set_residual; // the set containing residuals for random push
+
+    SFMTRand rand_gen;
+public:
     // public methods
     BackPush(string g_name_, DirectedG &graph, double c_, double epsilon_, double delta_);
 
@@ -131,8 +134,18 @@ struct BackPush { // Backward Push
     double random_bp(NodePair np, double rsum); // backward local push by random
     double MC_random_walk(); // perform random walks based on current residuals in the heap
     double query_one2one(NodePair np); // query single-pair SimRank scores
+
+#if !defined(SFMT)
+
     int sample_one_pair(NodePair np, std::default_random_engine &generator,
                         std::uniform_real_distribution<double> &dist); // sample one pair of random walk
+#else
+
+    int sample_one_pair(NodePair np);
+
+#endif
+
+
     double keep_push_cost(unique_max_heap &heap); // compute the cost is we push one-step further
     double change_to_MC_cost(unique_max_heap &heap); // compute the cost if we turn to random walk  
     size_t number_of_walkers(double sum); // compute the number of random walkers, given current sum

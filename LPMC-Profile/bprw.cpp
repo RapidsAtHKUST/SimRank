@@ -154,8 +154,10 @@ double BackPush::MC_random_walk() { // perform random walks based on current res
         return 0;
     }
 
+#if !defined(SFMT)
     std::default_random_engine generator;
     std::uniform_real_distribution<double> distribution(0.0, 1.0);
+#endif
 
     // sample according to the residual distribution, whether they meet
     auto begin = heap.heap.begin();
@@ -173,7 +175,11 @@ double BackPush::MC_random_walk() { // perform random walks based on current res
             // int n = ceil(residual * N / r_sum);
             total_num_samples += n;
             for (int i = 0; i < n; i++) {
+#if !defined(SFMT)
                 int indicator = sample_one_pair((*it).np, generator, distribution);
+#else
+                int indicator = sample_one_pair((*it).np);
+#endif
                 meeting_count += indicator;
             }
             // cout << "starting from " << (*it).np << " " << n << " samples. " << " meeting times " << meeting_count<<  endl; 
@@ -184,15 +190,16 @@ double BackPush::MC_random_walk() { // perform random walks based on current res
         cout << format("total meeting hits %s") % meeting_count << endl;
 #endif
         mc_estimate = r_sum * meeting_count / double(total_num_samples);
-#ifdef DEBU
+#ifdef DEBUG
         cout << format("Total samples: %s, MC estimate: %s") % total_num_samples % mc_estimate << endl;
 #endif
         return mc_estimate;
     } else { // no samples
         return 0;
     }
-
 }
+
+#if !defined(SFMT)
 
 int BackPush::sample_one_pair(NodePair np, std::default_random_engine &generator,
                               std::uniform_real_distribution<double> &distribution) {
@@ -237,6 +244,54 @@ int BackPush::sample_one_pair(NodePair np, std::default_random_engine &generator
     // cout << "indicator " << indicator << endl;
     return indicator;
 }
+#else
+
+int BackPush::sample_one_pair(NodePair np) {
+    // sample for one pair of random walk, with (1-c) stop probability
+    int a = np.first;
+    int b = np.second;
+    double prob;
+    int indicator = 0;
+    // vector<int> path_a{a};
+    // vector<int> path_b{b};
+    while (true) {
+        if (a == b) {
+            indicator = 1;
+            break;
+        }
+        // a != b
+        // cout << prob << endl;
+        prob = rand_gen.drand();
+
+        if (prob < c) {
+            // keep on moving
+            a = sample_in_neighbor(a, *g, rand_gen);
+            b = sample_in_neighbor(b, *g, rand_gen);
+            // path_a.push_back(a);
+            // path_b.push_back(b);
+            if (a == -1 || b == -1) {
+                break;
+            }
+        } else { // stop
+            break;
+        }
+    }
+    // cout << "path a:" ;
+    // for(auto & item:path_a){
+    //     cout << item << " ";
+    // }
+    // cout << endl;
+    // cout << "path b:" ;
+    // for(auto & item:path_b){
+    //     cout << item << " ";
+    // }
+    // cout << endl;
+    // cout << "indicator " << indicator << endl;
+    return indicator;
+}
+
+#endif
+
 
 size_t residual_set::size() const {
     return hash_d.size();

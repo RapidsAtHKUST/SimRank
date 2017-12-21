@@ -24,6 +24,8 @@
 #include <sparsepp/spp.h>
 #include <sparsehash/dense_hash_map>
 
+#include <SFMT.h>
+
 #include "file_serialization.h"
 #include "stat.h"
 
@@ -48,7 +50,20 @@ extern vector<string> DATA_NAME;
 // types definition
 typedef boost::adjacency_list<vecS, vecS, bidirectionalS> DirectedG;
 typedef pair<unsigned int, unsigned int> NodePair;
-typedef boost::multi_array<double, 2> SimRank_matrix;
+//typedef boost::multi_array<double, 2> SimRank_matrix;
+
+class SFMTRand {
+private:
+    sfmt_t rand_mt;
+public:
+    SFMTRand() { sfmt_init_gen_rand(&rand_mt, std::rand()); }
+
+    // [0, 2^32)
+    uint32_t rand() { return sfmt_genrand_uint32(&rand_mt); }
+
+    // [0,1)
+    double drand() { return sfmt_genrand_real2(&rand_mt); }
+};
 
 template<typename Iter, typename RandomGenerator>
 Iter select_randomly(Iter start, Iter end, RandomGenerator &g) {
@@ -62,6 +77,14 @@ Iter select_randomly(Iter start, Iter end) {
     static std::random_device rd;
     static std::mt19937 gen(rd());
     return select_randomly(start, end, gen);
+}
+
+//  randomly choose [start_iter, end_iter)
+template<typename Iter>
+Iter select_randomly_sfmt(Iter start, Iter end, SFMTRand &sfmt_rand_gen) {
+    auto advance_step = sfmt_rand_gen.rand() % (std::distance(start, end));
+    std::advance(start, advance_step);
+    return start;
 }
 
 namespace std {
@@ -235,6 +258,13 @@ extern string get_edge_list_path(string s);
 //} // Eigen::
 
 // sample in-neighbor
+
+#if !defined(SFMT)
 extern int sample_in_neighbor(int a, DirectedG &g);
+#else
+
+extern int sample_in_neighbor(int a, DirectedG &g, SFMTRand &sfmt_rand_gen);
+
+#endif
 
 #endif

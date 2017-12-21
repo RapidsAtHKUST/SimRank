@@ -13,7 +13,7 @@ if (OPENMP_FOUND)
 endif ()
 
 # compile for BLPMC
-set(BLPMC_SOURCE_FILES bprw.cpp bprw.h file_serialization.h graph.cpp graph.h main.cpp stat.cpp stat.h)
+set(BLPMC_SOURCE_FILES bprw.cpp bprw.h file_serialization.h graph.cpp graph.h main.cpp stat.cpp stat.h ../SFMT/SFMT.c)
 
 add_executable(blpmc ${BLPMC_SOURCE_FILES})
 
@@ -23,20 +23,37 @@ if (Boost_FOUND)
 endif ()
 target_include_directories(blpmc PRIVATE ../sparsehash-yche/include)
 target_include_directories(blpmc PRIVATE ../sparsepp)
-target_compile_options(blpmc PRIVATE -O3 -g)
+target_include_directories(blpmc PRIVATE ../SFMT)
+target_compile_options(blpmc PRIVATE -O3 -g -DSFMT_MEXP=607 -msse2 -DHAVE_SSE2)
+target_compile_definitions(blpmc PRIVATE -DSFMT=1 -DDEBUG=1)
 
-add_executable(blpmc-ap bprw.cpp bprw.h file_serialization.h graph.cpp graph.h main_test_all_pair.cpp stat.cpp stat.h)
+# compile for BLPMC-std
+add_executable(blpmc-std ${BLPMC_SOURCE_FILES})
+
+if (Boost_FOUND)
+    message(${Boost_INCLUDE_DIRS})
+    target_include_directories(blpmc-std PRIVATE ${Boost_INCLUDE_DIRS})
+endif ()
+target_include_directories(blpmc-std PRIVATE ../sparsehash-yche/include)
+target_include_directories(blpmc-std PRIVATE ../sparsepp)
+target_include_directories(blpmc-std PRIVATE ../SFMT)
+target_compile_options(blpmc-std PRIVATE -O3 -g -DSFMT_MEXP=607 -msse2 -DHAVE_SSE2)
+target_compile_definitions(blpmc-std PRIVATE -DDEBUG=1)
+
+# compile for BLPMC-ap, all pair just for profiling
+add_executable(blpmc-ap bprw.cpp bprw.h file_serialization.h graph.cpp graph.h main_test_all_pair.cpp stat.cpp stat.h ../SFMT/SFMT.c)
 if (Boost_FOUND)
     message(${Boost_INCLUDE_DIRS})
     target_include_directories(blpmc-ap PRIVATE ${Boost_INCLUDE_DIRS})
 endif ()
 target_include_directories(blpmc-ap PRIVATE ../sparsehash-yche/include)
 target_include_directories(blpmc-ap PRIVATE ../sparsepp)
-target_compile_options(blpmc-ap PRIVATE -O3 -g)
+target_include_directories(blpmc-ap PRIVATE ../SFMT)
+target_compile_options(blpmc-ap PRIVATE -O3 -g -DSFMT_MEXP=607 -msse2 -DHAVE_SSE2)
+target_compile_definitions(blpmc-ap PRIVATE -DSFMT=1)
 
 # compile for FLPMC
-
-set(FLPMC_SOURCE_FILES file_serialization.h graph.cpp graph.h stat.cpp stat.h local_push.h local_push.cpp flpmc.cpp flpmc.h)
+set(FLPMC_SOURCE_FILES file_serialization.h graph.cpp graph.h stat.cpp stat.h local_push.h local_push.cpp flpmc.cpp flpmc.h ../SFMT/SFMT.c)
 
 add_executable(flpmc ${FLPMC_SOURCE_FILES})
 
@@ -46,7 +63,8 @@ if (Boost_FOUND)
 endif ()
 target_include_directories(flpmc PRIVATE ../sparsehash-yche/include)
 target_include_directories(flpmc PRIVATE ../sparsepp)
-# comment out irrelevant dependency
-# target_include_directories(flpmc PRIVATE ../eigen)
+target_include_directories(flpmc PRIVATE ../SFMT)
 target_compile_options(flpmc PRIVATE -O3 -g)
 target_link_libraries(flpmc PRIVATE ${Boost_LIBRARIES})
+#target_compile_definitions(flpmc PRIVATE -DSFMT=1)
+
