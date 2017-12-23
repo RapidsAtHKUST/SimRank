@@ -15,8 +15,8 @@ using namespace std;
 class GraphYche {
     // bidirectional csr (compressed sparse row representation)
 public:
-    int n, m;
-    vector<int> off_in;
+        int n, m;
+        vector<int> off_in;
     vector<int> in_deg_arr;
     vector<int> neighbors_in;
 

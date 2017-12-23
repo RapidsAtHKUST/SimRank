@@ -113,6 +113,12 @@ struct DensePairMap {
         // }
     }
 
+    template<typename D>
+    T query(D a, D b) {
+        auto &table = v[a];
+        return !table.contains(b) ? 0 : table[b];
+    }
+
     void add(size_t n) {
         v.insert(v.end(), n, sparse_hash_map<unsigned int, T, std::hash<unsigned int>>{});
     }

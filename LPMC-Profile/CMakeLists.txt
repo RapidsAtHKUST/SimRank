@@ -24,7 +24,7 @@ set(SFMT_COMPILE_FLAGS -DSFMT_MEXP=607 -msse2 -DHAVE_SSE2)
 add_subdirectory(playground)
 
 # 1st: compile for BLPMC
-set(BLPMC_SOURCE_FILES yche_refactor/bprw_yche.cpp yche_refactor/bprw_yche.h  ${UTIL_FILES} main.cpp)
+set(BLPMC_SOURCE_FILES yche_refactor/bprw_yche.cpp yche_refactor/bprw_yche.h  ${UTIL_FILES} playground/main_bprw.cpp)
 
 add_executable(blpmc ${BLPMC_SOURCE_FILES})
 
@@ -49,7 +49,7 @@ target_compile_options(blpmc-std PRIVATE -O3 -g ${SFMT_COMPILE_FLAGS})
 target_compile_definitions(blpmc-std PRIVATE -DDEBUG=1)
 
 # 3rd: compile for BLPMC-ap, all pair just for profiling
-add_executable(blpmc-ap yche_refactor/bprw_yche.cpp yche_refactor/bprw_yche.h  ${UTIL_FILES} playground/main_test_all_pair.cpp)
+add_executable(blpmc-ap yche_refactor/bprw_yche.cpp yche_refactor/bprw_yche.h  ${UTIL_FILES} playground/main_bprw_all_pair.cpp)
 
 target_include_directories(blpmc-ap PRIVATE ../sparsehash-yche/include)
 target_include_directories(blpmc-ap PRIVATE ../sparsepp)
@@ -61,7 +61,8 @@ target_include_directories(blpmc-ap PRIVATE ../include)
 target_link_libraries(blpmc-ap PRIVATE tcmalloc)
 
 # 4th: compile for FLPMC
-set(FLPMC_SOURCE_FILES local_push.h local_push.cpp flpmc.cpp flpmc.h ${UTIL_FILES} ${GROUND_TRUTH_FILES} deprecated/graph.cpp deprecated/graph.h)
+set(FLPMC_SOURCE_FILES local_push.h local_push.cpp flpmc.cpp flpmc.h ${UTIL_FILES} ${GROUND_TRUTH_FILES}
+        deprecated/graph.cpp deprecated/graph.h playground/main_flpmc.cpp)
 
 add_executable(flpmc ${FLPMC_SOURCE_FILES})
 
@@ -72,5 +73,22 @@ target_include_directories(flpmc PRIVATE ../SFMT)
 target_include_directories(flpmc PRIVATE ../include)
 target_compile_options(flpmc PRIVATE -O3 -g ${SFMT_COMPILE_FLAGS})
 target_link_libraries(flpmc PRIVATE ${Boost_LIBRARIES})
-#target_compile_definitions(flpmc PRIVATE -DSFMT=1)
+target_compile_definitions(flpmc PRIVATE -DSFMT=1)
+
+# 5th: compile for FLPMC-ap
+set(FLPMC_SOURCE_FILES local_push.h local_push.cpp flpmc.cpp flpmc.h ${UTIL_FILES} ${GROUND_TRUTH_FILES}
+        deprecated/graph.cpp deprecated/graph.h playground/main_flpmc_all_pair.cpp)
+
+add_executable(flpmc-ap ${FLPMC_SOURCE_FILES})
+
+target_include_directories(flpmc-ap PRIVATE ${Boost_INCLUDE_DIRS})
+target_include_directories(flpmc-ap PRIVATE ../sparsehash-yche/include)
+target_include_directories(flpmc-ap PRIVATE ../sparsepp)
+target_include_directories(flpmc-ap PRIVATE ../SFMT)
+target_include_directories(flpmc-ap PRIVATE ../include)
+target_compile_options(flpmc-ap PRIVATE -O3 -g ${SFMT_COMPILE_FLAGS})
+target_link_libraries(flpmc-ap PRIVATE ${Boost_LIBRARIES})
+target_link_libraries(flpmc-ap PRIVATE tcmalloc)
+target_compile_definitions(flpmc-ap PRIVATE -DSFMT=1)
+
 

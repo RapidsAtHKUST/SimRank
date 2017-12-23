@@ -7,7 +7,7 @@
 
 #include <boost/program_options.hpp>
 
-#include "yche_refactor/bprw_yche.h"
+#include "../yche_refactor/bprw_yche.h"
 
 using namespace std;
 using namespace std::chrono;

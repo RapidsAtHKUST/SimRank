@@ -546,17 +546,17 @@ void LocalPush::remove(DirectedG::vertex_descriptor u, DirectedG::vertex_descrip
 
 double LocalPush::query_P(DirectedG::vertex_descriptor a, DirectedG::vertex_descriptor b) {
     if (a > b) {
-        return P[NodePair(b, a)];
+        return P.query(b, a);
     } else {
-        return P[NodePair(a, b)];
+        return P.query(a, b);
     }
 }
 
 double LocalPush::query_R(DirectedG::vertex_descriptor a, DirectedG::vertex_descriptor b) {
     if (a > b) {
-        return R[NodePair(b, a)];
+        return R.query(b, a);
     } else {
-        return R[NodePair(a, b)];
+        return R.query(a, b);
     }
 }
 

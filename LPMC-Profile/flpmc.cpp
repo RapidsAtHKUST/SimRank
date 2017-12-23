@@ -6,6 +6,7 @@
 
 #include "flpmc.h"
 #include "simrank.h"
+#include "playground/pretty_print.h"
 
 using namespace std;
 using namespace boost::program_options;
@@ -36,30 +37,34 @@ FLPMC::FLPMC(string g_name_, DirectedG &g_, double c_, double epsilon_, double d
 
 double FLPMC::get_rmax() {
     double r = sqrt(epsilon);
-    cout << format("r_max of local push: %s") % r << endl;
+//    cout << format("r_max of local push: %s") % r << endl;
     return r;
 }
 
 double FLPMC::get_lp_epsilon() {
     double lp_epsilon = get_rmax() * (1 - c);
-    cout << format("local push error: %s") % lp_epsilon << endl;
+//    cout << format("local push error: %s") % lp_epsilon << endl;
     return lp_epsilon;
 }
 
 
 double FLPMC::query_one2one(NodePair np) {
+//    cout << np << endl;
     if (np.first == np.second) {
         return 1;
     } else if (np.first > np.second) { // make sure np.first < np.second
         np = NodePair({np.second, np.first});
     }
     /* FLP result */
-    double p_i = lp->P[np];
+//    double p_i = lp->P[np];
+    double p_i = lp->query_P(np.first, np.second);
 
     // set up the random number generator
+#ifndef SFMT
     std::random_device rd;  //Will be used to obtain a seed for the random number engine
     std::mt19937 gen(rd()); //Standard mersenne_twister_engine seeded with rd()
     std::uniform_real_distribution<double> distribution(0.0, 1.0);
+#endif
 
     /* MC sampling phase */
     int N = get_N();
@@ -69,9 +74,15 @@ double FLPMC::query_one2one(NodePair np) {
         int a = np.first;
         int b = np.second;
         sum += lp->query_R(a, b);
+#ifndef SFMT
         while (distribution(gen) < c && (a != b)) {
             a = sample_in_neighbor(a, *g);
             b = sample_in_neighbor(b, *g);
+#else
+        while (rand_gen.double_rand() < c && (a != b)) {
+            a = sample_in_neighbor(a, *g, rand_gen);
+            b = sample_in_neighbor(b, *g, rand_gen);
+#endif
             if (a == -1 || b == -1) {
                 break;
             }
@@ -80,8 +91,8 @@ double FLPMC::query_one2one(NodePair np) {
         E_residual += sum;
     }
 
-    cout << format("p_i: %s") % p_i << endl;
-    cout << format("number of samples: %s") % get_N() << endl;
+//    cout << format("p_i: %s") % p_i << endl;
+//    cout << format("number of samples: %s") % get_N() << endl;
     return p_i + E_residual / N;
 }
 
@@ -92,50 +103,13 @@ double FLPMC::get_N() {
     return n;
 }
 
-void test_FLPMC(string data_name, double c, double epsilon, double delta, int x, int y) {
-    DirectedG g;
-    load_graph(get_edge_list_path(data_name), g);
-    size_t n = num_vertices(g);
-    NodePair q{x, y};
-
-    FLPMC flpmc(data_name, g, c, epsilon, delta, 100);
-    double result = flpmc.query_one2one(q);
-    cout << result << endl;
-
-    // ground truth
-    TruthSim ts(data_name, g, c, epsilon);
-    cout << format("ground truth: %s") % ts.sim(x, y) << endl;
-    cout << format("error: %s") % (ts.sim(q.first, q.second) - result) << endl;
-}
-
-int main(int args, char *argv[]) {
-    try {
-        options_description desc{"Options"};
-        double c = 0.6;
-        double epsilon = 0.01;
-        double delta = 0.01;
-        string data_name;
-        int x, y;
-        desc.add_options()
-                ("help,h", "Help Screen")
-                ("DataName,d", value<string>(&data_name), "Graph Name")
-                ("decay,c", value<double>(&c), "Decay Facrot c")
-                ("x,x", value<int>(&x), "x: the query node")
-                ("y,y", value<int>(&y), "y: the query node")
-                ("epsilon,e", value<double>(&epsilon), "Error bound");
-        variables_map vm;
-        store(parse_command_line(args, argv, desc), vm);
-        notify(vm);
-
-        if (vm.count("help")) {
-            cout << desc << endl;
-        } else {
-            test_FLPMC(data_name, c, epsilon, delta, x, y);
-        }
-
-    }
-    catch (const error &ex) {
-        cerr << ex.what() << endl;
-    }
-    return 0;
+FLPMC::FLPMC(const FLPMC &other_obj) {
+    rand_gen = SFMTRand();
+    g_name = other_obj.g_name;
+    Q = other_obj.Q;
+    epsilon = other_obj.epsilon; // the error bound required by query
+    delta = other_obj.delta;
+    c = other_obj.c;
+    g = other_obj.g; // the pointer to the graph
+    lp = other_obj.lp; // the pointer to the local push index
 }
