@@ -15,11 +15,13 @@ endif ()
 #    set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} ${OpenMP_EXE_LINKER_FLAGS}")
 #endif ()
 
-set(UTIL_FILES util/file_serialization.h util/graph.cpp util/graph.h util/stat.cpp util/stat.h
-        util/sfmt_based_rand.h ../SFMT/SFMT.c util/graph_yche.cpp util/graph_yche.h util/input_output.cpp util/input_output.h)
+set(UTIL_FILES util/file_serialization.h util/stat.cpp util/stat.h
+        util/sfmt_based_rand.h ../SFMT/SFMT.c util/graph.cpp util/graph.h)
 # util/graph_yche.cpp util/graph_yche.h
 set(GROUND_TRUTH_FILES simrank.cpp simrank.h)
 set(SFMT_COMPILE_FLAGS -DSFMT_MEXP=607 -msse2 -DHAVE_SSE2)
+
+add_subdirectory(playground)
 
 # 1st: compile for BLPMC
 set(BLPMC_SOURCE_FILES bprw.cpp bprw.h ${UTIL_FILES} main.cpp)

@@ -130,7 +130,9 @@ struct BackPush { // Backward Push
     unique_max_heap heap; // the heap contains residuals
     residual_set set_residual; // the set containing residuals for random push
 
+#ifdef SFMT
     SFMTRand rand_gen;
+#endif
 public:
     // public methods
     BackPush(string g_name_, DirectedG &graph, double c_, double epsilon_, double delta_);

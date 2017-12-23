@@ -28,14 +28,14 @@
 #include "file_serialization.h"
 #include "stat.h"
 
-#define SPP_MIX_HASH
+//#define SPP_MIX_HASH
 using namespace boost;
 using namespace std;
 using namespace Eigen;
+
 using spp::sparse_hash_map;
 using spp::sparse_hash_set;
 using google::dense_hash_map;
-
 
 // utility function
 inline bool file_exists(const std::string &name) {
@@ -50,11 +50,8 @@ extern vector<string> DATA_NAME;
 // types definition
 typedef boost::adjacency_list<vecS, vecS, bidirectionalS> DirectedG;
 
-//extern DirectedG *global_g_ptr;
-
 typedef pair<unsigned int, unsigned int> NodePair;
 typedef boost::multi_array<double, 2> SimRank_matrix;
-
 
 template<typename Iter, typename RandomGenerator>
 Iter select_randomly(Iter start, Iter end, RandomGenerator &g) {
@@ -196,10 +193,7 @@ struct DensePairMap {
     }
 };
 
-
-
 // typedef vector<sparse_hash_map<unsigned int, double>> DensePairMap;
-
 // typedef dense_hash_map<NodePair, bool, std::hash<NodePair>, eq_node_pair> DensePairMarker;
 // typedef dense_hash_map<NodePair, double, std::hash<NodePair>, eq_node_pair> DensePairMap;
 typedef sparse_hash_set<NodePair> PairSet;

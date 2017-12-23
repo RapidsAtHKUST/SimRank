@@ -10,6 +10,7 @@
 #include <boost/program_options.hpp>
 
 #include "../bprw.h"
+
 #include "omp.h"
 
 using namespace std;

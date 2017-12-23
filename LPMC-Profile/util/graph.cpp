@@ -16,8 +16,6 @@ vector<string> DATA_NAME = {
         "soc-LiveJournal1"};
 double C = 0.6;
 
-//DirectedG *global_g_ptr;
-
 void load_graph(string path, DirectedG &g) {
     // load graph from edge_list file
 //    global_g_ptr = &g;
@@ -55,7 +53,6 @@ string get_edge_list_path(string s) {
     // get file location of edgelist for graph s
     return EDGE_LIST_PATH + s + ".txt";
 }
-
 
 void indegree_mat(const DirectedG &g, SparseMatrix<float> &P) {
     // column normalized adjacency matrix
