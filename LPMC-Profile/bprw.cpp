@@ -34,6 +34,7 @@ void unique_max_heap::push(NodePair node_pair, double value) {
         heap.increase(handle);
     } else {
         heap_data hd{node_pair, value, *g_ptr};
+//        heap_data hd{node_pair, value};
         handle_t t = heap.push(hd);
         R[node_pair] = t;  // insert the handler to the hash map
     }

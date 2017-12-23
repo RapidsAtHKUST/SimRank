@@ -16,8 +16,11 @@ vector<string> DATA_NAME = {
         "soc-LiveJournal1"};
 double C = 0.6;
 
+//DirectedG *global_g_ptr;
+
 void load_graph(string path, DirectedG &g) {
     // load graph from edge_list file
+//    global_g_ptr = &g;
     if (file_exists(path)) {
         int a, b;
         cout << "loading " << path << endl;;
@@ -53,26 +56,26 @@ string get_edge_list_path(string s) {
     return EDGE_LIST_PATH + s + ".txt";
 }
 
-//
-//void indegree_mat(const DirectedG &g, SparseMatrix<float> &P) {
-//    // column normalized adjacency matrix
-//    typedef Triplet<float> T;
-//    vector<T> tripleList;
-//    DirectedG::edge_iterator edge_iter, edge_end;
-//    tie(edge_iter, edge_end) = edges(g);
-//    for (; edge_iter != edge_end; edge_iter++) {
-//        auto a = source(*edge_iter, g);
-//        auto b = target(*edge_iter, g);
-//        tripleList.push_back(T(a, b, 1));
-//    }
-//    P.setFromTriplets(tripleList.begin(), tripleList.end());
-//    for (int k = 0; k < P.outerSize(); ++k) { // column normalize the matrix
-//        auto indeg_k = in_degree(k, g);
-//        for (SparseMatrix<float>::InnerIterator it(P, k); it; ++it) {
-//            it.valueRef() = 1.0 / indeg_k;
-//        }
-//    }
-//}
+
+void indegree_mat(const DirectedG &g, SparseMatrix<float> &P) {
+    // column normalized adjacency matrix
+    typedef Triplet<float> T;
+    vector<T> tripleList;
+    DirectedG::edge_iterator edge_iter, edge_end;
+    tie(edge_iter, edge_end) = edges(g);
+    for (; edge_iter != edge_end; edge_iter++) {
+        auto a = source(*edge_iter, g);
+        auto b = target(*edge_iter, g);
+        tripleList.push_back(T(a, b, 1));
+    }
+    P.setFromTriplets(tripleList.begin(), tripleList.end());
+    for (int k = 0; k < P.outerSize(); ++k) { // column normalize the matrix
+        auto indeg_k = in_degree(k, g);
+        for (SparseMatrix<float>::InnerIterator it(P, k); it; ++it) {
+            it.valueRef() = 1.0 / indeg_k;
+        }
+    }
+}
 
 #if !defined(SFMT)
 int sample_in_neighbor(int a, DirectedG &g) {

@@ -11,7 +11,10 @@ class SFMTRand {
 private:
     sfmt_t rand_mt;
 public:
-    SFMTRand() { sfmt_init_gen_rand(&rand_mt, std::rand()); }
+    SFMTRand() {
+        std::srand(std::time(nullptr));
+        sfmt_init_gen_rand(&rand_mt, std::rand());
+    }
 
     // [0, 2^32)
     uint32_t uint_rand() { return sfmt_genrand_uint32(&rand_mt); }
