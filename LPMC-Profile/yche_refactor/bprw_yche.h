@@ -14,15 +14,17 @@
 
 using namespace boost::heap;
 
-using NodePair= pair<unsigned int, unsigned int>;
 using spp::sparse_hash_map;
 using boost::format;
 
+using NodePair= pair<unsigned int, unsigned int>;
+
+// used in the heap node
+extern GraphYche *g_ptr;
+
 template<typename Iter, typename RandomGenerator>
 Iter select_randomly(Iter start, Iter end, RandomGenerator &g) {
-//    std::uniform_int_distribution<> dis(0, std::distance(start, end) - 1);
     std::uniform_int_distribution<> dis(0, (end - start) - 1);
-//    std::advance(start, dis(g));
     start += dis(g);
     return start;
 }
@@ -67,11 +69,10 @@ struct heap_data {
     // the data the heap maintains
     NodePair np;
     double residual;
-    GraphYche *g_ptr; // the underlying graph
-    heap_data(NodePair np_, double residual_, GraphYche &g) {
+
+    heap_data(NodePair np_, double residual_) {
         np = np_;
         residual = residual_;
-        g_ptr = &g;
     }
 
     bool operator<(heap_data const &rhs) const { // doesn't change the memebr
@@ -164,8 +165,8 @@ public:
     // public methods
     BackPush(string g_name_, GraphYche &graph, double c_, double epsilon_, double delta_);
 
-    pair<double, int>
-    backward_push(NodePair np, unique_max_heap &); // self-adaptive backward local push, return estimate
+    // self-adaptive backward local push, return estimate
+    pair<double, int> backward_push(NodePair np, unique_max_heap &);
 
     double MC_random_walk(); // perform random walks based on current residuals in the heap
     double query_one2one(NodePair np); // query single-pair SimRank scores
@@ -182,9 +183,9 @@ public:
     double keep_push_cost(unique_max_heap &heap); // compute the cost is we push one-step further
     double change_to_MC_cost(unique_max_heap &heap); // compute the cost if we turn to random walk  
     size_t number_of_walkers(double sum); // compute the number of random walkers, given current sum
-    bool is_keep_on_push(unique_max_heap &heap); // the indicator bool function to decide whether
-    // the local push would continue
 
+    // the indicator bool function to decide whether the local push would continue
+    bool is_keep_on_push(unique_max_heap &heap);
 };
 
 #if !defined(SFMT)

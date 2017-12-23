@@ -1,7 +1,8 @@
 #include "bprw_yche.h"
 
-#include <cmath>
 #include <iostream>
+
+GraphYche *g_ptr = nullptr;
 
 void unique_max_heap::clear() {
     R.clear();
@@ -36,8 +37,8 @@ void unique_max_heap::push(NodePair node_pair, double value) {
         (*handle).residual += value;
         heap.increase(handle);
     } else {
-        heap_data hd{node_pair, value, *g_ptr};
-//        heap_data hd{node_pair, value};
+//        heap_data hd{node_pair, value, *g_ptr};
+        heap_data hd{node_pair, value};
         handle_t t = heap.push(hd);
         R[node_pair] = t;  // insert the handler to the hash map
     }
@@ -60,6 +61,7 @@ std::ostream &operator<<(std::ostream &os, const data_item &obj) {
 
 BackPush::BackPush(string g_name_, GraphYche &graph, double c_, double epsilon_, double delta_) :
         heap(graph), g_name(g_name_), g(&graph), c(c_), epsilon(epsilon_), fail_prob(delta_) {
+    g_ptr = &graph;
 }
 
 size_t BackPush::number_of_walkers(double sum) {
