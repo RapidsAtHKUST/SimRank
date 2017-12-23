@@ -23,6 +23,8 @@ extern double cal_rmax(DirectedG &g, double c, double epsilon, double delta); //
 
 extern double cal_rmax(double c, double epsilon); // the r_max for general case
 
+extern bool lp_file_exists(string data_name, double c, double epsilon, size_t n, bool is_full );
+
 /* base class of local push */
 struct LocalPush {
     /* data members */

@@ -598,4 +598,26 @@ void Reduced_LocalPush::update_residual(DirectedG &g, DirectedG::vertex_descript
 }
 
 
+// the help check file exists function
+bool lp_file_exists(string data_name, double c, double epsilon, size_t n, bool is_full = false) {
+    LocalPush *lp_test;
+    if (is_full) {
+        lp_test = new Full_LocalPush();
+    } else {
+        lp_test = new Reduced_LocalPush();
+    }
+    // Reduced_LocalPush lp_test;
+    lp_test->g_name = data_name;
+    lp_test->c = c;
+    lp_test->epsilon = epsilon;
+    string data_path = lp_test->get_file_path_base() + ".P";
+    cout << "data path !!!!" << data_path << endl;
+    if (file_exists(data_path)) {
+        return true;
+    } else {
+        return false;
+    }
+
+    delete lp_test;
+}
 
