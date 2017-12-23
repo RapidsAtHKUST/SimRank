@@ -26,5 +26,6 @@ add_executable(sling_all ${SOURCE_FILES} main_query_all_vertices.cpp)
 target_include_directories(sling_all PRIVATE ../../sparsehash-yche/include/)
 target_include_directories(sling_all PRIVATE ../../SFMT)
 target_link_libraries(sling_all PRIVATE ${CMAKE_THREAD_LIBS_INIT})
+target_link_libraries(sling_all PRIVATE tcmalloc)
 
 target_compile_options(sling_all PRIVATE -O3 -g -DSFMT_MEXP=607 -msse2 -DHAVE_SSE2)

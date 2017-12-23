@@ -14,7 +14,7 @@
 
 #include <sparsepp/spp.h>
 
-#include "graph.h"
+#include "util/graph.h"
 
 using boost::format;
 const string LOCAL_PUSH_DIR = "./datasets/local_push/";

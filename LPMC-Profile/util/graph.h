@@ -1,7 +1,6 @@
 #ifndef __GRAPH_H__
 #define __GRAPH_H__
 
-
 #include <sys/stat.h>
 
 #include <cstdint>
@@ -24,10 +23,10 @@
 #include <sparsepp/spp.h>
 #include <sparsehash/dense_hash_map>
 
-#include "util/sfmt_based_rand.h"
+#include "sfmt_based_rand.h"
 
-#include "util/file_serialization.h"
-#include "util/stat.h"
+#include "file_serialization.h"
+#include "stat.h"
 
 #define SPP_MIX_HASH
 using namespace boost;
