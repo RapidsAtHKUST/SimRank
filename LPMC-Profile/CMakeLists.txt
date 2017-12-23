@@ -8,15 +8,15 @@ find_package(Boost REQUIRED program_options)
 if (Boost_FOUND)
     message(${Boost_INCLUDE_DIRS})
 endif ()
-#find_package(OpenMP)
-#if (OPENMP_FOUND)
-#    set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} ${OpenMP_C_FLAGS}")
-#    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${OpenMP_CXX_FLAGS}")
-#    set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} ${OpenMP_EXE_LINKER_FLAGS}")
-#endif ()
+find_package(OpenMP)
+if (OPENMP_FOUND)
+    set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} ${OpenMP_C_FLAGS}")
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${OpenMP_CXX_FLAGS}")
+    set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} ${OpenMP_EXE_LINKER_FLAGS}")
+endif ()
 
 set(UTIL_FILES util/file_serialization.h util/stat.cpp util/stat.h
-        util/sfmt_based_rand.h ../SFMT/SFMT.c util/graph.cpp util/graph.h)
+        util/sfmt_based_rand.h ../SFMT/SFMT.c util/graph_yche.cpp)
 # util/graph_yche.cpp util/graph_yche.h
 set(GROUND_TRUTH_FILES simrank.cpp simrank.h)
 set(SFMT_COMPILE_FLAGS -DSFMT_MEXP=607 -msse2 -DHAVE_SSE2)
@@ -24,7 +24,7 @@ set(SFMT_COMPILE_FLAGS -DSFMT_MEXP=607 -msse2 -DHAVE_SSE2)
 add_subdirectory(playground)
 
 # 1st: compile for BLPMC
-set(BLPMC_SOURCE_FILES bprw.cpp bprw.h ${UTIL_FILES} main.cpp)
+set(BLPMC_SOURCE_FILES yche_refactor/bprw_yche.cpp yche_refactor/bprw_yche.h  ${UTIL_FILES} main.cpp)
 
 add_executable(blpmc ${BLPMC_SOURCE_FILES})
 
@@ -49,7 +49,7 @@ target_compile_options(blpmc-std PRIVATE -O3 -g ${SFMT_COMPILE_FLAGS})
 target_compile_definitions(blpmc-std PRIVATE -DDEBUG=1)
 
 # 3rd: compile for BLPMC-ap, all pair just for profiling
-add_executable(blpmc-ap bprw.cpp bprw.h ${UTIL_FILES} playground/main_test_all_pair.cpp)
+add_executable(blpmc-ap yche_refactor/bprw_yche.cpp yche_refactor/bprw_yche.h  ${UTIL_FILES} playground/main_test_all_pair.cpp)
 
 target_include_directories(blpmc-ap PRIVATE ../sparsehash-yche/include)
 target_include_directories(blpmc-ap PRIVATE ../sparsepp)
@@ -61,7 +61,7 @@ target_include_directories(blpmc-ap PRIVATE ../include)
 target_link_libraries(blpmc-ap PRIVATE tcmalloc)
 
 # 4th: compile for FLPMC
-set(FLPMC_SOURCE_FILES local_push.h local_push.cpp flpmc.cpp flpmc.h ${UTIL_FILES} ${GROUND_TRUTH_FILES})
+set(FLPMC_SOURCE_FILES local_push.h local_push.cpp flpmc.cpp flpmc.h ${UTIL_FILES} ${GROUND_TRUTH_FILES} deprecated/graph.cpp deprecated/graph.h)
 
 add_executable(flpmc ${FLPMC_SOURCE_FILES})
 

@@ -1,12 +1,13 @@
 #include <cstdlib>
 #include <ctime>
 
+#include <chrono>
 #include <iostream>
 #include <unordered_set>
 
 #include <boost/program_options.hpp>
 
-#include "bprw.h"
+#include "yche_refactor/bprw_yche.h"
 
 using namespace std;
 using namespace std::chrono;
@@ -15,10 +16,11 @@ using namespace boost::program_options;
 void test_bp(string data_name, double c, double epsilon, double delta, int x, int y) {
     // test_readsrq(data_name,c,epsilon,R_prime,R,t);
     // test the max heap functionality
-    DirectedG g;
-    load_graph(get_edge_list_path(data_name), g);
+    string path = get_edge_list_path(data_name);
+    GraphYche g(path);
+
     BackPush bprw(data_name, g, c, epsilon, delta);
-    size_t n = num_vertices(g);
+    size_t n = static_cast<size_t>(g.n);
     NodePair q{x, y};
     // for(int i = 0; i < 100;i++){
     auto start = std::chrono::high_resolution_clock::now();

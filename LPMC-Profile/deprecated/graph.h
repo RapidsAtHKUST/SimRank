@@ -23,10 +23,10 @@
 #include <sparsepp/spp.h>
 #include <sparsehash/dense_hash_map>
 
-#include "sfmt_based_rand.h"
+#include "../util/sfmt_based_rand.h"
 
-#include "file_serialization.h"
-#include "stat.h"
+#include "../util/file_serialization.h"
+#include "../util/stat.h"
 
 //#define SPP_MIX_HASH
 using namespace boost;

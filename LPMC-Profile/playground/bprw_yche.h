@@ -4,7 +4,7 @@
 
 #include <boost/heap/fibonacci_heap.hpp>
 
-#include "deprecated/graph.h"
+#include "util/graph.h"
 
 using namespace boost::heap;
 

@@ -36,4 +36,9 @@ public:
     int out_degree(int u);
 };
 
+inline string get_edge_list_path(string s) {
+    // get file location of edgelist for graph s
+    return "./datasets/edge_list/" + s + ".txt";
+}
+
 #endif //SPS_GRAPH_YCHE_H
