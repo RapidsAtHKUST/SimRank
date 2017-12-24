@@ -5,8 +5,8 @@
 #include <boost/program_options.hpp>
 
 #include "flpmc.h"
-#include "simrank.h"
-#include "playground/pretty_print.h"
+#include "../yche_refactor/simrank.h"
+#include "../playground/pretty_print.h"
 
 using namespace std;
 using namespace boost::program_options;

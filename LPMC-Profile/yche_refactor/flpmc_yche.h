@@ -1,20 +1,28 @@
 #include "local_push_yche.h"
 
+#include "../util/sfmt_based_rand.h"
+
 /* the forward local push and MC sampling algorithm */
-struct FLPMC{
+struct FLPMC {
     string g_name;
     size_t Q;
     double epsilon; // the error bound required by query
     double delta;
     double c;
-    DirectedG * g; // the pointer to the graph
-    LocalPush * lp; // the pointer to the local push index
+
+    GraphYche *g; // the pointer to the graph
+    LocalPush *lp; // the pointer to the local push index
+
 #ifdef SFMT
     SFMTRand rand_gen;
 #endif
-    FLPMC(string g_name_, DirectedG &, double c_, double epsilon_, double delta_, size_t Q);
-    FLPMC(const FLPMC& other_obj);
+
+    FLPMC(string g_name_, GraphYche &, double c_, double epsilon_, double delta_, size_t Q);
+
+    FLPMC(const FLPMC &other_obj);
+
     double query_one2one(NodePair np);
+
     double get_rmax(); // calculate the rmax of local push
     double get_lp_epsilon(); // return the epsilong for lp offline index
     double get_N(); // get the number of samples

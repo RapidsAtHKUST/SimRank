@@ -18,13 +18,14 @@ endif ()
 set(UTIL_FILES util/file_serialization.h util/stat.cpp util/stat.h
         util/sfmt_based_rand.h ../SFMT/SFMT.c util/graph_yche.cpp)
 # util/graph_yche.cpp util/graph_yche.h
-set(GROUND_TRUTH_FILES simrank.cpp simrank.h)
+set(GROUND_TRUTH_FILES yche_refactor/simrank.cpp yche_refactor/simrank.h)
 set(SFMT_COMPILE_FLAGS -DSFMT_MEXP=607 -msse2 -DHAVE_SSE2)
 
 add_subdirectory(playground)
 
 # 1st: compile for BLPMC
-set(BLPMC_SOURCE_FILES yche_refactor/bprw_yche.cpp yche_refactor/bprw_yche.h  ${UTIL_FILES} playground/main_bprw.cpp)
+set(BLPMC_SOURCE_FILES yche_refactor/bprw_yche.cpp yche_refactor/bprw_yche.h
+        ${UTIL_FILES} playground/main_bprw.cpp)
 
 add_executable(blpmc ${BLPMC_SOURCE_FILES})
 
@@ -47,9 +48,11 @@ target_include_directories(blpmc-std PRIVATE ../SFMT)
 target_include_directories(blpmc-std PRIVATE ../include)
 target_compile_options(blpmc-std PRIVATE -O3 -g ${SFMT_COMPILE_FLAGS})
 target_compile_definitions(blpmc-std PRIVATE -DDEBUG=1)
+target_link_libraries(blpmc-std PRIVATE tcmalloc)
 
 # 3rd: compile for BLPMC-ap, all pair just for profiling
-add_executable(blpmc-ap yche_refactor/bprw_yche.cpp yche_refactor/bprw_yche.h  ${UTIL_FILES} playground/main_bprw_all_pair.cpp)
+add_executable(blpmc-ap yche_refactor/bprw_yche.cpp yche_refactor/bprw_yche.h
+        ${UTIL_FILES} playground/main_bprw_all_pair.cpp)
 
 target_include_directories(blpmc-ap PRIVATE ../sparsehash-yche/include)
 target_include_directories(blpmc-ap PRIVATE ../sparsepp)
@@ -61,8 +64,10 @@ target_include_directories(blpmc-ap PRIVATE ../include)
 target_link_libraries(blpmc-ap PRIVATE tcmalloc)
 
 # 4th: compile for FLPMC
-set(FLPMC_SOURCE_FILES local_push.h local_push.cpp flpmc.cpp flpmc.h ${UTIL_FILES} ${GROUND_TRUTH_FILES}
-        deprecated/graph.cpp deprecated/graph.h playground/main_flpmc.cpp)
+set(LPMC_FILES yche_refactor/flpmc_yche.h yche_refactor/flpmc_yche.cpp
+        yche_refactor/local_push_yche.h yche_refactor/local_push_yche.cpp util/sparse_matrix_utils.h)
+set(FLPMC_SOURCE_FILES ${LPMC_FILES} ${UTIL_FILES} ${GROUND_TRUTH_FILES}
+        playground/main_flpmc.cpp)
 
 add_executable(flpmc ${FLPMC_SOURCE_FILES})
 
@@ -76,8 +81,8 @@ target_link_libraries(flpmc PRIVATE ${Boost_LIBRARIES})
 target_compile_definitions(flpmc PRIVATE -DSFMT=1)
 
 # 5th: compile for FLPMC-ap
-set(FLPMC_SOURCE_FILES local_push.h local_push.cpp flpmc.cpp flpmc.h ${UTIL_FILES} ${GROUND_TRUTH_FILES}
-        deprecated/graph.cpp deprecated/graph.h playground/main_flpmc_all_pair.cpp)
+set(FLPMC_SOURCE_FILES ${LPMC_FILES} ${UTIL_FILES} ${GROUND_TRUTH_FILES}
+        playground/main_flpmc_all_pair.cpp)
 
 add_executable(flpmc-ap ${FLPMC_SOURCE_FILES})
 

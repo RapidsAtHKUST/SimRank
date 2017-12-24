@@ -2,12 +2,13 @@
 // Created by yche on 12/23/17.
 //
 
-#include "../flpmc.h"
+#include "../yche_refactor/flpmc_yche.h"
+#include "../util/graph_yche.h"
 
 void test_FLPMC(string data_name, double c, double epsilon, double delta) {
-    DirectedG g;
-    load_graph(get_edge_list_path(data_name), g);
-    size_t n = num_vertices(g);
+    string path = get_edge_list_path(data_name);
+    GraphYche g(path);
+    size_t n = static_cast<size_t>(g.n);
 
     auto flpmc = FLPMC(data_name, g, c, epsilon, delta, 100);
 

@@ -22,20 +22,6 @@ using NodePair= pair<unsigned int, unsigned int>;
 // used in the heap node
 extern GraphYche *g_ptr;
 
-template<typename Iter, typename RandomGenerator>
-Iter select_randomly(Iter start, Iter end, RandomGenerator &g) {
-    std::uniform_int_distribution<> dis(0, (end - start) - 1);
-    start += dis(g);
-    return start;
-}
-
-template<typename Iter>
-Iter select_randomly(Iter start, Iter end) {
-    static std::random_device rd;
-    static std::mt19937 gen(rd());
-    return select_randomly(start, end, gen);
-}
-
 namespace std {
     template<>
     struct hash<NodePair> {
@@ -187,14 +173,6 @@ public:
     // the indicator bool function to decide whether the local push would continue
     bool is_keep_on_push(unique_max_heap &heap);
 };
-
-#if !defined(SFMT)
-extern int sample_in_neighbor(int a, GraphYche &g);
-#else
-
-extern int sample_in_neighbor(int a, GraphYche &g, SFMTRand &sfmt_rand_gen);
-
-#endif
 
 #endif
 

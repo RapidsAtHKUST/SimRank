@@ -4,16 +4,16 @@
 
 #include <boost/program_options.hpp>
 
-#include "../flpmc.h"
-#include "../simrank.h"
+#include "../yche_refactor/flpmc_yche.h"
+#include "../yche_refactor/simrank.h"
 
 using namespace std;
 using namespace boost::program_options;
 
 void test_FLPMC(string data_name, double c, double epsilon, double delta, int x, int y) {
-    DirectedG g;
-    load_graph(get_edge_list_path(data_name), g);
-    size_t n = num_vertices(g);
+    string path = get_edge_list_path(data_name);
+    GraphYche g(path);
+    size_t n = static_cast<size_t>(g.n);
     NodePair q{x, y};
 
     FLPMC flpmc(data_name, g, c, epsilon, delta, 100);

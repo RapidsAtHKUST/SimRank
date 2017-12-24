@@ -40,7 +40,6 @@ void TruthSim::run(DirectedG &g) {
     }
 }
 
-
 void basic_simrank(DirectedG &g, double c, SimRank_matrix &sim) {
     int K = 50;
     int n = num_vertices(g);

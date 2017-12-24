@@ -5,18 +5,23 @@
 #ifndef SPS_GRAPH_YCHE_H
 #define SPS_GRAPH_YCHE_H
 
+#include <sys/stat.h>
+
 #include <cstdint>
 
 #include <string>
 #include <vector>
+#include <random>
+
+#include "sfmt_based_rand.h"
 
 using namespace std;
 
 class GraphYche {
     // bidirectional csr (compressed sparse row representation)
 public:
-        int n, m;
-        vector<int> off_in;
+    int n, m;
+    vector<int> off_in;
     vector<int> in_deg_arr;
     vector<int> neighbors_in;
 
@@ -28,17 +33,50 @@ private:
 
     void LoadGraph(vector<pair<int, int>> &edge_lst);
 
+    bool BinarySearch(uint32_t offset_beg, uint32_t offset_end, int val);
+
 public:
     explicit GraphYche(string &graph_path);
 
     int in_degree(int u);
 
     int out_degree(int u);
+
+    bool exists_edge(int src, int dst);
+
 };
+
+// utility function
+inline bool file_exists(const std::string &name) {
+    struct stat buffer;
+    return (stat(name.c_str(), &buffer) == 0);
+}
 
 inline string get_edge_list_path(string s) {
     // get file location of edgelist for graph s
     return "./datasets/edge_list/" + s + ".txt";
 }
+
+template<typename Iter, typename RandomGenerator>
+Iter select_randomly(Iter start, Iter end, RandomGenerator &g) {
+    std::uniform_int_distribution<> dis(0, (end - start) - 1);
+    start += dis(g);
+    return start;
+}
+
+template<typename Iter>
+Iter select_randomly(Iter start, Iter end) {
+    static std::random_device rd;
+    static std::mt19937 gen(rd());
+    return select_randomly(start, end, gen);
+}
+
+#if !defined(SFMT)
+extern int sample_in_neighbor(int a, GraphYche &g);
+#else
+
+extern int sample_in_neighbor(int a, GraphYche &g, SFMTRand &sfmt_rand_gen);
+
+#endif
 
 #endif //SPS_GRAPH_YCHE_H

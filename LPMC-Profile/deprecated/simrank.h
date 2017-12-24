@@ -2,8 +2,11 @@
 #define __SIMRANK_H__
 
 #include <boost/format.hpp>
+#include <boost/multi_array.hpp>
+
 #include "deprecated/graph.h"
 
+using SimRank_matrix= boost::multi_array<double, 2>;
 
 extern void basic_simrank(DirectedG &g, double c, SimRank_matrix &);
 
@@ -33,8 +36,7 @@ struct TruthSim {
     }
 
     string get_file_path() { // file path to save and load
-        return GROUND_TRUTH_DIR + str(format("GROUND_%s-%.3f.bin") %
-                                      g_name % c);
+        return GROUND_TRUTH_DIR + str(format("GROUND_%s-%.3f.bin") % g_name % c);
     }
 };
 

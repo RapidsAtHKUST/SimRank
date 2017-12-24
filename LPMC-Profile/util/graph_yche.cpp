@@ -102,3 +102,46 @@ GraphYche::GraphYche(string &graph_path) {
     auto edge_lst = GetEdgeList(graph_path);
     LoadGraph(edge_lst);
 }
+
+bool GraphYche::BinarySearch(uint32_t offset_beg, uint32_t offset_end, int val) {
+    if (offset_beg >= offset_end) { return false; }
+
+    auto mid = static_cast<uint32_t>((static_cast<unsigned long>(offset_beg) + offset_end) / 2);
+    if (neighbors_out[mid] == val) { return true; }
+
+    return val < neighbors_out[mid] ? BinarySearch(offset_beg, mid, val) :
+           BinarySearch(mid + 1, offset_end, val);
+}
+
+bool GraphYche::exists_edge(int src, int dst) {
+//    for (auto offset = off_out[src]; offset < off_out[src + 1]; offset++) {
+//        if (neighbors_out[offset] == dst) {
+//            return true;
+//        }
+//    }
+//    return false;
+    return BinarySearch(static_cast<uint32_t>(off_out[src]), static_cast<uint32_t>(off_out[src + 1]), dst);
+}
+
+#if !defined(SFMT)
+int sample_in_neighbor(int a, GraphYche &g) {
+    // sample one in-neighbor of node a in g
+    auto in_deg = g.in_deg_arr[a];
+    if (in_deg > 0) {
+        return g.neighbors_in[select_randomly(g.off_in[a], g.off_in[a + 1])];
+    } else {
+        return -1;
+    }
+}
+#else
+
+int sample_in_neighbor(int a, GraphYche &g, SFMTRand &sfmt_rand_gen) {
+    auto in_deg = g.in_deg_arr[a];
+    if (in_deg > 0) {
+        return g.neighbors_in[select_randomly_sfmt(g.off_in[a], g.off_in[a + 1], sfmt_rand_gen)];
+    } else {
+        return -1;
+    }
+}
+
+#endif

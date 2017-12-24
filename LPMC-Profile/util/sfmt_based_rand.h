@@ -5,6 +5,8 @@
 #ifndef SPS_SFMT_BASED_RAND_H
 #define SPS_SFMT_BASED_RAND_H
 
+#include <ctime>
+
 #include <SFMT.h>
 
 class SFMTRand {

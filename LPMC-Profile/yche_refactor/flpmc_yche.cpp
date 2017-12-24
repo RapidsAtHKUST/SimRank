@@ -6,18 +6,18 @@
 
 #include "flpmc_yche.h"
 #include "simrank.h"
-#include "playground/pretty_print.h"
+#include "../playground/pretty_print.h"
 
 using namespace std;
 using namespace boost::program_options;
 
-FLPMC::FLPMC(string g_name_, DirectedG &g_, double c_, double epsilon_, double delta_, size_t Q_) :
+FLPMC::FLPMC(string g_name_, GraphYche &g_, double c_, double epsilon_, double delta_, size_t Q_) :
         g_name(g_name_), g(&g_), c(c_), epsilon(epsilon_), delta(delta_), Q(Q_) {
     // init local push
-    size_t n = num_vertices(*g);
+    size_t n = static_cast<size_t>(g->n);
     cout << format("r_max: %s") % get_rmax() << endl;
     lp = new Reduced_LocalPush(*g, g_name, c, get_lp_epsilon(), n);
-    // lp = new Full_LocalPush(*g, g_name, c, get_lp_epsilon(), n);
+//     lp = new Full_LocalPush(*g, g_name, c, get_lp_epsilon(), n);
     if (!lp_file_exists(g_name, c, get_lp_epsilon(), n, false)) { // test wether the local push index exists
         cout << "local push offline index doesn't exists.. " << endl;
         lp->local_push(*g);
