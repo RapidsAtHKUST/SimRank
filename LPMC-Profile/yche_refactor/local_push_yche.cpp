@@ -143,9 +143,10 @@ void Reduced_LocalPush::push_to_neighbors(GraphYche &g, NodePair &np, double cur
         for (auto off_a = off_beg_a; off_a < g.off_out[a + 1]; off_a++) {
             auto is_i_common = outs_i_common[off_a - off_beg_a];
 
-            auto out_nei_a = g.neighbors_out[off_a];
             for (auto off_b = off_beg_b; off_b < g.off_out[b + 1]; off_b++) {
                 auto is_j_common = outs_j_common[off_b - off_beg_b];
+                // put out_nei_a here, since swap happens later
+                auto out_nei_a = g.neighbors_out[off_a];
                 auto out_nei_b = g.neighbors_out[off_b];
 
                 auto in_degree_a = g.in_degree(out_nei_a);
