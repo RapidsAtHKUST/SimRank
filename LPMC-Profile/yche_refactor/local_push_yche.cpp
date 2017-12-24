@@ -3,8 +3,7 @@
 
 #include <boost/format.hpp>
 
-#include "local_push.h"
-
+#include "local_push_yche.h"
 #include "util/file_serialization.h"
 
 using boost::format;
@@ -71,8 +70,8 @@ LocalPush::LocalPush(DirectedG &g, string gName_, double c_, double epsilon_, si
     // }
 }
 
-Full_LocalPush::Full_LocalPush(DirectedG &g, string name, double c_, double r_max_, size_t n_) :
-        LocalPush(g, name, c_, r_max_, n_) {
+Full_LocalPush::Full_LocalPush(DirectedG &g, string name, double c_, double r_max_, size_t n_) : LocalPush(g, name, c_,
+                                                                                                           r_max_, n_) {
     string data_path = get_file_path_base() + ".P";
     cout << "data path " << data_path << endl;
     if (file_exists(data_path)) { // local push from start
@@ -95,8 +94,11 @@ Full_LocalPush::Full_LocalPush(DirectedG &g, string name, double c_, double r_ma
     }
 }
 
-Reduced_LocalPush::Reduced_LocalPush(DirectedG &g, string name, double c_, double r_max_, size_t n_) :
-        LocalPush(g, name, c_, r_max_, n_) {
+Reduced_LocalPush::Reduced_LocalPush(DirectedG &g, string name, double c_, double r_max_, size_t n_) : LocalPush(g,
+                                                                                                                 name,
+                                                                                                                 c_,
+                                                                                                                 r_max_,
+                                                                                                                 n_) {
     string data_path = get_file_path_base() + ".P";
     // cout << "data path " << data_path << endl;
     if (file_exists(data_path)) { // local push from start
@@ -594,3 +596,6 @@ void Reduced_LocalPush::update_residual(DirectedG &g, DirectedG::vertex_descript
         }
     }
 }
+
+
+
