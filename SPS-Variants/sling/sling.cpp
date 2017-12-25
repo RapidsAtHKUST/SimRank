@@ -93,7 +93,9 @@ double Sling::calcDi_1(int i, double eps, bool &early, int &R, int tid) {
     const vector<int> *inedge = g->inedge;
     const int isize = in_i.size();
     eps = eps * (double) isize / (double) (isize - 1) / c;
-    int Rs = 14. / 3. / eps * 2. * log(2 * g->n) / log(2.71828);
+//    int Rs = 14. / 3. / eps * 2. * log(2 * g->n) / log(2.71828);
+    constexpr double failure_probability = 0.01;
+    int Rs = 14. / 3. / eps * log(4.0 / failure_probability * g->n) / log(2.71828);
     int X = 0;
     double cc = c * (1l << 32);
     for (; R < Rs; ++R) {
