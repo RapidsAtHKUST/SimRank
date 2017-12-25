@@ -29,12 +29,13 @@ void test_bp(string data_name, double c, double epsilon, double delta, int x, in
     auto end = std::chrono::high_resolution_clock::now();
     std::chrono::duration<double> elapsed = end - start;
 
-    cout << format("sim: %s:%s") % q % result << endl;
+    cout << "\n" << format("sim: %s:%s") % q % result << endl;
     cout << format("memory:%s KB") % getValue() << endl;
     cout << format("total query cost: %s s") % elapsed.count() << endl; // record the pre-processing time
 
     // 3rd: ground truth
     if (g.n < 10000) {
+        cout << "\n";
         TruthSim ts(data_name, g, c, epsilon);
         cout << format("ground truth: %s") % ts.sim(x, y) << endl;
         cout << format("error: %s") % (ts.sim(q.first, q.second) - result) << endl;

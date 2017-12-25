@@ -22,11 +22,12 @@ void test_BFLPMC(string data_name, double c, double epsilon, double delta, int x
     double result = bflpmc.query_one2one({x, y});
     auto end = std::chrono::high_resolution_clock::now();
     std::chrono::duration<double> elapsed = end - start;
-    cout << format("total query cost: %s s") % elapsed.count() << endl; // record the pre-processing time
+    cout << "\n" << format("result of BFLPMC: %s") % result << endl;
     cout << format("memory:%s KB") % getValue() << endl;
+    cout << format("total query cost: %s s") % elapsed.count() << endl; // record the pre-processing time
 
-    cout << format("result of BFLPMC: %s") % result << endl;
     if (g.n < 10000) {
+        cout << "\n";
         TruthSim ts(data_name, g, c, epsilon);
         cout << format("ground truth: %s") % ts.sim(x, y) << endl;
         cout << format("error: %s") % (ts.sim(q.first, q.second) - result) << endl;
