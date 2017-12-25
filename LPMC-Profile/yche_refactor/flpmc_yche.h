@@ -16,7 +16,7 @@ struct FLPMC {
 #ifdef SFMT
     SFMTRand rand_gen;
 #endif
-
+public:
     FLPMC(string g_name_, GraphYche &, double c_, double epsilon_, double delta_, size_t Q);
 
     FLPMC(const FLPMC &other_obj);

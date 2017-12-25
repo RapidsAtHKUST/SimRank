@@ -23,34 +23,6 @@ using NodePair= pair<unsigned int, unsigned int>;
 // used in the heap node
 extern GraphYche *g_ptr;
 
-//namespace std {
-//    template<>
-//    struct hash<NodePair> {
-//        size_t operator()(NodePair const &p) const { // hash function for a node pair
-//            unsigned int combined_int;
-//            // symmetric pairing, we can assume p.second >= p.first
-//            // combined_int = p.second*(p.second+1)/2 + p.first;
-//
-//            // elegant pair function
-//            if (p.first >= p.second) {
-//                combined_int = p.first * p.first + p.first + p.second;
-//            } else {
-//                combined_int = p.second * p.second + p.first;
-//            }
-//            auto hash_value = std::hash<unsigned int>{}(combined_int);
-//            // cout << "hash_value: " << hash_value  << endl;
-//            return hash_value;
-//        }
-//    };
-//
-//    // string format for Node-pair
-//    inline ostream &operator<<(std::ostream &os, const NodePair np) {
-//        // os << np.first << ", " << np.second;
-//        os << format("(%s,%s)") % np.first % np.second;
-//        return os;
-//    }
-//}
-
 struct heap_data {
     // the data the heap maintains
     NodePair np;
