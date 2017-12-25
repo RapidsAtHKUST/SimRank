@@ -11,16 +11,16 @@
 #include "../yche_refactor/bflpmc_yche.h"
 
 void test_BFLPMC(string data_name, double c, double epsilon, double delta) {
-    // test_readsrq(data_name,c,epsilon,R_prime,R,t);
-    // test the max heap functionality
+    // init graph
     string path = get_edge_list_path(data_name);
     GraphYche g(path);
     size_t n = static_cast<size_t>(g.n);
-
     cout << n << endl;
-    auto start = std::chrono::high_resolution_clock::now();
+
+    // init bflpmc object
     auto bflpmc = BFLPMC(data_name, g, c, epsilon, delta);
 
+    auto start = std::chrono::high_resolution_clock::now();
 #pragma omp parallel
     {
         auto local_bflpmc = bflpmc;
@@ -33,7 +33,6 @@ void test_BFLPMC(string data_name, double c, double epsilon, double delta) {
             }
         }
     };
-
     auto end = std::chrono::high_resolution_clock::now();
     std::chrono::duration<double> elapsed = end - start;
 
@@ -46,6 +45,5 @@ int main(int args, char *argv[]) {
     double epsilon = 0.01;
     double delta = 0.01;
 
-//    int x = atoi(argv[2]), y = atoi(argv[3]);
     test_BFLPMC(data_name, c, epsilon, delta);
 }

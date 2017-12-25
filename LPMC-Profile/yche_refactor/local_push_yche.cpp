@@ -50,10 +50,11 @@ Full_LocalPush::Full_LocalPush(GraphYche &g, string name, double c_, double r_ma
         LocalPush(g, name, c_, r_max_, n_) {
     string data_path = get_file_path_base() + ".P";
     cout << "data path " << data_path << endl;
-    if (file_exists(data_path)) { // local push from start
-        cout << "file exisis.." << endl;
-        load();
-    } else { // file exists
+//    if (file_exists(data_path)) { // local push from start
+//        cout << "file exisis.." << endl;
+//        load();
+//    } else { // file exists
+    if (!file_exists(data_path)) {
         /* init the P and R */
         P.add(n);
         R.add(n);
@@ -73,9 +74,10 @@ Full_LocalPush::Full_LocalPush(GraphYche &g, string name, double c_, double r_ma
 Reduced_LocalPush::Reduced_LocalPush(GraphYche &g, string name, double c_, double r_max_, size_t n_) :
         LocalPush(g, name, c_, r_max_, n_) {
     string data_path = get_file_path_base() + ".P";
-    if (file_exists(data_path)) { // local push from start
-        load();
-    } else { // file exists
+//    if (file_exists(data_path)) { // local push from start
+//        load();
+//    } else { // file exists
+    if (!file_exists(data_path)) {
         /* init the P and R */
         P.add(n);
         R.add(n);

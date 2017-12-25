@@ -1,4 +1,4 @@
-## Implementation Optimization Trciks
+## Implementation Optimization Tricks
 
 * adopt bidirectional csr(better memory access)
 * adopt `tcmalloc`(thread-local cache memory) to replace glibc's `malloc`
@@ -13,6 +13,25 @@
 
 * output results to verify correctness for 4 small datasets
 * consider high degree random pairs(dense local structure) and normal random pairs
+
+## Usage
+
+single pair query
+
+```zsh
+./bprw soc-LiveJournal1 0 1
+./bprw-std soc-LiveJournal1 0 1
+./flpmc -d soc-LiveJournal1 -x 0 -y 1 -c 0.6
+./bflpmc soc-LiveJournal1 0 1  
+```
+
+all pair profiling
+
+```zsh
+./bprw-ap ca-GrQc
+./flpmc-ap ca-GrQc
+./bflpmc-ap ca-GrQc
+```
 
 ## Dir Organization
 

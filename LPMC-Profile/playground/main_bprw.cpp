@@ -8,35 +8,37 @@
 #include <boost/program_options.hpp>
 
 #include "../yche_refactor/bprw_yche.h"
+#include "../yche_refactor/simrank.h"
 
 using namespace std;
 using namespace std::chrono;
 using namespace boost::program_options;
 
 void test_bp(string data_name, double c, double epsilon, double delta, int x, int y) {
-    // test_readsrq(data_name,c,epsilon,R_prime,R,t);
-    // test the max heap functionality
     string path = get_edge_list_path(data_name);
     GraphYche g(path);
 
+    // 1st: init
     BackPush bprw(data_name, g, c, epsilon, delta);
     size_t n = static_cast<size_t>(g.n);
     NodePair q{x, y};
-    // for(int i = 0; i < 100;i++){
+
+    // 2nd: query sim(x,y)
     auto start = std::chrono::high_resolution_clock::now();
-
     double result = bprw.query_one2one(q);
-
     auto end = std::chrono::high_resolution_clock::now();
     std::chrono::duration<double> elapsed = end - start;
 
-    cout << q << ": " << result << endl;
-
-
     cout << format("sim: %s:%s") % q % result << endl;
-
+    cout << format("memory:%s KB") % getValue() << endl;
     cout << format("total query cost: %s s") % elapsed.count() << endl; // record the pre-processing time
 
+    // 3rd: ground truth
+    if (g.n < 10000) {
+        TruthSim ts(data_name, g, c, epsilon);
+        cout << format("ground truth: %s") % ts.sim(x, y) << endl;
+        cout << format("error: %s") % (ts.sim(q.first, q.second) - result) << endl;
+    }
 }
 
 int main(int args, char *argv[]) {

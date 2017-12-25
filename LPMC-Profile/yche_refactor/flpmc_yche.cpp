@@ -1,6 +1,6 @@
 #include <cmath>
 
-#include <algorithm>
+#include <chrono>
 
 #include <boost/program_options.hpp>
 
@@ -20,7 +20,11 @@ FLPMC::FLPMC(string g_name_, GraphYche &g_, double c_, double epsilon_, double d
 //     lp = new Full_LocalPush(*g, g_name, c, get_lp_epsilon(), n);
     if (!lp_file_exists(g_name, c, get_lp_epsilon(), n, false)) { // test wether the local push index exists
         cout << "local push offline index doesn't exists.. " << endl;
+        auto start_time = std::chrono::high_resolution_clock::now();
         lp->local_push(*g);
+        auto end_time = std::chrono::high_resolution_clock::now();
+        std::chrono::duration<double> elapsed = end_time - start_time;
+        cout << format("total indexing cost: %s s") % elapsed.count() << endl; // record the pre-processing time
         cout << format("building compete, saving to %s ") % lp->get_file_path_base() << endl;
         lp->save();
         cout << "saved." << endl;

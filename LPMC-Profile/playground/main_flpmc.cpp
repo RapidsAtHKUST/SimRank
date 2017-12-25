@@ -13,17 +13,27 @@ using namespace boost::program_options;
 void test_FLPMC(string data_name, double c, double epsilon, double delta, int x, int y) {
     string path = get_edge_list_path(data_name);
     GraphYche g(path);
-    size_t n = static_cast<size_t>(g.n);
     NodePair q{x, y};
 
+    // 1st: init
     FLPMC flpmc(data_name, g, c, epsilon, delta, 100);
+
+    // 2nd: query
+    auto start = std::chrono::high_resolution_clock::now();
     double result = flpmc.query_one2one(q);
+    auto end = std::chrono::high_resolution_clock::now();
+    std::chrono::duration<double> elapsed = end - start;
+
+    cout << format("total query cost: %s s") % elapsed.count() << endl; // record the pre-processing time
+    cout << format("memory:%s KB") % getValue() << endl;
     cout << result << endl;
 
-    // ground truth
-    TruthSim ts(data_name, g, c, epsilon);
-    cout << format("ground truth: %s") % ts.sim(x, y) << endl;
-    cout << format("error: %s") % (ts.sim(q.first, q.second) - result) << endl;
+    // 3rd: ground truth
+    if (g.n < 10000) {
+        TruthSim ts(data_name, g, c, epsilon);
+        cout << format("ground truth: %s") % ts.sim(x, y) << endl;
+        cout << format("error: %s") % (ts.sim(q.first, q.second) - result) << endl;
+    }
 }
 
 int main(int args, char *argv[]) {

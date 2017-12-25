@@ -7,6 +7,9 @@
 #include <fstream>
 #include <sstream>
 #include <tuple>
+#include <chrono>
+
+using namespace std::chrono;
 
 #include "graph_yche.h"
 
@@ -99,8 +102,16 @@ int GraphYche::out_degree(int u) {
 }
 
 GraphYche::GraphYche(string &graph_path) {
+    auto start_time = high_resolution_clock::now();
     auto edge_lst = GetEdgeList(graph_path);
+    auto end_time = high_resolution_clock::now();
+    cout << "load edge list time:" << duration_cast<milliseconds>(end_time - start_time).count()
+         << " ms\n";
+
     LoadGraph(edge_lst);
+    auto final_time = high_resolution_clock::now();
+    cout << "parse edge list to bi-dir csr time:" << duration_cast<milliseconds>(final_time - end_time).count()
+         << " ms\n";
 }
 
 bool GraphYche::BinarySearch(uint32_t offset_beg, uint32_t offset_end, int val) {
