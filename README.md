@@ -7,7 +7,7 @@ SimRank (single-pair query)
 folder | detail
 --- | ---
 [Our SPS Method Optimized](LPMC-Profile) | Our SPS optimized implementations
-[Our SPS Method Optimized](LPMC) | Our SPS not optimized implementations
+[Our SPS Method Not-Optimized](LPMC) | Our SPS not optimized implementations
 [SPS-Variants](SPS-Variants) | ISP(2010), Sling(2016), READS(2017)
 [APS](APS) | APS implementations(previous)
 

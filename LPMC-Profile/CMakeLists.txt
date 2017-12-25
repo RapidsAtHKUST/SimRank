@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.6)
-project(SPS)
+project(LPMC-Optimizing)
 
 set(CMAKE_CXX_STANDARD 11)
 set(CMAKE_EXPORT_COMPILE_COMMANDS "ON")
@@ -96,4 +96,31 @@ target_link_libraries(flpmc-ap PRIVATE ${Boost_LIBRARIES})
 target_link_libraries(flpmc-ap PRIVATE tcmalloc)
 target_compile_definitions(flpmc-ap PRIVATE -DSFMT=1)
 
+# 6th: compile for BFLPMC
+set(BFLPMC_SOURCE_FILES ${LPMC_FILES} yche_refactor/bprw_yche.cpp yche_refactor/bprw_yche.h
+        yche_refactor/bflpmc_yche.h yche_refactor/bflpmc_yche.cpp
+        ${UTIL_FILES} ${GROUND_TRUTH_FILES} playground/main_bflpmc.cpp)
+add_executable(bflpmc ${BFLPMC_SOURCE_FILES})
+target_include_directories(bflpmc PRIVATE ${Boost_INCLUDE_DIRS})
+target_include_directories(bflpmc PRIVATE ../sparsehash-yche/include)
+target_include_directories(bflpmc PRIVATE ../sparsepp)
+target_include_directories(bflpmc PRIVATE ../SFMT)
+target_include_directories(bflpmc PRIVATE ../include)
+target_compile_options(bflpmc PRIVATE -O3 -g ${SFMT_COMPILE_FLAGS})
+target_link_libraries(bflpmc PRIVATE ${Boost_LIBRARIES})
+target_compile_definitions(bflpmc PRIVATE -DSFMT=1)
 
+# 7th: compile for BFLPMC-ap
+
+set(BFLPMC_SOURCE_FILES ${LPMC_FILES} yche_refactor/bprw_yche.cpp yche_refactor/bprw_yche.h
+        yche_refactor/bflpmc_yche.h yche_refactor/bflpmc_yche.cpp
+        ${UTIL_FILES} ${GROUND_TRUTH_FILES} playground/main_bflpmc_all_pair.cpp)
+add_executable(bflpmc-ap ${BFLPMC_SOURCE_FILES})
+target_include_directories(bflpmc-ap PRIVATE ${Boost_INCLUDE_DIRS})
+target_include_directories(bflpmc-ap PRIVATE ../sparsehash-yche/include)
+target_include_directories(bflpmc-ap PRIVATE ../sparsepp)
+target_include_directories(bflpmc-ap PRIVATE ../SFMT)
+target_include_directories(bflpmc-ap PRIVATE ../include)
+target_compile_options(bflpmc-ap PRIVATE -O3 -g ${SFMT_COMPILE_FLAGS})
+target_link_libraries(bflpmc-ap PRIVATE ${Boost_LIBRARIES})
+target_compile_definitions(bflpmc-ap PRIVATE -DSFMT=1)
