@@ -1,3 +1,9 @@
+## Implementation Optimization Trciks
+
+* adopt bidirectional csr(better memory access)
+* adopt `tcmalloc`(thread-local cache memory) to replace glibc's `malloc`
+* adopt `SFMT`(simd fast rand generator), and reuse the allocated memory
+
 ## Dir Organization
 
 util | files

@@ -33,10 +33,12 @@ target_include_directories(blpmc PRIVATE ${Boost_INCLUDE_DIRS})
 target_include_directories(blpmc PRIVATE ../sparsehash-yche/include)
 target_include_directories(blpmc PRIVATE ../sparsepp)
 target_include_directories(blpmc PRIVATE ../SFMT)
+target_include_directories(blpmc PRIVATE ../include)
+
+target_link_libraries(blpmc PRIVATE tcmalloc)
+
 target_compile_options(blpmc PRIVATE -O3 -g ${SFMT_COMPILE_FLAGS})
 target_compile_definitions(blpmc PRIVATE -DSFMT=1 -DDEBUG=1)
-target_include_directories(blpmc PRIVATE ../include)
-target_link_libraries(blpmc PRIVATE tcmalloc)
 
 # 2nd: compile for BLPMC-std
 add_executable(blpmc-std ${BLPMC_SOURCE_FILES})
@@ -46,9 +48,11 @@ target_include_directories(blpmc-std PRIVATE ../sparsehash-yche/include)
 target_include_directories(blpmc-std PRIVATE ../sparsepp)
 target_include_directories(blpmc-std PRIVATE ../SFMT)
 target_include_directories(blpmc-std PRIVATE ../include)
+
+target_link_libraries(blpmc-std PRIVATE tcmalloc)
+
 target_compile_options(blpmc-std PRIVATE -O3 -g ${SFMT_COMPILE_FLAGS})
 target_compile_definitions(blpmc-std PRIVATE -DDEBUG=1)
-target_link_libraries(blpmc-std PRIVATE tcmalloc)
 
 # 3rd: compile for BLPMC-ap, all pair just for profiling
 add_executable(blpmc-ap yche_refactor/bprw_yche.cpp yche_refactor/bprw_yche.h
@@ -58,10 +62,13 @@ target_include_directories(blpmc-ap PRIVATE ../sparsehash-yche/include)
 target_include_directories(blpmc-ap PRIVATE ../sparsepp)
 target_include_directories(blpmc-ap PRIVATE ../SFMT)
 target_include_directories(blpmc-ap PRIVATE ${Boost_INCLUDE_DIRS})
+
+target_include_directories(blpmc-ap PRIVATE ../include)
+
+target_link_libraries(blpmc-ap PRIVATE tcmalloc)
+
 target_compile_options(blpmc-ap PRIVATE -O3 -g ${SFMT_COMPILE_FLAGS})
 target_compile_definitions(blpmc-ap PRIVATE -DSFMT=1)
-target_include_directories(blpmc-ap PRIVATE ../include)
-target_link_libraries(blpmc-ap PRIVATE tcmalloc)
 
 # 4th: compile for FLPMC
 set(LPMC_FILES yche_refactor/flpmc_yche.h yche_refactor/flpmc_yche.cpp
@@ -76,8 +83,11 @@ target_include_directories(flpmc PRIVATE ../sparsehash-yche/include)
 target_include_directories(flpmc PRIVATE ../sparsepp)
 target_include_directories(flpmc PRIVATE ../SFMT)
 target_include_directories(flpmc PRIVATE ../include)
-target_compile_options(flpmc PRIVATE -O3 -g ${SFMT_COMPILE_FLAGS})
+
 target_link_libraries(flpmc PRIVATE ${Boost_LIBRARIES})
+target_link_libraries(flpmc PRIVATE tcmalloc)
+
+target_compile_options(flpmc PRIVATE -O3 -g ${SFMT_COMPILE_FLAGS})
 target_compile_definitions(flpmc PRIVATE -DSFMT=1)
 
 # 5th: compile for FLPMC-ap
@@ -91,9 +101,11 @@ target_include_directories(flpmc-ap PRIVATE ../sparsehash-yche/include)
 target_include_directories(flpmc-ap PRIVATE ../sparsepp)
 target_include_directories(flpmc-ap PRIVATE ../SFMT)
 target_include_directories(flpmc-ap PRIVATE ../include)
-target_compile_options(flpmc-ap PRIVATE -O3 -g ${SFMT_COMPILE_FLAGS})
+
 target_link_libraries(flpmc-ap PRIVATE ${Boost_LIBRARIES})
 target_link_libraries(flpmc-ap PRIVATE tcmalloc)
+
+target_compile_options(flpmc-ap PRIVATE -O3 -g ${SFMT_COMPILE_FLAGS})
 target_compile_definitions(flpmc-ap PRIVATE -DSFMT=1)
 
 # 6th: compile for BFLPMC
@@ -101,26 +113,33 @@ set(BFLPMC_SOURCE_FILES ${LPMC_FILES} yche_refactor/bprw_yche.cpp yche_refactor/
         yche_refactor/bflpmc_yche.h yche_refactor/bflpmc_yche.cpp
         ${UTIL_FILES} ${GROUND_TRUTH_FILES} playground/main_bflpmc.cpp)
 add_executable(bflpmc ${BFLPMC_SOURCE_FILES})
+
 target_include_directories(bflpmc PRIVATE ${Boost_INCLUDE_DIRS})
 target_include_directories(bflpmc PRIVATE ../sparsehash-yche/include)
 target_include_directories(bflpmc PRIVATE ../sparsepp)
 target_include_directories(bflpmc PRIVATE ../SFMT)
 target_include_directories(bflpmc PRIVATE ../include)
-target_compile_options(bflpmc PRIVATE -O3 -g ${SFMT_COMPILE_FLAGS})
+
 target_link_libraries(bflpmc PRIVATE ${Boost_LIBRARIES})
+target_link_libraries(bflpmc PRIVATE tcmalloc)
+
+target_compile_options(bflpmc PRIVATE -O3 -g ${SFMT_COMPILE_FLAGS})
 target_compile_definitions(bflpmc PRIVATE -DSFMT=1)
 
 # 7th: compile for BFLPMC-ap
-
 set(BFLPMC_SOURCE_FILES ${LPMC_FILES} yche_refactor/bprw_yche.cpp yche_refactor/bprw_yche.h
         yche_refactor/bflpmc_yche.h yche_refactor/bflpmc_yche.cpp
         ${UTIL_FILES} ${GROUND_TRUTH_FILES} playground/main_bflpmc_all_pair.cpp)
 add_executable(bflpmc-ap ${BFLPMC_SOURCE_FILES})
+
 target_include_directories(bflpmc-ap PRIVATE ${Boost_INCLUDE_DIRS})
 target_include_directories(bflpmc-ap PRIVATE ../sparsehash-yche/include)
 target_include_directories(bflpmc-ap PRIVATE ../sparsepp)
 target_include_directories(bflpmc-ap PRIVATE ../SFMT)
 target_include_directories(bflpmc-ap PRIVATE ../include)
-target_compile_options(bflpmc-ap PRIVATE -O3 -g ${SFMT_COMPILE_FLAGS})
+
 target_link_libraries(bflpmc-ap PRIVATE ${Boost_LIBRARIES})
+target_link_libraries(bflpmc-ap PRIVATE tcmalloc)
+
+target_compile_options(bflpmc-ap PRIVATE -O3 -g ${SFMT_COMPILE_FLAGS})
 target_compile_definitions(bflpmc-ap PRIVATE -DSFMT=1)
