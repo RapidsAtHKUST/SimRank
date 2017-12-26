@@ -50,9 +50,10 @@ int main(int argc, char *argv[]) {
 
     tmp_start = std::chrono::high_resolution_clock::now();
 #pragma omp parallel for schedule(dynamic, 1)
-    for (auto u = 0; u < sling_algo.g->n; u++) {
-//    for (auto u = 0; u < 100; u++) {
-        for (auto v = u; v < sling_algo.g->n; v++) {
+//    for (auto u = 0; u < sling_algo.g->n; u++) {
+    for (auto u = 0; u < 1000; u++) {
+//        for (auto v = u; v < sling_algo.g->n; v++) {
+        for (auto v = u; v < 1000; v++) {
             sling_algo.simrank(u, v);
         }
     }

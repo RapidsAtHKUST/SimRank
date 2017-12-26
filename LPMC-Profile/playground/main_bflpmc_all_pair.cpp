@@ -25,9 +25,10 @@ void test_BFLPMC(string data_name, double c, double epsilon, double delta) {
     {
         auto local_bflpmc = bflpmc;
 #pragma omp for schedule(dynamic, 1)
-//        for (auto i = 0u; i < 100; i++) {
-        for (auto i = 0u; i < n; i++) {
-            for (auto j = i; j < n; j++) {
+        for (auto i = 0u; i < 1000; i++) {
+//        for (auto i = 0u; i < n; i++) {
+//            for (auto j = i; j < n; j++) {
+            for (auto j = i; j < 1000; j++) {
                 auto q = pair<uint32_t, uint32_t>(i, j);
                 local_bflpmc.query_one2one(q);
             }

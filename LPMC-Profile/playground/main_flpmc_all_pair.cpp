@@ -19,9 +19,10 @@ void test_FLPMC(string data_name, double c, double epsilon, double delta) {
         auto my_flpmc = flpmc;
 #pragma omp for schedule(dynamic, 1)
 //#pragma omp for
-//        for (auto i = 0u; i < 100; i++) {
-        for (auto i = 0u; i < n; i++) {
-            for (auto j = i; j < n; j++) {
+        for (auto i = 0u; i < 1000; i++) {
+//        for (auto i = 0u; i < n; i++) {
+//            for (auto j = i; j < n; j++) {
+            for (auto j = i; j < 1000; j++) {
                 auto q = pair<uint32_t, uint32_t>(i, j);
                 my_flpmc.query_one2one(q);
             }
