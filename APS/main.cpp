@@ -11,7 +11,7 @@
 #include "graph.h"
 #include "local_push.h"
 #include "simrank.h"
-//#include "tkde17_sim.h"
+#include "tkde17_sim.h"
 #include "cloud_walker.h"
 #include "linearD.h"
 #include "bprw.h"
@@ -293,7 +293,6 @@ void compute_ground_truth(string data_name, double c = 0.6, double epsilon = 0.0
     }
 }
 
-/*
 void test_tkde17(string data_name, float c = 0.6, float epsilon = 0.001) {
     // run tkde 17 experiments
     cout << "computing " << data_name << " " << c << epsilon << endl;
@@ -319,7 +318,7 @@ void test_tkde17(string data_name, float c = 0.6, float epsilon = 0.001) {
     cout << "==============" << endl;
     return;
 }
-*/
+
 void generate_effective_error_rlp(string data_name) {
     // generate rlp effective
     string ERROR_DIR("/homes/ywangby/workspace/dynamicSim/datasets/effective_error/");
@@ -382,21 +381,21 @@ void generate_effective_error_flp(string data_name) {
     out.close();
 }
 
-//void compute_tkde17_error(string data_name) {
-//    DirectedG g;
-//    load_graph(get_edge_list_path(data_name), g);
-//    double c = 0.6;
-//    double epsilon = 0.01;
-//    size_t n = num_vertices(g);
-//    ofstream out(TKDE17_RESULT_DIR + data_name + string(".error"));
-//    TruthSim ts(data_name, g, c, epsilon);
-//    cout << ts.sim.sum() << endl;
-//    LinearSystemSim tkde17(data_name, g, c, epsilon);
-//    double max_error = (ts.sim - tkde17.sim).cwiseAbs().maxCoeff();
-//    double mean_error = (ts.sim - tkde17.sim).cwiseAbs().mean();
-//    out << max_error << " " << mean_error << endl;
-//    out.close();
-//}
+void compute_tkde17_error(string data_name) {
+    DirectedG g;
+    load_graph(get_edge_list_path(data_name), g);
+    double c = 0.6;
+    double epsilon = 0.01;
+    size_t n = num_vertices(g);
+    ofstream out(TKDE17_RESULT_DIR + data_name + string(".error"));
+    TruthSim ts(data_name, g, c, epsilon);
+    cout << ts.sim.sum() << endl;
+    LinearSystemSim tkde17(data_name, g, c, epsilon);
+    double max_error = (ts.sim - tkde17.sim).cwiseAbs().maxCoeff();
+    double mean_error = (ts.sim - tkde17.sim).cwiseAbs().mean();
+    out << max_error << " " << mean_error << endl;
+    out.close();
+}
 
 void compute_cloudwalker_error(string data_name) {
     DirectedG g;
@@ -712,9 +711,9 @@ int main(int args, char *argv[]) {
             } else if (algo_name == "truth") {
                 compute_ground_truth(data_name, c); // ignore the other parameters for ground truth
             }
-//            else if (algo_name == "tkde17") {
-//                test_tkde17(data_name, c, epsilon);
-//            }
+            else if (algo_name == "tkde17") {
+                test_tkde17(data_name, c, epsilon);
+            }
             else if (algo_name == "dynamic") {
                 exp_dynamic(data_name, c, epsilon, number_of_updates);
             } else if (algo_name == "cloudwalker") {

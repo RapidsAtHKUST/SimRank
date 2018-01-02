@@ -1,21 +1,25 @@
 #ifndef __TKDE17_SIM_H__
 #define __TKDE17_SIM_H__
 
+#include <time.h>
+#include <math.h>
+
 #include <iostream>
-#include <Eigen/Dense>
 #include <string>
 #include <vector>
-#include <boost/format.hpp>
 #include <fstream>
-#include <exception>
-#include <Eigen/src/Core/Dot.h>
-#include <time.h>
-#include <Eigen/Sparse>
 #include <queue>
 #include <random>
 #include <algorithm>
 #include <iterator>
-#include <math.h>
+#include <exception>
+
+#include <boost/format.hpp>
+
+#include <Eigen/Dense>
+#include <Eigen/src/Core/Dot.h>
+#include <Eigen/Sparse>
+
 #include "graph.h"
 
 using namespace Eigen;
