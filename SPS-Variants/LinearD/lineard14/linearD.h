@@ -9,21 +9,26 @@ const string LINEAR_D_DIR = "./datasets/linearD/";
 
 struct LinearD {
     // The Linearization Technique SimRank (Efficient SimRank Computation via Linearization KDD'14)
+public:
+    string g_name;
+    size_t n; // number of nodes
+
+    double cpu_time; // cpu time
+    int mem_size; // the memory usage
+
+public:
     double c;
     int T;
     int L;
     int R;
-    size_t n; // number of nodes
-    double cpu_time; // cpu time
-    int mem_size; // the memory usage
+
     VectorXd D; // dynamic vector D
     DirectedG *g; // pointer to the graph
     MatrixXd sim;
     SparseMatrix<double> P, PT;
 
-    string g_name;
-
-    LinearD() {}
+public:
+    LinearD() = default;
 
     LinearD(DirectedG *, string name, double c_, int T_, int L_, int R_);
 
@@ -42,7 +47,6 @@ struct LinearD {
     void all_pair();
 
     pair<double, double> estimate_SDkk_SEkk(int k); // estimate S^{L}(D)_{kk} and S^{L}(E^{kk})_{kk}
-
 };
 
 #endif

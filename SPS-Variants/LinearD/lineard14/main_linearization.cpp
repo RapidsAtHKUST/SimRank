@@ -6,16 +6,20 @@
 
 #include "linearD.h"
 
+using namespace std;
+using namespace std::chrono;
+
 void test_linearD(string data_name, double c, int T, int L, int R) {
     DirectedG g;
     load_graph(get_edge_list_path(data_name), g);
-    srand(time(NULL)); // random number generator
-    std::chrono::duration<double> elapsed;
+    srand(static_cast<unsigned int>(time(NULL))); // random number generator
+    std::chrono::duration<double> elapsed{};
     int sample_size = 1000;
 
     auto start = std::chrono::high_resolution_clock::now();
     LinearD lin(&g, data_name, c, T, L, R);
     auto pre_time = std::chrono::high_resolution_clock::now();
+
     size_t n = num_vertices(g);
     ofstream out(LINEAR_D_DIR + lin.g_name + string(".meta")); // the file to store the execute info
     elapsed = pre_time - start;
@@ -47,7 +51,13 @@ void test_linearD(string data_name, double c, int T, int L, int R) {
 void test_lineD_all_pair(string data_name, double c, int T, int L, int R) {
     DirectedG g;
     load_graph(get_edge_list_path(data_name), g);
+
+    auto start_ss = std::chrono::high_resolution_clock::now();
     LinearD lin(&g, data_name, c, T, L, R);
+    auto end_ss = std::chrono::high_resolution_clock::now();
+    cout << "pre-processing: " << float(duration_cast<microseconds>(end_ss - start_ss).count()) / (pow(10, 6))
+         << " s\n" << endl;
+
     lin.all_pair();
     cout << lin.get_file_path_base() << endl;
     lin.save();
@@ -59,11 +69,11 @@ int main(int argc, char *argv[]) {
     int T = 15;
     double c = 0.6;
 
-    using namespace std::chrono;
     auto tmp_start = std::chrono::high_resolution_clock::now();
-    test_lineD_all_pair("ca-GrQc", c, T, L, R);
-    auto tmp_end = std::chrono::high_resolution_clock::now();
-    cout << "finish backward " << float(duration_cast<microseconds>(tmp_end - tmp_start).count()) / (pow(10, 6))
-         << " s\n";
 
+    test_lineD_all_pair("ca-GrQc", c, T, L, R);
+
+    auto tmp_end = std::chrono::high_resolution_clock::now();
+    cout << "finish the whole computation "
+         << float(duration_cast<microseconds>(tmp_end - tmp_start).count()) / (pow(10, 6)) << " s\n";
 }

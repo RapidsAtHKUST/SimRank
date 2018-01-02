@@ -33,6 +33,7 @@ void CloudWalker::mcap() {
     }
     auto finish = std::chrono::high_resolution_clock::now();
     std::chrono::duration<double> elapsed = finish - start;
+
     cpu_time = elapsed.count();
     mem_size = getValue();
 }
@@ -62,8 +63,6 @@ CloudWalker::CloudWalker(DirectedG *graph,
     preprocess_D();
     preprocess_F();
     preprocess_hat_P();
-
-
 }
 
 void CloudWalker::Tstep_distribution(int i, int samples, MatrixXd &pos_dist) {
@@ -113,7 +112,7 @@ void CloudWalker::preprocess_D() {
                 // update a_i 
                 int position, number;
                 tie(position, number) = item;
-                A[i][position] += pow(c, t) * pow(double(number) / double(R), 2); // udpate the sparse matrix A
+                A[i][position] += pow(c, t) * pow(double(number) / double(R), 2); // update the sparse matrix A
                 // choose the next position
                 for (int k = 0; k < number; k++) {
                     auto sampled_in_neighbor = sample_in_neighbor(position, *g);

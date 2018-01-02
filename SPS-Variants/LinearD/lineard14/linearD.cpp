@@ -24,12 +24,13 @@ LinearD::LinearD(DirectedG *graph, string name, double c_, int T_, int L_, int R
     L = L_;
     R = R_;
     g = graph;
-    g_name = name;
+    g_name = std::move(name);
     n = num_vertices(*g);
     D.resize(n);
     D.setOnes();
     P.resize(n, n);
     PT.resize(n, n);
+
     compute_D();
     compute_P();
 }
@@ -41,7 +42,7 @@ void LinearD::compute_D() {
         for (size_t k = 0; k < n; k++) {
             double alpha, beta, delta;
             tie(alpha, beta) = estimate_SDkk_SEkk(k);
-            // cout << "alpha and beta: " << alpha << " " << beta << endl;
+//             cout << "alpha and beta: " << alpha << " " << beta << endl;
             delta = (1.0 - alpha) / beta;
             D(k) += delta;
         }
@@ -49,6 +50,7 @@ void LinearD::compute_D() {
 }
 
 void LinearD::compute_P() {
+    cout << "compute p..." << endl;
     typedef Eigen::Triplet<double> T;
     std::vector<T> tripletListP, tripletListPT;
     tripletListP.reserve(num_edges(*g));
@@ -64,6 +66,7 @@ void LinearD::compute_P() {
     }
     P.setFromTriplets(tripletListP.begin(), tripletListP.end());
     PT.setFromTriplets(tripletListPT.begin(), tripletListPT.end());
+    cout << "finish compute p" << endl;
 }
 
 pair<double, double> LinearD::estimate_SDkk_SEkk(int k) {
@@ -125,12 +128,11 @@ void LinearD::single_source(int i, VectorXd &r) {
         e = P * e;
     }
     for (int t = 0; t <= T; ++t) {
-        Tstep_dist.row(t) = Tstep_dist.row(t).cwiseProduct(D);
+        Tstep_dist.row(t) = Tstep_dist.row(t).transpose().cwiseProduct(D);
     }
     r = Tstep_dist.row(T);
     for (int t = T - 1; t >= 0; t--) {
-        r = Tstep_dist.row(t) + c * PT * r;
+        r = Tstep_dist.row(t).transpose() + c * PT * r;
     }
     mem_size = getValue();
 }
-
