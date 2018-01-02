@@ -24,8 +24,8 @@
 #include <sparsepp/spp.h>
 #include <google/dense_hash_map>
 
-#include "util/file_serialization.h"
-#include "util/stat.h"
+#include "file_serialization.h"
+#include "stat.h"
 
 using namespace boost;
 using namespace std;

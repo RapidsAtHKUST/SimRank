@@ -3,7 +3,7 @@
 
 #include <memory>
 
-#include "graph.h"
+#include "../util/graph.h"
 
 const string LINEAR_D_DIR = "./datasets/linearD/";
 

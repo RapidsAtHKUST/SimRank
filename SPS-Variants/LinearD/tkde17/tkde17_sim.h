@@ -20,7 +20,7 @@
 #include <Eigen/src/Core/Dot.h>
 #include <Eigen/Sparse>
 
-#include "../graph.h"
+#include "../util/graph.h"
 
 using namespace Eigen;
 using namespace std;
