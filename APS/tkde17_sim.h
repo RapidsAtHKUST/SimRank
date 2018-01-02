@@ -1,8 +1,8 @@
 #ifndef __TKDE17_SIM_H__
 #define __TKDE17_SIM_H__
 
-#include <time.h>
-#include <math.h>
+#include <ctime>
+#include <cmath>
 
 #include <iostream>
 #include <string>

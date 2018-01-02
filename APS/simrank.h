@@ -2,8 +2,8 @@
 #define __SIMRANK_H__
 
 #include <boost/format.hpp>
-#include "graph.h"
 
+#include "graph.h"
 
 extern void basic_simrank(DirectedG &g, double c, SimRank_matrix &);
 
