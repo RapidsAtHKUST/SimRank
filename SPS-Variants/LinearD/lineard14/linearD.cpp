@@ -116,8 +116,8 @@ void LinearD::all_pair() {
     }
 }
 
+// time comleixty: T * m, space complexity: (T+1) * n
 void LinearD::single_source(int i, VectorXd &r) {
-    // single source simrank
     MatrixXd Tstep_dist(T + 1, n);
     Tstep_dist.setZero();
     VectorXd e(n);
@@ -135,4 +135,25 @@ void LinearD::single_source(int i, VectorXd &r) {
         r = Tstep_dist.row(t).transpose() + c * PT * r;
     }
     mem_size = getValue();
+}
+
+// time complexity: T * m, space complexity: 2n
+double LinearD::single_pair(int i, int j) {
+    double res = 0.0;
+
+    double cur_decay = 1.0;
+    VectorXd lhs_vec(n), rhs_vec(n);
+    lhs_vec.setZero();
+    lhs_vec(i) = 1;
+    rhs_vec.setZero();
+    rhs_vec(j) = 1;
+
+    for (auto t = 0; t < T; ++t) {
+        res += cur_decay * lhs_vec.cwiseProduct(D).transpose() * (rhs_vec);
+        lhs_vec = P * lhs_vec;
+        rhs_vec = P * rhs_vec;
+        cur_decay *= c;
+    }
+    res += cur_decay * lhs_vec.cwiseProduct(D).transpose() * (rhs_vec);
+    return res;
 }
