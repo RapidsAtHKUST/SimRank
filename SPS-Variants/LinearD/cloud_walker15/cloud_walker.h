@@ -41,13 +41,15 @@ public:
 
     void mcap(); // Monte Carlo All-pair SimRank computation
 
-    void Tstep_distribution(int i, int samples,
-                            MatrixXd &pos_dist); // compute T-step position distribution of a number of samples
+    double mcsp(int u, int v);
+
+    void Tstep_distribution(int i, MatrixXd &pos_dist); // compute T-step position distribution of a number of samples
     string get_file_path_base();
 
     void save();
 
     void load();
+
 };
 
 #endif

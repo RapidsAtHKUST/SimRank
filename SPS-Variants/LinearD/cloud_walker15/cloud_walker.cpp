@@ -65,7 +65,7 @@ CloudWalker::CloudWalker(DirectedG *graph,
     preprocess_hat_P();
 }
 
-void CloudWalker::Tstep_distribution(int i, int samples, MatrixXd &pos_dist) {
+void CloudWalker::Tstep_distribution(int i, MatrixXd &pos_dist) {
     pos_dist.setZero();
     /* start run R random walks */
     int current_pos;
@@ -109,7 +109,7 @@ void CloudWalker::preprocess_D() {
             // cout << "T: " << t << endl;
             (*next_ptr).clear();
             for (auto &item : (*pre_ptr)) {
-                // update a_i 
+                // update a_i
                 int position, number;
                 tie(position, number) = item;
                 A[i][position] += pow(c, t) * pow(double(number) / double(R), 2); // update the sparse matrix A
@@ -208,7 +208,7 @@ void CloudWalker::mcss(int i, VectorXd &r) {
     std::uniform_real_distribution<double> uniform_dist(0.0, 1.0);
 
     MatrixXd pos_dist(T + 1, n); // to store the distribution of random walks from i
-    Tstep_distribution(i, R_prime, pos_dist); // T-step random walk distribution
+    Tstep_distribution(i, pos_dist); // T-step random walk distribution
     // cout << "T step distribution: " << endl;
     // cout << pos_dist << endl;
     VectorXd v(n);
@@ -219,18 +219,18 @@ void CloudWalker::mcss(int i, VectorXd &r) {
         v = v.cwiseProduct(D);// now v = DPe_{i}
 
         for (size_t tt = 0; tt < t; ++tt) {
-            // compute P^{Tt}*v
+            // compute P^{ Tt}*v
             VectorXd one_step_dist(n);
             one_step_dist.setZero();
             v = v.cwiseProduct(F);
             double w = v.sum();
             v = v / w;
             auto &u = v; // initial distribution
-            // set up the distribution initial positions  
+            // set up the distribution initial positions
             discrete_distribution<int> dist(u.data(), u.data() + u.size());
             for (size_t k = 0; k < R_prime; ++k) { // start random walks
                 auto init_pos = dist(generator1); // sample a starting node
-                // sample out-neighbor, too heavy 
+                // sample out-neighbor, too heavy
                 if (out_degree(init_pos, *g) > 0) {
                     /* out-neighbor iterator for weights */
                     // auto out_start = hat_P.valuePtr() + hat_P.outerIndexPtr()[start_pos];
@@ -264,5 +264,24 @@ void CloudWalker::mcss(int i, VectorXd &r) {
     }
     mem_size = getValue();
 }
+
+double CloudWalker::mcsp(int u, int v) {
+    MatrixXd pos_dist_u(T + 1, n); // to store the distribution of random walks from i
+    Tstep_distribution(u, pos_dist_u); // T-step random walk distribution
+
+    MatrixXd pos_dist_v(T + 1, n);
+    Tstep_distribution(v, pos_dist_v);
+
+    double sim_score = 0.0;
+    double cur_decay = 1.0;
+    for (auto t = 0; t < T + 1; t++) {
+        sim_score +=
+                cur_decay * pos_dist_u.row(t).transpose().cwiseProduct(D).transpose() * pos_dist_v.row(t).transpose();
+        cur_decay *= c;
+    }
+    return sim_score;
+}
+
+
 
 
