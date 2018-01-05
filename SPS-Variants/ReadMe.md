@@ -1,14 +1,9 @@
-## ISP 2010
+## 2010 isp
 
-threshold `h` introduces errors
+## 2014 lin
 
-## READS
+## 2015 cloud-walker
 
-symbol | meaning
---- | ---
-confidence | 1 - delta
-absolute err | eps
-t | depth
-r | sampling number
+## 2015 tsf
 
-`r = ln(delta) * c^2 * (t-1) / (-2 * eps^2)`
+## 2016 sling
