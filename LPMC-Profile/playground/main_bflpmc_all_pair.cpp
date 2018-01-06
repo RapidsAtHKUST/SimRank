@@ -36,16 +36,17 @@ void test_BFLPMC(string data_name, double c, double epsilon, double delta) {
 #else
 #pragma omp for schedule(dynamic, 1)
 #endif
-        for (auto i = 0u; i < 1000; i++) {
-//        for (auto i = 0u; i < n; i++) {
-//            for (auto j = i; j < n; j++) {
-            for (auto j = i; j < 1000; j++) {
+//        for (auto i = 0u; i < 1000; i++) {
+        for (auto i = 0u; i < n; i++) {
+            for (auto j = i; j < n; j++) {
+//            for (auto j = i; j < 1000; j++) {
                 auto q = pair<uint32_t, uint32_t>(i, j);
 #ifdef GROUND_TRUTH
                 auto res = local_bflpmc.query_one2one(q);
                 // left: local, right: global or local ???
                 max_err = max(max_err, abs(ts.sim(q.first, q.second) - res));
-                if (abs(ts.sim(q.first, q.second) - res) > 0.1) {
+                if (abs(ts.sim(q.first, q.second) - res) > 0.01) {
+#pragma omp critical
                     cout << i << "," << j << "," << ts.sim(q.first, q.second) << "," << res << endl;
                 }
 #else

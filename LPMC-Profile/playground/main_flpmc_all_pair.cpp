@@ -36,7 +36,7 @@ void test_FLPMC(string data_name, double c, double epsilon, double delta) {
 #ifdef GROUND_TRUTH
                 auto res = my_flpmc.query_one2one(q);
                 max_err = max(max_err, abs(ts.sim(q.first, q.second) - res));
-                if (abs(ts.sim(q.first, q.second) - res) > 0.2) {
+                if (abs(ts.sim(q.first, q.second) - res) > 0.01) {
 #pragma omp critical
                     cout << i << ", " << j << "," << ts.sim(q.first, q.second) << "," << res << endl;
                 }
