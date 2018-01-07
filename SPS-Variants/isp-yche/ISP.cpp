@@ -63,7 +63,7 @@ ISP::ISP(string &file_path) {
 
 double ISP::ComputeSim(uint32_t u, uint32_t v, double c, int max_k, double h) {
     this->h = h;
-    auto tmp_start = high_resolution_clock::now();
+//    auto tmp_start = high_resolution_clock::now();
 
     if (u == v) { return 1.0; }
 
@@ -102,9 +102,9 @@ double ISP::ComputeSim(uint32_t u, uint32_t v, double c, int max_k, double h) {
         q_k_prev = q_k;
     }
 
-    auto tmp_end = high_resolution_clock::now();
-    cout << "query computation time:"
-         << duration_cast<milliseconds>(tmp_end - tmp_start).count() << " ms\n";
+//    auto tmp_end = high_resolution_clock::now();
+//    cout << "query computation time:"
+//         << duration_cast<milliseconds>(tmp_end - tmp_start).count() << " ms\n";
     return sim_u_v;
 }
 
