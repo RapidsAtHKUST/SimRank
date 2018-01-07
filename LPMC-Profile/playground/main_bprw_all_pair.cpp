@@ -71,7 +71,7 @@ int main(int args, char *argv[]) {
     string data_name(argv[1]);
     double c = 0.6;
     double epsilon = 0.01;
-    double delta = 0.01;
+    double delta = 0.000001;
 
     test_bp(data_name, c, epsilon, delta);
 }
