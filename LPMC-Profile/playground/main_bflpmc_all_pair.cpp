@@ -26,6 +26,32 @@ void test_BFLPMC(string data_name, double c, double epsilon, double delta) {
     auto max_err = 0.0;
 #endif
 
+    auto above_eps_count = 0;
+    auto above_point1_count = 0;
+    auto above_point2_count = 0;
+    auto above_point3_count = 0;
+    auto above_point4_count = 0;
+    auto above_point5_count = 0;
+    auto above_point6_count = 0;
+    for (auto i = 0u; i < n; i++) {
+        for (auto j = i; j < n; j++) {
+            if (ts.sim(i, j) > 0.01) { above_eps_count++; }
+            if (ts.sim(i, j) > 0.1) { above_point1_count++; }
+            if (ts.sim(i, j) > 0.2) { above_point2_count++; }
+            if (ts.sim(i, j) > 0.3) { above_point3_count++; }
+            if (ts.sim(i, j) > 0.4) { above_point4_count++; }
+            if (ts.sim(i, j) > 0.5) { above_point5_count++; }
+            if (ts.sim(i, j) > 0.6) { above_point6_count++; }
+        }
+    }
+    cout << "above eps:" << above_eps_count << endl;
+    cout << "above 0.1 :" << above_point1_count << endl;
+    cout << "above 0.2 :" << above_point2_count << endl;
+    cout << "above 0.3 :" << above_point3_count << endl;
+    cout << "above 0.4 :" << above_point4_count << endl;
+    cout << "above 0.5 :" << above_point5_count << endl;
+    cout << "above 0.6 :" << above_point6_count << endl;
+
     auto start = std::chrono::high_resolution_clock::now();
 #pragma omp parallel
     {

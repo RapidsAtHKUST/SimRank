@@ -87,7 +87,8 @@ pair<double, int> BackPush::backward_push(NodePair np, unique_max_heap &containe
     while (!container.empty() && is_keep_on_push(container)) {
         // check whether to stop
 
-        auto top_element = container.pop(); // pop and fetch the top element 
+        auto top_element = container.pop(); // pop and fetch the top element
+        cout << top_element << endl;
         auto a = top_element.np.first;
         auto b = top_element.np.second;
         double residual = top_element.residual;
@@ -106,7 +107,10 @@ pair<double, int> BackPush::backward_push(NodePair np, unique_max_heap &containe
                 tie(inb_it, inb_end) = in_edges(b, *g);
                 for (; inb_it != inb_end; ++inb_it) {
                     auto inb = source(*inb_it, *g);
-                    // cout << a << " " << b << " pushing to: " << ina << " " << inb << endl;
+#ifdef DEBUG
+                    cout << a << " " << b << " pushing to: " << ina << " " << inb << " ," << indeg_a << " ," << indeg_b
+                         << endl;
+#endif
                     container.push(NodePair{ina, inb}, c * residual / (indeg_a * indeg_b));
                     ++cost;
                 }
