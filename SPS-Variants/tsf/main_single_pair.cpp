@@ -5,7 +5,6 @@
 #include <chrono>
 #include <iostream>
 
-#include "tsf/TSF.h"
 #include "input_output.h"
 #include "util/pretty_print.h"
 
@@ -18,7 +17,6 @@ int main(int argc, char *argv[]) {
     auto stepNum = 11;
     auto sampleNum = 100;
     auto sampleQueryNum = 43;
-//    auto sampleQueryNum = 5000;
 
     vector<int> graph_src_vec;
     vector<int> graph_dst_vec;

@@ -6,9 +6,9 @@
 #include <chrono>
 #include <iostream>
 
-#include "tsf/TSF.h"
-#include "input_output.h"
-#include "util/pretty_print.h"
+#include "TSF.h"
+#include "../input_output.h"
+#include "../util/pretty_print.h"
 
 using namespace std::chrono;
 
