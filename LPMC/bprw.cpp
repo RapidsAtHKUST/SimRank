@@ -65,7 +65,8 @@ size_t BackPush::number_of_walkers(double sum) {
 
 double BackPush::keep_push_cost(unique_max_heap &heap) {
     const heap_data &top_element = heap.top();
-    size_t d = in_degree(top_element.np.first, *g) * in_degree(top_element.np.second, *g);
+    size_t d;
+    d = in_degree(top_element.np.first, *g) * in_degree(top_element.np.second, *g);
     return d + number_of_walkers(heap.sum - (1 - c) * top_element.residual) / (1 - c);
 }
 
@@ -74,7 +75,8 @@ double BackPush::change_to_MC_cost(unique_max_heap &heap) {
 }
 
 bool BackPush::is_keep_on_push(unique_max_heap &hp) {
-    return keep_push_cost(hp) < change_to_MC_cost(hp);
+    const heap_data &top_element = heap.top();
+    return  (top_element.np.first == top_element.np.second) || (keep_push_cost(hp) < change_to_MC_cost(hp) ); // when singleton nodes, directly keep on push
 }
 
 pair<double, int> BackPush::backward_push(NodePair np, unique_max_heap &container) {
@@ -87,7 +89,8 @@ pair<double, int> BackPush::backward_push(NodePair np, unique_max_heap &containe
     while (!container.empty() && is_keep_on_push(container)) {
         // check whether to stop
 
-        auto top_element = container.pop(); // pop and fetch the top element 
+        auto top_element = container.pop(); // pop and fetch the top element
+        // cout << top_element << endl;
         auto a = top_element.np.first;
         auto b = top_element.np.second;
         double residual = top_element.residual;
@@ -106,7 +109,10 @@ pair<double, int> BackPush::backward_push(NodePair np, unique_max_heap &containe
                 tie(inb_it, inb_end) = in_edges(b, *g);
                 for (; inb_it != inb_end; ++inb_it) {
                     auto inb = source(*inb_it, *g);
-                    // cout << a << " " << b << " pushing to: " << ina << " " << inb << endl;
+#ifdef DEBUG
+                    cout << a << " " << b << " pushing to: " << ina << " " << inb << " ," << indeg_a << " ," << indeg_b
+                         << endl;
+#endif
                     container.push(NodePair{ina, inb}, c * residual / (indeg_a * indeg_b));
                     ++cost;
                 }
@@ -148,40 +154,64 @@ double BackPush::MC_random_walk() { // perform random walks based on current res
     if (N == 0) {
         return 0;
     }
+    double mc_estimate = 0;
 
-    std::default_random_engine generator;
+    // set up the discret distribution 
+    unsigned seed = std::chrono::system_clock::now().time_since_epoch().count();
+    std::default_random_engine generator(seed);
     std::uniform_real_distribution<double> distribution(0.0, 1.0);
-
-    // sample according to the residual distribution, whether they meet
+    vector<double> weights;
+    vector<NodePair> node_pairs;
     auto begin = heap.heap.begin();
     auto end = heap.heap.end();
-    double r_sum = heap.sum;
-    double mc_estimate = 0;
-    int total_num_samples = 0;
+    for(auto it = begin; it !=end; ++ it){
+        weights.push_back((*it).residual / heap.sum);
+        node_pairs.push_back((*it).np);
+    }
+    std::discrete_distribution<int> residuals_dist (weights.begin(),weights.end());
+
+    // begin sampling
     int meeting_count = 0;
-    for (auto it = begin; it != end; ++it) {
-        // cout << (*it).np << ":" << (*it).residual << endl;
-        double residual = (*it).residual;
-        double local_sum = 0;
-        if (residual > 0) {
-            int n = round(residual * N / r_sum);
-            // int n = ceil(residual * N / r_sum);
-            total_num_samples += n;
-            for (int i = 0; i < n; i++) {
-                int indicator = sample_one_pair((*it).np, generator, distribution);
-                meeting_count += indicator;
-            }
-            // cout << "starting from " << (*it).np << " " << n << " samples. " << " meeting times " << meeting_count<<  endl; 
-        }
+    for(int i = 0; i< N; i++){
+        int index =  residuals_dist(generator) ; // index for node pairs
+        NodePair sampled_np = node_pairs[index];
+        int indicator = sample_one_pair(sampled_np, generator, distribution);
+        meeting_count += indicator;
     }
-    if (total_num_samples > 0) { // we have more than 1 samples
-        cout << format("total meeting hits %s") % meeting_count << endl;
-        mc_estimate = r_sum * meeting_count / double(total_num_samples);
-        cout << format("Total samples: %s, MC estimate: %s") % total_num_samples % mc_estimate << endl;
-        return mc_estimate;
-    } else { // no samples
-        return 0;
-    }
+
+    mc_estimate += heap.sum * (meeting_count / double(N));
+    return mc_estimate;
+    
+
+    // sample according to the residual distribution, whether they meet
+    // auto begin = heap.heap.begin();
+    // auto end = heap.heap.end();
+    // double r_sum = heap.sum;
+    // int total_num_samples = 0;
+    // int meeting_count = 0;
+    // for (auto it = begin; it != end; ++it) {
+    //     // cout << (*it).np << ":" << (*it).residual << endl;
+    //     double residual = (*it).residual;
+    //     double local_sum = 0;
+    //     if (residual > 0) {
+    //         int n = round(residual * N / r_sum);
+    //         // int n = ceil(residual * N / r_sum);
+    //         total_num_samples += n;
+    //         for (int i = 0; i < n; i++) {
+    //             int indicator = sample_one_pair((*it).np, generator, distribution);
+    //             meeting_count += indicator;
+    //         }
+    //         cout << "starting from " << (*it).np << " " << n << " samples. " << " meeting times " << meeting_count<<  " residual value: " << residual << endl; 
+    //     }
+    // }
+    // if (total_num_samples > 0) { // we have more than 1 samples
+    //     cout << format("total meeting hits %s") % meeting_count << endl;
+    //     mc_estimate = r_sum * meeting_count / double(total_num_samples);
+    //     cout << format("Total samples: %s, MC estimate: %s") % total_num_samples % mc_estimate << endl;
+    //     return mc_estimate;
+    // } else { // no samples
+    //     return 0;
+    // }
 
 }
 

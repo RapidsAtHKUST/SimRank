@@ -66,6 +66,10 @@ void test_bp(string data_name, double c, double epsilon, double delta, int x, in
     cout << format("sim: %s:%s") % q % result << endl;
 
     cout << format("total query cost: %s s") % elapsed.count() << endl; // record the pre-processing time
+    // ground truth
+    double truth = ground_truth(data_name, c, epsilon, delta, x,y);
+    cout << format("ground truth: %s") % truth << endl;
+    cout << format("error: %s") % (truth - result) << endl;
 
 }
 
