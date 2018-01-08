@@ -45,15 +45,17 @@ void test_single_source(string data_name, double c, int T, int L, int R, int i, 
 }
 
 void test_lineD_single_pair(string data_name, double c, int T, int L, int R, int i, int j) {
+    // load graph
     DirectedG g;
     load_graph(get_edge_list_path(data_name), g);
-
+    // init data
     auto start_ss = std::chrono::high_resolution_clock::now();
     LinearD lin(&g, data_name, c, T, L, R);
     auto end_ss = std::chrono::high_resolution_clock::now();
     cout << "pre-processing: " << float(duration_cast<microseconds>(end_ss - start_ss).count()) / (pow(10, 6))
          << " s\n" << endl;
 
+    // 1st: single source solution
     VectorXd tmp(num_vertices(g));
     auto tmp_start = std::chrono::high_resolution_clock::now();
     lin.single_source(i, tmp);
@@ -62,8 +64,10 @@ void test_lineD_single_pair(string data_name, double c, int T, int L, int R, int
     cout << "finish single-pair(via ss) computation "
          << float(duration_cast<microseconds>(tmp_end - tmp_start).count()) / (pow(10, 6)) << " s\n";
 
+    // 2nd: single pair solution
+    VectorXd lhs_vec(lin.n), rhs_vec(lin.n);
     tmp_start = std::chrono::high_resolution_clock::now();
-    cout << lin.single_pair(i, j) << endl;
+    cout << lin.single_pair(i, j, lhs_vec, rhs_vec) << endl;
     tmp_end = std::chrono::high_resolution_clock::now();
     cout << "finish single-pair(real sp) computation "
          << float(duration_cast<microseconds>(tmp_end - tmp_start).count()) / (pow(10, 6)) << " s\n";

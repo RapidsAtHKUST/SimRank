@@ -268,6 +268,8 @@ void CloudWalker::mcss(int i, VectorXd &r) {
 }
 
 double CloudWalker::mcsp(int u, int v, MatrixXd &pos_dist_u, MatrixXd &pos_dist_v) {
+    if (u == v) { return 1; }
+
     auto tmp_start = std::chrono::high_resolution_clock::now();
 
     Tstep_distribution(u, pos_dist_u); // T-step random walk distribution

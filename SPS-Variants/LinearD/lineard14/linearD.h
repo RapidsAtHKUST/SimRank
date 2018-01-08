@@ -46,6 +46,8 @@ public:
 
     double single_pair(int i, int j);
 
+    double single_pair(int i, int j, VectorXd &lhs_vec, VectorXd &rhs_vec);
+
     void all_pair();
 
     pair<double, double> estimate_SDkk_SEkk(int k); // estimate S^{L}(D)_{kk} and S^{L}(E^{kk})_{kk}

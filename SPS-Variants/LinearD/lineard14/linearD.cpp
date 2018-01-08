@@ -139,10 +139,14 @@ void LinearD::single_source(int i, VectorXd &r) {
 
 // time complexity: T * m, space complexity: 2n
 double LinearD::single_pair(int i, int j) {
-    double res = 0.0;
-
-    double cur_decay = 1.0;
     VectorXd lhs_vec(n), rhs_vec(n);
+    return single_pair(i, j, lhs_vec, rhs_vec);
+}
+
+double LinearD::single_pair(int i, int j, VectorXd &lhs_vec, VectorXd &rhs_vec) {
+    if (i == j) { return 1; }
+    double res = 0.0;
+    double cur_decay = 1.0;
     lhs_vec.setZero();
     lhs_vec(i) = 1;
     rhs_vec.setZero();
