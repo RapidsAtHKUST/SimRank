@@ -85,7 +85,7 @@ void test_BFLPMC(string data_name, double c, double epsilon, double delta, int x
 
     double truth = ground_truth(data_name, c, epsilon, delta, x, y);
     cout << format("ground truth: %s") % truth << endl;
-    
+    cout << format("error: %s") % (truth - result) << endl;
 }
 
 // int main(int args, char *argv[]) {

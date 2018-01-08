@@ -61,7 +61,7 @@ double BFLPMC::query_one2one(NodePair np){
         }
         estimate_r_i += current_residual / N;
     }
-    return blp_p_i + estimate_r_i;
+    return blp_p_i + estimate_r_i * blp->heap.sum;
 
     // cout << format("total number of samples: %s") % N << endl;
     // if(N>0){
@@ -88,5 +88,5 @@ double BFLPMC::query_one2one(NodePair np){
     //     estimate_r_i = estimate_r_i / total_num_samples;
     // }
     
-    return blp_p_i + flp_p_i + estimate_r_i;
+    // return blp_p_i + flp_p_i + estimate_r_i;
 }
