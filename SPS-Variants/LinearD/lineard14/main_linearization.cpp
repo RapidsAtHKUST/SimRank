@@ -71,9 +71,10 @@ void test_lineD_single_pair(string data_name, double c, int T, int L, int R, int
 
 int main(int argc, char *argv[]) {
     int R = 100;
-    int L = 15;
-    int T = 15;
+    int L = 3;
     double c = 0.6;
+
+    int T = 10;
 
     test_lineD_single_pair(string(argv[1]), c, T, L, R, atoi(argv[2]), atoi(argv[3]));
 }
