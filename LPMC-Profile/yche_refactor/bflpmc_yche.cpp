@@ -24,33 +24,40 @@ double BFLPMC::query_one2one(NodePair np) {
     double r_sum = blp->heap.sum;
     int N = blp->number_of_walkers(blp->heap.sum);
 
-    double estimate_r_i = 0;
-//    cout << format("total number of samples: %s") % N << endl;
-    if (N > 0) {
-        for (auto it = begin; it != end; ++it) {
-            double residual = (*it).residual;
-            int n = round(residual * N / r_sum);
-            total_num_samples += n;
-            for (int i = 0; i < n; ++i) {
-                double sum_in_this_round = 0;
-                int a, b; // the starting node pair
-                tie(a, b) = (*it).np;
-                sum_in_this_round += flp->lp->query_R(np.first, np.second);
-                while (rand_gen.double_rand() < c && (a != b)) {
-                    a = sample_in_neighbor(a, *g, rand_gen);
-                    b = sample_in_neighbor(b, *g, rand_gen);
-                    if (a == -1 || b == -1) {
-                        break;
-                    }
-                    sum_in_this_round += flp->lp->query_R(a, b);
-                }
-                estimate_r_i += sum_in_this_round;
-            }
-        }
-        estimate_r_i = estimate_r_i / total_num_samples;
+    // set up the random number generator
+    std::random_device rd;  //Will be used to obtain a seed for the random number engine
+    std::mt19937 generator(rd()); //Standard mersenne_twister_engine seeded with rd()
+    std::uniform_real_distribution<double> distribution(0.0, 1.0);
+    // set up the discret distribution
+    vector<double> weights;
+    vector<NodePair> node_pairs;
+    for (auto it = begin; it != end; ++it) {
+        weights.push_back((*it).residual / blp->heap.sum);
+        node_pairs.push_back((*it).np);
     }
+    std::discrete_distribution<int> residuals_dist(weights.begin(), weights.end());
 
-    return blp_p_i + flp_p_i + estimate_r_i;
+    // begin sampling
+    double estimate_r_i = 0;
+    for (int i = 0; i < N; i++) {
+        double current_residual = 0;
+        int index = residuals_dist(generator); // index for node pairs
+        NodePair sampled_np = node_pairs[index];
+        int a, b;
+        tie(a, b) = sampled_np;
+        // samples from this node pair
+        current_residual += flp->lp->query_R(sampled_np.first, sampled_np.second);
+        while (distribution(generator) < c && (a != b)) {
+            a = sample_in_neighbor(a, *g, rand_gen);
+            b = sample_in_neighbor(b, *g, rand_gen);
+            if (a == -1 || b == -1) {
+                break;
+            }
+            current_residual += flp->lp->query_R(a, b);
+        }
+        estimate_r_i += current_residual / N;
+    }
+    return blp_p_i + estimate_r_i;
 }
 
 BFLPMC::BFLPMC(const BFLPMC &other_obj) {

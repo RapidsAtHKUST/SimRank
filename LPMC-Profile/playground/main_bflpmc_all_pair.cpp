@@ -71,7 +71,7 @@ void test_BFLPMC(string data_name, double c, double epsilon, double delta) {
                 auto res = local_bflpmc.query_one2one(q);
                 // left: local, right: global or local ???
                 max_err = max(max_err, abs(ts.sim(q.first, q.second) - res));
-                if (abs(ts.sim(q.first, q.second) - res) > 0.01) {
+                if (abs(ts.sim(q.first, q.second) - res) > 0.05) {
 #pragma omp critical
                     cout << i << "," << j << "," << ts.sim(q.first, q.second) << "," << res << endl;
                 }
