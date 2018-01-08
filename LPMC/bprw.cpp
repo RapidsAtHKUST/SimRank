@@ -59,7 +59,7 @@ BackPush::BackPush(string g_name_, DirectedG &graph, double c_, double epsilon_,
 }
 
 size_t BackPush::number_of_walkers(double sum) {
-    double r = pow(c * heap.sum / epsilon, 2.0) * log(fail_prob / 2.0) / -2.0;
+    double r = pow(c * sum / epsilon, 2.0) * log(fail_prob / 2.0) / -2.0;
     return ceil(r);
 }
 
@@ -120,7 +120,7 @@ pair<double, int> BackPush::backward_push(NodePair np, unique_max_heap &containe
         }
     }
     // cout << format("Total number of pushes: %s") % cost << endl;
-    // cout << format{"deterministic estimate: %s, final residual sum: %s"} % p  % container.sum << endl;
+    cout << format{"deterministic estimate: %s, final residual sum: %s"} % p  % container.sum << endl;
     return {p, cost};
 }
 
@@ -171,92 +171,43 @@ double BackPush::MC_random_walk() { // perform random walks based on current res
     std::discrete_distribution<int> residuals_dist (weights.begin(),weights.end());
 
     // begin sampling
-    int meeting_count = 0;
+    double meeting_count = 0;
     for(int i = 0; i< N; i++){
         int index =  residuals_dist(generator) ; // index for node pairs
         NodePair sampled_np = node_pairs[index];
-        int indicator = sample_one_pair(sampled_np, generator, distribution);
-        meeting_count += indicator;
+        if(sampled_np.first == sampled_np.second){
+            meeting_count += 1.0;
+        }else{
+            double sample_result= sample_one_pair(sampled_np, generator, distribution);
+            meeting_count += sample_result;
+        }
     }
 
     mc_estimate += heap.sum * (meeting_count / double(N));
     return mc_estimate;
-    
-
-    // sample according to the residual distribution, whether they meet
-    // auto begin = heap.heap.begin();
-    // auto end = heap.heap.end();
-    // double r_sum = heap.sum;
-    // int total_num_samples = 0;
-    // int meeting_count = 0;
-    // for (auto it = begin; it != end; ++it) {
-    //     // cout << (*it).np << ":" << (*it).residual << endl;
-    //     double residual = (*it).residual;
-    //     double local_sum = 0;
-    //     if (residual > 0) {
-    //         int n = round(residual * N / r_sum);
-    //         // int n = ceil(residual * N / r_sum);
-    //         total_num_samples += n;
-    //         for (int i = 0; i < n; i++) {
-    //             int indicator = sample_one_pair((*it).np, generator, distribution);
-    //             meeting_count += indicator;
-    //         }
-    //         cout << "starting from " << (*it).np << " " << n << " samples. " << " meeting times " << meeting_count<<  " residual value: " << residual << endl; 
-    //     }
-    // }
-    // if (total_num_samples > 0) { // we have more than 1 samples
-    //     cout << format("total meeting hits %s") % meeting_count << endl;
-    //     mc_estimate = r_sum * meeting_count / double(total_num_samples);
-    //     cout << format("Total samples: %s, MC estimate: %s") % total_num_samples % mc_estimate << endl;
-    //     return mc_estimate;
-    // } else { // no samples
-    //     return 0;
-    // }
-
 }
 
-int BackPush::sample_one_pair(NodePair np, std::default_random_engine &generator,
+double BackPush::sample_one_pair(NodePair np, std::default_random_engine &generator,
                               std::uniform_real_distribution<double> &distribution) {
-    // sample for one pair of random walk, with (1-c) stop probability
+    // sample for one pair of random walk, with expected (1 + 1 / (1-c))
+    // assume that a != b
     int a = np.first;
     int b = np.second;
     double prob;
-    int indicator = 0;
-    // vector<int> path_a{a};
-    // vector<int> path_b{b};
-    while (true) {
-        if (a == b) {
+    double indicator = 0;
+    int step = 0; // 
+    while((distribution(generator) < c || step == 0 ) && a != b){ // walk when > c or the first step
+        a = sample_in_neighbor(a, *g);
+        b = sample_in_neighbor(b, *g);
+        step ++;
+        if(a == -1 || b == -1){
+            break;
+        }else if (a == b){
             indicator = 1;
             break;
         }
-        // a != b
-        prob = distribution(generator);
-        // cout << prob << endl;
-        if (prob < c) {
-            // keep on moving
-            a = sample_in_neighbor(a, *g);
-            b = sample_in_neighbor(b, *g);
-            // path_a.push_back(a);
-            // path_b.push_back(b);
-            if (a == -1 || b == -1) {
-                break;
-            }
-        } else { // stop
-            break;
-        }
     }
-    // cout << "path a:" ;
-    // for(auto & item:path_a){
-    //     cout << item << " ";
-    // }
-    // cout << endl;
-    // cout << "path b:" ;
-    // for(auto & item:path_b){
-    //     cout << item << " ";
-    // }
-    // cout << endl;
-    // cout << "indicator " << indicator << endl;
-    return indicator;
+    return c * indicator;
 }
 
 size_t residual_set::size() const {
