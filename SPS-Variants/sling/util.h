@@ -55,7 +55,7 @@ public:
 class PairHash {
 public:
     size_t operator()(const pair<int, int> &p) const {
-        hash<int> inthash;
+        std::hash<int> inthash;
         return inthash(p.first) + inthash(p.second);
     }
 };

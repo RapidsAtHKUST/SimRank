@@ -1,61 +1,35 @@
 //
-// Created by yche on 12/20/17.
+// Created by yche on 1/7/18.
 //
-
-//
-// Created by yche on 11/19/17.
-//
-
 #include <iostream>
+#include <chrono>
 
+#include "ISP.h"
+#include "ground_truth/graph_yche.h"
 #include "ground_truth/simrank.h"
-
-#include "sling.h"
-#include "graph.h"
 
 using namespace std;
 using namespace std::chrono;
 
+
 int main(int argc, char *argv[]) {
     // 1st: load graph
-    Graph g;
-    string file_path = argv[1];
-    g.inputGraph(file_path);
-
-    double c = atof(argv[2]);
+    string file_path = "./datasets/edge_list/" + string(argv[1]) + ".txt";
+    double c = 0.6;
+    int max_iter = 9;
+    double filter_threshold = 0.0001;
 
     auto tmp_start = std::chrono::high_resolution_clock::now();
-    Sling sling_algo(&g, c);
+    ISP my_isp(file_path);
     auto tmp_end = std::chrono::high_resolution_clock::now();
 
     cout << "finish input graph " << duration_cast<microseconds>(tmp_end - tmp_start).count() << " us\n";
 
 #ifdef GROUND_TRUTH
     GraphYche g_gt(file_path);
-    TruthSim ts(string(argv[3]), g_gt, c, 0.01);
+    TruthSim ts(string(argv[1]), g_gt, c, 0.01);
     auto max_err = 0.0;
 #endif
-
-    // build the index
-    cout << "indexing..." << endl;
-
-    tmp_start = std::chrono::high_resolution_clock::now();
-//    sling_algo.calcD(0.005);
-    sling_algo.calcD(0.002);
-    tmp_end = std::chrono::high_resolution_clock::now();
-    cout << "finish calcD " << float(duration_cast<microseconds>(tmp_end - tmp_start).count()) / (pow(10, 6))
-         << " s\n";
-
-    tmp_start = std::chrono::high_resolution_clock::now();
-//    sling_algo.backward(0.000725);
-    sling_algo.backward(0.00029);
-
-    tmp_end = std::chrono::high_resolution_clock::now();
-    cout << "finish backward " << float(duration_cast<microseconds>(tmp_end - tmp_start).count()) / (pow(10, 6))
-         << " s\n";
-
-//    int u = atoi(argv[3]);
-//    int v = atoi(argv[4]);
 
     tmp_start = std::chrono::high_resolution_clock::now();
 #ifdef GROUND_TRUTH
@@ -63,19 +37,17 @@ int main(int argc, char *argv[]) {
 #else
 #pragma omp parallel for schedule(dynamic, 1)
 #endif
-//    for (auto u = 0; u < sling_algo.g->n; u++) {
     for (auto u = 0; u < 1000; u++) {
-//        for (auto v = u; v < sling_algo.g->n; v++) {
         for (auto v = u; v < 1000; v++) {
 #ifdef GROUND_TRUTH
-            auto res = sling_algo.simrank(u, v);
+            auto res = my_isp.ComputeSim(u, v, c, max_iter, filter_threshold);
             max_err = max(max_err, abs(ts.sim(u, v) - res));
             if (abs(ts.sim(u, v) - res) > 0.01) {
 #pragma omp critical
                 cout << u << ", " << v << "," << ts.sim(u, v) << "," << res << endl;
             }
 #else
-            sling_algo.simrank(u, v);
+            my_isp.ComputeSim(u, v, c, max_iter, filter_threshold);
 #endif
         }
     }
@@ -86,4 +58,5 @@ int main(int argc, char *argv[]) {
 #endif
     cout << "query time:"
          << float(duration_cast<microseconds>(tmp_end - tmp_start).count()) / (pow(10, 6)) << " s\n";
+
 }

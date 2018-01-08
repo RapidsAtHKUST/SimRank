@@ -45,8 +45,8 @@ target_include_directories(bprw PRIVATE ../include)
 target_link_libraries(bprw PRIVATE tcmalloc)
 
 target_compile_options(bprw PRIVATE -O3 -g ${SFMT_COMPILE_FLAGS})
-target_compile_definitions(bprw PRIVATE -DSFMT=1)
-#target_compile_definitions(bprw PRIVATE -DSFMT=1 -DDEBUG=1)
+#target_compile_definitions(bprw PRIVATE -DSFMT=1)
+target_compile_definitions(bprw PRIVATE -DSFMT=1 -DDEBUG=1)
 
 ################################ 2nd: bprw(std rand gen) ######################################
 add_executable(bprw-std ${BLPMC_SOURCE_FILES})
@@ -60,10 +60,10 @@ target_include_directories(bprw-std PRIVATE ../include)
 target_link_libraries(bprw-std PRIVATE tcmalloc)
 
 target_compile_options(bprw-std PRIVATE -O3 -g ${SFMT_COMPILE_FLAGS})
-#target_compile_definitions(bprw-std PRIVATE -DDEBUG=1)
+target_compile_definitions(bprw-std PRIVATE -DDEBUG=1)
 
 ################################ 3rd: bprw(all pair) ######################################
-add_executable(bprw-ap ${BPRW_FILES} ${UTIL_FILES} playground/main_bprw_all_pair.cpp)
+add_executable(bprw-ap ${BPRW_FILES} ${UTIL_FILES} ${GROUND_TRUTH_FILES} playground/main_bprw_all_pair.cpp)
 
 target_include_directories(bprw-ap PRIVATE ../sparsehash-yche/include)
 target_include_directories(bprw-ap PRIVATE ../sparsepp)
@@ -75,7 +75,7 @@ target_include_directories(bprw-ap PRIVATE ../include)
 target_link_libraries(bprw-ap PRIVATE tcmalloc)
 
 target_compile_options(bprw-ap PRIVATE -O3 -g ${SFMT_COMPILE_FLAGS})
-target_compile_definitions(bprw-ap PRIVATE -DSFMT=1)
+target_compile_definitions(bprw-ap PRIVATE -DSFMT=1 -DGROUND_TRUTH=1)
 
 ################################ 4th: flpmc ######################################
 set(FLPMC_SOURCE_FILES ${LPMC_FILES} ${UTIL_FILES} ${GROUND_TRUTH_FILES}
@@ -111,7 +111,7 @@ target_link_libraries(flpmc-ap PRIVATE ${Boost_LIBRARIES})
 target_link_libraries(flpmc-ap PRIVATE tcmalloc)
 
 target_compile_options(flpmc-ap PRIVATE -O3 -g ${SFMT_COMPILE_FLAGS})
-target_compile_definitions(flpmc-ap PRIVATE -DSFMT=1)
+target_compile_definitions(flpmc-ap PRIVATE -DSFMT=1 -DGROUND_TRUTH=1)
 
 ################################ 6th: bflpmc ######################################
 set(BFLPMC_SOURCE_FILES ${LPMC_FILES} ${BPRW_FILES} ${UTIL_FILES} ${GROUND_TRUTH_FILES}
@@ -145,4 +145,4 @@ target_link_libraries(bflpmc-ap PRIVATE ${Boost_LIBRARIES})
 target_link_libraries(bflpmc-ap PRIVATE tcmalloc)
 
 target_compile_options(bflpmc-ap PRIVATE -O3 -g ${SFMT_COMPILE_FLAGS})
-target_compile_definitions(bflpmc-ap PRIVATE -DSFMT=1)
+target_compile_definitions(bflpmc-ap PRIVATE -DSFMT=1 -DGROUND_TRUTH=1)
