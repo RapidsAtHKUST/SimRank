@@ -55,8 +55,8 @@ double FLPMC::query_one2one(NodePair np) {
         np = NodePair({np.second, np.first});
     }
     /* FLP result */
-//    double p_i = lp->P[np];
     double p_i = lp->query_P(np.first, np.second);
+    double r_i = lp->query_R(np.first, np.second);
 
     // set up the random number generator
 #ifndef SFMT
@@ -72,16 +72,19 @@ double FLPMC::query_one2one(NodePair np) {
         double sum = 0; // the sum of residuals that passed by
         int a = np.first;
         int b = np.second;
-        sum += lp->query_R(a, b);
+        sum += r_i;
+        int step = 0;
 #ifndef SFMT
-        while (distribution(gen) < c && (a != b)) {
+        while(( distribution(gen) < c ) && (a != b)){
             a = sample_in_neighbor(a, *g);
             b = sample_in_neighbor(b, *g);
 #else
-        while (rand_gen.double_rand() < c && (a != b)) {
+//        while (rand_gen.double_rand() < c && (a != b)) {
+        while ((rand_gen.double_rand() < c) && (a != b)) {
             a = sample_in_neighbor(a, *g, rand_gen);
             b = sample_in_neighbor(b, *g, rand_gen);
 #endif
+            step++;
             if (a == -1 || b == -1) {
                 break;
             }

@@ -19,6 +19,8 @@ double BFLPMC::query_one2one(NodePair np) {
     // perform sampling: MC3
 
     int N = blp->number_of_walkers(blp->heap.sum);
+    N = N / pow(1 - c, 2); // make up for the bounds for c-walk
+
 #ifdef DEBUG
     cout << "number of samples: " << N << endl;
 #endif
@@ -26,6 +28,7 @@ double BFLPMC::query_one2one(NodePair np) {
     std::random_device rd;  //Will be used to obtain a seed for the random number engine
     std::mt19937 generator(rd()); //Standard mersenne_twister_engine seeded with rd()
     std::uniform_real_distribution<double> distribution(0.0, 1.0);
+
     // set up the discret distribution
     auto begin = blp->heap.heap.begin();
     auto end = blp->heap.heap.end();
@@ -39,30 +42,34 @@ double BFLPMC::query_one2one(NodePair np) {
     std::discrete_distribution<int> residuals_dist(weights.begin(), weights.end());
 
     // begin sampling
-    double estimate_r_i = 0;
+    double estimate_s_i = 0;
     for (int i = 0; i < N; i++) {
-        double current_residual = 0;
+        double sim = 0;
         int index = residuals_dist(generator); // index for node pairs
         NodePair sampled_np = node_pairs[index];
         int a, b;
         tie(a, b) = sampled_np;
         // samples from this node pair
-        current_residual += flp->lp->query_R(a, b);
+        sim += flp->lp->query_P(a, b);
+        sim += flp->lp->query_R(a, b);
+        int step = 0;
+
         double current_estimate = flp->lp->query_P(a, b);
-        while ((distribution(generator) < c) && (a != b)) {
+        while (((distribution(generator) < c) || step == 0) && (a != b)) {
             a = sample_in_neighbor(a, *g, rand_gen);
             b = sample_in_neighbor(b, *g, rand_gen);
+            step++;
             if (a == -1 || b == -1) {
                 break;
             }
-            current_residual += flp->lp->query_R(a, b);
+            sim += flp->lp->query_R(a, b);
         }
-        estimate_r_i += (current_residual + current_estimate) / N;
+        estimate_s_i += sim / N;
     }
 #ifdef DEBUG
-    cout << "avg. residual sum: " << estimate_r_i << endl;
+    cout << "avg. sim: " << estimate_s_i << endl;
 #endif
-    return blp_p_i + estimate_r_i * r_sum;
+    return blp_p_i + estimate_s_i * r_sum;
 }
 
 BFLPMC::BFLPMC(const BFLPMC &other_obj) {

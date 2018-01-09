@@ -130,11 +130,11 @@ public:
     double query_one2one(NodePair np); // query single-pair SimRank scores
 
 #if !defined(SFMT)
-    int sample_one_pair(NodePair np, std::default_random_engine &generator,
+    double sample_one_pair(NodePair np, std::default_random_engine &generator,
                         std::uniform_real_distribution<double> &dist); // sample one pair of random walk
 #else
 
-    int sample_one_pair(NodePair np);
+    double sample_one_pair(NodePair np);
 
 #endif
 
