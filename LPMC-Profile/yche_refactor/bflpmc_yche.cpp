@@ -27,7 +27,6 @@ double BFLPMC::query_one2one(NodePair np) {
     // set up the random number generator
     std::random_device rd;  //Will be used to obtain a seed for the random number engine
     std::mt19937 generator(rd()); //Standard mersenne_twister_engine seeded with rd()
-    std::uniform_real_distribution<double> distribution(0.0, 1.0);
 
     // set up the discret distribution
     auto begin = blp->heap.heap.begin();
@@ -54,7 +53,7 @@ double BFLPMC::query_one2one(NodePair np) {
         sim += flp->lp->query_R(a, b);
 
         double current_estimate = flp->lp->query_P(a, b);
-        while (((distribution(generator) < c)) && (a != b)) {
+        while (((rand_gen.double_rand() < c)) && (a != b)) {
             a = sample_in_neighbor(a, *g, rand_gen);
             b = sample_in_neighbor(b, *g, rand_gen);
 
