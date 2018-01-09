@@ -65,7 +65,7 @@ BackPush::BackPush(string g_name_, GraphYche &graph, double c_, double epsilon_,
 }
 
 size_t BackPush::number_of_walkers(double sum) {
-    double r = pow(c * sum / epsilon, 2.0) * log(fail_prob / 2.0) / -2.0;
+    double r = pow(c * heap.sum / epsilon, 2.0) * log(fail_prob / 2.0) / -2.0;
     return ceil(r);
 }
 

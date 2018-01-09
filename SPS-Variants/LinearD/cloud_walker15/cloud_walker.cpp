@@ -69,11 +69,13 @@ void CloudWalker::Tstep_distribution(int i, MatrixXd &pos_dist) {
     pos_dist.setZero();
     /* start run R random walks */
     int current_pos;
-    for (int k = 0; k < R; k++) {
+//    for (int k = 0; k < R; k++) {
+    for (int k = 0; k < R_prime; k++) {
         int t = 0;
         current_pos = i;
         while (t <= T) {
-            pos_dist(t, current_pos) += (1.0 / R);
+//            pos_dist(t, current_pos) += (1.0 / R);
+            pos_dist(t, current_pos) += (1.0 / R_prime);
             auto sampled_in_neighbor = sample_in_neighbor(current_pos, *g);
             if (sampled_in_neighbor != -1) {
                 current_pos = sampled_in_neighbor;
@@ -265,21 +267,34 @@ void CloudWalker::mcss(int i, VectorXd &r) {
     mem_size = getValue();
 }
 
-double CloudWalker::mcsp(int u, int v) {
-    MatrixXd pos_dist_u(T + 1, n); // to store the distribution of random walks from i
-    Tstep_distribution(u, pos_dist_u); // T-step random walk distribution
+double CloudWalker::mcsp(int u, int v, MatrixXd &pos_dist_u, MatrixXd &pos_dist_v) {
+    if (u == v) { return 1; }
 
-    MatrixXd pos_dist_v(T + 1, n);
+    auto tmp_start = std::chrono::high_resolution_clock::now();
+
+    Tstep_distribution(u, pos_dist_u); // T-step random walk distribution
     Tstep_distribution(v, pos_dist_v);
 
     double sim_score = 0.0;
     double cur_decay = 1.0;
-    for (auto t = 0; t < T + 1; t++) {
+    for (auto t = 0; t <= T; t++) {
         sim_score +=
                 cur_decay * pos_dist_u.row(t).transpose().cwiseProduct(D).transpose() * pos_dist_v.row(t).transpose();
         cur_decay *= c;
     }
+    auto tmp_end = std::chrono::high_resolution_clock::now();
+//    cout << "finish single one "
+//         << float(std::chrono::duration_cast<std::chrono::microseconds>(tmp_end - tmp_start).count()) / (pow(10, 6))
+//         << " s\n";
     return sim_score;
+}
+
+double CloudWalker::mcsp(int u, int v) {
+    MatrixXd pos_dist_u(T + 1, n);
+    MatrixXd pos_dist_v(T + 1, n);
+
+    // 2nd: query
+    return mcsp(u, v, pos_dist_u, pos_dist_v);
 }
 
 

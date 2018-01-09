@@ -96,7 +96,7 @@ double Sling::calcDi_1(int i, double eps, bool &early, int &R, int tid) {
 //    int Rs = 14. / 3. / eps * 2. * log(2 * g->n) / log(2.71828);
 //    constexpr double failure_probability = 0.01;
 //    constexpr double failure_probability = 0.0001;
-    constexpr double failure_probability = 0.00000001;
+    constexpr double failure_probability = 0.01;
 
     int Rs = 14. / 3. / eps * log(4.0 / failure_probability * g->n) / log(2.71828);
     int X = 0;

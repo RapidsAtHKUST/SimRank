@@ -47,11 +47,6 @@ void show_graph(DirectedG &g) {
     }
 }
 
-string get_edge_list_path(string s) {
-    // get file location of edgelist for graph s
-    return EDGE_LIST_PATH + s + ".txt";
-}
-
 void indegree_mat(const DirectedG &g, SparseMatrix<float> &P) {
     // column normalized adjacency matrix 
     typedef Triplet<float> T;
