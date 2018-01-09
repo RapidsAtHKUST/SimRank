@@ -22,7 +22,7 @@ double BFLPMC::query_one2one(NodePair np){
     // perform sampling: MC3
 
     int N = blp->number_of_walkers(blp->heap.sum);
-    N = N / pow(1-c,2); // make up for the bounds for c-walk
+    N = ceil(N / pow(1-c,2)); // make up for the bounds for c-walk
     cout << "number of samples: " << N << endl;
     
     // set up the random number generator
@@ -52,12 +52,10 @@ double BFLPMC::query_one2one(NodePair np){
         // samples from this node pair
         sim += flp->lp->query_P(a,b);
         sim += flp->lp->query_R(a, b);
-        int step =  0;
         double current_estimate = flp->lp->query_P(a, b);
-        while( ((distribution(generator) < c) || step == 0) && (a !=b )){
+        while( ((distribution(generator) < c) ) && (a !=b )){
             a = sample_in_neighbor(a, *g);
             b = sample_in_neighbor(b, *g);
-            step ++;
             if(a == -1 || b == - 1){
                 break;
             }
