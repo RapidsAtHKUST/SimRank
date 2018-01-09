@@ -1,4 +1,5 @@
 #include "bflpmc_yche.h"
+#include "../util/search_yche.h"
 
 BFLPMC::BFLPMC(string g_name_, GraphYche &g_, double c_, double epsilon_, double delta_) :
         g_name(g_name_), g(&g_), c(c_), epsilon(epsilon_), delta(delta_) {
@@ -38,13 +39,21 @@ double BFLPMC::query_one2one(NodePair np) {
         weights.push_back((*it).residual / blp->heap.sum);
         node_pairs.push_back((*it).np);
     }
-    std::discrete_distribution<int> residuals_dist(weights.begin(), weights.end());
+//    std::discrete_distribution<int> residuals_dist(weights.begin(), weights.end());
+    vector<double> cdf(weights.size(), 0.0);
+    auto prev = 0.0;
+    for (auto i = 0; i < weights.size(); i++) {
+        cdf[i] = prev + weights[i];
+        prev = cdf[i];
+    }
 
     // begin sampling
     double estimate_s_i = 0;
     for (int i = 0; i < N; i++) {
         double sim = 0;
-        int index = residuals_dist(generator); // index for node pairs
+//        int index = residuals_dist(generator); // index for node pairs
+        int index = BinarySearchForGallopingSearch(reinterpret_cast<const double *>(&cdf.front()), 0, cdf.size(),
+                                                   rand_gen.double_rand());
         NodePair sampled_np = node_pairs[index];
         int a, b;
         tie(a, b) = sampled_np;

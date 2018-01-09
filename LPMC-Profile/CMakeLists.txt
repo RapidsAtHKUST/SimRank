@@ -20,10 +20,11 @@ endif ()
 ################################ 3rd: source file environmental variables ######################################
 set(UTIL_FILES util/file_serialization.h util/stat.cpp util/stat.h
         util/sfmt_based_rand.h ../SFMT/SFMT.c util/graph_yche.cpp)
+set(BIN_SEARCH_FIES util/search_yche.h util/search_yche.cpp)
 set(GROUND_TRUTH_FILES yche_refactor/simrank.cpp yche_refactor/simrank.h)
 set(SFMT_COMPILE_FLAGS -DSFMT_MEXP=607 -msse2 -DHAVE_SSE2)
 
-set(BPRW_FILES yche_refactor/bprw_yche.cpp yche_refactor/bprw_yche.h)
+set(BPRW_FILES yche_refactor/bprw_yche.cpp yche_refactor/bprw_yche.h ${BIN_SEARCH_FIES})
 set(LPMC_FILES yche_refactor/flpmc_yche.h yche_refactor/flpmc_yche.cpp
         yche_refactor/local_push_yche.h yche_refactor/local_push_yche.cpp util/sparse_matrix_utils.h)
 
@@ -45,8 +46,8 @@ target_include_directories(bprw PRIVATE ../include)
 target_link_libraries(bprw PRIVATE tcmalloc)
 
 target_compile_options(bprw PRIVATE -O3 -g ${SFMT_COMPILE_FLAGS})
-#target_compile_definitions(bprw PRIVATE -DSFMT=1)
-target_compile_definitions(bprw PRIVATE -DSFMT=1 -DDEBUG=1)
+target_compile_definitions(bprw PRIVATE -DSFMT=1)
+#target_compile_definitions(bprw PRIVATE -DSFMT=1 -DDEBUG=1)
 
 ################################ 2nd: bprw(std rand gen) ######################################
 add_executable(bprw-std ${BLPMC_SOURCE_FILES})
