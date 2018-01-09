@@ -65,11 +65,10 @@ double FLPMC::query_one2one(NodePair np){
         double sum = 0; // the sum of residuals that passed by
         int a = np.first;
         int b = np.second;
-        int step = 0;
-        while(( distribution(gen) < c || step == 0) && (a != b)){
+        sum += r_i;
+        while(( distribution(gen) < c ) && (a != b)){
             a = sample_in_neighbor(a, *g);
             b = sample_in_neighbor(b, *g);
-            step ++;
             if(a == -1 || b == -1){
                 break;
             }
@@ -80,7 +79,7 @@ double FLPMC::query_one2one(NodePair np){
 
     cout << format("p_i: %s")  % p_i << endl;
     cout << format("number of samples: %s") % get_N() << endl;
-    return p_i + r_i + E_residual / N;
+    return p_i + E_residual / N;
 }
 
 double FLPMC::get_N(){
