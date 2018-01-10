@@ -51,7 +51,7 @@ int main(int argc, char *argv[]) {
     string data_name(argv[1]);
     double c = 0.6;
     double epsilon = 0.01;
-    double delta = 0.0001;
+    double delta = 0.01;
 
     int x = atoi(argv[2]), y = atoi(argv[3]);
     test_BFLPMC(data_name, c, epsilon, delta, x, y);
