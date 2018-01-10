@@ -126,7 +126,8 @@ public:
     // self-adaptive backward local push, return estimate
     pair<double, int> backward_push(NodePair np, unique_max_heap &);
 
-    double MC_random_walk(); // perform random walks based on current residuals in the heap
+//    double MC_random_walk(); // perform random walks based on current residuals in the heap
+    double MC_random_walk(int N);
     double query_one2one(NodePair np); // query single-pair SimRank scores
 
 #if !defined(SFMT)

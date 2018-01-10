@@ -41,6 +41,7 @@ util | files
 graph(bidirectional csr) | [graph_yche.h](util/graph_yche.h), [graph_yche.cpp](util/graph_yche.cpp)
 spare matrix | [sparse_matrix_utils.h](util/sparse_matrix_utils.h)
 sfmt(simd fast rand gen) | [sfmt_based_rand.h](util/sfmt_based_rand.h)
+binary/galloping search | [search_yche.h](util/search_yche.h), [search_yche.cpp](util/search_yche.cpp)
 file serialization | [file_serialization.h](util/file_serialization.h)
 profiling | [stat.h](util/stat.h), [stat.cpp](util/stat.cpp)
 
