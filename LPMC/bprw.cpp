@@ -174,15 +174,19 @@ double BackPush::MC_random_walk(int N) { // perform random walks based on curren
     }
     std::discrete_distribution<int> residuals_dist (weights.begin(),weights.end());
 
+    // set up the geometry distribution
+    std::geometric_distribution<int> geo_distribution(1-c);
+
     // begin sampling
     double meeting_count = 0;
     for(int i = 0; i< N; i++){
         int index =  residuals_dist(generator) ; // index for node pairs
+        int length_of_random_walk = geo_distribution(generator) + 1;
         NodePair sampled_np = node_pairs[index];
         if(sampled_np.first == sampled_np.second){
             meeting_count += 1.0;
         }else{
-            double sample_result= sample_one_pair(sampled_np, generator, distribution);
+            double sample_result= sample_one_pair(sampled_np, generator, distribution, length_of_random_walk);
             meeting_count += sample_result;
         }
     }
@@ -192,7 +196,7 @@ double BackPush::MC_random_walk(int N) { // perform random walks based on curren
 }
 
 double BackPush::sample_one_pair(NodePair np, std::default_random_engine &generator,
-                              std::uniform_real_distribution<double> &distribution) {
+                              std::uniform_real_distribution<double> &distribution, int length_of_random_walk) {
     // sample for one pair of random walk, with expected (1 + 1 / (1-c))
     // assume that a != b
     int a = np.first;
@@ -200,7 +204,9 @@ double BackPush::sample_one_pair(NodePair np, std::default_random_engine &genera
     double prob;
     double indicator = 0;
     int step = 0; // 
-    while((distribution(generator) < c || step == 0 ) && a != b){ // walk when > c or the first step
+
+
+    while( step < length_of_random_walk && a != b){ // walk when > c or the first step
         a = sample_in_neighbor(a, *g);
         b = sample_in_neighbor(b, *g);
         step ++;

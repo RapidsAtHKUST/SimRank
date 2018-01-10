@@ -58,6 +58,9 @@ double FLPMC::query_one2one(NodePair np){
     std::mt19937 gen(rd()); //Standard mersenne_twister_engine seeded with rd()
     std::uniform_real_distribution<double> distribution(0.0,1.0);
 
+    // set up the geometry distribution
+    std::geometric_distribution<int> geo_distribution(1-c);
+
     /* MC sampling phase */
     int N = get_N();
     double E_residual = 0;
@@ -66,9 +69,12 @@ double FLPMC::query_one2one(NodePair np){
         int a = np.first;
         int b = np.second;
         sum += r_i;
-        while(( distribution(gen) < c ) && (a != b)){
+        int length_of_random_walk = geo_distribution(gen);
+        int step = 0;
+        while(( step < length_of_random_walk ) && (a != b)){
             a = sample_in_neighbor(a, *g);
             b = sample_in_neighbor(b, *g);
+            step ++;
             if(a == -1 || b == -1){
                 break;
             }

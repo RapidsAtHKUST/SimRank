@@ -63,10 +63,14 @@ double BFLPMC::query_one2one(NodePair np){
         }
         std::discrete_distribution<int> residuals_dist (weights.begin(),weights.end());
 
+        // set up the geometry distribution
+        std::geometric_distribution<int> geo_distribution(1-c);
+
         // begin sampling
         double estimate_r_i = 0;
         for(int i = 0 ; i < N ;i ++){
             double terminate_r = 0;
+            int length_of_random_walk = geo_distribution(generator) + 1;
             int step = 0;
             int index =  residuals_dist(generator) ; // index for node pairs
             NodePair sampled_np = node_pairs[index];
@@ -74,7 +78,7 @@ double BFLPMC::query_one2one(NodePair np){
             tie(a,b) = sampled_np;
             // samples from this node pair
             double current_estimate = flp->lp->query_P(a, b);
-            while( ((distribution(generator) < c) || step == 0) && (a !=b )){ // random walk length (1 + 1 / (1-c))
+            while( (step < length_of_random_walk) && (a !=b )){ // random walk length (1 + 1 / (1-c))
                 a = sample_in_neighbor(a, *g);
                 b = sample_in_neighbor(b, *g);
                 step ++;
