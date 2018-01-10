@@ -153,6 +153,9 @@ double BackPush::query_one2one(NodePair np) { // pairwise SimRank estimation
 double BackPush::MC_random_walk() { // perform random walks based on current residuals in the heap
     // assume that there is no singleton nodes in current residuals
     // int N = ceil( pow(c * heap.sum, 2.0) * log(fail_prob / 2.0)  / (-2 * pow(epsilon, 2)) ); // number of samples
+    if (heap.empty()) { // corner case: heap is empty
+        return 0;
+    }
     size_t N = number_of_walkers(heap.sum);
 #ifdef DEBUG
     cout << format("require %s pairs of samples") % N << endl;

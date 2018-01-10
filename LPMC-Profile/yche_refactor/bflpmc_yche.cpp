@@ -17,6 +17,9 @@ double BFLPMC::query_one2one(NodePair np) {
 #ifdef DEBUG
     cout << "BLP result: " << blp_p_i << endl;
 #endif
+    if (blp->heap.empty()) { // the corner case: the residual heap is empty
+        return blp_p_i;
+    }
     // perform sampling: MC3
 
     int N = blp->number_of_walkers(blp->heap.sum);
