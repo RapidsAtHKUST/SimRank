@@ -5,7 +5,7 @@ BFLPMC::BFLPMC(string g_name_, GraphYche &g_, double c_, double epsilon_, double
         g_name(g_name_), g(&g_), c(c_), epsilon(epsilon_), delta(delta_) {
     // init the two components
     flp = new FLPMC(g_name, *g, c, epsilon, delta, 0); // Q is set to 0
-    blp = new BackPush(g_name, *g, c, epsilon / flp->get_rmax(), delta);
+    blp = new BackPush(g_name, *g, c, (1 - c) * epsilon / flp->get_rmax(), delta);
 }
 
 double BFLPMC::query_one2one(NodePair np) {
@@ -20,10 +20,11 @@ double BFLPMC::query_one2one(NodePair np) {
     if (blp->heap.empty()) { // the corner case: the residual heap is empty
         return blp_p_i;
     }
+
+    double h_p_r = 0;
     // perform sampling: MC3
 
     int N = blp->number_of_walkers(blp->heap.sum);
-    N = ceil(N / pow(1 - c, 2)); // make up for the bounds for c-walk
 
 #ifdef DEBUG
     cout << "number of samples: " << N << endl;
@@ -40,7 +41,11 @@ double BFLPMC::query_one2one(NodePair np) {
     vector<NodePair> node_pairs;
     for (auto it = begin; it != end; ++it) {
         weights.push_back((*it).residual / blp->heap.sum);
-        node_pairs.push_back((*it).np);
+        NodePair current_np = (*it).np;
+        node_pairs.push_back(current_np);
+        // update hpr component
+        h_p_r += (*it).residual * (flp->lp->query_P(current_np.first, current_np.second) +
+                                   flp->lp->query_R(current_np.first, current_np.second));
     }
 //    std::discrete_distribution<int> residuals_dist(weights.begin(), weights.end());
     constexpr int YCHE_MAX_INT = 1 << 30;
@@ -55,9 +60,10 @@ double BFLPMC::query_one2one(NodePair np) {
     cdf.back() = YCHE_MAX_INT;
 
     // begin sampling
-    double estimate_s_i = 0;
+    double estimate_r_i = 0;
     for (int i = 0; i < N; i++) {
-        double sim = 0;
+        double terminate_r = 0;
+        int step = 0;
 //        int index = residuals_dist(generator); // index for node pairs
 //        int index = BinarySearchForGallopingSearch(reinterpret_cast<const double *>(&cdf.front()), 0, cdf.size(),
 //                                                   rand_gen.double_rand());
@@ -72,25 +78,23 @@ double BFLPMC::query_one2one(NodePair np) {
         int a, b;
         tie(a, b) = sampled_np;
         // samples from this node pair
-        sim += flp->lp->query_P(a, b);
-        sim += flp->lp->query_R(a, b);
 
         double current_estimate = flp->lp->query_P(a, b);
-        while (((rand_gen.double_rand() < c)) && (a != b)) {
+        while (((rand_gen.double_rand() < c) || step == 0) && (a != b)) { // random walk length (1 + 1 / (1-c))
             a = sample_in_neighbor(a, *g, rand_gen);
             b = sample_in_neighbor(b, *g, rand_gen);
-
+            step++;
             if (a == -1 || b == -1) {
                 break;
             }
-            sim += flp->lp->query_R(a, b);
         }
-        estimate_s_i += sim / N;
+        if (a != -1 && b != -1) {
+            terminate_r = flp->lp->query_R(a, b);
+        }
+        estimate_r_i += terminate_r / N;
     }
-#ifdef DEBUG
-    cout << "avg. sim: " << estimate_s_i << endl;
-#endif
-    return blp_p_i + estimate_s_i * r_sum;
+
+    return blp_p_i + h_p_r + c * r_sum * estimate_r_i / (1 - c);
 }
 
 BFLPMC::BFLPMC(const BFLPMC &other_obj) {
