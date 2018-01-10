@@ -74,11 +74,11 @@ double BackPush::keep_push_cost(unique_max_heap &heap) {
     const heap_data &top_element = heap.top();
     size_t d;
     d = g->in_deg_arr[top_element.np.first] * g->in_deg_arr[top_element.np.second];
-    return d + number_of_walkers(heap.sum - (1 - c) * top_element.residual) / (1 - c);
+    return d + number_of_walkers(heap.sum - (1 - c) * top_element.residual) * (1 + 1 / (1 - c));
 }
 
 double BackPush::change_to_MC_cost(unique_max_heap &heap) {
-    return number_of_walkers(heap.sum) / (1 - c);
+    return number_of_walkers(heap.sum) * (1.0 + 1.0 / (1 - c));
 }
 
 bool BackPush::is_keep_on_push(unique_max_heap &hp) {
