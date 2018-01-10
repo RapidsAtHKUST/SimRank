@@ -129,7 +129,7 @@ struct BackPush { // Backward Push
     backward_push(NodePair np, unique_max_heap &); // self-adaptive backward local push, return estimate
 
     double random_bp(NodePair np, double rsum); // backward local push by random
-    double MC_random_walk(); // perform random walks based on current residuals in the heap
+    double MC_random_walk(int N); // perform random walks based on current residuals in the heap
     double query_one2one(NodePair np); // query single-pair SimRank scores
     double sample_one_pair(NodePair np, std::default_random_engine &generator,
                         std::uniform_real_distribution<double> &dist); // sample one pair of random walk
