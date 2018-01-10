@@ -19,6 +19,10 @@ double BFLPMC::query_one2one(NodePair np){
     double blp_p_i = blp->backward_push(np, blp->heap).first;// the estimate value of backward local push
     cout << "BLP result: " << blp_p_i << endl;
 
+    if(blp->heap.empty()){ // the corner case: the residual heap is empty
+        return blp_p_i;
+    }
+
     // perform sampling: MC3
 
     int N = blp->number_of_walkers(blp->heap.sum);
