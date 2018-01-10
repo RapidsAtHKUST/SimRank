@@ -1,4 +1,5 @@
 #include "bflpmc_yche.h"
+#include "../util/search_yche.h"
 
 BFLPMC::BFLPMC(string g_name_, GraphYche &g_, double c_, double epsilon_, double delta_) :
         g_name(g_name_), g(&g_), c(c_), epsilon(epsilon_), delta(delta_) {
@@ -19,7 +20,7 @@ double BFLPMC::query_one2one(NodePair np) {
     // perform sampling: MC3
 
     int N = blp->number_of_walkers(blp->heap.sum);
-    N = N / pow(1 - c, 2); // make up for the bounds for c-walk
+    N = ceil(N / pow(1 - c, 2)); // make up for the bounds for c-walk
 
 #ifdef DEBUG
     cout << "number of samples: " << N << endl;
@@ -27,7 +28,6 @@ double BFLPMC::query_one2one(NodePair np) {
     // set up the random number generator
     std::random_device rd;  //Will be used to obtain a seed for the random number engine
     std::mt19937 generator(rd()); //Standard mersenne_twister_engine seeded with rd()
-    std::uniform_real_distribution<double> distribution(0.0, 1.0);
 
     // set up the discret distribution
     auto begin = blp->heap.heap.begin();
@@ -39,26 +39,33 @@ double BFLPMC::query_one2one(NodePair np) {
         weights.push_back((*it).residual / blp->heap.sum);
         node_pairs.push_back((*it).np);
     }
-    std::discrete_distribution<int> residuals_dist(weights.begin(), weights.end());
+//    std::discrete_distribution<int> residuals_dist(weights.begin(), weights.end());
+    vector<double> cdf(weights.size(), 0.0);
+    auto prev = 0.0;
+    for (auto i = 0; i < weights.size(); i++) {
+        cdf[i] = prev + weights[i];
+        prev = cdf[i];
+    }
 
     // begin sampling
     double estimate_s_i = 0;
     for (int i = 0; i < N; i++) {
         double sim = 0;
-        int index = residuals_dist(generator); // index for node pairs
+//        int index = residuals_dist(generator); // index for node pairs
+        int index = BinarySearchForGallopingSearch(reinterpret_cast<const double *>(&cdf.front()), 0, cdf.size(),
+                                                   rand_gen.double_rand());
         NodePair sampled_np = node_pairs[index];
         int a, b;
         tie(a, b) = sampled_np;
         // samples from this node pair
         sim += flp->lp->query_P(a, b);
         sim += flp->lp->query_R(a, b);
-        int step = 0;
 
         double current_estimate = flp->lp->query_P(a, b);
-        while (((distribution(generator) < c) || step == 0) && (a != b)) {
+        while (((rand_gen.double_rand() < c)) && (a != b)) {
             a = sample_in_neighbor(a, *g, rand_gen);
             b = sample_in_neighbor(b, *g, rand_gen);
-            step++;
+
             if (a == -1 || b == -1) {
                 break;
             }

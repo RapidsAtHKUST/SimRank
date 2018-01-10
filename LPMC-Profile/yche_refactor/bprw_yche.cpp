@@ -1,3 +1,4 @@
+#include "../util/search_yche.h"
 #include "bprw_yche.h"
 
 #include <iostream>
@@ -165,7 +166,11 @@ double BackPush::MC_random_walk() { // perform random walks based on current res
     // set up the discrete distribution
     auto seed = static_cast<unsigned int>(std::chrono::system_clock::now().time_since_epoch().count());
     std::default_random_engine generator(seed);
+
+#if !defined(SFMT)
     std::uniform_real_distribution<double> distribution(0.0, 1.0);
+#endif
+
     vector<double> weights;
     vector<NodePair> node_pairs;
     auto begin = heap.heap.begin();
@@ -174,12 +179,27 @@ double BackPush::MC_random_walk() { // perform random walks based on current res
         weights.push_back((*it).residual / heap.sum);
         node_pairs.push_back((*it).np);
     }
+
+#if !defined(SFMT)
     std::discrete_distribution<int> residuals_dist(weights.begin(), weights.end());
+#else
+    vector<double> cdf(weights.size(), 0.0);
+    auto prev = 0.0;
+    for (auto i = 0; i < weights.size(); i++) {
+        cdf[i] = prev + weights[i];
+        prev = cdf[i];
+    }
+#endif
 
     // begin sampling
     double meeting_count = 0;
     for (int i = 0; i < N; i++) {
+#if !defined(SFMT)
         int index = residuals_dist(generator); // index for node pairs
+#else
+        int index = BinarySearchForGallopingSearch(reinterpret_cast<const double *>(&cdf.front()), 0, cdf.size(),
+                                                   rand_gen.double_rand());
+#endif
         NodePair sampled_np = node_pairs[index];
 
         if (sampled_np.first == sampled_np.second) {
@@ -192,13 +212,6 @@ double BackPush::MC_random_walk() { // perform random walks based on current res
 #endif
             meeting_count += sample_result;
         }
-
-//#if !defined(SFMT)
-//        int indicator = sample_one_pair(sampled_np, generator, distribution);
-//#else
-//        int indicator = sample_one_pair(sampled_np);
-//#endif
-//        meeting_count += indicator;
     }
 
     mc_estimate += heap.sum * (meeting_count / double(N));
@@ -208,26 +221,25 @@ double BackPush::MC_random_walk() { // perform random walks based on current res
 #if !defined(SFMT)
 
 double BackPush::sample_one_pair(NodePair np, std::default_random_engine &generator,
-                                 std::uniform_real_distribution<double> &distribution) {
-    // sample for one pair of random walk, with expected (1 + 1 / (1-c))
-    // assume that a != b
-    int a = np.first;
-    int b = np.second;
-    double prob;
-    double indicator = 0;
-    int step = 0; //
-    while ((distribution(generator) < c || step == 0) && a != b) { // walk when > c or the first step
-        a = sample_in_neighbor(a, *g);
-        b = sample_in_neighbor(b, *g);
-        step++;
-        if (a == -1 || b == -1) {
-            break;
-        } else if (a == b) {
-            indicator = 1;
-            break;
-        }
+                             std::uniform_real_distribution<double> &distribution) {
+// sample for one pair of random walk, with expected (1 + 1 / (1-c))
+// assume that a != b
+int a = np.first;
+int b = np.second;
+double indicator = 0;
+int step = 0; //
+while ((distribution(generator) < c || step == 0) && a != b) { // walk when > c or the first step
+    a = sample_in_neighbor(a, *g);
+    b = sample_in_neighbor(b, *g);
+    step++;
+    if (a == -1 || b == -1) {
+        break;
+    } else if (a == b) {
+        indicator = 1;
+        break;
     }
-    return c * indicator;
+}
+return c * indicator;
 }
 #else
 
@@ -237,7 +249,6 @@ double BackPush::sample_one_pair(NodePair np) {
     // assume that a != b
     int a = np.first;
     int b = np.second;
-    double prob;
     double indicator = 0;
     int step = 0; //
     while ((rand_gen.double_rand() < c || step == 0) && a != b) { // walk when > c or the first step
