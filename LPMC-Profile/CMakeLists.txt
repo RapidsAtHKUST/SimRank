@@ -45,7 +45,7 @@ target_include_directories(bprw PRIVATE ../include)
 
 target_link_libraries(bprw PRIVATE tcmalloc)
 
-target_compile_options(bprw PRIVATE -O3 -g ${SFMT_COMPILE_FLAGS})
+target_compile_options(bprw PRIVATE -O3 -g ${SFMT_COMPILE_FLAGS} -march=native)
 target_compile_definitions(bprw PRIVATE -DSFMT=1)
 #target_compile_definitions(bprw PRIVATE -DSFMT=1 -DDEBUG=1)
 
@@ -60,7 +60,7 @@ target_include_directories(bprw-std PRIVATE ../include)
 
 target_link_libraries(bprw-std PRIVATE tcmalloc)
 
-target_compile_options(bprw-std PRIVATE -O3 -g ${SFMT_COMPILE_FLAGS})
+target_compile_options(bprw-std PRIVATE -O3 -g ${SFMT_COMPILE_FLAGS} -march=native)
 #target_compile_definitions(bprw-std PRIVATE -DDEBUG=1)
 
 ################################ 3rd: bprw(all pair) ######################################
@@ -75,7 +75,7 @@ target_include_directories(bprw-ap PRIVATE ../include)
 
 target_link_libraries(bprw-ap PRIVATE tcmalloc)
 
-target_compile_options(bprw-ap PRIVATE -O3 -g ${SFMT_COMPILE_FLAGS})
+target_compile_options(bprw-ap PRIVATE -O3 -g ${SFMT_COMPILE_FLAGS} -march=native)
 target_compile_definitions(bprw-ap PRIVATE -DSFMT=1 -DGROUND_TRUTH=1)
 #target_compile_definitions(bprw-ap PRIVATE -DSFMT=1 -DGROUND_TRUTH=1)
 
@@ -129,7 +129,7 @@ target_include_directories(bflpmc PRIVATE ../include)
 target_link_libraries(bflpmc PRIVATE ${Boost_LIBRARIES})
 target_link_libraries(bflpmc PRIVATE tcmalloc)
 
-target_compile_options(bflpmc PRIVATE -O3 -g ${SFMT_COMPILE_FLAGS})
+target_compile_options(bflpmc PRIVATE -O3 -g ${SFMT_COMPILE_FLAGS} -march=native)
 target_compile_definitions(bflpmc PRIVATE -DSFMT=1)
 
 ################################ 7th: bflpmc(all pair) ######################################
@@ -146,5 +146,5 @@ target_include_directories(bflpmc-ap PRIVATE ../include)
 target_link_libraries(bflpmc-ap PRIVATE ${Boost_LIBRARIES})
 target_link_libraries(bflpmc-ap PRIVATE tcmalloc)
 
-target_compile_options(bflpmc-ap PRIVATE -O3 -g ${SFMT_COMPILE_FLAGS})
+target_compile_options(bflpmc-ap PRIVATE -O3 -g ${SFMT_COMPILE_FLAGS} -march=native)
 target_compile_definitions(bflpmc-ap PRIVATE -DSFMT=1 -DGROUND_TRUTH=1)

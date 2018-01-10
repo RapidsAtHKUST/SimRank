@@ -153,6 +153,9 @@ double BackPush::query_one2one(NodePair np) { // pairwise SimRank estimation
 double BackPush::MC_random_walk() { // perform random walks based on current residuals in the heap
     // assume that there is no singleton nodes in current residuals
     // int N = ceil( pow(c * heap.sum, 2.0) * log(fail_prob / 2.0)  / (-2 * pow(epsilon, 2)) ); // number of samples
+    if (heap.empty()) { // corner case: heap is empty
+        return 0;
+    }
     size_t N = number_of_walkers(heap.sum);
 #ifdef DEBUG
     cout << format("require %s pairs of samples") % N << endl;
@@ -183,12 +186,23 @@ double BackPush::MC_random_walk() { // perform random walks based on current res
 #if !defined(SFMT)
     std::discrete_distribution<int> residuals_dist(weights.begin(), weights.end());
 #else
-    vector<double> cdf(weights.size(), 0.0);
+    constexpr int YCHE_MAX_INT = 1 << 30;
+    vector<int> cdf(weights.size(), 0);
     auto prev = 0.0;
+    auto accumulation = prev;
     for (auto i = 0; i < weights.size(); i++) {
-        cdf[i] = prev + weights[i];
-        prev = cdf[i];
+        accumulation = prev + weights[i];
+        cdf[i] = static_cast<int>(accumulation * YCHE_MAX_INT);
+        prev = accumulation;
     }
+    cdf.back() = YCHE_MAX_INT;
+
+//    vector<double> cdf(weights.size(), 0.0);
+//    auto prev = 0.0;
+//    for (auto i = 0; i < weights.size(); i++) {
+//        cdf[i] = prev + weights[i];
+//        prev = cdf[i];
+//    }
 #endif
 
     // begin sampling
@@ -197,8 +211,15 @@ double BackPush::MC_random_walk() { // perform random walks based on current res
 #if !defined(SFMT)
         int index = residuals_dist(generator); // index for node pairs
 #else
-        int index = BinarySearchForGallopingSearch(reinterpret_cast<const double *>(&cdf.front()), 0, cdf.size(),
-                                                   rand_gen.double_rand());
+//        int index = BinarySearchForGallopingSearch(reinterpret_cast<const double *>(&cdf.front()), 0, cdf.size(),
+//                                                   rand_gen.double_rand());
+//        int index = GallopingSearch(&cdf.front(), 0, static_cast<uint32_t>(cdf.size()),
+//                                    static_cast<int>(rand_gen.double_rand() * YCHE_MAX_INT));
+//        int index = GallopingSearchAVX2(&cdf.front(), 0, static_cast<uint32_t>(cdf.size()),
+//                                                       static_cast<int>(rand_gen.double_rand() * YCHE_MAX_INT));
+        int index = BinarySearchForGallopingSearchAVX2(&cdf.front(), 0, static_cast<uint32_t>(cdf.size()),
+                                                       static_cast<int>(rand_gen.double_rand() * YCHE_MAX_INT));
+
 #endif
         NodePair sampled_np = node_pairs[index];
 

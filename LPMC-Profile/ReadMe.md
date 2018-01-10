@@ -3,6 +3,7 @@
 * adopt bidirectional csr(better memory access)
 * adopt `tcmalloc`(thread-local cache memory) to replace glibc's `malloc`
 * adopt `SFMT`(simd fast rand generator), and reuse the allocated memory
+* adopt `BinarySearchForGallopingSearchAVX2`, using avx2 and cache pre-fetching instructions (256-bit operations) to implement binary search
 
 ## Possible Investigations
 
