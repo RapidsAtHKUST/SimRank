@@ -98,7 +98,7 @@ double Sling::calcDi_1(int i, double eps, bool &early, int &R, int tid) {
 //    constexpr double failure_probability = 0.0001;
 //    constexpr double failure_probability = 0.01;
 
-    int Rs = 14. / 3. / eps * log(4.0 / failure_probability * g->n) / log(2.71828);
+    int Rs = 14. / 3. / eps * log(4.0 * g->n / failure_probability) / log(2.71828);
     int X = 0;
     double cc = c * (1l << 32);
     for (; R < Rs; ++R) {
@@ -123,8 +123,8 @@ double Sling::calcDi_1(int i, double eps, bool &early, int &R, int tid) {
     }
     double upp = X / (double) R + sqrt(eps * X / (double) R);
 //    int Rl = (2 * upp + 2. / 3. * eps) / (eps * eps) * log(2 * g->n) / log(2.71828);
-    int Rl = (2 * upp + 2. / 3. * eps) / (eps * eps) * log(4.0 / failure_probability * g->n) / log(2.71828);
-    for (;  R < Rl; ++R) {
+    int Rl = (2 * upp + 2. / 3. * eps) / (eps * eps) * log(4.0 * g->n / failure_probability) / log(2.71828);
+    for (; R < Rl; ++R) {
         int rx = gen.rand(tid) % isize;
         int ry = gen.rand(tid) % (isize - 1);
         if (ry >= rx) ++ry;

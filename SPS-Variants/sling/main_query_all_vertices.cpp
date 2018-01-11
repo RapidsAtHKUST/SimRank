@@ -11,7 +11,6 @@
 #include "ground_truth/simrank.h"
 
 #include "sling.h"
-#include "graph.h"
 
 using namespace std;
 using namespace std::chrono;
@@ -37,7 +36,7 @@ int main(int argc, char *argv[]) {
     auto max_err = 0.0;
 #endif
 
-    // build the index
+    // 2nd: build the index
     cout << "indexing..." << endl;
 
     tmp_start = std::chrono::high_resolution_clock::now();
@@ -55,19 +54,17 @@ int main(int argc, char *argv[]) {
     cout << "finish backward " << float(duration_cast<microseconds>(tmp_end - tmp_start).count()) / (pow(10, 6))
          << " s\n";
 
-//    int u = atoi(argv[3]);
-//    int v = atoi(argv[4]);
-
+    // 3rd: querying pairs
     tmp_start = std::chrono::high_resolution_clock::now();
 #ifdef GROUND_TRUTH
 #pragma omp parallel for reduction(max:max_err) schedule(dynamic, 1)
 #else
 #pragma omp parallel for schedule(dynamic, 1)
 #endif
-//    for (auto u = 0; u < sling_algo.g->n; u++) {
-    for (auto u = 0; u < 1000; u++) {
-//        for (auto v = u; v < sling_algo.g->n; v++) {
-        for (auto v = u; v < 1000; v++) {
+    for (auto u = 0; u < sling_algo.g->n; u++) {
+//    for (auto u = 0; u < 1000; u++) {
+        for (auto v = u; v < sling_algo.g->n; v++) {
+//        for (auto v = u; v < 1000; v++) {
 #ifdef GROUND_TRUTH
             auto res = sling_algo.simrank(u, v);
             max_err = max(max_err, abs(ts.sim(u, v) - res));
