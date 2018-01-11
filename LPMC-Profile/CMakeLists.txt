@@ -84,7 +84,6 @@ set(FLPMC_SOURCE_FILES ${LPMC_FILES} ${UTIL_FILES} ${GROUND_TRUTH_FILES}
         playground/main_flpmc.cpp)
 
 add_executable(flpmc ${FLPMC_SOURCE_FILES})
-kkkkkkkkkoikkkkkk
 target_include_directories(flpmc PRIVATE ${Boost_INCLUDE_DIRS})
 target_include_directories(flpmc PRIVATE ../sparsehash-yche/include)
 target_include_directories(flpmc PRIVATE ../sparsepp)
