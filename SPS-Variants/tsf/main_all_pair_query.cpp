@@ -53,10 +53,10 @@ int main(int argc, char *argv[]) {
 #ifdef GROUND_TRUTH
             auto res = yche_tfs.querySinglePair(u, v);
             max_err = max(max_err, abs(ts.sim(u, v) - res));
-//            if (abs(ts.sim(u, v) - res) > 0.01) {
-//#pragma omp critical
-//                cout << u << ", " << v << "," << ts.sim(u, v) << "," << res << endl;
-//            }
+            if (abs(ts.sim(u, v) - res) > 0.01) {
+#pragma omp critical
+                cout << u << ", " << v << "," << ts.sim(u, v) << "," << res << endl;
+            }
 #else
             yche_tfs.querySinglePair(u, v);
 #endif

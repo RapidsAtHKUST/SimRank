@@ -9,7 +9,10 @@
 #include <cstdlib>
 #include <ctime>
 
+#include <random>
+
 class Random {
+    std::mt19937 generator;
 public:
     Random() {
         srand(static_cast<unsigned int>(time(NULL)));
@@ -17,7 +20,7 @@ public:
 
     ~Random() = default;
 
-    int getRandom() {
+    unsigned long getRandom() {
         return rand();
     }
 };

@@ -6,6 +6,7 @@
 #define TSF_YCHETSF_H
 
 #include <vector>
+#include "util/sfmt_based_rand.h"
 
 using namespace std;
 
@@ -16,11 +17,12 @@ private:
     int sampleQueryNum;
     int maxSteps;
     double c;
+    SFMTRand rand;
 
     // reversed graph csr representation
     int n;
-    vector<int> graphSrc;
-    vector<int> graphDst;
+    vector<int> off;
+    vector<int> dst_v;
 
     vector<vector<int>> owg_arr;
 public:
