@@ -36,7 +36,8 @@ class Sling {
     friend void __Sling_t_backward(Sling *sim, double eps, mutex *tasklock, int *cursor, int tid, mutex *plock);
 
 private:
-    const static int BLOCKSIZE = 1000;
+//    const static int BLOCKSIZE = 1000;
+    const static int BLOCKSIZE = 100;
     static int NUMTHREAD;
 //    const static int NUMTHREAD = 2;
 

@@ -40,4 +40,18 @@ target_link_libraries(sling_all PRIVATE ${CMAKE_THREAD_LIBS_INIT})
 target_link_libraries(sling_all PRIVATE tcmalloc)
 
 target_compile_options(sling_all PRIVATE -O3 -g -DSFMT_MEXP=607 -msse2 -DHAVE_SSE2)
-target_compile_definitions(sling_all PRIVATE -DGROUND_TRUTH=1)
+target_compile_definitions(sling_all PRIVATE -DGROUND_TRUTH=1 -DALL_PAIR=1)
+
+########## benchmark
+
+add_executable(sling_bench ${SOURCE_FILES} ${GROUND_TRUTH_FILES} main_query_all_vertices.cpp)
+
+target_include_directories(sling_bench PRIVATE ../../sparsehash-yche/include/)
+target_include_directories(sling_bench PRIVATE ../../SFMT)
+target_include_directories(sling_bench PRIVATE ../../include)
+target_include_directories(sling_bench PRIVATE ../../sparsepp)
+
+target_link_libraries(sling_bench PRIVATE ${CMAKE_THREAD_LIBS_INIT})
+target_link_libraries(sling_bench PRIVATE tcmalloc)
+
+target_compile_options(sling_bench PRIVATE -O3 -g -DSFMT_MEXP=607 -msse2 -DHAVE_SSE2)
