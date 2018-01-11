@@ -31,7 +31,6 @@ int main(int argc, char *argv[]) {
 
     InitGraph(file_path, graph_src_vec, graph_dst_vec);
 
-    auto yche_tfs = YcheTSF(sampleNum, sampleQueryNum, stepNum, decayFactor, graph_src_vec, graph_dst_vec);
     auto tmp_end = std::chrono::high_resolution_clock::now();
 
     cout << "finish input graph " << duration_cast<microseconds>(tmp_end - tmp_start).count() << " us\n";
@@ -43,25 +42,31 @@ int main(int argc, char *argv[]) {
 #endif
 
     tmp_start = std::chrono::high_resolution_clock::now();
+    omp_set_num_threads(10);
+#pragma omp parallel
+    {
+        auto yche_tfs = YcheTSF(sampleNum, sampleQueryNum, stepNum, decayFactor, graph_src_vec, graph_dst_vec);
 #ifdef GROUND_TRUTH
-#pragma omp parallel for reduction(max:max_err) schedule(dynamic, 1)
+#pragma omp for reduction(max:max_err) schedule(dynamic, 1)
 #else
-#pragma omp parallel for schedule(dynamic, 1)
+#pragma omp for schedule(dynamic, 1)
 #endif
-    for (auto u = 0; u < 1000; u++) {
-        for (auto v = u; v < 1000; v++) {
+        for (auto u = 0; u < 1000; u++) {
+            for (auto v = u; v < 1000; v++) {
 #ifdef GROUND_TRUTH
-            auto res = yche_tfs.querySinglePair(u, v);
-            max_err = max(max_err, abs(ts.sim(u, v) - res));
+                auto res = yche_tfs.querySinglePair(u, v);
+                max_err = max(max_err, abs(ts.sim(u, v) - res));
 //            if (abs(ts.sim(u, v) - res) > 0.01) {
 //#pragma omp critical
 //                cout << u << ", " << v << "," << ts.sim(u, v) << "," << res << endl;
 //            }
 #else
-            yche_tfs.querySinglePair(u, v);
+                yche_tfs.querySinglePair(u, v);
 #endif
+            }
         }
-    }
+
+    };
     tmp_end = std::chrono::high_resolution_clock::now();
 
 #ifdef GROUND_TRUTH
