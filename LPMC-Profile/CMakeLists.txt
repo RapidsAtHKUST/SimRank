@@ -147,4 +147,4 @@ target_link_libraries(bflpmc-ap PRIVATE ${Boost_LIBRARIES})
 target_link_libraries(bflpmc-ap PRIVATE tcmalloc)
 
 target_compile_options(bflpmc-ap PRIVATE -O3 -g ${SFMT_COMPILE_FLAGS} -march=native)
-target_compile_definitions(bflpmc-ap PRIVATE -DSFMT=1 -DGROUND_TRUTH=1)
+target_compile_definitions(bflpmc-ap PRIVATE -DSFMT=1 -DGROUND_TRUTH=1 -DGROUND_TRUTH_STATISTICS=1)

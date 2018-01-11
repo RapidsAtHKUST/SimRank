@@ -39,12 +39,6 @@ void test_BFLPMC(string data_name, double c, double epsilon, double delta, int x
     cout << "failure count:" << failure_count << endl;
     cout << "max err:" << max_err << endl;
     cout << "min err:" << min_err << endl;
-//    if (g.n < 10000) {
-//        cout << "\n";
-//        TruthSim ts(data_name, g, c, epsilon);
-//        cout << format("ground truth: %s") % ts.sim(x, y) << endl;
-////        cout << format("error: %s") % (ts.sim(q.first, q.second) - result) << endl;
-//    }
 }
 
 int main(int argc, char *argv[]) {
