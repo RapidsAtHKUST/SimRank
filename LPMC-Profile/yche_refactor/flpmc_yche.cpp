@@ -32,6 +32,8 @@ FLPMC::FLPMC(string g_name_, GraphYche &g_, double c_, double epsilon_, double d
         cout << "offline index exists..loading " << endl;
         lp->load();
     }
+    generator = std::mt19937(rd());
+    geo_distribution = std::geometric_distribution<int>(1 - c);
 }
 
 double FLPMC::get_rmax() {
@@ -79,12 +81,13 @@ double FLPMC::query_one2one(NodePair np) {
             a = sample_in_neighbor(a, *g);
             b = sample_in_neighbor(b, *g);
 #else
-//        while (rand_gen.double_rand() < c && (a != b)) {
-        while ((rand_gen.double_rand() < c) && (a != b)) {
+//        while ((rand_gen.double_rand() < c) && (a != b)) {
+        int length_of_random_walk = geo_distribution(generator);
+        while ((step < length_of_random_walk) && (a != b)) {
             a = sample_in_neighbor(a, *g, rand_gen);
             b = sample_in_neighbor(b, *g, rand_gen);
-#endif
             step++;
+#endif
             if (a == -1 || b == -1) {
                 break;
             }

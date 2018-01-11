@@ -63,6 +63,10 @@ std::ostream &operator<<(std::ostream &os, const data_item &obj) {
 BackPush::BackPush(string g_name_, GraphYche &graph, double c_, double epsilon_, double delta_) :
         heap(graph), g_name(g_name_), g(&graph), c(c_), epsilon(epsilon_), fail_prob(delta_) {
     g_ptr = &graph;
+    std::random_device rd;  //Will be used to obtain a seed for the random number engine
+
+    generator = std::mt19937(rd());
+    geo_distribution = std::geometric_distribution<int>(1 - c);
 }
 
 size_t BackPush::number_of_walkers(double sum) {
@@ -221,15 +225,16 @@ double BackPush::MC_random_walk(int N) { // perform random walks based on curren
                                                        static_cast<int>(rand_gen.double_rand() * YCHE_MAX_INT));
 
 #endif
+        int length_of_random_walk = geo_distribution(generator) + 1;
         NodePair sampled_np = node_pairs[index];
 
         if (sampled_np.first == sampled_np.second) {
             meeting_count += 1.0;
         } else {
 #if !defined(SFMT)
-            double sample_result = sample_one_pair(sampled_np, generator, distribution);
+            double sample_result = sample_one_pair(sampled_np, generator, distribution, length_of_random_walk);
 #else
-            double sample_result = sample_one_pair(sampled_np);
+            double sample_result = sample_one_pair(sampled_np, length_of_random_walk);
 #endif
             meeting_count += sample_result;
         }
@@ -242,14 +247,14 @@ double BackPush::MC_random_walk(int N) { // perform random walks based on curren
 #if !defined(SFMT)
 
 double BackPush::sample_one_pair(NodePair np, std::default_random_engine &generator,
-                             std::uniform_real_distribution<double> &distribution) {
+                             std::uniform_real_distribution<double> &distribution, int length_of_random_walk) {
 // sample for one pair of random walk, with expected (1 + 1 / (1-c))
 // assume that a != b
 int a = np.first;
 int b = np.second;
 double indicator = 0;
 int step = 0; //
-while ((distribution(generator) < c || step == 0) && a != b) { // walk when > c or the first step
+while (step < length_of_random_walk && a != b) { // walk when > c or the first step
     a = sample_in_neighbor(a, *g);
     b = sample_in_neighbor(b, *g);
     step++;
@@ -264,7 +269,7 @@ return c * indicator;
 }
 #else
 
-double BackPush::sample_one_pair(NodePair np) {
+double BackPush::sample_one_pair(NodePair np, int length_of_random_walk) {
     // sample for one pair of random walk, with (1-c) stop probability
     // sample for one pair of random walk, with expected (1 + 1 / (1-c))
     // assume that a != b
@@ -272,7 +277,7 @@ double BackPush::sample_one_pair(NodePair np) {
     int b = np.second;
     double indicator = 0;
     int step = 0; //
-    while ((rand_gen.double_rand() < c || step == 0) && a != b) { // walk when > c or the first step
+    while (step < length_of_random_walk && a != b) { // walk when > c or the first step
         a = sample_in_neighbor(a, *g, rand_gen);
         b = sample_in_neighbor(b, *g, rand_gen);
         step++;

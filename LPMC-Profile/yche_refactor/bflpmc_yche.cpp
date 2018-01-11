@@ -6,6 +6,9 @@ BFLPMC::BFLPMC(string g_name_, GraphYche &g_, double c_, double epsilon_, double
     // init the two components
     flp = new FLPMC(g_name, *g, c, epsilon, delta, 0); // Q is set to 0
     blp = new BackPush(g_name, *g, c, (1 - c) * epsilon / flp->get_rmax(), delta);
+    // set up the random number generator
+    generator = std::mt19937(rd());
+    geo_distribution = std::geometric_distribution<int>(1 - c);
 }
 
 double BFLPMC::query_one2one(NodePair np) {
@@ -38,10 +41,6 @@ double BFLPMC::query_one2one(NodePair np) {
         return blp_p_i + estimate_s_i;
     } else {
 
-        // set up the random number generator
-        std::random_device rd;  //Will be used to obtain a seed for the random number engine
-        std::mt19937 generator(rd()); //Standard mersenne_twister_engine seeded with rd()
-
         // set up the discret distribution
         auto begin = blp->heap.heap.begin();
         auto end = blp->heap.heap.end();
@@ -72,6 +71,8 @@ double BFLPMC::query_one2one(NodePair np) {
         double estimate_r_i = 0;
         for (int i = 0; i < N; i++) {
             double terminate_r = 0;
+
+            int length_of_random_walk = geo_distribution(generator) + 1;
             int step = 0;
 //        int index = residuals_dist(generator); // index for node pairs
 //        int index = BinarySearchForGallopingSearch(reinterpret_cast<const double *>(&cdf.front()), 0, cdf.size(),
@@ -89,7 +90,8 @@ double BFLPMC::query_one2one(NodePair np) {
             // samples from this node pair
 
             double current_estimate = flp->lp->query_P(a, b);
-            while (((rand_gen.double_rand() < c) || step == 0) && (a != b)) { // random walk length (1 + 1 / (1-c))
+//            while (((rand_gen.double_rand() < c) || step == 0) && (a != b)) { // random walk length (1 + 1 / (1-c))
+            while ((step < length_of_random_walk) && (a != b)) { // random walk length (1 + 1 / (1-c))
                 a = sample_in_neighbor(a, *g, rand_gen);
                 b = sample_in_neighbor(b, *g, rand_gen);
                 step++;

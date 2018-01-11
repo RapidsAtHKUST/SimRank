@@ -13,6 +13,10 @@ struct FLPMC {
     GraphYche *g; // the pointer to the graph
     LocalPush *lp; // the pointer to the local push index
 
+    std::random_device rd;  //Will be used to obtain a seed for the random number engine
+    std::mt19937 generator; //Standard mersenne_twister_engine seeded with rd()
+    std::geometric_distribution<int> geo_distribution;
+
 #ifdef SFMT
     SFMTRand rand_gen;
 #endif

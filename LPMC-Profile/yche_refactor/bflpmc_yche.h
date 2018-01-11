@@ -15,6 +15,9 @@ public:
     BackPush *blp;
     FLPMC *flp;
 
+    std::random_device rd;  //Will be used to obtain a seed for the random number engine
+    std::mt19937 generator; //Standard mersenne_twister_engine seeded with rd()
+    std::geometric_distribution<int> geo_distribution;
     SFMTRand rand_gen;
 public:
     BFLPMC(string g_name_, GraphYche &, double c_, double epsilon_, double delta_);

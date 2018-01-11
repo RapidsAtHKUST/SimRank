@@ -116,6 +116,8 @@ struct BackPush { // Backward Push
     unique_max_heap heap; // the heap contains residuals
 //    residual_set set_residual; // the set containing residuals for random push
 
+    std::mt19937 generator; //Standard mersenne_twister_engine seeded with rd()
+    std::geometric_distribution<int> geo_distribution;
 #ifdef SFMT
     SFMTRand rand_gen;
 #endif
@@ -132,10 +134,10 @@ public:
 
 #if !defined(SFMT)
     double sample_one_pair(NodePair np, std::default_random_engine &generator,
-                        std::uniform_real_distribution<double> &dist); // sample one pair of random walk
+                        std::uniform_real_distribution<double> &dist, int length_of_random_walk); // sample one pair of random walk
 #else
 
-    double sample_one_pair(NodePair np);
+    double sample_one_pair(NodePair np, int length_of_random_walk);
 
 #endif
 
