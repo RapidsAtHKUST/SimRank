@@ -76,8 +76,21 @@ target_include_directories(bprw-ap PRIVATE ../include)
 target_link_libraries(bprw-ap PRIVATE tcmalloc)
 
 target_compile_options(bprw-ap PRIVATE -O3 -g ${SFMT_COMPILE_FLAGS} -march=native)
-target_compile_definitions(bprw-ap PRIVATE -DSFMT=1 -DGROUND_TRUTH=1)
-#target_compile_definitions(bprw-ap PRIVATE -DSFMT=1 -DGROUND_TRUTH=1)
+target_compile_definitions(bprw-ap PRIVATE -DSFMT=1 -DGROUND_TRUTH=1 -DALL_PAIR=1)
+
+################## benchmark
+add_executable(bprw-bench ${BPRW_FILES} ${UTIL_FILES} ${GROUND_TRUTH_FILES} playground/main_bprw_all_pair.cpp)
+target_include_directories(bprw-bench PRIVATE ../sparsehash-yche/include)
+target_include_directories(bprw-bench PRIVATE ../sparsepp)
+target_include_directories(bprw-bench PRIVATE ../SFMT)
+target_include_directories(bprw-bench PRIVATE ${Boost_INCLUDE_DIRS})
+
+target_include_directories(bprw-bench PRIVATE ../include)
+
+target_link_libraries(bprw-bench PRIVATE tcmalloc)
+
+target_compile_options(bprw-bench PRIVATE -O3 -g ${SFMT_COMPILE_FLAGS} -march=native)
+target_compile_definitions(bprw-bench PRIVATE -DSFMT=1)
 
 ################################ 4th: flpmc ######################################
 set(FLPMC_SOURCE_FILES ${LPMC_FILES} ${UTIL_FILES} ${GROUND_TRUTH_FILES}
@@ -112,7 +125,26 @@ target_link_libraries(flpmc-ap PRIVATE ${Boost_LIBRARIES})
 target_link_libraries(flpmc-ap PRIVATE tcmalloc)
 
 target_compile_options(flpmc-ap PRIVATE -O3 -g ${SFMT_COMPILE_FLAGS})
-target_compile_definitions(flpmc-ap PRIVATE -DSFMT=1 -DGROUND_TRUTH=1)
+target_compile_definitions(flpmc-ap PRIVATE -DSFMT=1 -DGROUND_TRUTH=1 -DALL_PAIR=1)
+
+################## benchmark
+
+set(FLPMC_SOURCE_FILES ${LPMC_FILES} ${UTIL_FILES} ${GROUND_TRUTH_FILES}
+        playground/main_flpmc_all_pair.cpp)
+
+add_executable(flpmc-bench ${FLPMC_SOURCE_FILES})
+
+target_include_directories(flpmc-bench PRIVATE ${Boost_INCLUDE_DIRS})
+target_include_directories(flpmc-bench PRIVATE ../sparsehash-yche/include)
+target_include_directories(flpmc-bench PRIVATE ../sparsepp)
+target_include_directories(flpmc-bench PRIVATE ../SFMT)
+target_include_directories(flpmc-bench PRIVATE ../include)
+
+target_link_libraries(flpmc-bench PRIVATE ${Boost_LIBRARIES})
+target_link_libraries(flpmc-bench PRIVATE tcmalloc)
+
+target_compile_options(flpmc-bench PRIVATE -O3 -g ${SFMT_COMPILE_FLAGS})
+target_compile_definitions(flpmc-bench PRIVATE -DSFMT=1)
 
 ################################ 6th: bflpmc ######################################
 set(BFLPMC_SOURCE_FILES ${LPMC_FILES} ${BPRW_FILES} ${UTIL_FILES} ${GROUND_TRUTH_FILES}
@@ -146,4 +178,20 @@ target_link_libraries(bflpmc-ap PRIVATE ${Boost_LIBRARIES})
 target_link_libraries(bflpmc-ap PRIVATE tcmalloc)
 
 target_compile_options(bflpmc-ap PRIVATE -O3 -g ${SFMT_COMPILE_FLAGS} -march=native)
-target_compile_definitions(bflpmc-ap PRIVATE -DSFMT=1 -DGROUND_TRUTH=1 -DGROUND_TRUTH_STATISTICS=1)
+target_compile_definitions(bflpmc-ap PRIVATE -DSFMT=1 -DGROUND_TRUTH=1 -DGROUND_TRUTH_STATISTICS=1 -DALL_PAIR=1)
+
+############### benchmark
+
+add_executable(bflpmc-bench ${BFLPMC_SOURCE_FILES})
+
+target_include_directories(bflpmc-bench PRIVATE ${Boost_INCLUDE_DIRS})
+target_include_directories(bflpmc-bench PRIVATE ../sparsehash-yche/include)
+target_include_directories(bflpmc-bench PRIVATE ../sparsepp)
+target_include_directories(bflpmc-bench PRIVATE ../SFMT)
+target_include_directories(bflpmc-bench PRIVATE ../include)
+
+target_link_libraries(bflpmc-bench PRIVATE ${Boost_LIBRARIES})
+target_link_libraries(bflpmc-bench PRIVATE tcmalloc)
+
+target_compile_options(bflpmc-bench PRIVATE -O3 -g ${SFMT_COMPILE_FLAGS} -march=native)
+target_compile_definitions(bflpmc-bench PRIVATE -DSFMT=1)

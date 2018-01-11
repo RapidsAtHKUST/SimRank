@@ -64,10 +64,14 @@ void test_BFLPMC(string data_name, double c, double epsilon, double delta) {
 #else
 #pragma omp for schedule(dynamic, 1)
 #endif
-//        for (auto i = 0u; i < 1000; i++) {
+
+#if defined(ALL_PAIR)
         for (auto i = 0u; i < n; i++) {
             for (auto j = i; j < n; j++) {
-//            for (auto j = i; j < 1000; j++) {
+#else
+                for (auto i = 0u; i < 1000; i++) {
+                    for (auto j = i; j < 1000; j++) {
+#endif
                 auto q = pair<uint32_t, uint32_t>(i, j);
 #ifdef GROUND_TRUTH
                 auto res = local_bflpmc.query_one2one(q);
@@ -81,11 +85,13 @@ void test_BFLPMC(string data_name, double c, double epsilon, double delta) {
 #endif
             }
         }
+
     };
     auto end = std::chrono::high_resolution_clock::now();
     std::chrono::duration<double> elapsed = end - start;
 #ifdef GROUND_TRUTH
-    cout << "max err:" << max_err << endl;
+    cout << "max err:" << max_err <<
+         endl;
 #endif
     cout << format("total query cost: %s s") % elapsed.count() << endl; // record the pre-processing time
 }
