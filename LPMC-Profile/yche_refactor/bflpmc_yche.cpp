@@ -37,12 +37,7 @@ double BFLPMC::query_one2one(NodePair np) {
         double estimate_s_i = blp->MC_random_walk(N2);
         return blp_p_i + estimate_s_i;
     } else {
-
-        // set up the random number generator
-        std::random_device rd;  //Will be used to obtain a seed for the random number engine
-        std::mt19937 generator(rd()); //Standard mersenne_twister_engine seeded with rd()
-
-        // set up the discret distribution
+        // discrete distribution
         auto begin = blp->heap.heap.begin();
         auto end = blp->heap.heap.end();
         double r_sum = blp->heap.sum;
@@ -56,7 +51,7 @@ double BFLPMC::query_one2one(NodePair np) {
             h_p_r += (*it).residual * (flp->lp->query_P(current_np.first, current_np.second) +
                                        flp->lp->query_R(current_np.first, current_np.second));
         }
-//    std::discrete_distribution<int> residuals_dist(weights.begin(), weights.end());
+        // init cdf
         constexpr int YCHE_MAX_INT = 1 << 30;
         vector<int> cdf(weights.size(), 0);
         auto prev = 0.0;
@@ -73,21 +68,14 @@ double BFLPMC::query_one2one(NodePair np) {
         for (int i = 0; i < N; i++) {
             double terminate_r = 0;
             int step = 0;
-//        int index = residuals_dist(generator); // index for node pairs
-//        int index = BinarySearchForGallopingSearch(reinterpret_cast<const double *>(&cdf.front()), 0, cdf.size(),
-//                                                   rand_gen.double_rand());
-//        int index = GallopingSearch(&cdf.front(), 0, static_cast<uint32_t>(cdf.size()),
-//                                    static_cast<int>(rand_gen.double_rand() * YCHE_MAX_INT));
-//        int index = GallopingSearchAVX2(&cdf.front(), 0, static_cast<uint32_t>(cdf.size()),
-//                                                       static_cast<int>(rand_gen.double_rand() * YCHE_MAX_INT));
             int index = BinarySearchForGallopingSearchAVX2(&cdf.front(), 0, static_cast<uint32_t>(cdf.size()),
                                                            static_cast<int>(rand_gen.double_rand() * YCHE_MAX_INT));
 
             NodePair sampled_np = node_pairs[index];
             int a, b;
             tie(a, b) = sampled_np;
-            // samples from this node pair
 
+            // samples from this node pair
             double current_estimate = flp->lp->query_P(a, b);
             while (((rand_gen.double_rand() < c) || step == 0) && (a != b)) { // random walk length (1 + 1 / (1-c))
                 a = sample_in_neighbor(a, *g, rand_gen);

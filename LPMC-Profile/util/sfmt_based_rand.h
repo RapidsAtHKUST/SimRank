@@ -27,13 +27,9 @@ public:
 
 //  randomly choose [start_iter, end_iter), concept requires random access iterator
 template<typename Iter>
-Iter select_randomly_sfmt(Iter start, Iter end, SFMTRand &sfmt_rand_gen) {
-//    auto advance_step = sfmt_rand_gen.uint_rand() % (std::distance(start, end));
+inline Iter select_randomly_sfmt(Iter start, Iter end, SFMTRand &sfmt_rand_gen) {
     auto advance_step = sfmt_rand_gen.uint_rand() % (end - start);
-//    std::advance(start, advance_step);
-    // already sure within the range
-    start += advance_step;
-    return start;
+    return start + advance_step;
 }
 
 #endif //SPS_SFMT_BASED_RAND_H

@@ -43,7 +43,6 @@ public:
     int out_degree(int u);
 
     bool exists_edge(int src, int dst);
-
 };
 
 // utility function
@@ -58,14 +57,14 @@ inline string get_edge_list_path(string s) {
 }
 
 template<typename Iter, typename RandomGenerator>
-Iter select_randomly(Iter start, Iter end, RandomGenerator &g) {
+inline Iter select_randomly(Iter start, Iter end, RandomGenerator &g) {
     std::uniform_int_distribution<> dis(0, (end - start) - 1);
     start += dis(g);
     return start;
 }
 
 template<typename Iter>
-Iter select_randomly(Iter start, Iter end) {
+inline Iter select_randomly(Iter start, Iter end) {
     static std::random_device rd;
     static std::mt19937 gen(rd());
     return select_randomly(start, end, gen);
@@ -75,7 +74,14 @@ Iter select_randomly(Iter start, Iter end) {
 extern int sample_in_neighbor(int a, GraphYche &g);
 #else
 
-extern int sample_in_neighbor(int a, GraphYche &g, SFMTRand &sfmt_rand_gen);
+inline extern int sample_in_neighbor(int a, GraphYche &g, SFMTRand &sfmt_rand_gen) {
+    auto in_deg = g.in_deg_arr[a];
+    if (in_deg > 0) {
+        return g.neighbors_in[select_randomly_sfmt(g.off_in[a], g.off_in[a + 1], sfmt_rand_gen)];
+    } else {
+        return -1;
+    }
+}
 
 #endif
 
