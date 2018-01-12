@@ -8,6 +8,7 @@ const double Sling::BACKEPS = 7.28e-4; //EPS / 23.;
 const double Sling::DEPS = 5e-3; //EPS * 3. * 3. / 23.;
 const double Sling::K = 10.;
 int Sling::NUMTHREAD = std::thread::hardware_concurrency();
+//int Sling::NUMTHREAD = 1;
 
 void Sling::init() {
     first = new bool[g->n];
@@ -381,6 +382,7 @@ void __Sling_t_backward(Sling *sim, double eps, mutex *tasklock, int *cursor, in
 }
 
 void Sling::backward(double eps) {
+    Sling::NUMTHREAD = 1;
     int plockNum = (g->n - 1) / BLOCKSIZE + 1;
     auto *plock = new mutex[plockNum];
     mutex tasklock;

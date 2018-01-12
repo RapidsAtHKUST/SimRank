@@ -41,6 +41,7 @@ target_link_libraries(sling_all PRIVATE tcmalloc)
 
 target_compile_options(sling_all PRIVATE -O3 -g -DSFMT_MEXP=607 -msse2 -DHAVE_SSE2)
 target_compile_definitions(sling_all PRIVATE -DGROUND_TRUTH=1 -DALL_PAIR=1)
+#target_compile_definitions(sling_all PRIVATE -DGROUND_TRUTH=1)
 
 ########## benchmark
 
