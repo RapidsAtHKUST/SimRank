@@ -14,7 +14,7 @@ using namespace std::chrono;
 
 int main(int argc, char *argv[]) {
     // 1st: load graph
-    string file_path = "./datasets/edge_list/" + string(argv[1]) + ".txt";
+    string file_path = "/homes/ywangby/workspace/LinsysSimRank/datasets/edge_list/" + string(argv[1]) + ".txt";
     double c = 0.6;
     int max_iter = 9;
     double filter_threshold = 0.0001;

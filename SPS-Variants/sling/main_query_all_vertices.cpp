@@ -7,6 +7,7 @@
 #include "ground_truth/simrank.h"
 
 #include "sling.h"
+#include "ground_truth/stat.h"
 
 using namespace std;
 using namespace std::chrono;
@@ -15,7 +16,7 @@ int main(int argc, char *argv[]) {
     // 1st: load graph
     Graph g;
     string file_name = argv[1];
-    string file_path = "./datasets/edge_list/" + file_name + ".txt";
+    string file_path = "/homes/ywangby/workspace/LinsysSimRank/datasets/edge_list/" + file_name + ".txt";
     g.inputGraph(file_path);
 
     double c = 0.6;
@@ -48,6 +49,8 @@ int main(int argc, char *argv[]) {
     tmp_end = std::chrono::high_resolution_clock::now();
     cout << "finish backward " << float(duration_cast<microseconds>(tmp_end - tmp_start).count()) / (pow(10, 6))
          << " s\n";
+
+    cout << "mem size:" << getValue() << endl;
 
     // 3rd: querying pairs
     tmp_start = std::chrono::high_resolution_clock::now();
