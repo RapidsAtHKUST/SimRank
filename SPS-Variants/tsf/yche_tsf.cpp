@@ -4,12 +4,15 @@
 
 #include <cmath>
 #include <iostream>
+#include <chrono>
 
 #include "yche_tsf.h"
 #include "util/pretty_print.h"
 
 void YcheTSF::BuildIndex() {
     SFMTRand rand;
+    auto tmp_start = std::chrono::high_resolution_clock::now();
+
     owg_arr.resize(sampleNum);
     for (int sid = 0; sid < sampleNum; ++sid) {
         owg_arr[sid] = vector<int>(n, -1);
@@ -21,6 +24,9 @@ void YcheTSF::BuildIndex() {
             }
         }
     }
+    auto tmp_end = std::chrono::high_resolution_clock::now();
+    cout << "indexing computation time:"
+         << std::chrono::duration_cast<std::chrono::milliseconds>(tmp_end - tmp_start).count() << " ms\n";
 }
 
 double YcheTSF::querySinglePair(int u, int v) {

@@ -48,8 +48,13 @@ int main(int argc, char *argv[]) {
 #else
 #pragma omp parallel for schedule(dynamic, 1)
 #endif
+#ifdef ALL_PAIR
     for (auto u = 0; u < 1000; u++) {
         for (auto v = u; v < 1000; v++) {
+#else
+    for (auto u = 0; u < 100; u++) {
+        for (auto v = u; v < 100; v++) {
+#endif
 #ifdef GROUND_TRUTH
             auto res = yche_tfs.querySinglePair(u, v);
             max_err = max(max_err, abs(ts.sim(u, v) - res));

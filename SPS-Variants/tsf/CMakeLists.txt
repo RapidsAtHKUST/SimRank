@@ -43,3 +43,17 @@ target_link_libraries(tsf-ap PRIVATE tcmalloc)
 
 target_compile_options(tsf-ap PRIVATE ${SFMT_COMPILE_FLAGS} -O3 -g)
 target_compile_definitions(tsf-ap PRIVATE -DGROUND_TRUTH=1)
+
+################ benchmark
+
+add_executable(tsf-bench main_all_pair_query.cpp
+        yche_tsf.cpp yche_tsf.h input_output.cpp input_output.h ${GROUND_TRUTH_FILES} ../../SFMT/SFMT.c util/sfmt_based_rand.h)
+
+target_include_directories(tsf-bench PRIVATE ../../sparsepp)
+target_include_directories(tsf-bench PRIVATE ../../include)
+target_include_directories(tsf-bench PRIVATE ../../sparsehash-yche/include)
+target_include_directories(tsf-bench PRIVATE ../../SFMT)
+target_link_libraries(tsf-bench PRIVATE tcmalloc)
+
+target_compile_options(tsf-bench PRIVATE ${SFMT_COMPILE_FLAGS} -O3 -g)
+target_compile_definitions(tsf-bench PRIVATE)
