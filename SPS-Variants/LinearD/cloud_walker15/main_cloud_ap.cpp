@@ -51,10 +51,8 @@ int main(int argc, char *argv[]) {
 #else
 #pragma omp for schedule(dynamic, 1)
 #endif
-//        for (auto u = 0; u < 1000; u++) {
-        for (auto u = 0; u < 200; u++) {
-            for (auto v = u + 1; v < 200; v++) {
-//            for (auto v = u; v < 1000; v++) {
+        for (auto u = 0; u < 100; u++) {
+            for (auto v = u; v < 100; v++) {
 #ifdef GROUND_TRUTH
                 auto res = cw.mcsp(u, v, pos_dist_u, pos_dist_v);
 
@@ -68,7 +66,6 @@ int main(int argc, char *argv[]) {
 #endif
             }
         }
-
     };
     auto tmp_end = std::chrono::high_resolution_clock::now();
 

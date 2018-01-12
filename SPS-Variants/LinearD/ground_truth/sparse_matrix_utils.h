@@ -64,8 +64,7 @@ namespace std {
 
 template<typename T>
 struct DensePairMap {
-    vector<sparse_hash_map<unsigned int, T, std::hash<unsigned int>>>
-            v;
+    vector<sparse_hash_map<unsigned int, T, std::hash<unsigned int>>> v;
 
     // assume np.first <= np.second
     T &operator[](NodePair np) {

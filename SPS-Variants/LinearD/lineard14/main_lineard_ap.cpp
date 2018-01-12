@@ -50,8 +50,8 @@ int main(int argc, char *argv[]) {
 #else
 #pragma omp for schedule(dynamic, 1)
 #endif
-        for (auto u = 0; u < 1000; u++) {
-            for (auto v = u; v < 1000; v++) {
+        for (auto u = 0; u < 100; u++) {
+            for (auto v = u; v < 100; v++) {
 #ifdef GROUND_TRUTH
                 auto res = lin.single_pair(u, v, lhs_vec, rhs_vec);
 
@@ -61,7 +61,7 @@ int main(int argc, char *argv[]) {
                     cout << u << ", " << v << "," << ts.sim(u, v) << "," << res << endl;
                 }
 #else
-                cw.mcsp(u, v, pos_dist_u, pos_dist_v);
+                lin.single_pair(u, v, lhs_vec, rhs_vec);
 #endif
             }
         }
