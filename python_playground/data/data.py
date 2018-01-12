@@ -300,7 +300,7 @@ if __name__ == '__main__':
     # print(D_times)
     # compute_Diagonal_correction_array("odlis")
     for p in ["wiki-Link"]:
-        convert_and_save_to_adj_matrix("./datasets/" + p + ".txt")
+        # convert_and_save_to_adj_matrix("./datasets/" + p + ".txt")
         convert_and_save_to_adj_matrix("./datasets/" + p + ".txt", False)
         write_to_edgelist(p)
     # with Pool(len(DATA)) as pool:

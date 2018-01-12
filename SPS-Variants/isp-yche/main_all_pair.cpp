@@ -37,8 +37,8 @@ int main(int argc, char *argv[]) {
 #else
 #pragma omp parallel for schedule(dynamic, 1)
 #endif
-    for (auto u = 0; u < 1000; u++) {
-        for (auto v = u; v < 1000; v++) {
+    for (auto u = 0; u < 200; u++) {
+        for (auto v = u; v < 200; v++) {
 #ifdef GROUND_TRUTH
             auto res = my_isp.ComputeSim(u, v, c, max_iter, filter_threshold);
             max_err = max(max_err, abs(ts.sim(u, v) - res));

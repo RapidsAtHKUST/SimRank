@@ -23,6 +23,7 @@ target_include_directories(isp_yche PRIVATE ${Boost_INCLUDE_DIRS})
 target_compile_options(isp_yche PRIVATE -O3 -g)
 #target_compile_definitions(isp_yche PRIVATE DEBUG=1)
 
+################ isp ground truth testing
 add_executable(isp_ap ${SOURCE_FILES} ${GROUND_TRUTH_FILES} main_all_pair.cpp)
 target_include_directories(isp_ap PRIVATE ../../sparsepp)
 target_include_directories(isp_ap PRIVATE ${Boost_INCLUDE_DIRS})
@@ -32,6 +33,16 @@ target_compile_options(isp_ap PRIVATE -O3 -g)
 target_compile_definitions(isp_ap PRIVATE -DGROUND_TRUTH=1)
 target_link_libraries(isp_ap tcmalloc)
 
+########### isp benchmarking
+add_executable(isp_bench ${SOURCE_FILES} ${GROUND_TRUTH_FILES} main_all_pair.cpp)
+target_include_directories(isp_bench PRIVATE ../../sparsepp)
+target_include_directories(isp_bench PRIVATE ${Boost_INCLUDE_DIRS})
+target_include_directories(isp_bench PRIVATE ../../include)
+target_include_directories(isp_bench PRIVATE ../../sparsehash-yche/include)
+target_compile_options(isp_bench PRIVATE -O3 -g)
+target_link_libraries(isp_bench tcmalloc)
+
+############### others
 set(YCHE_GROUND_TRUTH_FILES yche_ground_truth/main_serial_naive_iter.cpp yche_ground_truth/SerialNaiveSim.cpp yche_ground_truth/SerialNaiveSim.h input_output.cpp)
 add_executable(naive_iter ${YCHE_GROUND_TRUTH_FILES})
 target_include_directories(naive_iter PRIVATE ../../sparsepp)
