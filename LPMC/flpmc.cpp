@@ -31,13 +31,13 @@ FLPMC::FLPMC(string g_name_, DirectedG &g_, double c_, double epsilon_, double d
     }
 
 double FLPMC::get_rmax(){
-    double r = sqrt(epsilon);
+    double r = pow(epsilon, 1.0 / 1.5);
     cout << format("r_max of local push: %s") % r << endl;
     return r;
 }
 
 double FLPMC::get_lp_epsilon(){
-    double lp_epsilon = get_rmax() * (1-c);
+    double lp_epsilon = get_rmax() / (1-c);
     cout << format("local push error: %s") % lp_epsilon << endl;
     return lp_epsilon;
 }
