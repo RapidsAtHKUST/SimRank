@@ -146,13 +146,13 @@ int sample_in_neighbor(int a, GraphYche &g) {
 }
 #else
 
-int sample_in_neighbor(int a, GraphYche &g, SFMTRand &sfmt_rand_gen) {
-    auto in_deg = g.in_deg_arr[a];
-    if (in_deg > 0) {
-        return g.neighbors_in[select_randomly_sfmt(g.off_in[a], g.off_in[a + 1], sfmt_rand_gen)];
-    } else {
-        return -1;
-    }
-}
+//int sample_in_neighbor(int a, GraphYche &g, SFMTRand &sfmt_rand_gen) {
+//    auto in_deg = g.in_deg_arr[a];
+//    if (in_deg > 0) {
+//        return g.neighbors_in[select_randomly_sfmt(g.off_in[a], g.off_in[a + 1], sfmt_rand_gen)];
+//    } else {
+//        return -1;
+//    }
+//}
 
 #endif

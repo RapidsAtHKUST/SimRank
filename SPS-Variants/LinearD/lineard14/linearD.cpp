@@ -1,4 +1,5 @@
 #include "linearD.h"
+#include "../ground_truth/stat.h"
 
 string LinearD::get_file_path_base() {
     return LINEAR_D_DIR + str(format("%s-%.3f-%s-%s-%s") % g_name % c % T % L % R);
@@ -33,6 +34,7 @@ LinearD::LinearD(DirectedG *graph, string name, double c_, int T_, int L_, int R
 
     compute_D();
     compute_P();
+    cout << "mem size:" << getValue() << endl;
 }
 
 void LinearD::compute_D() {

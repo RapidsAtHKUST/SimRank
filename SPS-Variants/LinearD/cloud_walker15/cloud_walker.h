@@ -39,18 +39,13 @@ public:
 
     void mcss(int s, VectorXd &); // Monte Carlo Single-source query: source node, result vec
 
-    void mcap(); // Monte Carlo All-pair SimRank computation
-
     double mcsp(int u, int v, MatrixXd &pos_dist_u, MatrixXd &pos_dist_v);
 
     double mcsp(int u, int v);
 
     void Tstep_distribution(int i, MatrixXd &pos_dist); // compute T-step position distribution of a number of samples
+
     string get_file_path_base();
-
-    void save();
-
-    void load();
 
 };
 

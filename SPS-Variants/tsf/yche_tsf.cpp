@@ -4,31 +4,34 @@
 
 #include <cmath>
 #include <iostream>
+#include <chrono>
 
 #include "yche_tsf.h"
-#include "util/random.h"
 #include "util/pretty_print.h"
 
 void YcheTSF::BuildIndex() {
-    Random rand;
+    SFMTRand rand;
+    auto tmp_start = std::chrono::high_resolution_clock::now();
+
     owg_arr.resize(sampleNum);
     for (int sid = 0; sid < sampleNum; ++sid) {
         owg_arr[sid] = vector<int>(n, -1);
         for (int i = 0; i < n; ++i) {
             auto &one_way_graph = owg_arr[sid];
-            int r_num = rand.getRandom();
-            if (graphSrc[i] != graphSrc[i + 1]) {
-                int idx = r_num % (graphSrc[i + 1] - graphSrc[i]);
-                one_way_graph[i] = graphDst[graphSrc[i] + idx];
+            if (off[i] != off[i + 1]) {
+                int idx = rand.uint_rand() % (off[i + 1] - off[i]);
+                one_way_graph[i] = dst_v[off[i] + idx];
             }
         }
     }
+    auto tmp_end = std::chrono::high_resolution_clock::now();
+    cout << "indexing computation time:"
+         << std::chrono::duration_cast<std::chrono::milliseconds>(tmp_end - tmp_start).count() << " ms\n";
 }
 
 double YcheTSF::querySinglePair(int u, int v) {
     if (u == v) { return 1.0; }
 
-    Random rand;
     double sim = 0;
 
     // random walk on Gr for vertex u, sampleNum * sampleQueryNum times
@@ -39,6 +42,12 @@ double YcheTSF::querySinglePair(int u, int v) {
         auto &one_way_graph = owg_arr[sid];
         path_v[0] = v;
         for (auto step = 0; step < maxSteps; ++step) {
+            if (path_v[step] >= one_way_graph.size()) {
+                cout << "err" << endl;
+            }
+            if (path_v[step] < 0) {
+                cout << "err too" << endl;
+            }
             path_v[step + 1] = one_way_graph[path_v[step]];
             if (path_v[step + 1] == -1) { break; }
         }
@@ -47,9 +56,9 @@ double YcheTSF::querySinglePair(int u, int v) {
             int cur_vertex = u;
             // random walk on Gr
             for (int s = 1; s < maxSteps; ++s) {
-                int nei_len = graphSrc[cur_vertex + 1] - graphSrc[cur_vertex];
+                int nei_len = off[cur_vertex + 1] - off[cur_vertex];
                 if (nei_len > 0) {
-                    cur_vertex = graphDst[graphSrc[cur_vertex] + (rand.getRandom() % nei_len)];
+                    cur_vertex = dst_v[off[cur_vertex] + (rand.uint_rand() % nei_len)];
                     // first meet only
                     if (path_v[s] == cur_vertex) {
 //                        cout << path_v[s] << cur_vertex << endl;
@@ -69,7 +78,7 @@ YcheTSF::YcheTSF(int sampleNum, int sampleQueryNum, int maxSteps, double c,
                  const vector<int> &graphSrc, const vector<int> &graphDst) : sampleNum(sampleNum),
                                                                              sampleQueryNum(sampleQueryNum),
                                                                              maxSteps(maxSteps), c(c),
-                                                                             graphSrc(graphSrc), graphDst(graphDst) {
+                                                                             off(graphSrc), dst_v(graphDst) {
     n = static_cast<int>(graphSrc.size() - 1);
     BuildIndex();
 }

@@ -5,16 +5,6 @@
 * adopt `SFMT`(simd fast rand generator), and reuse the allocated memory
 * adopt `BinarySearchForGallopingSearchAVX2`, using avx2 and cache pre-fetching instructions (256-bit operations) to implement binary search
 
-## Possible Investigations
-
-* better heap: support incre-key, max-key, unique pair, residual sum update
-* sparse hash-map: mainly better find and insert, possibly supporting multi-threading environment 
-
-## Random Pair Input Serialization/DeSerialization
-
-* output results to verify correctness for 4 small datasets
-* consider high degree random pairs(dense local structure) and normal random pairs
-
 ## Usage
 
 single pair query
@@ -64,3 +54,14 @@ cd build
 cmake ..
 make -j
 ```
+
+## Possible Investigations
+
+* better heap: support incre-key, max-key, unique pair, residual sum update
+* sparse hash-map: mainly better find and insert, possibly supporting multi-threading environment 
+
+## Random Pair Input Serialization/DeSerialization
+
+* output results to verify correctness for 4 small datasets
+* consider high degree random pairs(dense local structure) and normal random pairs
+

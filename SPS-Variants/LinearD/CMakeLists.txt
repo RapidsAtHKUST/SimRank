@@ -46,6 +46,19 @@ target_compile_definitions(LinSimAP PRIVATE -DGROUND_TRUTH=1)
 target_link_libraries(LinSimAP PRIVATE ${Boost_LIBRARIES})
 target_link_libraries(LinSimAP PRIVATE tcmalloc)
 
+####################### LinSimBench
+
+add_executable(LinSimBench ${SOURCE_FILES} lineard14/main_lineard_ap.cpp ${GROUND_TRUTH_FILES})
+target_include_directories(LinSimBench PRIVATE ../../sparsehash-yche/include/)
+target_include_directories(LinSimBench PRIVATE ../../sparsepp)
+target_include_directories(LinSimBench PRIVATE ../../eigen)
+target_include_directories(LinSimBench PRIVATE ../../include)
+target_include_directories(LinSimBench PRIVATE ${Boost_INCLUDE_DIRS})
+
+target_compile_options(LinSimBench PRIVATE -O3 ${SFMT_COMPILE_FLAGS})
+target_link_libraries(LinSimBench PRIVATE ${Boost_LIBRARIES})
+target_link_libraries(LinSimBench PRIVATE tcmalloc)
+
 ############################### release: CloudWalker #####################################################
 set(CLOUD_WALKER_FILES ${UTIL_FILES}
         cloud_walker15/cloud_walker.cpp cloud_walker15/cloud_walker.h)
@@ -71,3 +84,16 @@ target_compile_options(CloudWalkerAP PRIVATE -O3 ${SFMT_COMPILE_FLAGS})
 target_compile_definitions(CloudWalkerAP PRIVATE -DGROUND_TRUTH=1)
 target_link_libraries(CloudWalkerAP PRIVATE ${Boost_LIBRARIES})
 target_link_libraries(CloudWalkerAP PRIVATE tcmalloc)
+
+############ cloud-walker-bench
+
+add_executable(CloudWalkerBench ${CLOUD_WALKER_FILES} cloud_walker15/main_cloud_ap.cpp ${GROUND_TRUTH_FILES})
+target_include_directories(CloudWalkerBench PRIVATE ../../sparsehash-yche/include/)
+target_include_directories(CloudWalkerBench PRIVATE ../../sparsepp)
+target_include_directories(CloudWalkerBench PRIVATE ../../eigen)
+target_include_directories(CloudWalkerBench PRIVATE ../../include)
+target_include_directories(CloudWalkerBench PRIVATE ${Boost_INCLUDE_DIRS})
+
+target_compile_options(CloudWalkerBench PRIVATE -O3 ${SFMT_COMPILE_FLAGS})
+target_link_libraries(CloudWalkerBench PRIVATE ${Boost_LIBRARIES})
+target_link_libraries(CloudWalkerBench PRIVATE tcmalloc)

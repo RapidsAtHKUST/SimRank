@@ -2,16 +2,12 @@
 // Created by yche on 12/20/17.
 //
 
-//
-// Created by yche on 11/19/17.
-//
-
 #include <iostream>
 
 #include "ground_truth/simrank.h"
 
 #include "sling.h"
-#include "graph.h"
+#include "ground_truth/stat.h"
 
 using namespace std;
 using namespace std::chrono;
@@ -20,7 +16,7 @@ int main(int argc, char *argv[]) {
     // 1st: load graph
     Graph g;
     string file_name = argv[1];
-    string file_path = "./datasets/edge_list/" + file_name + ".txt";
+    string file_path = "/homes/ywangby/workspace/LinsysSimRank/datasets/edge_list/" + file_name + ".txt";
     g.inputGraph(file_path);
 
     double c = 0.6;
@@ -37,15 +33,14 @@ int main(int argc, char *argv[]) {
     auto max_err = 0.0;
 #endif
 
-    // build the index
+    // 2nd: build the index
     cout << "indexing..." << endl;
 
     tmp_start = std::chrono::high_resolution_clock::now();
 //    sling_algo.calcD(0.005);
     sling_algo.calcD(0.002);
     tmp_end = std::chrono::high_resolution_clock::now();
-    cout << "finish calcD " << float(duration_cast<microseconds>(tmp_end - tmp_start).count()) / (pow(10, 6))
-         << " s\n";
+    cout << "finish calcD " << float(duration_cast<microseconds>(tmp_end - tmp_start).count()) / (pow(10, 6)) << " s\n";
 
     tmp_start = std::chrono::high_resolution_clock::now();
 //    sling_algo.backward(0.000725);
@@ -55,19 +50,22 @@ int main(int argc, char *argv[]) {
     cout << "finish backward " << float(duration_cast<microseconds>(tmp_end - tmp_start).count()) / (pow(10, 6))
          << " s\n";
 
-//    int u = atoi(argv[3]);
-//    int v = atoi(argv[4]);
+    cout << "mem size:" << getValue() << endl;
 
+    // 3rd: querying pairs
     tmp_start = std::chrono::high_resolution_clock::now();
 #ifdef GROUND_TRUTH
 #pragma omp parallel for reduction(max:max_err) schedule(dynamic, 1)
 #else
 #pragma omp parallel for schedule(dynamic, 1)
 #endif
-//    for (auto u = 0; u < sling_algo.g->n; u++) {
-    for (auto u = 0; u < 1000; u++) {
-//        for (auto v = u; v < sling_algo.g->n; v++) {
-        for (auto v = u; v < 1000; v++) {
+#ifdef ALL_PAIR
+    for (auto u = 0; u < sling_algo.g->n; u++) {
+        for (auto v = u; v < sling_algo.g->n; v++) {
+#else
+            for (auto u = 0; u < 1000; u++) {
+                for (auto v = u; v < 1000; v++) {
+#endif
 #ifdef GROUND_TRUTH
             auto res = sling_algo.simrank(u, v);
             max_err = max(max_err, abs(ts.sim(u, v) - res));
@@ -79,12 +77,12 @@ int main(int argc, char *argv[]) {
             sling_algo.simrank(u, v);
 #endif
         }
+
     }
     tmp_end = std::chrono::high_resolution_clock::now();
 
 #ifdef GROUND_TRUTH
     cout << "max err:" << max_err << endl;
 #endif
-    cout << "query time:"
-         << float(duration_cast<microseconds>(tmp_end - tmp_start).count()) / (pow(10, 6)) << " s\n";
+    cout << "query time:" << float(duration_cast<microseconds>(tmp_end - tmp_start).count()) / (pow(10, 6)) << " s\n";
 }

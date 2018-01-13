@@ -7,6 +7,7 @@
 #include "yche_tsf.h"
 #include "ground_truth/graph_yche.h"
 #include "ground_truth/simrank.h"
+#include "ground_truth/stat.h"
 #include "input_output.h"
 
 using namespace std;
@@ -20,7 +21,7 @@ int main(int argc, char *argv[]) {
     auto sampleQueryNum = 43;
 
     // 1st: load graph
-    string file_path = "./datasets/edge_list/" + string(argv[1]) + ".txt";
+    string file_path = "/homes/ywangby/workspace/LinsysSimRank/datasets/edge_list/" + string(argv[1]) + ".txt";
     double c = 0.6;
     int max_iter = 9;
     double filter_threshold = 0.0001;
@@ -35,7 +36,7 @@ int main(int argc, char *argv[]) {
     auto tmp_end = std::chrono::high_resolution_clock::now();
 
     cout << "finish input graph " << duration_cast<microseconds>(tmp_end - tmp_start).count() << " us\n";
-
+    cout << "mem size:" << getValue() << endl;
 #ifdef GROUND_TRUTH
     GraphYche g_gt(file_path);
     TruthSim ts(string(argv[1]), g_gt, c, 0.01);
@@ -48,15 +49,20 @@ int main(int argc, char *argv[]) {
 #else
 #pragma omp parallel for schedule(dynamic, 1)
 #endif
+#ifdef ALL_PAIR
     for (auto u = 0; u < 1000; u++) {
         for (auto v = u; v < 1000; v++) {
+#else
+    for (auto u = 0; u < 100; u++) {
+        for (auto v = u; v < 100; v++) {
+#endif
 #ifdef GROUND_TRUTH
             auto res = yche_tfs.querySinglePair(u, v);
             max_err = max(max_err, abs(ts.sim(u, v) - res));
-//            if (abs(ts.sim(u, v) - res) > 0.01) {
-//#pragma omp critical
-//                cout << u << ", " << v << "," << ts.sim(u, v) << "," << res << endl;
-//            }
+            if (abs(ts.sim(u, v) - res) > 0.01) {
+#pragma omp critical
+                cout << u << ", " << v << "," << ts.sim(u, v) << "," << res << endl;
+            }
 #else
             yche_tfs.querySinglePair(u, v);
 #endif

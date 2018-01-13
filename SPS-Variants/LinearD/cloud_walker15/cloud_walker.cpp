@@ -4,42 +4,7 @@ string CloudWalker::get_file_path_base() {
     return CLOUD_WALKER_DIR + str(format("%s-%.3f-%s-%s-%s-%s") % g_name % c % T % L % R % R_prime);
 }
 
-void CloudWalker::save() {
-    cout << "saving to disk..." << endl;
-    write_binary((get_file_path_base() + ".bin").c_str(), sim);
-    ofstream out(get_file_path_base() + ".meta");
-    out << cpu_time << endl;
-    out << mem_size << endl;
-    out << n << endl;
-    out.close();
-}
-
-void CloudWalker::load() {
-    read_binary((get_file_path_base() + ".bin").c_str(), sim);
-}
-
-void CloudWalker::mcap() {
-    auto start = std::chrono::high_resolution_clock::now();
-    sim.resize(n, n);
-    sim.setZero();
-    VectorXd tmp(n);
-    for (size_t i = 0; i < n; i++) {
-        tmp.setZero();
-        if (i % 100 == 0) {
-            cout << str(format("computing single source for %s/%s") % i % n) << endl;
-        }
-        mcss(i, tmp);
-        sim.row(i) = tmp;
-    }
-    auto finish = std::chrono::high_resolution_clock::now();
-    std::chrono::duration<double> elapsed = finish - start;
-
-    cpu_time = elapsed.count();
-    mem_size = getValue();
-}
-
-CloudWalker::CloudWalker(DirectedG *graph,
-                         string name, double c_, int T_, int L_, int R_, int R_prime_) {
+CloudWalker::CloudWalker(DirectedG *graph, string name, double c_, int T_, int L_, int R_, int R_prime_) {
     c = c_;
     T = T_;
     L = L_;
@@ -63,6 +28,7 @@ CloudWalker::CloudWalker(DirectedG *graph,
     preprocess_D();
     preprocess_F();
     preprocess_hat_P();
+    cout << "mem size:" << getValue() << endl;
 }
 
 void CloudWalker::Tstep_distribution(int i, MatrixXd &pos_dist) {
@@ -95,7 +61,6 @@ void CloudWalker::preprocess_D() {
     for (int i = 0; i < n; i++) {
         A.push_back(std::unordered_map<int, double>());
     }
-
 
     DirectedG::vertex_descriptor i, current_pos;
 
@@ -155,7 +120,6 @@ void CloudWalker::preprocess_D() {
         swap(new_D_ptr, current_D_ptr);
     }
     // cout << (A * D) << endl;
-
 }
 
 void CloudWalker::preprocess_F() {
@@ -283,9 +247,6 @@ double CloudWalker::mcsp(int u, int v, MatrixXd &pos_dist_u, MatrixXd &pos_dist_
         cur_decay *= c;
     }
     auto tmp_end = std::chrono::high_resolution_clock::now();
-//    cout << "finish single one "
-//         << float(std::chrono::duration_cast<std::chrono::microseconds>(tmp_end - tmp_start).count()) / (pow(10, 6))
-//         << " s\n";
     return sim_score;
 }
 
@@ -296,7 +257,3 @@ double CloudWalker::mcsp(int u, int v) {
     // 2nd: query
     return mcsp(u, v, pos_dist_u, pos_dist_v);
 }
-
-
-
-

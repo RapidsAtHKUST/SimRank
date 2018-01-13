@@ -14,7 +14,7 @@ using namespace std::chrono;
 
 int main(int argc, char *argv[]) {
     // 1st: load graph
-    string file_path = "./datasets/edge_list/" + string(argv[1]) + ".txt";
+    string file_path = "/homes/ywangby/workspace/LinsysSimRank/datasets/edge_list/" + string(argv[1]) + ".txt";
     double c = 0.6;
     int max_iter = 9;
     double filter_threshold = 0.0001;
@@ -37,8 +37,8 @@ int main(int argc, char *argv[]) {
 #else
 #pragma omp parallel for schedule(dynamic, 1)
 #endif
-    for (auto u = 0; u < 1000; u++) {
-        for (auto v = u; v < 1000; v++) {
+    for (auto u = 0; u < 100; u++) {
+        for (auto v = u; v < 100; v++) {
 #ifdef GROUND_TRUTH
             auto res = my_isp.ComputeSim(u, v, c, max_iter, filter_threshold);
             max_err = max(max_err, abs(ts.sim(u, v) - res));

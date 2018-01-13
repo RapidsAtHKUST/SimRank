@@ -38,10 +38,14 @@ void test_bp(string data_name, double c, double epsilon, double delta) {
 #else
 #pragma omp for schedule(dynamic, 1)
 #endif
-//        for (auto i = 0u; i < 1000; i++) {
+
+#if defined(ALL_PAIR)
         for (auto i = 0u; i < n; i++) {
             for (auto j = i; j < n; j++) {
-//            for (auto j = i; j < 1000; j++) {
+#else
+        for (auto i = 0u; i < 1000; i++) {
+            for (auto j = i; j < 1000; j++) {
+#endif
                 auto q = pair<uint32_t, uint32_t>(i, j);
 #ifdef GROUND_TRUTH
                 auto res = bprw.query_one2one(q);
@@ -71,10 +75,7 @@ int main(int args, char *argv[]) {
     string data_name(argv[1]);
     double c = 0.6;
     double epsilon = 0.01;
-//    double delta = 0.00000001;
     double delta = 0.01;
-//    double delta = 0.001;
-//    double delta = 0.0001;
 
     test_bp(data_name, c, epsilon, delta);
 }
