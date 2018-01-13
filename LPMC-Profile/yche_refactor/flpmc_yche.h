@@ -41,12 +41,13 @@ inline bool lp_file_exists(string data_name, double c, double epsilon, size_t n,
     lp_test->epsilon = epsilon;
     string data_path = lp_test->get_file_path_base() + ".P";
     cout << "data path !!!!" << data_path << endl;
+    delete lp_test;
+
     if (file_exists(data_path)) {
         return true;
     } else {
         return false;
     }
 
-    delete lp_test;
 }
 

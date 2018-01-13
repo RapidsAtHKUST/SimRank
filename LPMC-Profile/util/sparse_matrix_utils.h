@@ -74,7 +74,11 @@ struct DensePairMap {
     template<typename D>
     T query(D a, D b) {
         auto &table = v[a];
-        return !table.contains(b) ? 0 : table[b];
+        if (!table.contains(b)) {
+            return 0;
+        } else {
+            return table[b];
+        }
     }
 
     void add(size_t n) {

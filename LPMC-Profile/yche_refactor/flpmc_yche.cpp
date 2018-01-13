@@ -17,8 +17,9 @@ FLPMC::FLPMC(string g_name_, GraphYche &g_, double c_, double epsilon_, double d
     size_t n = static_cast<size_t>(g->n);
     cout << format("r_max: %s") % get_rmax() << endl;
     lp = new Reduced_LocalPush(*g, g_name, c, get_lp_epsilon(), n);
-//     lp = new Full_LocalPush(*g, g_name, c, get_lp_epsilon(), n);
+//    lp = new Full_LocalPush(*g, g_name, c, get_lp_epsilon(), n);
     if (!lp_file_exists(g_name, c, get_lp_epsilon(), n, false)) { // test wether the local push index exists
+//    if (!lp_file_exists(g_name, c, get_lp_epsilon(), n, true)) { // test wether the local push index exists
         cout << "local push offline index doesn't exists.. " << endl;
         auto start_time = std::chrono::high_resolution_clock::now();
         lp->local_push(*g);
@@ -35,13 +36,15 @@ FLPMC::FLPMC(string g_name_, GraphYche &g_, double c_, double epsilon_, double d
 }
 
 double FLPMC::get_rmax() {
-    double r = sqrt(epsilon);
+//    double r = sqrt(epsilon);
+    double r = pow(epsilon, 1.0 / 1.5);
 //    cout << format("r_max of local push: %s") % r << endl;
     return r;
 }
 
 double FLPMC::get_lp_epsilon() {
-    double lp_epsilon = get_rmax() * (1 - c);
+//    double lp_epsilon = get_rmax() * (1 - c);
+    double lp_epsilon = get_rmax() / (1 - c);
 //    cout << format("local push error: %s") % lp_epsilon << endl;
     return lp_epsilon;
 }
@@ -57,6 +60,7 @@ double FLPMC::query_one2one(NodePair np) {
     /* FLP result */
     double p_i = lp->query_P(np.first, np.second);
     double r_i = lp->query_R(np.first, np.second);
+//    cout << format("pi: %s, ri:%s") % p_i % r_i << endl;
 
     // set up the random number generator
 #ifndef SFMT
