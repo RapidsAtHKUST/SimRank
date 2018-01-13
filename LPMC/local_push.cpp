@@ -544,7 +544,7 @@ void LocalPush::remove(DirectedG::vertex_descriptor u, DirectedG::vertex_descrip
     // remove edge(a,b) to g, noted we assume g is already updated, and we just update P and R
 }
 
-double LocalPush::query_P(DirectedG::vertex_descriptor a, DirectedG::vertex_descriptor b) {
+double Reduced_LocalPush::query_P(DirectedG::vertex_descriptor a, DirectedG::vertex_descriptor b) {
     if (a > b) {
         return P[NodePair(b, a)];
     } else {
@@ -552,12 +552,15 @@ double LocalPush::query_P(DirectedG::vertex_descriptor a, DirectedG::vertex_desc
     }
 }
 
-double LocalPush::query_R(DirectedG::vertex_descriptor a, DirectedG::vertex_descriptor b) {
-    if (a > b) {
-        return R[NodePair(b, a)];
-    } else {
-        return R[NodePair(a, b)];
-    }
+double Full_LocalPush::query_R(DirectedG::vertex_descriptor a, DirectedG::vertex_descriptor b) {
+    return R[NodePair(a, b)];
+}
+double Full_LocalPush::query_P(DirectedG::vertex_descriptor a, DirectedG::vertex_descriptor b) {
+    return P[NodePair(a, b)];
+}
+
+double Reduced_LocalPush::query_R(DirectedG::vertex_descriptor a, DirectedG::vertex_descriptor b) {
+    return R[NodePair(a, b)];
 }
 
 void Reduced_LocalPush::update_residual(DirectedG &g, DirectedG::vertex_descriptor a, DirectedG::vertex_descriptor b) {
