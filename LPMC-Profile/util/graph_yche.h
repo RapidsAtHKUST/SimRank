@@ -52,7 +52,7 @@ inline bool file_exists(const std::string &name) {
 }
 
 inline string get_edge_list_path(string s) {
-    // get file location of edgelist for graph s
+    // get file location of edgelist for graphs
     return "/homes/ywangby/workspace/LinsysSimRank/datasets/edge_list/" + s + ".txt";
 }
 
