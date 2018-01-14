@@ -23,7 +23,7 @@ void test_BFLPMC(string data_name, double c, double epsilon, double delta, int x
     auto min_err = 1.0;
     auto failure_count = 0;
     auto start = std::chrono::high_resolution_clock::now();
-    for (auto i = 0; i < 2000; i++) {
+    for (auto i = 0; i < 6000000; i++) {
         double result = bflpmc.query_one2one(q);
         auto cur_err = abs(result - ts.sim(x, y));
         max_err = max(max_err, cur_err);

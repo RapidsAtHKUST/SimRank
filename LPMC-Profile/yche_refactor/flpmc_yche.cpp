@@ -35,6 +35,19 @@ FLPMC::FLPMC(string g_name_, GraphYche &g_, double c_, double epsilon_, double d
     }
 }
 
+FLPMC::FLPMC(const FLPMC &other_obj) {
+//    cout << "flpmc..." << endl;
+    rand_gen = SFMTRand();
+
+    g_name = other_obj.g_name;
+    Q = other_obj.Q;
+    epsilon = other_obj.epsilon; // the error bound required by query
+    delta = other_obj.delta;
+    c = other_obj.c;
+    g = other_obj.g; // the pointer to the graph
+    lp = other_obj.lp; // the pointer to the local push index
+}
+
 double FLPMC::get_rmax() {
 //    double r = sqrt(epsilon);
     double r = pow(epsilon, 1.0 / 1.5);
@@ -110,15 +123,4 @@ double FLPMC::get_N() {
     double tmp = (pow(c, 2.) * pow(get_rmax(), 2.) * log(2. / delta)) / (2 * pow(epsilon, 2.) * pow((1 - c), 2.));
     int n = ceil(tmp);
     return n;
-}
-
-FLPMC::FLPMC(const FLPMC &other_obj) {
-    rand_gen = SFMTRand();
-    g_name = other_obj.g_name;
-    Q = other_obj.Q;
-    epsilon = other_obj.epsilon; // the error bound required by query
-    delta = other_obj.delta;
-    c = other_obj.c;
-    g = other_obj.g; // the pointer to the graph
-    lp = other_obj.lp; // the pointer to the local push index
 }

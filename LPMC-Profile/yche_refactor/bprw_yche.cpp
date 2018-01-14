@@ -272,7 +272,7 @@ double BackPush::sample_one_pair(NodePair np) {
     int b = np.second;
     double indicator = 0;
     int step = 0; //
-    while ((rand_gen.double_rand() < c || step == 0) && a != b) { // walk when > c or the first step
+    while ((step == 0 || rand_gen.double_rand() < c) && a != b) { // walk when > c or the first step
         a = sample_in_neighbor(a, *g, rand_gen);
         b = sample_in_neighbor(b, *g, rand_gen);
         step++;
