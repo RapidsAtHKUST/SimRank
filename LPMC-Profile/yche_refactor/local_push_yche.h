@@ -65,9 +65,9 @@ public:
 
     inline void push(NodePair &pab, double inc);
 
-    double query_P(int a, int b);
+    virtual double query_P(int a, int b) { return 0; }
 
-    double query_R(int a, int b);
+    virtual double query_R(int a, int b) { return 0; }
 
     virtual double how_much_residual_to_push(GraphYche &g, NodePair &np) {}
 };
@@ -84,6 +84,10 @@ struct Reduced_LocalPush : LocalPush {
     virtual string get_file_path_base() override; // get file path of local push data
 
     double how_much_residual_to_push(GraphYche &g, NodePair &np) override;
+
+    double query_P(int a, int b) override;
+
+    double query_R(int a, int b) override;
 };
 
 /* local push using full system*/
@@ -96,6 +100,10 @@ struct Full_LocalPush : LocalPush {
 
     virtual string get_file_path_base() override; // get file path of local push data
     double how_much_residual_to_push(GraphYche &g, NodePair &np) override;
+
+    double query_P(int a, int b) override;
+
+    double query_R(int a, int b) override;
 };
 
 #endif
