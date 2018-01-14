@@ -2,6 +2,8 @@
 // Created by yche on 12/23/17.
 //
 
+#include <ctime>
+
 #include "../yche_refactor/flpmc_yche.h"
 #include "../util/graph_yche.h"
 #include "../yche_refactor/simrank.h"
@@ -19,6 +21,7 @@ void test_FLPMC(string data_name, double c, double epsilon, double delta) {
 #endif
 
     auto start = std::chrono::high_resolution_clock::now();
+    auto clock_start = clock();
 #pragma omp parallel
     {
         auto my_flpmc = flpmc;
@@ -32,8 +35,8 @@ void test_FLPMC(string data_name, double c, double epsilon, double delta) {
         for (auto i = 0u; i < n; i++) {
             for (auto j = i; j < n; j++) {
 #else
-        for (auto i = 0u; i < 1000; i++) {
-            for (auto j = i; j < 1000; j++) {
+                for (auto i = 0u; i < 1000; i++) {
+                    for (auto j = i; j < 1000; j++) {
 #endif
                 auto q = pair<uint32_t, uint32_t>(i, j);
 #ifdef GROUND_TRUTH
@@ -51,6 +54,8 @@ void test_FLPMC(string data_name, double c, double epsilon, double delta) {
     };
 
     auto end = std::chrono::high_resolution_clock::now();
+    auto clock_end = clock();
+    cout << "total query cpu time:" << static_cast<double>(clock_end - clock_start) / CLOCKS_PER_SEC << "s" << endl;
     std::chrono::duration<double> elapsed = end - start;
 #ifdef GROUND_TRUTH
     cout << "max err:" << max_err << endl;
