@@ -71,12 +71,12 @@ double FLPMC::query_one2one(NodePair np){
         int b = np.second;
         int length_of_random_walk = geo_distribution(gen);
         int step = 0;
-        double is_dead_node = false;
+        bool is_dead_node = false;
         while(( step < length_of_random_walk + 1) && (a != b)){
             a = sample_in_neighbor(a, *g);
             b = sample_in_neighbor(b, *g);
             step ++;
-            if(b == -1 || b == -1){
+            if(a == -1 || b == -1){
                 is_dead_node = true;
                 break;
             }
