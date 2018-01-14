@@ -24,7 +24,7 @@ set(BIN_SEARCH_FIES util/search_yche.h util/search_yche.cpp)
 set(GROUND_TRUTH_FILES yche_refactor/simrank.cpp yche_refactor/simrank.h)
 set(SFMT_COMPILE_FLAGS -DSFMT_MEXP=607 -msse2 -DHAVE_SSE2)
 
-set(BPRW_FILES yche_refactor/bprw_yche.cpp yche_refactor/bprw_yche.h ${BIN_SEARCH_FIES})
+set(BPRW_FILES yche_refactor/bprw_yche.cpp yche_refactor/bprw_yche.h ${BIN_SEARCH_FIES} util/exp/flat_hash_map.hpp)
 set(LPMC_FILES yche_refactor/flpmc_yche.h yche_refactor/flpmc_yche.cpp
         yche_refactor/local_push_yche.h yche_refactor/local_push_yche.cpp util/sparse_matrix_utils.h)
 
