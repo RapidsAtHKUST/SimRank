@@ -63,9 +63,9 @@ struct LocalPush {
 
     void remove(DirectedG::vertex_descriptor, DirectedG::vertex_descriptor, DirectedG &g);
 
-    double query_P(DirectedG::vertex_descriptor a, DirectedG::vertex_descriptor b);
+    double virtual query_P(DirectedG::vertex_descriptor a, DirectedG::vertex_descriptor b){return 0;};
 
-    double query_R(DirectedG::vertex_descriptor a, DirectedG::vertex_descriptor b);
+    double virtual query_R(DirectedG::vertex_descriptor a, DirectedG::vertex_descriptor b){return 0;};
 
     void virtual update_residual(DirectedG &g, DirectedG::vertex_descriptor a, DirectedG::vertex_descriptor b) {}
 
@@ -87,6 +87,10 @@ struct Reduced_LocalPush : LocalPush {
     string virtual get_file_path_base() override; // get file path of local push data
 
     double how_much_residual_to_push(DirectedG &g, NodePair &np) override;
+
+    double virtual query_P(DirectedG::vertex_descriptor a, DirectedG::vertex_descriptor b) override;
+
+    double virtual query_R(DirectedG::vertex_descriptor a, DirectedG::vertex_descriptor b) override;
 };
 
 /* local push using full system*/
@@ -99,6 +103,9 @@ struct Full_LocalPush : LocalPush {
 
     string virtual get_file_path_base() override; // get file path of local push data
     double how_much_residual_to_push(DirectedG &g, NodePair &np) override;
+    double virtual query_P(DirectedG::vertex_descriptor a, DirectedG::vertex_descriptor b) override;
+
+    double virtual query_R(DirectedG::vertex_descriptor a, DirectedG::vertex_descriptor b) override;
 };
 
 
