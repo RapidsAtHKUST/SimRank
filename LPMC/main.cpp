@@ -32,15 +32,31 @@ void test_FLPMC(string data_name, double c, double epsilon, double delta, int x,
     load_graph(get_edge_list_path(data_name), g);
     size_t n = num_vertices(g);
     NodePair q{x,y};
-
-    FLPMC flpmc(data_name, g, c, epsilon, delta, 100);
-    double result = flpmc.query_one2one(q);
-    cout << result << endl;
-
+    int round = 10000;
+    int failure_count = 0;
     // ground truth
     double truth = ground_truth(data_name, c, epsilon, delta, x,y);
-    cout << format("ground truth: %s") % truth << endl;
-    cout << format("error: %s") % (truth - result) << endl;
+
+    double result;
+    FLPMC flpmc(data_name, g, c, epsilon, delta, 100);
+    for(int i = 0; i< round ;i++){
+        // cout << "--------------" << endl;
+        result = flpmc.query_one2one(q);
+        double error = abs(result - truth);
+        if(error  > 0.01){
+            failure_count ++;
+        }
+        // cout << "--------------" << endl;
+        // cout << format("result:%s") % result << endl;
+        // cout << format("error: %s") % error << endl;
+    }
+    // cout << result << endl;
+    // cout << format("ground truth: %s") % truth << endl;
+    // cout << format("error: %s") % (truth - result) << endl;
+    cout << "indegree: " << in_degree(x,g) << ", " << in_degree(y, g) << endl;
+    cout << format("ground truth:%s") % truth << endl;
+    cout << format("failure/round: %s/%s") % failure_count % round << endl;
+    cout << format("failure probability: %s") % (failure_count / double(round)) << endl;
 }
 
 
@@ -88,6 +104,44 @@ void test_BFLPMC(string data_name, double c, double epsilon, double delta, int x
     cout << format("error: %s") % (truth - result) << endl;
 }
 
+void test_all_pair(string data_name){
+    // set up blpmc
+    DirectedG g;
+    load_graph(get_edge_list_path(data_name), g);
+    size_t n = num_vertices(g);
+    double c = 0.6;
+    double epsilon = 0.01;
+    double delta = 0.01;
+    BFLPMC bflpmc(data_name, g, c, epsilon, delta);
+
+    // set up ground truth
+    TruthSim ts(data_name, g, c, epsilon);
+    double max_error = 0;
+
+    int error_count = 0;
+    int query_count = 0;
+    for(int i = n-1; i >=0 ; i--){
+        cout << format("%sth column") % i << endl;
+        for(int j = i ; j < n; j++){
+            query_count ++;
+            double result = bflpmc.query_one2one({i,j});
+            double truth = ts.sim(i,j);
+            double error = abs(truth - result);
+            if(error > max_error){
+                max_error = error;
+            }
+            if(error > 0.01){
+                cout << format("pair:%s,%s, query result: %s, truth:%s, error: %s ") % i %j %result  % truth % error << endl;
+                error_count ++; 
+            }
+        }
+    }
+
+    cout << format("fail count/query number: %s/%s, prob: %s") % error_count % query_count % (double(error_count) / query_count) << endl;
+    cout << format("max error: %s") %  max_error << endl;
+
+}
+
 // int main(int args, char *argv[]) {
 //     string data_name(argv[1]);
 //     double c = 0.6;
@@ -129,6 +183,8 @@ int main(int args, char*argv[]){
                 test_bp(data_name, c, epsilon, delta, x, y);
             }else if (method == "bflp"){
                 test_BFLPMC(data_name, c, epsilon, delta, x,  y);
+            }else if (method == "bflpap"){
+                test_all_pair(data_name);
             }
         }
 

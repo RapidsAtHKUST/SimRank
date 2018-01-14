@@ -17,7 +17,7 @@ double BFLPMC::query_one2one(NodePair np){
     }
     
     double blp_p_i = blp->backward_push(np, blp->heap).first;// the estimate value of backward local push
-    cout << "BLP result: " << blp_p_i << endl;
+    // cout << "BLP result: " << blp_p_i << endl;
 
     if(blp->heap.empty()){ // the corner case: the residual heap is empty
         return blp_p_i;
@@ -32,7 +32,7 @@ double BFLPMC::query_one2one(NodePair np){
 
     // consider the case directly using \sqrt{c} meeting interpretation BLPMC method now
     int N2 =  ceil(pow( c * blp->heap.sum / epsilon, 2.0) * log(2 / delta) / 2);
-    cout << "r_sum: " << blp->heap.sum << endl;
+    // cout << "r_sum: " << blp->heap.sum << endl;
 
     // set up the random number generator
     std::random_device rd;  //Will be used to obtain a seed for the random number engine
@@ -46,12 +46,12 @@ double BFLPMC::query_one2one(NodePair np){
     vector<NodePair> node_pairs;
 
     if(N2 < N){ // using the c-walk meeting model
-        cout << "number of samples N2: " << N2 << endl;
+        // cout << "number of samples N2: " << N2 << endl;
         double estimate_s_i = blp->MC_random_walk(N2);
         return blp_p_i + estimate_s_i;
 
     }else{ // use the termination residual mode
-        cout << "number of samples: " << N << endl;
+        // cout << "number of samples: " << N << endl;
         
         for(auto it = begin; it !=end; ++ it){
             weights.push_back((*it).residual / blp->heap.sum);
@@ -78,7 +78,7 @@ double BFLPMC::query_one2one(NodePair np){
             tie(a,b) = sampled_np;
             // samples from this node pair
             double current_estimate = flp->lp->query_P(a, b);
-            while( (step < length_of_random_walk) && (a !=b )){ // random walk length (1 + 1 / (1-c))
+            while( (step < length_of_random_walk + 1) && (a !=b )){ // random walk length (1 + 1 / (1-c))
                 a = sample_in_neighbor(a, *g);
                 b = sample_in_neighbor(b, *g);
                 step ++;
@@ -91,7 +91,7 @@ double BFLPMC::query_one2one(NodePair np){
             }
             estimate_r_i += terminate_r / N;
         }
-        cout << "avg. terminate r: " << estimate_r_i << endl;
+        // cout << "avg. terminate r: " << estimate_r_i << endl;
         return blp_p_i + h_p_r + c * r_sum * estimate_r_i / (1-c);
     }
 

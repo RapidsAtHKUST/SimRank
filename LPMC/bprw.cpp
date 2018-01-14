@@ -120,7 +120,7 @@ pair<double, int> BackPush::backward_push(NodePair np, unique_max_heap &containe
         }
     }
     // cout << format("Total number of pushes: %s") % cost << endl;
-    cout << format{"deterministic estimate: %s, final residual sum: %s"} % p  % container.sum << endl;
+    // cout << format{"deterministic estimate: %s, final residual sum: %s"} % p  % container.sum << endl;
     return {p, cost};
 }
 
