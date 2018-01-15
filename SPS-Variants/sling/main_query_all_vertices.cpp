@@ -13,44 +13,28 @@ using namespace std;
 using namespace std::chrono;
 
 int main(int argc, char *argv[]) {
+    double eps_d = 0.002;
+    double theta = 0.00029;
+    double c = 0.6;
+
     // 1st: load graph
     Graph g;
     string file_name = argv[1];
     string file_path = "/homes/ywangby/workspace/LinsysSimRank/datasets/edge_list/" + file_name + ".txt";
     g.inputGraph(file_path);
 
-    double c = 0.6;
-
+    // 2nd: construct sling algorithm, indexing
     auto tmp_start = std::chrono::high_resolution_clock::now();
-    Sling sling_algo(&g, c);
+    Sling sling_algo(&g, file_name, c, eps_d, theta);
     auto tmp_end = std::chrono::high_resolution_clock::now();
-
-    cout << "finish input graph " << duration_cast<microseconds>(tmp_end - tmp_start).count() << " us\n";
+    cout << "finish input graph and construct indexing: " << duration_cast<milliseconds>(tmp_end - tmp_start).count()
+         << " ms\n";
 
 #ifdef GROUND_TRUTH
     GraphYche g_gt(file_path);
     TruthSim ts(file_name, g_gt, c, 0.01);
     auto max_err = 0.0;
 #endif
-
-    // 2nd: build the index
-    cout << "indexing..." << endl;
-
-    tmp_start = std::chrono::high_resolution_clock::now();
-//    sling_algo.calcD(0.005);
-    sling_algo.calcD(0.002);
-    tmp_end = std::chrono::high_resolution_clock::now();
-    cout << "finish calcD " << float(duration_cast<microseconds>(tmp_end - tmp_start).count()) / (pow(10, 6)) << " s\n";
-
-    tmp_start = std::chrono::high_resolution_clock::now();
-//    sling_algo.backward(0.000725);
-    sling_algo.backward(0.00029);
-
-    tmp_end = std::chrono::high_resolution_clock::now();
-    cout << "finish backward " << float(duration_cast<microseconds>(tmp_end - tmp_start).count()) / (pow(10, 6))
-         << " s\n";
-
-    cout << "mem size:" << getValue() << endl;
 
     // 3rd: querying pairs
     tmp_start = std::chrono::high_resolution_clock::now();

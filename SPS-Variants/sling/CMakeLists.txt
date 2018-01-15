@@ -4,10 +4,15 @@ project(sling)
 set(CMAKE_CXX_STANDARD 11)
 
 set(GROUND_TRUTH_FILES ground_truth/simrank.cpp ground_truth/simrank.h ground_truth/graph_yche.cpp ground_truth/graph_yche.h
-        ground_truth/sparse_matrix_utils.h ground_truth/file_serialization.h ground_truth/stat.cpp ground_truth/stat.h)
-set(SOURCE_FILES graph.h sling.h sling.cpp ../../SFMT/SFMT.c input_output.cpp input_output.h util.h util.cpp)
+        ground_truth/sparse_matrix_utils.h ground_truth/file_serialization.h ground_truth/stat.h
+        ground_truth/yche_serialization.h)
+set(SOURCE_FILES graph.h sling.h sling.cpp ../../SFMT/SFMT.c input_output.cpp input_output.h util.h util.cpp ground_truth/stat.cpp)
 
 # setup pthread environmental variables
+find_package(Boost REQUIRED program_options)
+if (Boost_FOUND)
+    message(${Boost_INCLUDE_DIRS})
+endif ()
 find_package(Threads REQUIRED)
 find_package(OpenMP)
 
@@ -56,3 +61,6 @@ target_link_libraries(sling_bench PRIVATE ${CMAKE_THREAD_LIBS_INIT})
 target_link_libraries(sling_bench PRIVATE tcmalloc)
 
 target_compile_options(sling_bench PRIVATE -O3 -g -DSFMT_MEXP=607 -msse2 -DHAVE_SSE2)
+
+############# playground
+add_subdirectory(playground)
