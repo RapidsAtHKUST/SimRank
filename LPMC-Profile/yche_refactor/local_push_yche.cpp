@@ -317,12 +317,7 @@ string Reduced_LocalPush::get_file_path_base() {
     return LOCAL_PUSH_DIR + str(format("RLP_%s-%.3f-%.6f") % g_name % c % epsilon);
 }
 
-string Full_LocalPush::get_file_path_base() {
-    // return the file path, exluding the suffix
-    return LOCAL_PUSH_DIR + str(format("FLP_%s-%.3f-%.6f") % g_name % c % epsilon);
-}
-
-double LocalPush::query_P(int a, int b) {
+double Reduced_LocalPush::query_P(int a, int b) {
     if (a > b) {
         return P.query(b, a);
     } else {
@@ -330,10 +325,23 @@ double LocalPush::query_P(int a, int b) {
     }
 }
 
-double LocalPush::query_R(int a, int b) {
+double Reduced_LocalPush::query_R(int a, int b) {
     if (a > b) {
         return R.query(b, a);
     } else {
         return R.query(a, b);
     }
+}
+
+string Full_LocalPush::get_file_path_base() {
+    // return the file path, exluding the suffix
+    return LOCAL_PUSH_DIR + str(format("FLP_%s-%.3f-%.6f") % g_name % c % epsilon);
+}
+
+double Full_LocalPush::query_P(int a, int b) {
+    return P.query(a, b);
+}
+
+double Full_LocalPush::query_R(int a, int b) {
+    return R.query(a, b);
 }

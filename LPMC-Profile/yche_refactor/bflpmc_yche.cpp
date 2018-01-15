@@ -8,6 +8,20 @@ BFLPMC::BFLPMC(string g_name_, GraphYche &g_, double c_, double epsilon_, double
     blp = new BackPush(g_name, *g, c, (1 - c) * epsilon / flp->get_rmax(), delta);
 }
 
+BFLPMC::BFLPMC(const BFLPMC &other_obj) {
+//    cout << "copy constructor...bflpmc" << endl;
+    rand_gen = SFMTRand();
+
+    g_name = other_obj.g_name;
+    epsilon = other_obj.epsilon; // the error bound required by query
+    delta = other_obj.delta;
+    c = other_obj.c;
+    g = other_obj.g; // the pointer to the graph
+
+    flp = new FLPMC(*(other_obj.flp));
+    blp = new BackPush(g_name, *g, c, (1 - c) * epsilon / flp->get_rmax(), delta);
+}
+
 double BFLPMC::query_one2one(NodePair np) {
     if (np.first == np.second) {
         return 1;
@@ -77,7 +91,7 @@ double BFLPMC::query_one2one(NodePair np) {
 
             // samples from this node pair
             double current_estimate = flp->lp->query_P(a, b);
-            while (((rand_gen.double_rand() < c) || step == 0) && (a != b)) { // random walk length (1 + 1 / (1-c))
+            while ((step == 0 || rand_gen.double_rand() < c) && (a != b)) { // random walk length (1 + 1 / (1-c))
                 a = sample_in_neighbor(a, *g, rand_gen);
                 b = sample_in_neighbor(b, *g, rand_gen);
                 step++;
@@ -92,17 +106,4 @@ double BFLPMC::query_one2one(NodePair np) {
         }
         return blp_p_i + h_p_r + c * r_sum * estimate_r_i / (1 - c);
     }
-}
-
-BFLPMC::BFLPMC(const BFLPMC &other_obj) {
-    rand_gen = SFMTRand();
-
-    g_name = other_obj.g_name;
-    epsilon = other_obj.epsilon; // the error bound required by query
-    delta = other_obj.delta;
-    c = other_obj.c;
-    g = other_obj.g; // the pointer to the graph
-
-    flp = new FLPMC(*other_obj.flp);
-    blp = new BackPush(g_name, *g, c, epsilon / flp->get_rmax(), delta);
 }

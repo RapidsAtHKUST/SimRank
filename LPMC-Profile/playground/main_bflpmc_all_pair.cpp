@@ -58,6 +58,7 @@ void test_BFLPMC(string data_name, double c, double epsilon, double delta) {
 #pragma omp parallel
     {
         auto local_bflpmc = bflpmc;
+//        auto local_bflpmc = BFLPMC(data_name, g, c, epsilon, delta);
 
 #ifdef GROUND_TRUTH
 #pragma omp for reduction(max:max_err) schedule(dynamic, 1)

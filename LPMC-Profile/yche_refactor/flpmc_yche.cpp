@@ -16,10 +16,10 @@ FLPMC::FLPMC(string g_name_, GraphYche &g_, double c_, double epsilon_, double d
     // init local push
     size_t n = static_cast<size_t>(g->n);
     cout << format("r_max: %s") % get_rmax() << endl;
-    lp = new Reduced_LocalPush(*g, g_name, c, get_lp_epsilon(), n);
-//    lp = new Full_LocalPush(*g, g_name, c, get_lp_epsilon(), n);
-    if (!lp_file_exists(g_name, c, get_lp_epsilon(), n, false)) { // test wether the local push index exists
-//    if (!lp_file_exists(g_name, c, get_lp_epsilon(), n, true)) { // test wether the local push index exists
+//    lp = new Reduced_LocalPush(*g, g_name, c, get_lp_epsilon(), n);
+    lp = new Full_LocalPush(*g, g_name, c, get_lp_epsilon(), n);
+//    if (!lp_file_exists(g_name, c, get_lp_epsilon(), n, false)) { // test wether the local push index exists
+    if (!lp_file_exists(g_name, c, get_lp_epsilon(), n, true)) { // test wether the local push index exists
         cout << "local push offline index doesn't exists.. " << endl;
         auto start_time = std::chrono::high_resolution_clock::now();
         lp->local_push(*g);
@@ -33,6 +33,19 @@ FLPMC::FLPMC(string g_name_, GraphYche &g_, double c_, double epsilon_, double d
         cout << "offline index exists..loading " << endl;
         lp->load();
     }
+}
+
+FLPMC::FLPMC(const FLPMC &other_obj) {
+//    cout << "flpmc..." << endl;
+    rand_gen = SFMTRand();
+
+    g_name = other_obj.g_name;
+    Q = other_obj.Q;
+    epsilon = other_obj.epsilon; // the error bound required by query
+    delta = other_obj.delta;
+    c = other_obj.c;
+    g = other_obj.g; // the pointer to the graph
+    lp = other_obj.lp; // the pointer to the local push index
 }
 
 double FLPMC::get_rmax() {
@@ -73,33 +86,36 @@ double FLPMC::query_one2one(NodePair np) {
     int N = get_N();
     double E_residual = 0;
     for (int i = 0; i < N; i++) {
-        double sum = 0; // the sum of residuals that passed by
         int a = np.first;
         int b = np.second;
-        sum += r_i;
         int step = 0;
+        bool is_dead_node = false;
+
 #ifndef SFMT
         while(( distribution(gen) < c ) && (a != b)){
             a = sample_in_neighbor(a, *g);
             b = sample_in_neighbor(b, *g);
 #else
-//        while (rand_gen.double_rand() < c && (a != b)) {
-        while ((rand_gen.double_rand() < c) && (a != b)) {
+        while ((step == 0 || rand_gen.double_rand() < c) && (a != b)) {
             a = sample_in_neighbor(a, *g, rand_gen);
             b = sample_in_neighbor(b, *g, rand_gen);
 #endif
             step++;
             if (a == -1 || b == -1) {
+                is_dead_node = true;
                 break;
             }
-            sum += lp->query_R(a, b);
         }
-        E_residual += sum;
+        if (is_dead_node) {
+            E_residual += 0;
+        } else {
+            E_residual += lp->query_R(a, b);
+        }
     }
 
 //    cout << format("p_i: %s") % p_i << endl;
 //    cout << format("number of samples: %s") % get_N() << endl;
-    return p_i + E_residual / N;
+    return p_i + r_i + (c / (1 - c)) * (E_residual / N);
 }
 
 double FLPMC::get_N() {
@@ -107,15 +123,4 @@ double FLPMC::get_N() {
     double tmp = (pow(c, 2.) * pow(get_rmax(), 2.) * log(2. / delta)) / (2 * pow(epsilon, 2.) * pow((1 - c), 2.));
     int n = ceil(tmp);
     return n;
-}
-
-FLPMC::FLPMC(const FLPMC &other_obj) {
-    rand_gen = SFMTRand();
-    g_name = other_obj.g_name;
-    Q = other_obj.Q;
-    epsilon = other_obj.epsilon; // the error bound required by query
-    delta = other_obj.delta;
-    c = other_obj.c;
-    g = other_obj.g; // the pointer to the graph
-    lp = other_obj.lp; // the pointer to the local push index
 }

@@ -8,10 +8,12 @@
 #include <boost/format.hpp>
 
 #include <sparsepp/spp.h>
+#include <unordered_map>
 
 #include "../util/graph_yche.h"
 #include "../util/sfmt_based_rand.h"
 #include "../util/sparse_matrix_utils.h"
+#include "../util/exp/flat_hash_map.hpp"
 
 using namespace boost::heap;
 
@@ -81,7 +83,11 @@ public:
 
 class unique_max_heap : public Residual_Container { // the heap structure used in BPRW
 public:
+#ifdef SPARSE_HASH_MAP_FOR_HEAP
     typedef sparse_hash_map<NodePair, fibonacci_heap<heap_data>::handle_type> RMap; // hash table for residuals
+#else
+    typedef std::unordered_map<NodePair, fibonacci_heap<heap_data>::handle_type> RMap; // hash table for residuals
+#endif
     typedef fibonacci_heap<heap_data>::handle_type handle_t;
     RMap R;
     fibonacci_heap<heap_data> heap;
@@ -128,6 +134,7 @@ public:
 
 //    double MC_random_walk(); // perform random walks based on current residuals in the heap
     double MC_random_walk(int N);
+
     double query_one2one(NodePair np); // query single-pair SimRank scores
 
 #if !defined(SFMT)

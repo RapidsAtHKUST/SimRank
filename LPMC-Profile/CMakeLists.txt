@@ -24,7 +24,7 @@ set(BIN_SEARCH_FIES util/search_yche.h util/search_yche.cpp)
 set(GROUND_TRUTH_FILES yche_refactor/simrank.cpp yche_refactor/simrank.h)
 set(SFMT_COMPILE_FLAGS -DSFMT_MEXP=607 -msse2 -DHAVE_SSE2)
 
-set(BPRW_FILES yche_refactor/bprw_yche.cpp yche_refactor/bprw_yche.h ${BIN_SEARCH_FIES})
+set(BPRW_FILES yche_refactor/bprw_yche.cpp yche_refactor/bprw_yche.h ${BIN_SEARCH_FIES} util/exp/flat_hash_map.hpp)
 set(LPMC_FILES yche_refactor/flpmc_yche.h yche_refactor/flpmc_yche.cpp
         yche_refactor/local_push_yche.h yche_refactor/local_push_yche.cpp util/sparse_matrix_utils.h)
 
@@ -90,7 +90,8 @@ target_include_directories(bprw-bench PRIVATE ../include)
 target_link_libraries(bprw-bench PRIVATE tcmalloc)
 
 target_compile_options(bprw-bench PRIVATE -O3 -g ${SFMT_COMPILE_FLAGS} -march=native)
-target_compile_definitions(bprw-bench PRIVATE -DSFMT=1)
+target_compile_definitions(bprw-bench PRIVATE -DSFMT=1 -DSPARSE_HASH_MAP_FOR_HEAP=1)
+#target_compile_definitions(bprw-bench PRIVATE -DSFMT=1)
 
 ################################ 4th: flpmc ######################################
 set(FLPMC_SOURCE_FILES ${LPMC_FILES} ${UTIL_FILES} ${GROUND_TRUTH_FILES}
@@ -194,4 +195,5 @@ target_link_libraries(bflpmc-bench PRIVATE ${Boost_LIBRARIES})
 target_link_libraries(bflpmc-bench PRIVATE tcmalloc)
 
 target_compile_options(bflpmc-bench PRIVATE -O3 -g ${SFMT_COMPILE_FLAGS} -march=native)
+#target_compile_definitions(bflpmc-bench PRIVATE -DSFMT=1 -DSPARSE_HASH_MAP_FOR_HEAP=1)
 target_compile_definitions(bflpmc-bench PRIVATE -DSFMT=1)

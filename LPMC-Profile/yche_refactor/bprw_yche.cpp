@@ -31,6 +31,7 @@ data_item unique_max_heap::pop() {
 
 void unique_max_heap::push(NodePair node_pair, double value) {
     // push value to node pairs
+#ifdef SPARSE_HASH_MAP_FOR_HEAP
     if (R.contains(node_pair)) {
         // the key is already exists, so udpate its value
         handle_t handle = R[node_pair];
@@ -44,6 +45,22 @@ void unique_max_heap::push(NodePair node_pair, double value) {
         R[node_pair] = t;  // insert the handler to the hash map
     }
     sum += value;
+#else
+    auto iter = R.find(node_pair);
+    if (iter != R.end()) {
+        // the key is already exists, so update its value
+        handle_t handle = iter->second;
+        // update sum
+        (*handle).residual += value;
+        heap.increase(handle);
+    } else {
+//        heap_data hd{node_pair, value, *g_ptr};
+        heap_data hd{node_pair, value};
+        handle_t t = heap.push(hd);
+        R.emplace(node_pair, t);// insert the handler to the hash map
+    }
+    sum += value;
+#endif
 }
 
 size_t unique_max_heap::size() const {
@@ -272,7 +289,7 @@ double BackPush::sample_one_pair(NodePair np) {
     int b = np.second;
     double indicator = 0;
     int step = 0; //
-    while ((rand_gen.double_rand() < c || step == 0) && a != b) { // walk when > c or the first step
+    while ((step == 0 || rand_gen.double_rand() < c) && a != b) { // walk when > c or the first step
         a = sample_in_neighbor(a, *g, rand_gen);
         b = sample_in_neighbor(b, *g, rand_gen);
         step++;
