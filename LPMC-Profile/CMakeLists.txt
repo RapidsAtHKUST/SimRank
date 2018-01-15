@@ -90,8 +90,8 @@ target_include_directories(bprw-bench PRIVATE ../include)
 target_link_libraries(bprw-bench PRIVATE tcmalloc)
 
 target_compile_options(bprw-bench PRIVATE -O3 -g ${SFMT_COMPILE_FLAGS} -march=native)
-target_compile_definitions(bprw-bench PRIVATE -DSFMT=1 -DSPARSE_HASH_MAP_FOR_HEAP=1)
-#target_compile_definitions(bprw-bench PRIVATE -DSFMT=1)
+#target_compile_definitions(bprw-bench PRIVATE -DSFMT=1 -DSPARSE_HASH_MAP_FOR_HEAP=1)
+target_compile_definitions(bprw-bench PRIVATE -DSFMT=1)
 
 ################################ 4th: flpmc ######################################
 set(FLPMC_SOURCE_FILES ${LPMC_FILES} ${UTIL_FILES} ${GROUND_TRUTH_FILES}

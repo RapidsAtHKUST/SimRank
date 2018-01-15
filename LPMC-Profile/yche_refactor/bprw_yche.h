@@ -126,6 +126,9 @@ struct BackPush { // Backward Push
     SFMTRand rand_gen;
 #endif
 public:
+    int push_cost = 5; // the contant for push operation given a current heap and d, which is degree of neighbors pushing to
+    int mc_cost = 1; // the constant for MC sampling givn a double, which is the sum of heap residuals
+public:
     // public methods
     BackPush(string g_name_, GraphYche &graph, double c_, double epsilon_, double delta_);
 
