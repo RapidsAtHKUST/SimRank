@@ -32,7 +32,7 @@ void test_FLPMC(string data_name, double c, double epsilon, double delta, int x,
     load_graph(get_edge_list_path(data_name), g);
     size_t n = num_vertices(g);
     NodePair q{x,y};
-    int round = 10000;
+    int round = 1;
     int failure_count = 0;
     // ground truth
     double truth = ground_truth(data_name, c, epsilon, delta, x,y);
@@ -104,7 +104,7 @@ void test_BFLPMC(string data_name, double c, double epsilon, double delta, int x
     cout << format("error: %s") % (truth - result) << endl;
 }
 
-void test_all_pair(string data_name){
+void test_bflp_all_pair(string data_name){
     // set up blpmc
     DirectedG g;
     load_graph(get_edge_list_path(data_name), g);
@@ -120,6 +120,7 @@ void test_all_pair(string data_name){
 
     int error_count = 0;
     int query_count = 0;
+    auto start = std::chrono::high_resolution_clock::now();
     for(int i = n-1; i >=0 ; i--){
         cout << format("%sth column") % i << endl;
         for(int j = i ; j < n; j++){
@@ -136,9 +137,12 @@ void test_all_pair(string data_name){
             }
         }
     }
+    auto end = std::chrono::high_resolution_clock::now();
+    std::chrono::duration<double> elapsed = end - start;
 
     cout << format("fail count/query number: %s/%s, prob: %s") % error_count % query_count % (double(error_count) / query_count) << endl;
     cout << format("max error: %s") %  max_error << endl;
+    cout << format("total query cost: %s") %  elapsed.count() << endl;
 
 }
 
@@ -184,7 +188,7 @@ int main(int args, char*argv[]){
             }else if (method == "bflp"){
                 test_BFLPMC(data_name, c, epsilon, delta, x,  y);
             }else if (method == "bflpap"){
-                test_all_pair(data_name);
+                test_bflp_all_pair(data_name);
             }
         }
 

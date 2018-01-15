@@ -54,7 +54,7 @@ std::ostream &operator<<(std::ostream &os, const data_item &obj) {
     return os;
 }
 
-BackPush::BackPush(string g_name_, DirectedG &graph, double c_, double epsilon_, double delta_) :
+BackPush::BackPush(string g_name_, DirectedG &graph, double c_, double epsilon_, double delta_):
         heap(graph), g_name(g_name_), g(&graph), c(c_), epsilon(epsilon_), fail_prob(delta_) {
 }
 
@@ -67,11 +67,11 @@ double BackPush::keep_push_cost(unique_max_heap &heap) {
     const heap_data &top_element = heap.top();
     size_t d;
     d = in_degree(top_element.np.first, *g) * in_degree(top_element.np.second, *g);
-    return d + number_of_walkers(heap.sum - (1 - c) * top_element.residual) * ( 1+ 1 / (1 - c));
+    return push_cost * log(heap.size()) * d +  mc_cost * number_of_walkers(heap.sum - (1 - c) * top_element.residual) * ( 1+ 1 / (1 - c));
 }
 
 double BackPush::change_to_MC_cost(unique_max_heap &heap) {
-    return number_of_walkers(heap.sum) * ( 1.0 + 1.0 / (1-c));
+    return mc_cost * number_of_walkers(heap.sum) * ( 1.0 + 1.0 / (1-c));
 }
 
 bool BackPush::is_keep_on_push(unique_max_heap &hp) {

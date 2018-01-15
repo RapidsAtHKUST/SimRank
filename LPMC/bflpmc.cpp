@@ -51,7 +51,7 @@ double BFLPMC::query_one2one(NodePair np){
         return blp_p_i + estimate_s_i;
 
     }else{ // use the termination residual mode
-        // cout << "number of samples: " << N << endl;
+        cout << "number of samples: " << N << endl;
         
         for(auto it = begin; it !=end; ++ it){
             weights.push_back((*it).residual / blp->heap.sum);

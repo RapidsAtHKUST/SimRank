@@ -63,6 +63,7 @@ double FLPMC::query_one2one(NodePair np){
 
     /* MC sampling phase */
     int N = get_N();
+    cout << format("number of samples: %s") % N << endl;
     double E_residual = 0;
     for(int i = 0; i< N;i++){
         // cout << "---------" << endl;

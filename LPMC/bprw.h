@@ -128,6 +128,10 @@ struct BackPush { // Backward Push
     pair<double, int>
     backward_push(NodePair np, unique_max_heap &); // self-adaptive backward local push, return estimate
 
+    // constant for cost estimation
+    int push_cost = 1; // the contant for push operation given a current heap and d, which is degree of neighbors pushing to
+    int mc_cost = 1; // the constant for MC sampling givn a double, which is the sum of heap residuals
+
     double random_bp(NodePair np, double rsum); // backward local push by random
     double MC_random_walk(int N); // perform random walks based on current residuals in the heap
     double query_one2one(NodePair np); // query single-pair SimRank scores
