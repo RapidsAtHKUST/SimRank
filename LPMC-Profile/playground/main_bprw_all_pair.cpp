@@ -60,8 +60,8 @@ void test_bp(string data_name, double c, double epsilon, double delta) {
 #endif
             }
         }
-#pragma omp critical
-        cout << bprw.heap.R.bucket_count() << ", " << bprw.heap.R.load_factor() << endl;
+//#pragma omp critical
+//        cout << bprw.heap.R.bucket_count() << ", " << bprw.heap.R.load_factor() << endl;
     }
 
     auto end = std::chrono::high_resolution_clock::now();
