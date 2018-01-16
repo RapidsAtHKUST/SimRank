@@ -32,7 +32,13 @@ def signal_handler(signal, frame):
 
 
 def run_exp():
-    other_exec_path_lst = ['/homes/ywangby/workspace/yche/git-repos/SimRank/SPS-Variants/sling/build/sling_all']
+    other_exec_path_lst = [
+        '/homes/ywangby/workspace/yche/git-repos/SimRank/SPS-Variants/sling/build/sling_all',
+        '/homes/ywangby/workspace/yche/git-repos/SimRank/SPS-Variants/isp-yche/build/isp_ap',
+        '/homes/ywangby/workspace/yche/git-repos/SimRank/SPS-Variants/isp-yche/build/LinSimAP',
+        '/homes/ywangby/workspace/yche/git-repos/SimRank/SPS-Variants/isp-yche/build/CloudWalkerAP',
+        '/homes/ywangby/workspace/yche/git-repos/SimRank/SPS-Variants/tsf/build/tsf-ap'
+    ]
     data_set_lst = ['ca-GrQc', 'ca-HepTh', 'p2p-Gnutella06', 'wiki-Vote']
     folder_name = 'other_methods_overview'
     tag = 'exp_results'
@@ -49,7 +55,7 @@ def run_exp():
                     ['echo', my_splitter + time.ctime() + my_splitter, '>>', statistics_file_path]))
                 params_lst = map(str, [other_algorithm_path, data_set_name, '>>', statistics_file_path])
                 cmd = ' '.join(params_lst)
-                time_out = 1200 if data_set_name != 'soc-LiveJournal1' else 3600
+                time_out = 1800 if data_set_name != 'soc-LiveJournal1' else 3600
 
                 tle_flag, info, correct_info = time_out_util.run_with_timeout(cmd, timeout_sec=time_out)
                 write_split(statistics_file_path)
@@ -61,12 +67,19 @@ def run_exp():
                     ifs.write('\n\n\n\n')
                 print 'finish:', cmd
 
-    one_round()
-    data_set_lst = ['ca-GrQc', 'ca-HepTh', 'p2p-Gnutella06', 'wiki-Vote',
-                    'email-Enron', 'email-EuAll', 'web-NotreDame', 'web-Stanford', 'web-BerkStan', 'web-Google',
-                    'cit-Patents', 'soc-LiveJournal1'
-                    ]
-    other_exec_path_lst = ['/homes/ywangby/workspace/yche/git-repos/SimRank/SPS-Variants/sling/build/sling-bench']
+    # one_round()
+    data_set_lst = [
+        'ca-GrQc', 'ca-HepTh', 'p2p-Gnutella06', 'wiki-Vote',
+        'email-Enron', 'email-EuAll',
+        'web-NotreDame', 'web-Stanford', 'web-BerkStan', 'web-Google', 'cit-Patents',
+        'soc-LiveJournal1']
+    other_exec_path_lst = [
+        '/homes/ywangby/workspace/yche/git-repos/SimRank/SPS-Variants/sling/build/sling_bench',
+        '/homes/ywangby/workspace/yche/git-repos/SimRank/SPS-Variants/isp-yche/build/isp_bench'
+        '/homes/ywangby/workspace/yche/git-repos/SimRank/SPS-Variants/isp-yche/build/LinSimBench',
+        '/homes/ywangby/workspace/yche/git-repos/SimRank/SPS-Variants/isp-yche/build/CloudWalkerBench',
+        '/homes/ywangby/workspace/yche/git-repos/SimRank/SPS-Variants/tsf/build/tsf-bench'
+    ]
     one_round()
 
 
