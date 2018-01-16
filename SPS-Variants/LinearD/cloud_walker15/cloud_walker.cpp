@@ -17,17 +17,25 @@ CloudWalker::CloudWalker(DirectedG *graph, string name, double c_, int T_, int L
     D.resize(n);
     // D.setOnes(); // initially D = I
     D.setZero();
+#ifdef SINGLE_SOURCE
     F.resize(n);
     F.setZero();
     hat_P.resize(n, n);
+#endif
     vector<int> out_degrees(n, 0);
     for (int i = 0; i < n; i++) {
         out_degrees[i] = out_degree(i, *g);
     }
+#ifdef SINGLE_SOURCE
     hat_P.reserve(out_degrees);
+#endif
+
     preprocess_D();
+
+#ifdef SINGLE_SOURCE
     preprocess_F();
     preprocess_hat_P();
+#endif
     cout << "mem size:" << getValue() << endl;
 }
 
@@ -122,6 +130,7 @@ void CloudWalker::preprocess_D() {
     // cout << (A * D) << endl;
 }
 
+#ifdef SINGLE_SOURCE
 void CloudWalker::preprocess_F() {
     cout << "computing F" << endl;
     DirectedG::edge_iterator edge_it, edge_end;
@@ -230,6 +239,7 @@ void CloudWalker::mcss(int i, VectorXd &r) {
     }
     mem_size = getValue();
 }
+#endif
 
 double CloudWalker::mcsp(int u, int v, MatrixXd &pos_dist_u, MatrixXd &pos_dist_v) {
     if (u == v) { return 1; }

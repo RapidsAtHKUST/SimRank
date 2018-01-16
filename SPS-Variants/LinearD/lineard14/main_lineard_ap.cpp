@@ -20,17 +20,18 @@ int main(int argc, char *argv[]) {
     int T = 10;
     int R_prime = 10000;
 
-    DirectedG g;
+//    DirectedG g;
     auto data_name = string(argv[1]);
-    load_graph(get_edge_list_path(data_name), g);
+//    load_graph(get_edge_list_path(data_name), g);
     srand(static_cast<unsigned int>(time(nullptr))); // random number generator
     std::chrono::duration<double> elapsed{};
 
     // 1st: indexing
     auto start = std::chrono::high_resolution_clock::now();
-    LinearD lin(&g, data_name, c, T, L, R);
+//    LinearD lin(&g, data_name, c, T, L, R);
+    LinearD lin(data_name, c, T, L, R);
     auto pre_time = std::chrono::high_resolution_clock::now();
-    cout << "indexing time:" << float(duration_cast<microseconds>(pre_time - start).count()) / (pow(10, 6)) << " s\n";
+    cout << "constructing time:" << float(duration_cast<microseconds>(pre_time - start).count()) / (pow(10, 6)) << " s\n";
 
     // 2nd: query
 #ifdef GROUND_TRUTH

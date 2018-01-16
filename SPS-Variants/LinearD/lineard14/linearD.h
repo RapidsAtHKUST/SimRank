@@ -5,7 +5,7 @@
 
 #include "../util/graph.h"
 
-const string LINEAR_D_DIR = "./datasets/linearD/";
+const string LINEAR_D_DIR = "/homes/ywangby/workspace/LinsysSimRank/datasets/linearD/";
 
 struct LinearD {
     // The Linearization Technique SimRank (Efficient SimRank Computation via Linearization KDD'14)
@@ -27,21 +27,33 @@ public:
     MatrixXd sim;
     SparseMatrix<double> P, PT;
 
+private:
+    string get_file_path_base();
+
+    string get_p_file_path_base();
+
+    void build_or_load_index();
+
 public:
     LinearD() = default;
 
     LinearD(DirectedG *, string name, double c_, int T_, int L_, int R_);
 
-    string get_file_path_base();
+    LinearD(string name, double c_, int T_, int L_, int R_);
 
+#ifdef SAVE_LOAD
     void save();
 
     void load();
+#endif
+
+    pair<double, double> estimate_SDkk_SEkk(int k); // estimate S^{L}(D)_{kk} and S^{L}(E^{kk})_{kk}
 
     void compute_D();
 
     void compute_P();
 
+public:
     void single_source(int i, VectorXd &r);
 
     double single_pair(int i, int j);
@@ -49,8 +61,6 @@ public:
     double single_pair(int i, int j, VectorXd &lhs_vec, VectorXd &rhs_vec);
 
     void all_pair();
-
-    pair<double, double> estimate_SDkk_SEkk(int k); // estimate S^{L}(D)_{kk} and S^{L}(E^{kk})_{kk}
 };
 
 #endif

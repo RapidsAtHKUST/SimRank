@@ -3,7 +3,7 @@ project(LinSim)
 
 set(CMAKE_CXX_STANDARD 11)
 
-find_package(Boost REQUIRED serialization program_options)
+find_package(Boost REQUIRED serialization program_options filesystem)
 
 find_package(OpenMP)
 
@@ -97,3 +97,6 @@ target_include_directories(CloudWalkerBench PRIVATE ${Boost_INCLUDE_DIRS})
 target_compile_options(CloudWalkerBench PRIVATE -O3 ${SFMT_COMPILE_FLAGS})
 target_link_libraries(CloudWalkerBench PRIVATE ${Boost_LIBRARIES})
 target_link_libraries(CloudWalkerBench PRIVATE tcmalloc)
+
+############# playground
+add_subdirectory(playground)

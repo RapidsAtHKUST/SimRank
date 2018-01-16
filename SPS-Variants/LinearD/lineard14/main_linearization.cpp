@@ -9,6 +9,7 @@
 using namespace std;
 using namespace std::chrono;
 
+#ifdef SAVE_LOAD
 void test_lineD_all_pair(string data_name, double c, int T, int L, int R) {
     DirectedG g;
     load_graph(get_edge_list_path(data_name), g);
@@ -23,6 +24,7 @@ void test_lineD_all_pair(string data_name, double c, int T, int L, int R) {
     cout << lin.get_file_path_base() << endl;
     lin.save();
 }
+#endif
 
 void test_single_source(string data_name, double c, int T, int L, int R, int i, int j = 1) {
     DirectedG g;

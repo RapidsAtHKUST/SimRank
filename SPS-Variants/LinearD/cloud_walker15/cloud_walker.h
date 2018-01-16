@@ -22,9 +22,12 @@ struct CloudWalker {
 public:
     VectorXd D; // dynamic vector D
     DirectedG *g; // pointer to the graph
+
+#ifdef SINGLE_SOURCE
     SparseMatrix<double> hat_P; // the column normalized version of P^{T}, column major
     VectorXd F; // denote the diag matrix $F$ of the original paper
     MatrixXd sim;
+#endif
 
 public:
     CloudWalker() = default;
@@ -33,11 +36,13 @@ public:
 
     void preprocess_D();
 
+#ifdef SINGLE_SOURCE
     void preprocess_F();
 
     void preprocess_hat_P();
 
     void mcss(int s, VectorXd &); // Monte Carlo Single-source query: source node, result vec
+#endif
 
     double mcsp(int u, int v, MatrixXd &pos_dist_u, MatrixXd &pos_dist_v);
 
