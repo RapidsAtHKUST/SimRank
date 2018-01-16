@@ -101,7 +101,7 @@ double BackPush::change_to_MC_cost(unique_max_heap &heap) {
 }
 
 bool BackPush::is_keep_on_push(unique_max_heap &hp) {
-    if (hp.size() > 64) { return false; }
+//    if (hp.size() > 64) { return false; }
     const heap_data &top_element = heap.top();
 
     return (top_element.np.first == top_element.np.second) ||
