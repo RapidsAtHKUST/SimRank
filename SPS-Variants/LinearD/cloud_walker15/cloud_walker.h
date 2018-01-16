@@ -3,7 +3,7 @@
 
 #include "../util/graph.h"
 
-const string CLOUD_WALKER_DIR = "./datasets/cloudwalker/";
+const string CLOUD_WALKER_DIR = "/homes/ywangby/workspace/LinsysSimRank/datasets/cloudwalker/";
 
 struct CloudWalker {
     // implementation of VLDB'16 paper: Walking in the Cloud: Parallel SimRank at Scale 
@@ -34,8 +34,14 @@ public:
 
     CloudWalker(DirectedG *, string name, double c_, int T_, int L_, int R_, int R_prime_);
 
+private:
+    string get_file_path_base();
+
     void preprocess_D();
 
+    void build_or_load_index();
+
+public:
 #ifdef SINGLE_SOURCE
     void preprocess_F();
 
@@ -49,9 +55,6 @@ public:
     double mcsp(int u, int v);
 
     void Tstep_distribution(int i, MatrixXd &pos_dist); // compute T-step position distribution of a number of samples
-
-    string get_file_path_base();
-
 };
 
 #endif

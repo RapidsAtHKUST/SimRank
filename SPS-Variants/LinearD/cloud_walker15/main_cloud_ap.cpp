@@ -30,7 +30,8 @@ int main(int argc, char *argv[]) {
     auto start = std::chrono::high_resolution_clock::now();
     CloudWalker cw(&g, data_name, c, T, L, R, R_prime);
     auto pre_time = std::chrono::high_resolution_clock::now();
-    cout << "indexing time:" << float(duration_cast<microseconds>(pre_time - start).count()) / (pow(10, 6)) << " s\n";
+    cout << "constructing time:" << float(duration_cast<microseconds>(pre_time - start).count()) / (pow(10, 6))
+         << " s\n";
 
     // 2nd: query
 #ifdef GROUND_TRUTH
