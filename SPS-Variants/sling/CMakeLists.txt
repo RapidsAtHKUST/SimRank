@@ -22,45 +22,44 @@ if (OPENMP_FOUND)
     set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} ${OpenMP_EXE_LINKER_FLAGS}")
 endif ()
 
+macro(InitHashSFMTEigenPthread exec_name)
+    target_include_directories(${exec_name} PRIVATE ../../sparsehash-yche/include/)
+    target_include_directories(${exec_name} PRIVATE ../../SFMT)
+    target_include_directories(${exec_name} PRIVATE ../../include)
+
+    target_link_libraries(${exec_name} PRIVATE ${CMAKE_THREAD_LIBS_INIT})
+    target_link_libraries(${exec_name} PRIVATE tcmalloc)
+
+    target_compile_options(${exec_name} PRIVATE -O3 -g -DSFMT_MEXP=607 -msse2 -DHAVE_SSE2)
+endmacro()
+
 # 1st: sling single pair
 add_executable(sling ${SOURCE_FILES} main.cpp)
-
-target_include_directories(sling PRIVATE ../../sparsehash-yche/include/)
-target_include_directories(sling PRIVATE ../../SFMT)
-target_include_directories(sling PRIVATE ../../include)
-
-target_link_libraries(sling PRIVATE ${CMAKE_THREAD_LIBS_INIT})
-
-target_compile_options(sling PRIVATE -O3 -g -DSFMT_MEXP=607 -msse2 -DHAVE_SSE2)
+InitHashSFMTEigenPthread(sling)
 
 # 2nd: sling all pair
+macro(InitSlingAP exec_name)
+    target_include_directories(${exec_name} PRIVATE ../../sparsepp)
+    InitHashSFMTEigenPthread(${exec_name})
+endmacro()
+
 add_executable(sling_all ${SOURCE_FILES} ${GROUND_TRUTH_FILES} main_query_all_vertices.cpp)
-
-target_include_directories(sling_all PRIVATE ../../sparsehash-yche/include/)
-target_include_directories(sling_all PRIVATE ../../SFMT)
-target_include_directories(sling_all PRIVATE ../../include)
-target_include_directories(sling_all PRIVATE ../../sparsepp)
-
-target_link_libraries(sling_all PRIVATE ${CMAKE_THREAD_LIBS_INIT})
-target_link_libraries(sling_all PRIVATE tcmalloc)
-
-target_compile_options(sling_all PRIVATE -O3 -g -DSFMT_MEXP=607 -msse2 -DHAVE_SSE2)
+InitSlingAP(sling_all)
 target_compile_definitions(sling_all PRIVATE -DGROUND_TRUTH=1 -DALL_PAIR=1)
 #target_compile_definitions(sling_all PRIVATE -DGROUND_TRUTH=1)
 
 ########## benchmark
-
 add_executable(sling_bench ${SOURCE_FILES} ${GROUND_TRUTH_FILES} main_query_all_vertices.cpp)
+InitSlingAP(sling_bench)
 
-target_include_directories(sling_bench PRIVATE ../../sparsehash-yche/include/)
-target_include_directories(sling_bench PRIVATE ../../SFMT)
-target_include_directories(sling_bench PRIVATE ../../include)
-target_include_directories(sling_bench PRIVATE ../../sparsepp)
+####
+add_executable(sling-rand-bench ${SOURCE_FILES} ${GROUND_TRUTH_FILES} main_query_rand_pairs.cpp ground_truth/random_pair_generator.cpp)
+InitSlingAP(sling-rand-bench)
 
-target_link_libraries(sling_bench PRIVATE ${CMAKE_THREAD_LIBS_INIT})
-target_link_libraries(sling_bench PRIVATE tcmalloc)
-
-target_compile_options(sling_bench PRIVATE -O3 -g -DSFMT_MEXP=607 -msse2 -DHAVE_SSE2)
+add_executable(sling-rand-bench-gt ${SOURCE_FILES} ${GROUND_TRUTH_FILES} main_query_rand_pairs.cpp ground_truth/random_pair_generator.cpp)
+InitSlingAP(sling-rand-bench-gt)
+target_compile_definitions(sling-rand-bench-gt PRIVATE -DGROUND_TRUTH=1)
 
 ############# playground
 add_subdirectory(playground)
+
