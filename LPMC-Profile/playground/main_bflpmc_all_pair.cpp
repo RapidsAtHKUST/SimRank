@@ -70,8 +70,8 @@ void test_BFLPMC(string data_name, double c, double epsilon, double delta) {
         for (auto i = 0u; i < n; i++) {
             for (auto j = i; j < n; j++) {
 #else
-                for (auto i = 0u; i < 1000; i++) {
-                    for (auto j = i; j < 1000; j++) {
+                for (auto i = n-10000; i < n; i++) {
+                    for (auto j = i; j < n; j++) {
 #endif
                 auto q = pair<uint32_t, uint32_t>(i, j);
 #ifdef GROUND_TRUTH
