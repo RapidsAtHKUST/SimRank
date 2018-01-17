@@ -44,6 +44,7 @@ int main(int argc, char *argv[]) {
     GraphYche g_gt(path);
     TruthSim ts(string(argv[1]), g_gt, c, 0.01);
     auto max_err = 0.0;
+    auto failure_count = 0;
 #endif
 
     auto sample_pairs = read_sample_pairs(file_name, pair_num, round_i);
@@ -68,13 +69,15 @@ int main(int argc, char *argv[]) {
             max_err = max(max_err, abs(ts.sim(u, v) - res));
             if (abs(ts.sim(u, v) - res) > 0.01) {
 #pragma omp critical
-                cout << u << ", " << v << "," << ts.sim(u, v) << "," << res << endl;
+                {
+                    cout << u << ", " << v << "," << ts.sim(u, v) << "," << res << endl;
+                    failure_count++;
+                }
             }
 #else
             cw.mcsp(u, v, pos_dist_u, pos_dist_v);
 #endif
         }
-
     };
 
     auto end = std::chrono::high_resolution_clock::now();
@@ -83,6 +86,7 @@ int main(int argc, char *argv[]) {
     elapsed = end - start;
 
 #ifdef GROUND_TRUTH
+    cout << "failure count:" << failure_count << endl;
     cout << "max err:" << max_err << endl;
 #endif
     cout << format("total query cost: %s s") % elapsed.count() << endl; // record the pre-processing time

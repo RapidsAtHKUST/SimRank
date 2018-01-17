@@ -34,6 +34,7 @@ int main(int argc, char *argv[]) {
     auto max_err = 0.0;
 #endif
 
+    auto failure_count = 0;
     auto sample_pairs = read_sample_pairs(file_name, pair_num, round_i);
     auto start = std::chrono::high_resolution_clock::now();
     auto clock_start = clock();
@@ -51,7 +52,10 @@ int main(int argc, char *argv[]) {
         max_err = max(max_err, abs(ts.sim(u, v) - res));
         if (abs(ts.sim(u, v) - res) > 0.01) {
 #pragma omp critical
+        {
             cout << u << ", " << v << "," << ts.sim(u, v) << "," << res << endl;
+            failure_count++;
+        };
         }
 #else
         my_isp.ComputeSim(u, v, c, max_iter, filter_threshold);
@@ -65,6 +69,7 @@ int main(int argc, char *argv[]) {
     cout << "total query cpu time:" << static_cast<double>(clock_end - clock_start) / CLOCKS_PER_SEC << "s" << endl;
     std::chrono::duration<double> elapsed = end - start;
 #ifdef GROUND_TRUTH
+    cout << "failure count:" << failure_count << endl;
     cout << "max err:" << max_err << endl;
 #endif
     cout << format("total query cost: %s s") % elapsed.count() << endl; // record the pre-processing time
