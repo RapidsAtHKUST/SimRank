@@ -69,6 +69,17 @@ InitBprw(bprw-bench)
 target_compile_definitions(bprw-bench PRIVATE -DSFMT=1)
 #target_compile_definitions(bprw-bench PRIVATE -DSFMT=1 -DSPARSE_HASH_MAP_FOR_HEAP=1)
 
+#### bprw(random pairs)
+add_executable(bprw-rand-bench ${BPRW_FILES} ${UTIL_FILES} ${GROUND_TRUTH_FILES} playground/random_pairs/main_bprw_rand_pair.cpp
+        util/random_pair_generator.cpp)
+InitBprw(bprw-rand-bench)
+target_compile_definitions(bprw-rand-bench PRIVATE -DSFMT=1)
+
+add_executable(bprw-rand-bench-gt ${BPRW_FILES} ${UTIL_FILES} ${GROUND_TRUTH_FILES} playground/random_pairs/main_bprw_rand_pair.cpp
+        util/random_pair_generator.cpp)
+InitBprw(bprw-rand-bench-gt)
+target_compile_definitions(bprw-rand-bench-gt PRIVATE -DSFMT=1 -DGROUND_TRUTH=1)
+
 #### 2nd: flpmc #######################################################################################################
 macro(InitFLPMC exec_name)
     InitBoostHashSFMTEigen(${exec_name})
@@ -93,6 +104,17 @@ add_executable(flpmc-bench ${FLPMC_SOURCE_FILES})
 InitFLPMC(flpmc-bench)
 target_compile_definitions(flpmc-bench PRIVATE -DSFMT=1)
 
+#### flpmc(random pairs)
+set(FLPMC_SOURCE_FILES_RAND ${LPMC_FILES} ${UTIL_FILES} ${GROUND_TRUTH_FILES} playground/random_pairs/main_flpmc_rand_pair.cpp
+        util/random_pair_generator.cpp)
+add_executable(flpmc-rand-bench ${FLPMC_SOURCE_FILES_RAND})
+InitFLPMC(flpmc-rand-bench)
+target_compile_definitions(flpmc-rand-bench PRIVATE -DSFMT=1)
+
+add_executable(flpmc-rand-bench-gt ${FLPMC_SOURCE_FILES_RAND})
+InitFLPMC(flpmc-rand-bench-gt)
+target_compile_definitions(flpmc-rand-bench-gt PRIVATE -DSFMT=1 -DGROUND_TRUTH=1)
+
 #### 3rd: bflpmc #######################################################################################################
 macro(InitBFLPMC exec_name)
     InitFLPMC(${exec_name})
@@ -113,6 +135,17 @@ target_compile_definitions(bflpmc-ap PRIVATE -DSFMT=1 -DGROUND_TRUTH=1 -DGROUND_
 #### bflpmc(benchmark)
 add_executable(bflpmc-bench ${BFLPMC_SOURCE_FILES})
 InitBFLPMC(bflpmc-bench)
-target_compile_options(bflpmc-bench PRIVATE -O3 -g ${SFMT_COMPILE_FLAGS} -march=native)
 target_compile_definitions(bflpmc-bench PRIVATE -DSFMT=1)
 #target_compile_definitions(bflpmc-bench PRIVATE -DSFMT=1 -DSPARSE_HASH_MAP_FOR_HEAP=1)
+
+#### bflpmc(random pairs)
+set(BFLPMC_SOURCE_FILES_RAND ${LPMC_FILES} ${BPRW_FILES} ${UTIL_FILES} ${GROUND_TRUTH_FILES}
+        yche_refactor/bflpmc_yche.h yche_refactor/bflpmc_yche.cpp playground/random_pairs/main_bflpmc_rand_pair.cpp
+        util/random_pair_generator.cpp)
+add_executable(bflpmc-rand-bench ${BFLPMC_SOURCE_FILES_RAND})
+InitBFLPMC(bflpmc-rand-bench)
+target_compile_definitions(bflpmc-rand-bench PRIVATE -DSFMT=1)
+
+add_executable(bflpmc-rand-bench-gt ${BFLPMC_SOURCE_FILES_RAND})
+InitBFLPMC(bflpmc-rand-bench-gt)
+target_compile_definitions(bflpmc-rand-bench-gt PRIVATE -DSFMT=1 -DGROUND_TRUTH=1)

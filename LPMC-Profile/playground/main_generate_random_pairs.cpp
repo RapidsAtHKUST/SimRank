@@ -18,6 +18,8 @@ int main(int argc, char *argv[]) {
         generate_sample_pairs(graph_name, pair_num, round_num);
     } else {
         int round_i = atoi(argv[3]);
+#ifdef DEBUG
         cout << read_sample_pairs(graph_name, pair_num, round_i) << endl;
+#endif
     }
 }

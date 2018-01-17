@@ -8,10 +8,12 @@
 
 #include <boost/program_options.hpp>
 
-#include "../yche_refactor/bflpmc_yche.h"
-#include "../yche_refactor/simrank.h"
+#include "../../yche_refactor/bflpmc_yche.h"
+#include "../../yche_refactor/simrank.h"
+#include "../../util/random_pair_generator.h"
+#include "../../playground/pretty_print.h"
 
-void test_BFLPMC(string data_name, double c, double epsilon, double delta) {
+void test_BFLPMC(string data_name, double c, double epsilon, double delta, int pair_num, int round) {
     // init graph
     string path = get_edge_list_path(data_name);
     GraphYche g(path);
@@ -54,6 +56,8 @@ void test_BFLPMC(string data_name, double c, double epsilon, double delta) {
     cout << "above 0.6 :" << above_point6_count << endl;
 #endif
 
+    auto sample_pairs = read_sample_pairs(data_name, pair_num, round);
+    auto clock_start = clock();
     auto start = std::chrono::high_resolution_clock::now();
 #pragma omp parallel
     {
@@ -61,35 +65,31 @@ void test_BFLPMC(string data_name, double c, double epsilon, double delta) {
 //        auto local_bflpmc = BFLPMC(data_name, g, c, epsilon, delta);
 
 #ifdef GROUND_TRUTH
-#pragma omp for reduction(max:max_err) schedule(dynamic, 1)
+#pragma omp for reduction(max:max_err) schedule(dynamic, 100)
 #else
-#pragma omp for schedule(dynamic, 1)
+#pragma omp for schedule(dynamic, 100)
 #endif
-
-#if defined(ALL_PAIR)
-        for (auto i = 0u; i < n; i++) {
-            for (auto j = i; j < n; j++) {
-#else
-                for (auto i = n-10000; i < n; i++) {
-                    for (auto j = i; j < n; j++) {
-#endif
-                auto q = pair<uint32_t, uint32_t>(i, j);
+        for (auto pair_i = 0; pair_i < pair_num; pair_i++) {
+            auto q = pair<uint32_t, uint32_t>(sample_pairs[pair_i].first, sample_pairs[pair_i].second);
 #ifdef GROUND_TRUTH
-                auto res = local_bflpmc.query_one2one(q);
-                max_err = max(max_err, abs(ts.sim(q.first, q.second) - res));
-                if (abs(ts.sim(q.first, q.second) - res) > 0.01) {
+            auto res = local_bflpmc.query_one2one(q);
+            max_err = max(max_err, abs(ts.sim(q.first, q.second) - res));
+            if (abs(ts.sim(q.first, q.second) - res) > 0.01) {
 #pragma omp critical
-                    cout << i << "," << j << "," << ts.sim(q.first, q.second) << "," << res << endl;
-                }
-#else
-                local_bflpmc.query_one2one(q);
-#endif
+                cout << sample_pairs[pair_i].first << "," << sample_pairs[pair_i].second << ","
+                << ts.sim(q.first, q.second) << "," << res << endl;
             }
+#else
+            local_bflpmc.query_one2one(q);
+#endif
         }
-
     };
+
     auto end = std::chrono::high_resolution_clock::now();
     std::chrono::duration<double> elapsed = end - start;
+
+    auto clock_end = clock();
+    cout << "total query cpu time:" << static_cast<double>(clock_end - clock_start) / CLOCKS_PER_SEC << "s" << endl;
 #ifdef GROUND_TRUTH
     cout << "max err:" << max_err << endl;
 #endif
@@ -102,5 +102,8 @@ int main(int args, char *argv[]) {
     double epsilon = 0.01;
     double delta = 0.01;
 
-    test_BFLPMC(data_name, c, epsilon, delta);
+
+    int pair_num = atoi(argv[2]);
+    int round_i = atoi(argv[3]);
+    test_BFLPMC(data_name, c, epsilon, delta, pair_num, round_i);
 }
