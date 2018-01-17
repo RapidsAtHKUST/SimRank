@@ -53,9 +53,9 @@ int main(int argc, char *argv[]) {
         // allocate memory in advance
         VectorXd lhs_vec(lin.n), rhs_vec(lin.n);
 #ifdef GROUND_TRUTH
-#pragma omp parallel for reduction(max:max_err) schedule(dynamic, 100)
+#pragma omp for reduction(max:max_err) schedule(dynamic, 100)
 #else
-#pragma omp parallel for schedule(dynamic, 100)
+#pragma omp for schedule(dynamic, 100)
 #endif
         for (auto pair_i = 0; pair_i < pair_num; pair_i++) {
             auto u = sample_pairs[pair_i].first;
