@@ -29,31 +29,35 @@ target_include_directories(tsf-spair PRIVATE ../../SFMT)
 target_compile_options(tsf-spair PRIVATE -O3 -g)
 
 ################## yche reimplementation of tsf #######################
+macro(InitTSF exec_name)
+    target_include_directories(${exec_name} PRIVATE ../../sparsepp)
+    target_include_directories(${exec_name} PRIVATE ../../include)
+    target_include_directories(${exec_name} PRIVATE ../../sparsehash-yche/include)
+    target_include_directories(${exec_name} PRIVATE ../../SFMT)
+    target_link_libraries(${exec_name} PRIVATE tcmalloc)
+    target_compile_options(${exec_name} PRIVATE ${SFMT_COMPILE_FLAGS} -O3 -g)
+endmacro()
+
+###### tsf-yche(ground-truth)
 set(GROUND_TRUTH_FILES ground_truth/simrank.cpp ground_truth/simrank.h ground_truth/graph_yche.cpp ground_truth/graph_yche.h
         ground_truth/sparse_matrix_utils.h ground_truth/file_serialization.h ground_truth/stat.cpp ground_truth/stat.h)
-
 add_executable(tsf-ap main_all_pair_query.cpp
         yche_tsf.cpp yche_tsf.h input_output.cpp input_output.h ${GROUND_TRUTH_FILES} ../../SFMT/SFMT.c util/sfmt_based_rand.h)
-
-target_include_directories(tsf-ap PRIVATE ../../sparsepp)
-target_include_directories(tsf-ap PRIVATE ../../include)
-target_include_directories(tsf-ap PRIVATE ../../sparsehash-yche/include)
-target_include_directories(tsf-ap PRIVATE ../../SFMT)
-target_link_libraries(tsf-ap PRIVATE tcmalloc)
-
-target_compile_options(tsf-ap PRIVATE ${SFMT_COMPILE_FLAGS} -O3 -g)
+InitTSF(tsf-ap)
 target_compile_definitions(tsf-ap PRIVATE -DGROUND_TRUTH=1)
 
-################ benchmark
+#### tsf-yche(benchmark)
 
 add_executable(tsf-bench main_all_pair_query.cpp
         yche_tsf.cpp yche_tsf.h input_output.cpp input_output.h ${GROUND_TRUTH_FILES} ../../SFMT/SFMT.c util/sfmt_based_rand.h)
+InitTSF(tsf-bench)
 
-target_include_directories(tsf-bench PRIVATE ../../sparsepp)
-target_include_directories(tsf-bench PRIVATE ../../include)
-target_include_directories(tsf-bench PRIVATE ../../sparsehash-yche/include)
-target_include_directories(tsf-bench PRIVATE ../../SFMT)
-target_link_libraries(tsf-bench PRIVATE tcmalloc)
+#### tsf-yche(random pairs)
+add_executable(tsf-rand-bench main_rand_pair_query.cpp ground_truth/random_pair_generator.cpp
+        yche_tsf.cpp yche_tsf.h input_output.cpp input_output.h ${GROUND_TRUTH_FILES} ../../SFMT/SFMT.c util/sfmt_based_rand.h)
+InitTSF(tsf-rand-bench)
 
-target_compile_options(tsf-bench PRIVATE ${SFMT_COMPILE_FLAGS} -O3 -g)
-target_compile_definitions(tsf-bench PRIVATE)
+add_executable(tsf-rand-bench-gt main_rand_pair_query.cpp ground_truth/random_pair_generator.cpp
+        yche_tsf.cpp yche_tsf.h input_output.cpp input_output.h ${GROUND_TRUTH_FILES} ../../SFMT/SFMT.c util/sfmt_based_rand.h)
+InitTSF(tsf-rand-bench-gt)
+target_compile_definitions(tsf-rand-bench-gt PRIVATE -DGROUND_TRUTH=1)
