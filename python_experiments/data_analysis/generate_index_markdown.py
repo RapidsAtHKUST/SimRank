@@ -1,8 +1,8 @@
 from indexing_time_space_statistics import *
 
 
-def get_dict():
-    with open('data-json' + os.sep + 'index_result' + '.json') as ifs:
+def get_index_dict(root_dir='.'):
+    with open(root_dir + os.sep + 'data-json' + os.sep + 'index_result' + '.json') as ifs:
         lines = ifs.readlines()
         return eval(''.join(lines))
 
@@ -10,7 +10,7 @@ def get_dict():
 if __name__ == '__main__':
     algorithm_lst = [local_push_tag, sling_tag, linear_d_tag, cloud_walker_tag, tsf_tag]
 
-    index_dict = get_dict()
+    index_dict = get_index_dict()
 
 
     def get_time_table(data_set_lst):
