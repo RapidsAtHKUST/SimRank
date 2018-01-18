@@ -41,9 +41,10 @@ def run_exp():
 
     def one_round():
         for data_set_name in data_set_lst:
-            for sample_num in [10 ** 3, 10 ** 4, 10 ** 5, 10 ** 6]:
-                for round_idx in range_idx_lst:
-                    for our_algorithm in our_exec_name_lst:
+            for our_algorithm in our_exec_name_lst:
+                for sample_num in [10 ** 3, 10 ** 4, 10 ** 5, 10 ** 6]:
+                    is_cur_sample_scale_tle = False
+                    for round_idx in range_idx_lst:
                         statistics_dir = os.sep.join(
                             map(str, ['.', tag, folder_name, data_set_name, sample_num, round_idx]))
                         os.system('mkdir -p ' + statistics_dir)
@@ -56,7 +57,7 @@ def run_exp():
                         params_lst = map(str, [algorithm_path, data_set_name, sample_num, round_idx, '>>',
                                                statistics_file_path])
                         cmd = ' '.join(params_lst)
-                        time_out = 1000 if data_set_name != 'soc-LiveJournal1' else 3600
+                        time_out = 1200 if data_set_name != 'soc-LiveJournal1' else 3600
 
                         tle_flag, info, correct_info = time_out_util.run_with_timeout(cmd, timeout_sec=time_out)
                         write_split(statistics_file_path)
@@ -67,6 +68,12 @@ def run_exp():
                             ifs.write('is_time_out:' + str(tle_flag))
                             ifs.write('\n\n\n\n')
                         print 'finish:', cmd
+
+                        if tle_flag:
+                            is_cur_sample_scale_tle = True
+                            break
+                    if is_cur_sample_scale_tle:
+                        break
 
     one_round()
 

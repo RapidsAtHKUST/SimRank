@@ -46,9 +46,10 @@ def run_exp():
 
     def one_round():
         for data_set_name in data_set_lst:
-            for sample_num in [10 ** 3, 10 ** 4, 10 ** 5, 10 ** 6]:
-                for round_idx in range_idx_lst:
-                    for other_algorithm_path in other_exec_path_lst:
+            for other_algorithm_path in other_exec_path_lst:
+                for sample_num in [10 ** 3, 10 ** 4, 10 ** 5, 10 ** 6]:
+                    is_cur_sample_scale_tle = False
+                    for round_idx in range_idx_lst:
                         other_algorithm = other_algorithm_path.split('/')[-1]
                         statistics_dir = os.sep.join(
                             map(str, ['.', tag, folder_name, data_set_name, sample_num, round_idx]))
@@ -72,6 +73,12 @@ def run_exp():
                             ifs.write('is_time_out:' + str(tle_flag))
                             ifs.write('\n\n\n\n')
                         print 'finish:', cmd
+
+                        if tle_flag:
+                            is_cur_sample_scale_tle = True
+                            break
+                    if is_cur_sample_scale_tle:
+                        break
 
     one_round()
 
