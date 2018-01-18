@@ -4,7 +4,8 @@ import os
 
 data_set_lst = [
     'ca-GrQc', 'ca-HepTh', 'p2p-Gnutella06', 'wiki-Vote',
-    'email-Enron', 'email-EuAll', 'web-NotreDame', 'web-Stanford', 'web-BerkStan', 'web-Google',
+    'email-Enron', 'email-EuAll',
+    'web-NotreDame', 'web-Stanford', 'web-BerkStan', 'web-Google',
     'cit-Patents', 'soc-LiveJournal1']
 
 our_algo_indexing_stat_root_folder = '/home/yche/mnt/wangyue-clu/csproject/biggraph/ywangby/' \
@@ -15,7 +16,7 @@ other_algo_indexing_stat_root_folder = '/home/yche/mnt/wangyue-clu/csproject/big
                                        'yche/git-repos/SimRank/python_experiments/exp_results/' \
                                        'other_methods_overview_01_16'
 
-datasets_root_folder = '/home/yche/mnt/wangyue-clu/csproject/biggraph/ywangby/LinsysSimRank/datasets/'
+datasets_root_folder = '/home/yche/mnt/wangyue-clu/csproject/biggraph/ywangby/LinsysSimRank/datasets'
 
 
 def format_str(float_num):
@@ -36,7 +37,17 @@ def get_tag_info(file_path, tag):
         return None if len(lst) == 0 else min(lst)
 
 
-# our full local push related
+def get_tag_no_colon_info(file_path, tag):
+    if not os.path.exists(file_path):
+        return None
+    with open(file_path) as ifs:
+        # assume unit seconds
+        lst = map(lambda line: eval(line.split(tag)[-1].split('s')[0]),
+                  filter(lambda line: line.startswith(tag), ifs.readlines()))
+        return None if len(lst) == 0 else min(lst)
+
+
+# 1st: our full local push related
 class LocalPushIndexingStat:
     # unit: seconds
     @staticmethod
@@ -51,7 +62,6 @@ class LocalPushIndexingStat:
                     indexing_time_lst.append(indexing_time)
                     break
         return dict(zip(data_set_lst, indexing_time_lst))
-        # return zip(data_set_lst, indexing_time_lst)
 
     # unit: MB
     @staticmethod
@@ -63,7 +73,6 @@ class LocalPushIndexingStat:
             with open(os.sep.join([local_push_folder, index_naming + '.meta'])) as ifs:
                 mem_size_lst.append(float(format_str(float(ifs.readlines()[5].strip()) / 1024.)))
         return dict(zip(data_set_lst, mem_size_lst))
-        # return zip(data_set_lst, mem_size_lst)
 
     # unit: MB
     @staticmethod
@@ -78,8 +87,69 @@ class LocalPushIndexingStat:
         return dict(zip(data_set_lst, space_size_lst))
 
 
+# 2nd: sling related
+class SlingIndexingStat:
+    # unit: seconds
+    @staticmethod
+    def get_indexing_time():
+        # sling's parallel d calculation not effective, thus we collect single thread time also
+        sling_compute_d_time_lst = [24.868744, 39.719319, 3.928212, 1.050985,
+                                    100.487657, 8.268188,
+                                    820.528155]
+        indexing_time_lst = []
+        for data_set in data_set_lst:
+            for algorithm_name in ['sling_all', 'sling_bench']:
+                parallel_cal_d_time = get_tag_no_colon_info(
+                    os.sep.join([other_algo_indexing_stat_root_folder, data_set, algorithm_name + '.txt']),
+                    tag='finish calcD')
+                backward_time = get_tag_no_colon_info(
+                    os.sep.join([other_algo_indexing_stat_root_folder, data_set, algorithm_name + '.txt']),
+                    tag='finish backward')
+                if backward_time is not None:
+                    indexing_time_lst.append(float(format_str(6 * parallel_cal_d_time + backward_time)))
+                    break
+        return dict(zip(data_set_lst, indexing_time_lst))
+
+    # unit: MB
+    @staticmethod
+    def get_mem_size():
+        mem_size_lst = []
+        for data_set in data_set_lst:
+            for algorithm_name in ['sling_all', 'sling_bench']:
+                mem_size = get_tag_info(
+                    os.sep.join([other_algo_indexing_stat_root_folder, data_set, algorithm_name + '.txt']),
+                    tag='mem size')
+                if mem_size is not None:
+                    mem_size_lst.append(float(format_str(mem_size / 1024.)))
+                    break
+        return dict(zip(data_set_lst, mem_size_lst))
+
+    # unit: MB
+    @staticmethod
+    def get_index_disk_size():
+        local_push_folder = os.sep.join([datasets_root_folder, 'sling'])
+        space_size_lst = []
+        for data_set in data_set_lst:
+            index_naming = '_'.join(['RLP', '-'.join([data_set, '0.600', '0.002000', '0.000290'])])
+            d_size = os.path.getsize(os.sep.join([local_push_folder, index_naming + '.d'])) / (1024. ** 2)
+            p_size = os.path.getsize(os.sep.join([local_push_folder, index_naming + '.p'])) / (1024. ** 2)
+            pstart_size = os.path.getsize(os.sep.join([local_push_folder, index_naming + '.pstart'])) / (1024. ** 2)
+            space_size_lst.append(float(format_str(d_size + p_size + pstart_size)))
+        return dict(zip(data_set_lst, space_size_lst))
+
+
+# 3rd: linear-d
+
+# 4th: cloud-walker
+
+# 5th: tsf
+
 if __name__ == '__main__':
-    my_str = str()
-    print LocalPushIndexingStat.get_indexing_time()
-    print LocalPushIndexingStat.get_mem_size()
-    print LocalPushIndexingStat.get_index_disk_size()
+    # print LocalPushIndexingStat.get_indexing_time()
+    # print LocalPushIndexingStat.get_mem_size()
+    # print LocalPushIndexingStat.get_index_disk_size()
+
+    # print SlingIndexingStat.get_indexing_time()
+    # print SlingIndexingStat.get_index_disk_size()
+    # print SlingIndexingStat.get_mem_size()
+    pass
