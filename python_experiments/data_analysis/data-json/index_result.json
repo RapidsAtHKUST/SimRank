@@ -161,18 +161,18 @@
             "email-Enron": 409.886
         }, 
         "indexing time": {
-            "wiki-Vote": 4.036, 
+            "wiki-Vote": 3.431, 
             "cit-Patents": 1421.028, 
-            "email-EuAll": 40.009, 
-            "web-Stanford": 1423.489, 
-            "ca-HepTh": 43.169, 
-            "web-BerkStan": 3000.953, 
-            "web-NotreDame": 879.91, 
-            "p2p-Gnutella06": 9.462, 
+            "email-EuAll": 40.899, 
+            "web-Stanford": 1734.798, 
+            "ca-HepTh": 46.405, 
+            "web-BerkStan": 3777.746, 
+            "web-NotreDame": 1027.976, 
+            "p2p-Gnutella06": 9.119, 
             "soc-LiveJournal1": 15970.2, 
-            "web-Google": 2505.903, 
-            "ca-GrQc": 28.341, 
-            "email-Enron": 137.995
+            "web-Google": 2781.0, 
+            "ca-GrQc": 27.825, 
+            "email-Enron": 149.528
         }
     }, 
     "linear d": {

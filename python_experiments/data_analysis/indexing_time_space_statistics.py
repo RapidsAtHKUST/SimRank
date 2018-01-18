@@ -114,7 +114,9 @@ class SlingIndexingStat:
         # sling's parallel d calculation not effective, thus we collect single thread time also
         sling_compute_d_time_lst = [24.868744, 39.719319, 3.928212, 1.050985,
                                     100.487657, 8.268188,
-                                    820.528155, 1578.569044, 3371.547423, ]
+                                    820.528155, 1578.569044, 3371.547423, 2450.991423,
+                                    0, 0]
+        sling_compute_d_time_dict = dict(zip(data_set_lst, sling_compute_d_time_lst))
         indexing_time_lst = []
         for data_set in data_set_lst:
             for algorithm_name in ['sling_all', 'sling_bench']:
@@ -125,7 +127,10 @@ class SlingIndexingStat:
                     os.sep.join([other_algo_indexing_stat_root_folder, data_set, algorithm_name + '.txt']),
                     tag='finish backward')
                 if backward_time is not None:
-                    indexing_time_lst.append(float(format_str(6 * parallel_cal_d_time + backward_time)))
+                    if sling_compute_d_time_dict[data_set] == 0:
+                        indexing_time_lst.append(float(format_str(6 * parallel_cal_d_time + backward_time)))
+                    else:
+                        indexing_time_lst.append(float(format_str(sling_compute_d_time_dict[data_set] + backward_time)))
                     break
         return dict(zip(data_set_lst, indexing_time_lst))
 
