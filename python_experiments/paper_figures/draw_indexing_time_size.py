@@ -45,7 +45,7 @@ def draw_indexing_time():
     # other lst
     algorithm_tag_lst = [local_push_tag, sling_tag, linear_d_tag, cloud_walker_tag, tsf_tag]
     hatch_lst = ["//", ".", '-', 'x', '+']
-    label_lst = ["FLP", "SLING", "LIN", "CW", "TSF"]
+    label_lst = ["FLP", "SLING", "LIN", "MCSP", "TSF"]
 
     # 1st: bars
     for idx, tag in enumerate(algorithm_tag_lst):
@@ -82,7 +82,7 @@ def draw_indexing_size():
     # other lst
     algorithm_tag_lst = [local_push_tag, sling_tag, linear_d_tag, cloud_walker_tag, tsf_tag]
     hatch_lst = ["//", ".", '-', 'x', '+']
-    label_lst = ["FLP", "SLING", "LIN", "CW", "TSF"]
+    label_lst = ["FLP", "SLING", "LIN", "MCSP", "TSF"]
 
     # 1st: bars
     for idx, tag in enumerate(algorithm_tag_lst):
