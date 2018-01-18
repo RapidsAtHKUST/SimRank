@@ -1,3 +1,4 @@
+*.pyc
 LPMC-Copy
 datasets
 *.iml

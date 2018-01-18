@@ -1,0 +1,222 @@
+{
+    "tsf": {
+        "max memory consumption": {
+            "wiki-Vote": 9.395, 
+            "cit-Patents": 1622.734, 
+            "email-EuAll": 114.965, 
+            "web-Stanford": 136.875, 
+            "ca-HepTh": 12.098, 
+            "web-BerkStan": 334.668, 
+            "web-NotreDame": 146.293, 
+            "p2p-Gnutella06": 9.91, 
+            "soc-LiveJournal1": 2461.566, 
+            "web-Google": 391.969, 
+            "ca-GrQc": 10.293, 
+            "email-Enron": 24.535
+        }, 
+        "index disk size": {
+            "wiki-Vote": 2.714, 
+            "cit-Patents": 1439.96, 
+            "email-EuAll": 101.171, 
+            "web-Stanford": 107.537, 
+            "ca-HepTh": 3.768, 
+            "web-BerkStan": 261.395, 
+            "web-NotreDame": 124.256, 
+            "p2p-Gnutella06": 3.325, 
+            "soc-LiveJournal1": 1849.202, 
+            "web-Google": 334.058, 
+            "ca-GrQc": 2.0, 
+            "email-Enron": 13.997
+        }, 
+        "indexing time": {
+            "wiki-Vote": 0.005, 
+            "cit-Patents": 2.592, 
+            "email-EuAll": 0.198, 
+            "web-Stanford": 0.203, 
+            "ca-HepTh": 0.013, 
+            "web-BerkStan": 0.585, 
+            "web-NotreDame": 0.28, 
+            "p2p-Gnutella06": 0.007, 
+            "soc-LiveJournal1": 4.041, 
+            "web-Google": 0.804, 
+            "ca-GrQc": 0.009, 
+            "email-Enron": 0.026
+        }
+    }, 
+    "full local push": {
+        "max memory consumption": {
+            "wiki-Vote": 47.684, 
+            "cit-Patents": 9894.152, 
+            "email-EuAll": 749.25, 
+            "web-Stanford": 1961.977, 
+            "ca-HepTh": 21.512, 
+            "web-BerkStan": 3243.73, 
+            "web-NotreDame": 14753.609, 
+            "p2p-Gnutella06": 31.438, 
+            "soc-LiveJournal1": 55615.48, 
+            "web-Google": 1241.574, 
+            "ca-GrQc": 12.105, 
+            "email-Enron": 532.934
+        }, 
+        "index disk size": {
+            "wiki-Vote": 24.769, 
+            "cit-Patents": 5603.594, 
+            "email-EuAll": 305.251, 
+            "web-Stanford": 930.064, 
+            "ca-HepTh": 4.472, 
+            "web-BerkStan": 1564.381, 
+            "web-NotreDame": 7660.588, 
+            "p2p-Gnutella06": 13.324, 
+            "soc-LiveJournal1": 36777.005, 
+            "web-Google": 509.086, 
+            "ca-GrQc": 1.872, 
+            "email-Enron": 292.075
+        }, 
+        "indexing time": {
+            "wiki-Vote": 0.792288, 
+            "cit-Patents": 210.592, 
+            "email-EuAll": 11.972, 
+            "web-Stanford": 178.046, 
+            "ca-HepTh": 0.152088, 
+            "web-BerkStan": 322.794, 
+            "web-NotreDame": 347.515, 
+            "p2p-Gnutella06": 0.288567, 
+            "soc-LiveJournal1": 1752.62, 
+            "web-Google": 25.235, 
+            "ca-GrQc": 0.0743373, 
+            "email-Enron": 10.3893
+        }
+    }, 
+    "cloud walker": {
+        "max memory consumption": {
+            "wiki-Vote": 31.152, 
+            "cit-Patents": 8231.398, 
+            "email-EuAll": 559.891, 
+            "web-Stanford": 1653.758, 
+            "ca-HepTh": 122.613, 
+            "web-BerkStan": 4474.453, 
+            "web-NotreDame": 2121.266, 
+            "p2p-Gnutella06": 173.078, 
+            "soc-LiveJournal1": 118511.609, 
+            "web-Google": 4179.852, 
+            "ca-GrQc": 46.301, 
+            "email-Enron": 785.637
+        }, 
+        "index disk size": {
+            "wiki-Vote": 0.054, 
+            "cit-Patents": 28.799, 
+            "email-EuAll": 2.023, 
+            "web-Stanford": 2.151, 
+            "ca-HepTh": 0.075, 
+            "web-BerkStan": 5.228, 
+            "web-NotreDame": 2.485, 
+            "p2p-Gnutella06": 0.067, 
+            "soc-LiveJournal1": 36.984, 
+            "web-Google": 6.681, 
+            "ca-GrQc": 0.04, 
+            "email-Enron": 0.28
+        }, 
+        "indexing time": {
+            "wiki-Vote": 0.133, 
+            "cit-Patents": 84.769, 
+            "email-EuAll": 5.119, 
+            "web-Stanford": 25.679, 
+            "ca-HepTh": 1.605, 
+            "web-BerkStan": 72.949, 
+            "web-NotreDame": 34.767, 
+            "p2p-Gnutella06": 1.648, 
+            "soc-LiveJournal1": 1708.24, 
+            "web-Google": 76.014, 
+            "ca-GrQc": 0.717, 
+            "email-Enron": 8.767
+        }
+    }, 
+    "sling": {
+        "max memory consumption": {
+            "wiki-Vote": 70.805, 
+            "cit-Patents": 5976.492, 
+            "email-EuAll": 296.656, 
+            "web-Stanford": 3108.539, 
+            "ca-HepTh": 189.621, 
+            "web-BerkStan": 7593.016, 
+            "web-NotreDame": 4383.129, 
+            "p2p-Gnutella06": 179.691, 
+            "soc-LiveJournal1": 46397.402, 
+            "web-Google": 7119.602, 
+            "ca-GrQc": 124.047, 
+            "email-Enron": 485.859
+        }, 
+        "index disk size": {
+            "wiki-Vote": 6.362, 
+            "cit-Patents": 5559.157, 
+            "email-EuAll": 211.237, 
+            "web-Stanford": 2999.271, 
+            "ca-HepTh": 127.29, 
+            "web-BerkStan": 7392.115, 
+            "web-NotreDame": 4187.683, 
+            "p2p-Gnutella06": 115.335, 
+            "soc-LiveJournal1": 44850.682, 
+            "web-Google": 6957.387, 
+            "ca-GrQc": 62.395, 
+            "email-Enron": 409.886
+        }, 
+        "indexing time": {
+            "wiki-Vote": 4.036, 
+            "cit-Patents": 1421.028, 
+            "email-EuAll": 40.009, 
+            "web-Stanford": 1423.489, 
+            "ca-HepTh": 43.169, 
+            "web-BerkStan": 3000.953, 
+            "web-NotreDame": 879.91, 
+            "p2p-Gnutella06": 9.462, 
+            "soc-LiveJournal1": 15970.2, 
+            "web-Google": 2505.903, 
+            "ca-GrQc": 28.341, 
+            "email-Enron": 137.995
+        }
+    }, 
+    "linear d": {
+        "max memory consumption": {
+            "wiki-Vote": 22.91, 
+            "cit-Patents": 2843.879, 
+            "email-EuAll": 92.773, 
+            "web-Stanford": 386.684, 
+            "ca-HepTh": 16.438, 
+            "web-BerkStan": 1224.891, 
+            "web-NotreDame": 263.695, 
+            "p2p-Gnutella06": 15.988, 
+            "soc-LiveJournal1": 11047.559, 
+            "web-Google": 858.496, 
+            "ca-GrQc": 15.23, 
+            "email-Enron": 66.07
+        }, 
+        "index disk size": {
+            "wiki-Vote": 2.482, 
+            "cit-Patents": 435.687, 
+            "email-EuAll": 13.661, 
+            "web-Stanford": 57.23, 
+            "ca-HepTh": 1.34, 
+            "web-BerkStan": 184.42, 
+            "web-NotreDame": 39.237, 
+            "p2p-Gnutella06": 0.855, 
+            "soc-LiveJournal1": 1653.11, 
+            "web-Google": 130.207, 
+            "ca-GrQc": 0.743, 
+            "email-Enron": 8.975
+        }, 
+        "indexing time": {
+            "wiki-Vote": 0.279, 
+            "cit-Patents": 186.031, 
+            "email-EuAll": 6.867, 
+            "web-Stanford": 55.788, 
+            "ca-HepTh": 3.08, 
+            "web-BerkStan": 137.716, 
+            "web-NotreDame": 73.362, 
+            "p2p-Gnutella06": 2.267, 
+            "soc-LiveJournal1": 2780.59, 
+            "web-Google": 146.213, 
+            "ca-GrQc": 1.306, 
+            "email-Enron": 12.741
+        }
+    }
+}

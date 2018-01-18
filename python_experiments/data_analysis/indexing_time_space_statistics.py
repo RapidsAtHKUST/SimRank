@@ -1,4 +1,5 @@
 import decimal
+import json
 
 import os
 
@@ -7,6 +8,13 @@ data_set_lst = [
     'email-Enron', 'email-EuAll',
     'web-NotreDame', 'web-Stanford', 'web-BerkStan', 'web-Google',
     'cit-Patents', 'soc-LiveJournal1']
+
+# for tsf indexing space computation
+v_num_dict = dict(zip(data_set_lst, [5242, 9877, 8717, 7115,
+                                     36692, 265214,
+                                     325729, 281903, 685230, 875713,
+                                     3774768, 4847571]))
+size_of_int = 4
 
 our_algo_indexing_stat_root_folder = '/home/yche/mnt/wangyue-clu/csproject/biggraph/ywangby/' \
                                      'yche/git-repos/SimRank/python_experiments/exp_results/' \
@@ -17,6 +25,15 @@ other_algo_indexing_stat_root_folder = '/home/yche/mnt/wangyue-clu/csproject/big
                                        'other_methods_overview_01_16'
 
 datasets_root_folder = '/home/yche/mnt/wangyue-clu/csproject/biggraph/ywangby/LinsysSimRank/datasets'
+
+index_time_tag = "indexing time"
+index_size_tag = "index disk size"
+max_mem_size_tag = "max memory consumption"
+local_push_tag = "full local push"
+sling_tag = "sling"
+linear_d_tag = "linear d"
+cloud_walker_tag = "cloud walker"
+tsf_tag = "tsf"
 
 
 def format_str(float_num):
@@ -47,7 +64,9 @@ def get_tag_no_colon_info(file_path, tag):
         return None if len(lst) == 0 else min(lst)
 
 
-# 1st: our full local push related
+# introduction: isp and our bprw are on-line algorithms
+
+# 1st: our full local push related (for bflpmc, flpmc)
 class LocalPushIndexingStat:
     # unit: seconds
     @staticmethod
@@ -95,7 +114,7 @@ class SlingIndexingStat:
         # sling's parallel d calculation not effective, thus we collect single thread time also
         sling_compute_d_time_lst = [24.868744, 39.719319, 3.928212, 1.050985,
                                     100.487657, 8.268188,
-                                    820.528155]
+                                    820.528155, 1578.569044, 3371.547423, ]
         indexing_time_lst = []
         for data_set in data_set_lst:
             for algorithm_name in ['sling_all', 'sling_bench']:
@@ -127,29 +146,165 @@ class SlingIndexingStat:
     # unit: MB
     @staticmethod
     def get_index_disk_size():
-        local_push_folder = os.sep.join([datasets_root_folder, 'sling'])
+        index_folder = os.sep.join([datasets_root_folder, 'sling'])
         space_size_lst = []
         for data_set in data_set_lst:
             index_naming = '_'.join(['RLP', '-'.join([data_set, '0.600', '0.002000', '0.000290'])])
-            d_size = os.path.getsize(os.sep.join([local_push_folder, index_naming + '.d'])) / (1024. ** 2)
-            p_size = os.path.getsize(os.sep.join([local_push_folder, index_naming + '.p'])) / (1024. ** 2)
-            pstart_size = os.path.getsize(os.sep.join([local_push_folder, index_naming + '.pstart'])) / (1024. ** 2)
+            d_size = os.path.getsize(os.sep.join([index_folder, index_naming + '.d'])) / (1024. ** 2)
+            p_size = os.path.getsize(os.sep.join([index_folder, index_naming + '.p'])) / (1024. ** 2)
+            pstart_size = os.path.getsize(os.sep.join([index_folder, index_naming + '.pstart'])) / (1024. ** 2)
             space_size_lst.append(float(format_str(d_size + p_size + pstart_size)))
         return dict(zip(data_set_lst, space_size_lst))
 
 
 # 3rd: linear-d
+class LinearDIndexingStat:
+    # unit: seconds
+    @staticmethod
+    def get_indexing_time():
+        indexing_time_lst = []
+        for data_set in data_set_lst:
+            for algorithm_name in ['LinSimAP', 'LinSimBench']:
+                indexing_time = get_tag_info(
+                    os.sep.join([other_algo_indexing_stat_root_folder, data_set, algorithm_name + '.txt']),
+                    tag='indexing time')
+
+                if indexing_time is not None:
+                    indexing_time_lst.append(float(format_str(indexing_time)))
+                    break
+        return dict(zip(data_set_lst, indexing_time_lst))
+
+    # unit: MB
+    @staticmethod
+    def get_mem_size():
+        mem_size_lst = []
+        for data_set in data_set_lst:
+            for algorithm_name in ['LinSimAP', 'LinSimBench']:
+                mem_size = get_tag_info(
+                    os.sep.join([other_algo_indexing_stat_root_folder, data_set, algorithm_name + '.txt']),
+                    tag='mem size')
+                if mem_size is not None:
+                    mem_size_lst.append(float(format_str(mem_size / 1024.)))
+                    break
+        return dict(zip(data_set_lst, mem_size_lst))
+
+    # unit: MB
+    @staticmethod
+    def get_index_disk_size():
+        index_folder = os.sep.join([datasets_root_folder, 'linearD'])
+        space_size_lst = []
+        for data_set in data_set_lst:
+            index_naming = '-'.join([data_set, '0.600', '10', '3', '100'])
+            d_size = os.path.getsize(os.sep.join([index_folder, index_naming + '.D'])) / (1024. ** 2)
+            P_size = os.path.getsize(os.sep.join([index_folder, data_set + '.P'])) / (1024. ** 2)
+            PT_size = os.path.getsize(os.sep.join([index_folder, data_set + '.PT'])) / (1024. ** 2)
+            space_size_lst.append(float(format_str(d_size + P_size + PT_size)))
+        return dict(zip(data_set_lst, space_size_lst))
+
 
 # 4th: cloud-walker
+class CloudWalkerIndexingStat:
+    # unit: seconds
+    @staticmethod
+    def get_indexing_time():
+        indexing_time_lst = []
+        for data_set in data_set_lst:
+            for algorithm_name in ['CloudWalkerAP', 'CloudWalkerBench']:
+                indexing_time = get_tag_info(
+                    os.sep.join([other_algo_indexing_stat_root_folder, data_set, algorithm_name + '.txt']),
+                    tag='indexing time')
+
+                if indexing_time is not None:
+                    indexing_time_lst.append(float(format_str(indexing_time)))
+                    break
+        return dict(zip(data_set_lst, indexing_time_lst))
+
+    # unit: MB
+    @staticmethod
+    def get_mem_size():
+        mem_size_lst = []
+        for data_set in data_set_lst:
+            for algorithm_name in ['CloudWalkerAP', 'CloudWalkerBench']:
+                mem_size = get_tag_info(
+                    os.sep.join([other_algo_indexing_stat_root_folder, data_set, algorithm_name + '.txt']),
+                    tag='mem size')
+                if mem_size is not None:
+                    mem_size_lst.append(float(format_str(mem_size / 1024.)))
+                    break
+        return dict(zip(data_set_lst, mem_size_lst))
+
+    # unit: MB
+    @staticmethod
+    def get_index_disk_size():
+        index_folder = os.sep.join([datasets_root_folder, 'cloudwalker'])
+        space_size_lst = []
+        for data_set in data_set_lst:
+            index_naming = '-'.join([data_set, '0.600', '10', '3', '100', '10000'])
+            d_size = os.path.getsize(os.sep.join([index_folder, index_naming + '.D'])) / (1024. ** 2)
+            space_size_lst.append(float(format_str(d_size)))
+        return dict(zip(data_set_lst, space_size_lst))
+
 
 # 5th: tsf
+class TSFIndexingStat:
+    # unit: seconds
+    @staticmethod
+    def get_indexing_time():
+        indexing_time_lst = []
+        for data_set in data_set_lst:
+            for algorithm_name in ['tsf-ap', 'tsf-bench']:
+                indexing_time = get_tag_info(
+                    os.sep.join([other_algo_indexing_stat_root_folder, data_set, algorithm_name + '.txt']),
+                    tag='indexing computation time')
+
+                if indexing_time is not None:
+                    indexing_time_lst.append(float(format_str(indexing_time)))
+                    break
+        return dict(zip(data_set_lst, indexing_time_lst))
+
+    # unit: MB
+    @staticmethod
+    def get_mem_size():
+        mem_size_lst = []
+        for data_set in data_set_lst:
+            for algorithm_name in ['tsf-ap', 'tsf-bench']:
+                mem_size = get_tag_info(
+                    os.sep.join([other_algo_indexing_stat_root_folder, data_set, algorithm_name + '.txt']),
+                    tag='mem size')
+                if mem_size is not None:
+                    mem_size_lst.append(float(format_str(mem_size / 1024.)))
+                    break
+        return dict(zip(data_set_lst, mem_size_lst))
+
+    # unit: MB
+    @staticmethod
+    def get_index_disk_size():
+        sample_one_way_graph_num = 100
+        space_size_lst = []
+        for data_set in data_set_lst:
+            space_size_lst.append(
+                float(format_str(sample_one_way_graph_num * size_of_int * v_num_dict[data_set] / (1024. ** 2))))
+        return dict(zip(data_set_lst, space_size_lst))
+
 
 if __name__ == '__main__':
-    # print LocalPushIndexingStat.get_indexing_time()
-    # print LocalPushIndexingStat.get_mem_size()
-    # print LocalPushIndexingStat.get_index_disk_size()
+    def get_dict(algorithm_obj):
+        assert isinstance(algorithm_obj, LocalPushIndexingStat) or isinstance(algorithm_obj, SlingIndexingStat) or \
+               isinstance(algorithm_obj, LinearDIndexingStat) or isinstance(algorithm_obj, CloudWalkerIndexingStat) \
+               or isinstance(algorithm_obj, TSFIndexingStat)
+        ret_dict = {
+            index_time_tag: algorithm_obj.get_indexing_time(),
+            index_size_tag: algorithm_obj.get_index_disk_size(),
+            max_mem_size_tag: algorithm_obj.get_mem_size()
+        }
+        return ret_dict
 
-    # print SlingIndexingStat.get_indexing_time()
-    # print SlingIndexingStat.get_index_disk_size()
-    # print SlingIndexingStat.get_mem_size()
-    pass
+
+    algorithm_tag_lst = [local_push_tag, sling_tag, linear_d_tag, cloud_walker_tag, tsf_tag]
+    algorithm_obj_lst = [LocalPushIndexingStat(), SlingIndexingStat(), LinearDIndexingStat(), CloudWalkerIndexingStat(),
+                         TSFIndexingStat()]
+    index_info_dict = dict(zip(algorithm_tag_lst, map(get_dict, algorithm_obj_lst)))
+    my_str = json.dumps(index_info_dict, indent=4)
+    os.system('mkdir -p data-json')
+    with open('data-json/index_result.json', 'w') as ofs:
+        ofs.write(my_str)
