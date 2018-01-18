@@ -44,10 +44,15 @@ def run_exp():
     tag = 'exp_results'
     range_idx_lst = range(10)
 
+    # sample_num_lst= [10 ** 3, 10 ** 4, 10 ** 5, 10 ** 6]
+    sample_num_lst = [10 ** 3, 10 ** 4]
+
     def one_round():
         for data_set_name in data_set_lst:
             for other_algorithm_path in other_exec_path_lst:
-                for sample_num in [10 ** 3, 10 ** 4, 10 ** 5, 10 ** 6]:
+                # for sample_num in [10 ** 3, 10 ** 4, 10 ** 5, 10 ** 6]:
+                # for sample_num in [10 ** 3, 10 ** 4, 10 ** 5, 10 ** 6]:
+                for sample_num in sample_num_lst:
                     is_cur_sample_scale_tle = False
                     for round_idx in range_idx_lst:
                         other_algorithm = other_algorithm_path.split('/')[-1]
@@ -81,7 +86,8 @@ def run_exp():
                         break
 
     one_round()
-
+    
+    sample_num_lst = [10 ** 3, 10 ** 4, 10 ** 5]
     range_idx_lst = range(2)
     data_set_lst = [
         'ca-GrQc', 'ca-HepTh', 'p2p-Gnutella06', 'wiki-Vote',
