@@ -16,7 +16,7 @@ def draw_figures_max_err():
     round_lst = xrange(10)
     exp_figure, ax_tuple = plt.subplots(1, 4, sharex=True, figsize=(32, 6))
     algorithm_tag_lst = [bflpmc_tag, flpmc_tag, bprw_tag, sling_tag, isp_tag, tsf_tag, lind_tag, cw_tag]
-    legend_lst = ['BFLPMC', 'FLPMC', 'BLPMC', 'SLING', 'ISP', 'TSF', 'LIND', 'MCSP']
+    legend_lst = ['BFLPMC', 'FLPMC', 'BLPMC', 'SLING', 'ISP', 'TSF', 'LIN', 'MCSP']
 
     for ax_idx, ax in enumerate(ax_tuple):
         max_err_lst_lst = []
@@ -40,7 +40,7 @@ def draw_figures_max_err():
         # my_ax.set_title(sub_titles[idx], fontsize=LABEL_SIZE)
         if idx == 0:
             plt.yticks(fontsize=LABEL_SIZE)
-            my_ax.set_ylabel('Maximum Error', fontsize=LABEL_SIZE + 4)
+            my_ax.set_ylabel('Maximum Error', fontsize=LABEL_SIZE + 6)
         for tick in my_ax.yaxis.get_major_ticks():
             tick.label.set_fontsize(TICK_SIZE)
         my_ax.set_xlabel('Round Number\n' + sub_titles[idx], fontsize=LABEL_SIZE + 4)
