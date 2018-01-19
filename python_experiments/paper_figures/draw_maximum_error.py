@@ -24,9 +24,10 @@ def draw_figures_max_err():
             time_lst = get_algorithm_max_err_lst(algorithm, data_set_lst[ax_idx])
             max_err_lst_lst.append(time_lst)
             shape_lst = ['h-.', 's--', 'o:', 'x-', 'v-', '^-', '<-', '>-']
-            cur_mark_size = 10
-            if idx < 4:
-                cur_mark_size = 12
+            # cur_mark_size = 10
+            # if idx < 4:
+            #     cur_mark_size = 12
+            cur_mark_size = 12
             ax.plot(round_lst, time_lst, shape_lst[idx], markersize=cur_mark_size, markerfacecolor='none')
             ax.set_yscale('log')
         plt.yticks(fontsize=TICK_SIZE)

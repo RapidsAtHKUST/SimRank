@@ -1,3 +1,5 @@
+# Average Singe Pair Query
+
 ## Query Time (us)
 
 algo\data | ca-GrQc | ca-HepTh | p2p-Gnutella06 | wiki-Vote | email-Enron | email-EuAll
@@ -6,6 +8,10 @@ bflpmc | 7.615 us | 8.095 us | 7.245 us | 2.075 us | 16.805 us | 1.340 us
 flpmc | 8.160 us | 8.635 us | 8.420 us | 2.080 us | 21.590 us | 2.775 us
 bprw | 118.070 us | 133.780 us | 78.740 us | 50.310 us | 197.505 us | 7.550 us
 sling | 500.990 us | 484.445 us | 276.660 us | 275.410 us | 1241.555 us | 115.295 us
+isp | 2604.600 us | 3636.700 us | 3368.650 us | 2758.200 us | 51793.000 us | 2657.250 us
+tsf | 46951.650 us | 47567.200 us | 46057.800 us | 4361.050 us | 31715.750 us | 2793.100 us
+lind | 1205.850 us | 2273.400 us | 1702.900 us | 2592.200 us | 13038.950 us | 246623.000 us
+cw | 207048.000 us | 201243.500 us | 209022.500 us | 18417.750 us | 212362.000 us | 257305.000 us
 
 algo\data | web-NotreDame | web-Stanford | web-BerkStan | web-Google | cit-Patents | soc-LiveJournal1
 --- | --- | --- | --- | --- | --- | ---
@@ -13,6 +19,10 @@ bflpmc | 15.055 us | 11.090 us | 12.015 us | 7.710 us | 9.195 us | 35.595 us
 flpmc | 22.115 us | 13.210 us | 13.615 us | 9.380 us | 10.210 us | 45.630 us
 bprw | 75.070 us | 85.535 us | 91.385 us | 55.920 us | 25.860 us | 420.355 us
 sling | 541.795 us | 487.170 us | 543.015 us | 340.265 us | 69.540 us | 821.230 us
+isp | 9614.100 us | 35612.600 us | 30532.100 us | 2731.100 us | 187.850 us | 29270.000 us
+tsf | 57231.500 us | 49924.800 us | 38958.950 us | 30601.550 us | 11146.650 us | 28308.550 us
+lind | 213140.500 us | 279501.500 us | 772805.000 us | 1627740.000 us | 3371840.000 us | 58471000.000 us
+cw | 311607.500 us | 302145.000 us | 683985.000 us | 910875.000 us | 3978750.000 us | 5745600.000 us
 
 ## Speedup Over Sling
 

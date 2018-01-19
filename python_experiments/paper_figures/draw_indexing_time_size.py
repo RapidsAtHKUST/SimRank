@@ -42,9 +42,9 @@ def draw_indexing_time():
     indent_lst = map(lambda idx: ind + idx * width, range(5))
 
     # other lst
-    algorithm_tag_lst = [local_push_tag, sling_tag, linear_d_tag, cloud_walker_tag, tsf_tag]
     hatch_lst = ["//", ".", '-', 'x', '+']
-    label_lst = ["FLP", "SLING", "LIN", "MCSP", "TSF"]
+    algorithm_tag_lst = [local_push_tag, sling_tag, tsf_tag, linear_d_tag, cloud_walker_tag]
+    label_lst = ["FLP", "SLING", "TSF", "LIN", "MCSP"]
 
     # 1st: bars
     for idx, tag in enumerate(algorithm_tag_lst):
@@ -57,7 +57,7 @@ def draw_indexing_time():
     plt.xticks(fontsize=TICK_SIZE)
 
     plt.yscale('log')
-    ax.set_ylabel("Indexing Time(s)", fontsize=LABEL_SIZE)
+    ax.set_ylabel("Indexing Time (s)", fontsize=LABEL_SIZE)
     plt.yticks(fontsize=TICK_SIZE)
 
     # 3rd: figure properties
@@ -79,9 +79,10 @@ def draw_indexing_size():
     indent_lst = map(lambda idx: ind + idx * width, range(5))
 
     # other lst
-    algorithm_tag_lst = [local_push_tag, sling_tag, linear_d_tag, cloud_walker_tag, tsf_tag]
     hatch_lst = ["//", ".", '-', 'x', '+']
-    label_lst = ["FLP", "SLING", "LIN", "MCSP", "TSF"]
+
+    algorithm_tag_lst = [local_push_tag, sling_tag, tsf_tag, linear_d_tag, cloud_walker_tag]
+    label_lst = ["FLP", "SLING", "TSF", "LIN", "MCSP"]
 
     # 1st: bars
     for idx, tag in enumerate(algorithm_tag_lst):
@@ -94,7 +95,7 @@ def draw_indexing_size():
     plt.xticks(fontsize=TICK_SIZE)
 
     plt.yscale('log')
-    ax.set_ylabel("Index Size(MB)", fontsize=LABEL_SIZE)
+    ax.set_ylabel("Index Size (MB)", fontsize=LABEL_SIZE)
     plt.yticks(fontsize=TICK_SIZE)
 
     # 3rd: figure properties
