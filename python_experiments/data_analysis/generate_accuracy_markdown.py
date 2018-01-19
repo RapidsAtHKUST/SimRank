@@ -8,7 +8,7 @@ def get_accuracy_dict(root_dir='.'):
 
 
 def format_str(float_num):
-    return str(decimal.Decimal.from_float(float_num * (10 ** 3)).quantize(decimal.Decimal('0.000')))
+    return str(decimal.Decimal.from_float(float_num * (10 ** 2)).quantize(decimal.Decimal('0.000')))
 
 
 if __name__ == '__main__':
@@ -24,7 +24,7 @@ if __name__ == '__main__':
         table_lines.append(' | '.join(['---'] * (len(round_lst) + 1)))
         lines = map(lambda algorithm:
                     ' | '.join([algorithm] +
-                               map(lambda num: format_str(num) + " e-3",
+                               map(lambda num: format_str(num) + "",
                                    accuracy_dict[algorithm][data_set][str(10 ** 5)], )), algorithm_tag_lst)
         table_lines.extend(lines)
         return '\n'.join(table_lines)
@@ -32,5 +32,6 @@ if __name__ == '__main__':
 
     os.system('mkdir -p data-markdown')
     with open('data-markdown/accuracy_result.md', 'w') as ofs:
+        ofs.writelines(['# Max Err, Unit: 0.01\n\n'])
         for data_set in accuracy_data_set_lst:
             ofs.writelines(['## ' + data_set, '\n\n', get_time_table(range(10), data_set), '\n\n'])
