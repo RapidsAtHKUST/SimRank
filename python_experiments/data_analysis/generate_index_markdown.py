@@ -3,8 +3,7 @@ from indexing_time_space_statistics import *
 
 def get_index_dict(root_dir='.'):
     with open(root_dir + os.sep + 'data-json' + os.sep + 'index_result' + '.json') as ifs:
-        lines = ifs.readlines()
-        return eval(''.join(lines))
+        return json.load(ifs)
 
 
 if __name__ == '__main__':
