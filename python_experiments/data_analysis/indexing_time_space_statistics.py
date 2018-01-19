@@ -115,7 +115,7 @@ class SlingIndexingStat:
         sling_compute_d_time_lst = [24.868744, 39.719319, 3.928212, 1.050985,
                                     100.487657, 8.268188,
                                     820.528155, 1578.569044, 3371.547423, 2450.991423,
-                                    1693.183911, 0]
+                                    1693.183911, 13469.924516]
         sling_compute_d_time_dict = dict(zip(data_set_lst, sling_compute_d_time_lst))
         indexing_time_lst = []
         for data_set in data_set_lst:

@@ -11,7 +11,7 @@ tsf | 0.009 s | 0.013 s | 0.007 s | 0.005 s | 0.026 s | 0.198 s
 algo\data | web-NotreDame | web-Stanford | web-BerkStan | web-Google | cit-Patents | soc-LiveJournal1
 --- | --- | --- | --- | --- | --- | ---
 full local push | 347.515 s | 178.046 s | 322.794 s | 25.235 s | 210.592 s | 1752.620 s
-sling | 1027.976 s | 1734.798 s | 3777.746 s | 2781.000 s | 2019.548 s | 15970.200 s
+sling | 1027.976 s | 1734.798 s | 3777.746 s | 2781.000 s | 2019.548 s | 21571.125 s
 linear d | 73.362 s | 55.788 s | 137.716 s | 146.213 s | 186.031 s | 2780.590 s
 cloud walker | 34.767 s | 25.679 s | 72.949 s | 76.014 s | 84.769 s | 1708.240 s
 tsf | 0.280 s | 0.203 s | 0.585 s | 0.804 s | 2.592 s | 4.041 s
