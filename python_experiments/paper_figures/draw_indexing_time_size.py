@@ -1,7 +1,6 @@
 import matplotlib.pyplot as plt
 import numpy as np
 
-from data_analysis.indexing_time_space_statistics import *
 from data_analysis.generate_index_markdown import *
 
 
