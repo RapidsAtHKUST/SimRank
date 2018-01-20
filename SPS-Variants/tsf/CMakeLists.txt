@@ -61,3 +61,14 @@ add_executable(tsf-rand-bench-gt main_rand_pair_query.cpp ground_truth/random_pa
         yche_tsf.cpp yche_tsf.h input_output.cpp input_output.h ${GROUND_TRUTH_FILES} ../../SFMT/SFMT.c util/sfmt_based_rand.h)
 InitTSF(tsf-rand-bench-gt)
 target_compile_definitions(tsf-rand-bench-gt PRIVATE -DGROUND_TRUTH=1)
+
+#### tsf-yche (random pairs varying parameters)
+add_executable(tsf-rand-varying main_rand_pair_query_varying_parameters.cpp ground_truth/random_pair_generator.cpp
+        yche_tsf.cpp yche_tsf.h input_output.cpp input_output.h ${GROUND_TRUTH_FILES} ../../SFMT/SFMT.c util/sfmt_based_rand.h)
+InitTSF(tsf-rand-varying)
+
+add_executable(tsf-rand-varying-gt main_rand_pair_query_varying_parameters.cpp ground_truth/random_pair_generator.cpp
+        yche_tsf.cpp yche_tsf.h input_output.cpp input_output.h ${GROUND_TRUTH_FILES} ../../SFMT/SFMT.c util/sfmt_based_rand.h)
+InitTSF(tsf-rand-varying-gt)
+target_compile_definitions(tsf-rand-varying-gt PRIVATE -DGROUND_TRUTH=1)
+
