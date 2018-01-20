@@ -80,6 +80,13 @@ add_executable(bprw-rand-bench-gt ${BPRW_FILES} ${UTIL_FILES} ${GROUND_TRUTH_FIL
 InitBprw(bprw-rand-bench-gt)
 target_compile_definitions(bprw-rand-bench-gt PRIVATE -DSFMT=1 -DGROUND_TRUTH=1)
 
+#### bprw(random paris varying parameters)
+add_executable(bprw-rand-varying ${BPRW_FILES} ${UTIL_FILES} ${GROUND_TRUTH_FILES}
+        playground/varying_parameters/main_bprw_rand_pair_varying_parameters.cpp
+        util/random_pair_generator.cpp)
+InitBprw(bprw-rand-varying)
+target_compile_definitions(bprw-rand-varying PRIVATE -DSFMT=1)
+
 #### 2nd: flpmc #######################################################################################################
 macro(InitFLPMC exec_name)
     InitBoostHashSFMTEigen(${exec_name})
@@ -115,6 +122,14 @@ add_executable(flpmc-rand-bench-gt ${FLPMC_SOURCE_FILES_RAND})
 InitFLPMC(flpmc-rand-bench-gt)
 target_compile_definitions(flpmc-rand-bench-gt PRIVATE -DSFMT=1 -DGROUND_TRUTH=1)
 
+#### flpmc(random pairs varying parameters)
+set(FLPMC_SOURCE_FILES_RAND ${LPMC_FILES} ${UTIL_FILES} ${GROUND_TRUTH_FILES}
+        playground/varying_parameters/main_flpmc_rand_pair_varying_parameters.cpp
+        util/random_pair_generator.cpp)
+add_executable(flpmc-rand-varying ${FLPMC_SOURCE_FILES_RAND})
+InitFLPMC(flpmc-rand-varying)
+target_compile_definitions(flpmc-rand-varying PRIVATE -DSFMT=1)
+
 #### 3rd: bflpmc #######################################################################################################
 macro(InitBFLPMC exec_name)
     InitFLPMC(${exec_name})
@@ -149,3 +164,11 @@ target_compile_definitions(bflpmc-rand-bench PRIVATE -DSFMT=1)
 add_executable(bflpmc-rand-bench-gt ${BFLPMC_SOURCE_FILES_RAND})
 InitBFLPMC(bflpmc-rand-bench-gt)
 target_compile_definitions(bflpmc-rand-bench-gt PRIVATE -DSFMT=1 -DGROUND_TRUTH=1)
+
+#### bflpmc(...)
+set(BFLPMC_SOURCE_FILES_RAND ${LPMC_FILES} ${BPRW_FILES} ${UTIL_FILES} ${GROUND_TRUTH_FILES}
+        yche_refactor/bflpmc_yche.h yche_refactor/bflpmc_yche.cpp playground/varying_parameters/main_bflpmc_rand_pair_varying_parameters.cpp
+        util/random_pair_generator.cpp)
+add_executable(bflpmc-rand-varying ${BFLPMC_SOURCE_FILES_RAND})
+InitBFLPMC(bflpmc-rand-varying)
+target_compile_definitions(bflpmc-rand-varying PRIVATE -DSFMT=1)

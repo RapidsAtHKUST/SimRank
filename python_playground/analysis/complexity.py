@@ -1,7 +1,7 @@
 import math
 
 
-def power_method_iter_num(c=0.6, digit_num=6):
+def power_method_iter_num(c=0.6, digit_num=22):
     eps = 10 ** (-digit_num)
     t = math.log(eps * (1 - c), c)
     print '(2002original) power method for eps:', eps, ',c:', c, ', requiring t:', t
@@ -16,7 +16,8 @@ def tsf_parameters(c=0.6, eps=0.01, delta=0.01):
     print '(2015tsf) sample# (R*Rq):', math.log(delta / 2) / (-2) / (eps ** 2) * ((b - c) ** 2)
 
 
-# sling delta_d = delta / n, delta is the failure probability of sim score estimation
+# sling delta_d = delta / n (according to the sling paper page1865),
+# delta is the failure probability of sim score estimation
 def sling_eps_bound(c=0.6, eps_d=0.005, theta=0.000725):
     left_part = eps_d / (1 - c)
     right_part = (2 * math.sqrt(c)) / (1 - math.sqrt(c)) / (1 - c) * theta
