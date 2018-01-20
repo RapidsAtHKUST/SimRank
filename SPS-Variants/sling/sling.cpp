@@ -13,6 +13,7 @@ const double Sling::BACKEPS = 7.28e-4; //EPS / 23.;
 const double Sling::K = 10.;
 
 int Sling::NUMTHREAD = std::thread::hardware_concurrency();
+//int Sling::NUMTHREAD = 1;
 
 using namespace std::chrono;
 
@@ -55,7 +56,7 @@ double Sling::calcDi_1(int i, double eps, bool &early, int &R, int tid) {
     const int isize = in_i.size();
     eps = eps * (double) isize / (double) (isize - 1) / c;
 //    int Rs = 14. / 3. / eps * 2. * log(2 * g->n) / log(2.71828);
-    constexpr double failure_probability = 0.01;
+//    constexpr double failure_probability = 0.01;
 
     int Rs = 14. / 3. / eps * log(4.0 * g->n / failure_probability) / log(2.71828);
     int X = 0;

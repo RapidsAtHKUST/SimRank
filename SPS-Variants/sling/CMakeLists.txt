@@ -52,13 +52,22 @@ target_compile_definitions(sling_all PRIVATE -DGROUND_TRUTH=1 -DALL_PAIR=1)
 add_executable(sling_bench ${SOURCE_FILES} ${GROUND_TRUTH_FILES} main_query_all_vertices.cpp)
 InitSlingAP(sling_bench)
 
-####
+#### sling (random pairs)
 add_executable(sling-rand-bench ${SOURCE_FILES} ${GROUND_TRUTH_FILES} main_query_rand_pairs.cpp ground_truth/random_pair_generator.cpp)
 InitSlingAP(sling-rand-bench)
 
 add_executable(sling-rand-bench-gt ${SOURCE_FILES} ${GROUND_TRUTH_FILES} main_query_rand_pairs.cpp ground_truth/random_pair_generator.cpp)
 InitSlingAP(sling-rand-bench-gt)
 target_compile_definitions(sling-rand-bench-gt PRIVATE -DGROUND_TRUTH=1)
+
+#### sling (random pairs, varying parameters)
+add_executable(sling-rand-varying ${SOURCE_FILES} ${GROUND_TRUTH_FILES} main_query_rand_pairs_varying_parameters.cpp ground_truth/random_pair_generator.cpp)
+InitSlingAP(sling-rand-varying)
+target_compile_definitions(sling-rand-varying PRIVATE -DALWAYS_REBUILD=1)
+
+add_executable(sling-rand-varying-gt ${SOURCE_FILES} ${GROUND_TRUTH_FILES} main_query_rand_pairs_varying_parameters.cpp ground_truth/random_pair_generator.cpp)
+InitSlingAP(sling-rand-varying-gt)
+target_compile_definitions(sling-rand-varying-gt PRIVATE -DALWAYS_REBUILD=1 -DGROUND_TRUTH=1)
 
 ############# playground
 add_subdirectory(playground)

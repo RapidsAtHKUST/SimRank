@@ -80,6 +80,8 @@ private:
     void build_or_load_index();
 
 public:
+    double failure_probability = 0.01;
+
     void init();
 
     Sling(Graph *g, double c) : g(g), c(c), sqrtc(sqrt(c)), d(NULL), gen(NUMTHREAD) { init(); }
@@ -88,7 +90,9 @@ public:
             g(g), c(c), sqrtc(sqrt(c)), d(NULL), gen(NUMTHREAD), g_name(graph_name), eps_d(eps_d),
             theta(theta) {
         init();
+#ifndef ALWAYS_REBUILD
         build_or_load_index();
+#endif
     }
 
     ~Sling() {
