@@ -50,6 +50,14 @@ add_executable(isp-rand-bench-gt ${SOURCE_FILES} ${GROUND_TRUTH_FILES} main_rand
 InitISP(isp-rand-bench-gt)
 target_compile_definitions(isp-rand-bench-gt PRIVATE -DGROUND_TRUTH=1)
 
+#### isp(random paris - accept varying parameters)
+add_executable(isp-rand-varying-gt ${SOURCE_FILES} ${GROUND_TRUTH_FILES} main_rand_pair_varying_parameters.cpp ground_truth/random_pair_generator.cpp)
+InitISP(isp-rand-varying-gt)
+target_compile_definitions(isp-rand-varying-gt PRIVATE -DGROUND_TRUTH=1)
+
+add_executable(isp-rand-varying ${SOURCE_FILES} ${GROUND_TRUTH_FILES} main_rand_pair_varying_parameters.cpp ground_truth/random_pair_generator.cpp)
+InitISP(isp-rand-varying)
+
 ############### others ######################################################
 set(YCHE_GROUND_TRUTH_FILES yche_ground_truth/main_serial_naive_iter.cpp yche_ground_truth/SerialNaiveSim.cpp yche_ground_truth/SerialNaiveSim.h input_output.cpp)
 add_executable(naive_iter ${YCHE_GROUND_TRUTH_FILES})

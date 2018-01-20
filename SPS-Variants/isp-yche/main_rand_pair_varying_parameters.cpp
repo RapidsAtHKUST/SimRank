@@ -21,9 +21,11 @@ int main(int argc, char *argv[]) {
     string file_name = string(argv[1]);
     int pair_num = atoi(argv[2]);
     int round_i = atoi(argv[3]);
-    double c = 0.6;
 
-    int max_iter = 9;
+    // init c and eps, which determines max_iter
+    double c = atof(argv[4]);
+    double eps = atof(argv[5]);
+    auto max_iter = static_cast<int>(log(eps) / log(c));
 
     double filter_threshold = 0.0001;
 
@@ -55,12 +57,12 @@ int main(int argc, char *argv[]) {
 #ifdef GROUND_TRUTH
         auto res = my_isp.ComputeSim(u, v, c, max_iter, filter_threshold);
         max_err = max(max_err, abs(ts.sim(u, v) - res));
-        if (abs(ts.sim(u, v) - res) > 0.01) {
+        if (abs(ts.sim(u, v) - res) > eps) {
 #pragma omp critical
-        {
-            cout << u << ", " << v << "," << ts.sim(u, v) << "," << res << endl;
-            failure_count++;
-        };
+            {
+                cout << u << ", " << v << "," << ts.sim(u, v) << "," << res << endl;
+                failure_count++;
+            };
         }
 #else
         my_isp.ComputeSim(u, v, c, max_iter, filter_threshold);
