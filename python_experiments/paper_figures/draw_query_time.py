@@ -51,15 +51,17 @@ def draw_average_query_one_pair_time():
     # other lst
     algorithm_tag_lst = [bflpmc_tag, flpmc_tag, bprw_tag, sling_tag, isp_tag, tsf_tag, lind_tag, cw_tag]
 
-    hatch_lst = ['//', '*', 'o', ".", '\\', '-', 'x', '+']
+    hatch_lst = ['//', '*', 'o', ".", '\\', '-', 'x', '++']
     label_lst = ["FBLPMC", "FLPMC", "BLPMC", "SLING", "ISP", "TSF", "LIN", "MCSP"]
+    color_lst = ['blue', 'orange', 'green', 'red', 'm', 'brown', 'k', 'gray']
 
     # 1st: bars
     for idx, tag in enumerate(algorithm_tag_lst):
         ax.bar(indent_lst[idx],
                map(lambda val: float(val) / us_to_ms_factor, get_algorithm_time_lst(tag, data_set_lst)), width,
                hatch=hatch_lst[idx],
-               # edgecolor=color_lst[idx],
+               edgecolor=color_lst[idx],
+               # color=color_lst[idx],
                label=label_lst[idx], fill=False)
 
     # 2nd: x and y's ticks and labels

@@ -34,9 +34,10 @@ def draw_query_index_time():
 
         time_lst = map(lambda val: float(val) / us_to_ms_factor, time_lst)
         lst_lst.append(time_lst)
-        shape_lst = ['H-.', 's--', 'o:', 'x-', 'v-', '^-', '<-', '>-']
+        shape_lst = ['D-.', 's--', 'o:', 'x-', 'v-', '^-', '<-', '>-']
         color_lst = ['blue', 'orange', 'green', 'red', 'm', 'brown', 'pink', 'gray']
-        ax.plot(eps_lst, time_lst, shape_lst[idx], color=color_lst[idx], markersize=18, markerfacecolor='none')
+        ax.plot(eps_lst, time_lst, shape_lst[idx], color=color_lst[idx], markersize=18 if idx != 0 else 14,
+                markerfacecolor='none')
         ax.set_yscale('log')
 
     # setup ticks for x and y axis
@@ -69,9 +70,10 @@ def draw_query_index_time():
 
         lst_lst.append(time_lst)
 
-        shape_lst = ['H-.', 'x-', '^-']
+        shape_lst = ['D-.', 'x-', '^-']
         color_lst = ['blue', 'red', 'brown']
-        ax.plot(eps_lst, time_lst, shape_lst[idx], color=color_lst[idx], markersize=18, markerfacecolor='none')
+        ax.plot(eps_lst, time_lst, shape_lst[idx], color=color_lst[idx], markersize=18 if idx != 0 else 14,
+                markerfacecolor='none')
         ax.set_yscale('log')
 
     # setup ticks for x and y axis

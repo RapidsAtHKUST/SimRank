@@ -42,13 +42,19 @@ def draw_indexing_time():
     indent_lst = map(lambda idx: ind + idx * width, range(5))
 
     # other lst
-    hatch_lst = ["//", ".", '-', 'x', '+']
+    hatch_lst = ["//", ".", '-', 'x', '++']
     algorithm_tag_lst = [local_push_tag, sling_tag, tsf_tag, linear_d_tag, cloud_walker_tag]
     label_lst = ["FLP", "SLING", "TSF", "LIN", "MCSP"]
+    color_lst = ['blue',
+                 # 'orange', 'green',
+                 'red',
+                 # 'm',
+                 'brown', 'k', 'gray']
 
     # 1st: bars
     for idx, tag in enumerate(algorithm_tag_lst):
         ax.bar(indent_lst[idx], get_algorithm_indexing_time_lst(tag), width, hatch=hatch_lst[idx], label=label_lst[idx],
+               edgecolor=color_lst[idx],
                fill=False)
 
     # 2nd: x and y's ticks and labels
@@ -79,14 +85,19 @@ def draw_indexing_size():
     indent_lst = map(lambda idx: ind + idx * width, range(5))
 
     # other lst
-    hatch_lst = ["//", ".", '-', 'x', '+']
+    hatch_lst = ["//", ".", '-', 'x', '++']
 
     algorithm_tag_lst = [local_push_tag, sling_tag, tsf_tag, linear_d_tag, cloud_walker_tag]
     label_lst = ["FLP", "SLING", "TSF", "LIN", "MCSP"]
-
+    color_lst = ['blue',
+                 # 'orange', 'green',
+                 'red',
+                 # 'm',
+                 'brown', 'k', 'gray']
     # 1st: bars
     for idx, tag in enumerate(algorithm_tag_lst):
         ax.bar(indent_lst[idx], get_algorithm_index_size_lst(tag), width, hatch=hatch_lst[idx], label=label_lst[idx],
+               edgecolor=color_lst[idx],
                fill=False)
 
     # 2nd: x and y's ticks and labels
