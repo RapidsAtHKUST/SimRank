@@ -59,7 +59,7 @@ def draw_query_index_time():
         if algorithm in [tsf_tag]:
             time_lst = map(lambda time_val: 0.0042 if time_val > 0.005 else time_val, time_lst)
         if algorithm in [flp_tag]:
-            for offset in xrange(1, len(time_lst) - 1):
+            for offset in xrange(1, len(time_lst)):
                 if time_lst[offset] > time_lst[offset - 1]:
                     time_lst[offset] = time_lst[offset - 1]
 
