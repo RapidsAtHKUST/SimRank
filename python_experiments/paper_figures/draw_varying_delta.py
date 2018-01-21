@@ -39,7 +39,6 @@ def draw_query_index_time():
         ax.set_yscale('log')
 
     # setup ticks for x and y axis
-    # ax.set_ylim(0.8, 10 ** 8)
     ax.set_ylim(0.8 / us_to_ms_factor, 10 ** 8 / us_to_ms_factor)
     ax.set_xticks(delta_lst)
     ax.set_xscale('log')
@@ -48,7 +47,6 @@ def draw_query_index_time():
     for tick in ax.xaxis.get_major_ticks():
         tick.label.set_fontsize(TICK_SIZE + large_size_plus)
     # setup labels and grid, legend
-    # ax.set_ylabel('Avg Query Time ($\\mu$s)', fontsize=LABEL_SIZE)
     ax.set_ylabel('Avg Query Time (ms)', fontsize=LABEL_SIZE + large_size_plus)
     ax.set_xlabel('$\\delta$', fontsize=LABEL_SIZE + large_size_plus)
     ax.grid(True, alpha=0.4)

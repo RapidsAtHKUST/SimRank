@@ -4,7 +4,6 @@ from data_analysis.querying_time_accuracy_statistics import *
 
 def get_cpu_time_dict(root_dir='.'):
     with open(root_dir + os.sep + 'data-json' + os.sep + 'query_result_full_total_query_cpu_time' + '.json') as ifs:
-        # with open(root_dir + os.sep + 'data-json' + os.sep + 'query_result_full_total_query_cost' + '.json') as ifs:
         return json.load(ifs)
 
 
@@ -53,7 +52,6 @@ def draw_average_query_one_pair_time():
     algorithm_tag_lst = [bflpmc_tag, flpmc_tag, bprw_tag, sling_tag, isp_tag, tsf_tag, lind_tag, cw_tag]
 
     hatch_lst = ['//', '*', 'o', ".", '\\', '-', 'x', '+']
-    # color_lst = ['b', 'orange', 'g', 'r', 'm', 'k', 'pink', 'grey']
     label_lst = ["FBLPMC", "FLPMC", "BLPMC", "SLING", "ISP", "TSF", "LIN", "MCSP"]
 
     # 1st: bars
@@ -70,7 +68,6 @@ def draw_average_query_one_pair_time():
     plt.xticks(fontsize=TICK_SIZE)
 
     plt.yscale('log')
-    # ax.set_ylabel("Avg Query Time ($\\mu$s)", fontsize=LABEL_SIZE)
     ax.set_ylabel("Avg Query Time (ms)", fontsize=LABEL_SIZE)
     plt.yticks(fontsize=TICK_SIZE)
 

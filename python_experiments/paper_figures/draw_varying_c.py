@@ -27,10 +27,6 @@ def draw_query_index_time():
     lst_lst = []
     for idx, algorithm in enumerate(algorithm_tag_lst):
         time_lst = map(lambda c: c_query_dict[algorithm][format_str(c)], c_lst)
-        # if algorithm in [tsf_tag]:
-        #     for offset in xrange(1, len(time_lst)):
-        #         if time_lst[offset] > time_lst[offset - 1]:
-        #             time_lst[offset] = time_lst[offset - 1]
         time_lst = map(lambda val: float(val) / us_to_ms_factor, time_lst)
         lst_lst.append(time_lst)
         shape_lst = ['H-.', 's--', 'o:', 'x-', 'v-', '^-', '<-', '>-']
@@ -39,16 +35,14 @@ def draw_query_index_time():
         ax.set_yscale('log')
 
     # setup ticks for x and y axis
-    # ax.set_ylim(0.4, 10 ** 8 / 4)
-    ax.set_ylim(0.4 / us_to_ms_factor, 10 ** 8 / 4 / us_to_ms_factor)
+    ax.set_ylim(0.4 / us_to_ms_factor, 10 ** 8 * 0.3 / us_to_ms_factor)
     ax.set_xticks(c_lst)
-    # ax.set_xscale('log')
+
+    # setup font size for ticks and labels
     for tick in ax.yaxis.get_major_ticks():
         tick.label.set_fontsize(TICK_SIZE + large_size_plus)
     for tick in ax.xaxis.get_major_ticks():
         tick.label.set_fontsize(TICK_SIZE + large_size_plus)
-    # setup labels and grid, legend
-    # ax.set_ylabel('Avg Query Time ($\\mu$s)', fontsize=LABEL_SIZE)
     ax.set_ylabel('Avg Query Time (ms)', fontsize=LABEL_SIZE + large_size_plus)
     ax.set_xlabel('$c$', fontsize=LABEL_SIZE + large_size_plus)
     ax.grid(True, alpha=0.4)
@@ -64,11 +58,6 @@ def draw_query_index_time():
         time_lst = map(lambda c: c_index_dict[algorithm][format_str(c)], c_lst)
         if algorithm in [tsf_tag]:
             time_lst = map(lambda time_val: 0.0042 if time_val > 0.005 else time_val, time_lst)
-        # if algorithm in [flp_tag]:
-        #     for offset in xrange(1, len(time_lst)):
-        #         if time_lst[offset] > time_lst[offset - 1]:
-        #             time_lst[offset] = time_lst[offset - 1]
-
         lst_lst.append(time_lst)
 
         shape_lst = ['H-.', 'x-', '^-']
@@ -78,7 +67,6 @@ def draw_query_index_time():
 
     # setup ticks for x and y axis
     ax.set_ylim(10 ** -3, 10 ** 5 * 2)
-    # ax.set_xticks(map(lambda idx: c_lst[idx], [0, 2, 4, 6, 8]))
     for tick in ax.yaxis.get_major_ticks():
         tick.label.set_fontsize(TICK_SIZE + large_size_plus)
     for tick in ax.xaxis.get_major_ticks():
