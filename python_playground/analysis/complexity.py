@@ -50,3 +50,9 @@ if __name__ == '__main__':
     tsf_parameters()
     sling_parameters()
     reads_sample_num()
+
+    tsf_parameters(0.4)
+    tsf_parameters(0.5)
+    tsf_parameters(0.6)
+    tsf_parameters(0.7)
+    tsf_parameters(0.8)

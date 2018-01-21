@@ -24,10 +24,10 @@ def draw_query_index_time():
     lst_lst = []
     for idx, algorithm in enumerate(algorithm_tag_lst):
         time_lst = map(lambda c: c_query_dict[algorithm][format_str(c)], c_lst)
-        if algorithm in [tsf_tag]:
-            for offset in xrange(1, len(time_lst)):
-                if time_lst[offset] > time_lst[offset - 1]:
-                    time_lst[offset] = time_lst[offset - 1]
+        # if algorithm in [tsf_tag]:
+        #     for offset in xrange(1, len(time_lst)):
+        #         if time_lst[offset] > time_lst[offset - 1]:
+        #             time_lst[offset] = time_lst[offset - 1]
         lst_lst.append(time_lst)
         shape_lst = ['H-.', 's--', 'o:', 'x-', 'v-', '^-', '<-', '>-']
         color_lst = ['blue', 'orange', 'green', 'red', 'm', 'brown', 'pink', 'gray']
@@ -71,7 +71,7 @@ def draw_query_index_time():
         ax.set_yscale('log')
 
     # setup ticks for x and y axis
-    ax.set_ylim(10 ** -3, 10 ** 5)
+    ax.set_ylim(10 ** -3, 10 ** 5 * 2)
     # ax.set_xticks(map(lambda idx: c_lst[idx], [0, 2, 4, 6, 8]))
     for tick in ax.yaxis.get_major_ticks():
         tick.label.set_fontsize(TICK_SIZE)
