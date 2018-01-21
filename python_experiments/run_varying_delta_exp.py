@@ -39,7 +39,11 @@ def run_exp():
         '/homes/ywangby/workspace/yche/git-repos/SimRank/SPS-Variants/sling/build/sling-rand-varying',
         '/homes/ywangby/workspace/yche/git-repos/SimRank/SPS-Variants/tsf/build/tsf-rand-varying'
     ]
-    sample_num_lst = [10 ** 6, 10 ** 6, 10 ** 6, 10 ** 6, 10 ** 5]
+    sample_num_lst = [10 ** 6,
+                      10 ** 6,
+                      10 ** 6,
+                      10 ** 6,
+                      10 ** 3]
     sample_num_dict = dict(zip(exec_path_lst, sample_num_lst))
 
     tag = 'exp_results'
