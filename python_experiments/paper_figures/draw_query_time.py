@@ -10,6 +10,8 @@ def get_cpu_time_dict(root_dir='.'):
 
 g_cpu_time_dict = get_cpu_time_dict('../data_analysis')
 
+us_to_ms_factor = 10 ** 3
+
 
 def get_algorithm_time_lst(algorithm, data_lst, cpu_time_dict=g_cpu_time_dict):
     def select_first_data_set(my_lst):
@@ -56,7 +58,9 @@ def draw_average_query_one_pair_time():
 
     # 1st: bars
     for idx, tag in enumerate(algorithm_tag_lst):
-        ax.bar(indent_lst[idx], get_algorithm_time_lst(tag, data_set_lst), width, hatch=hatch_lst[idx],
+        ax.bar(indent_lst[idx],
+               map(lambda val: float(val) / us_to_ms_factor, get_algorithm_time_lst(tag, data_set_lst)), width,
+               hatch=hatch_lst[idx],
                # edgecolor=color_lst[idx],
                label=label_lst[idx], fill=False)
 
@@ -66,7 +70,8 @@ def draw_average_query_one_pair_time():
     plt.xticks(fontsize=TICK_SIZE)
 
     plt.yscale('log')
-    ax.set_ylabel("Avg Query Time ($\\mu$s)", fontsize=LABEL_SIZE)
+    # ax.set_ylabel("Avg Query Time ($\\mu$s)", fontsize=LABEL_SIZE)
+    ax.set_ylabel("Avg Query Time (ms)", fontsize=LABEL_SIZE)
     plt.yticks(fontsize=TICK_SIZE)
 
     # 3rd: figure properties

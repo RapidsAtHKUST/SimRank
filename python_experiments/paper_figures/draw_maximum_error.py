@@ -23,7 +23,7 @@ def draw_figures_max_err():
         for idx, algorithm in enumerate(algorithm_tag_lst):
             time_lst = get_algorithm_max_err_lst(algorithm, data_set_lst[ax_idx])
             max_err_lst_lst.append(time_lst)
-            color_lst = ['blue', 'orange', 'green', 'red', 'm', 'brown', 'pink', 'gray']
+            color_lst = ['blue', 'orange', 'green', 'red', 'm', 'brown', 'k', 'gray']
             shape_lst = ['H-.', 's--', 'o:', 'x-', 'v-', '^-', '<-', '>-']
             cur_mark_size = 22
             ax.plot(round_lst, time_lst, shape_lst[idx], markersize=cur_mark_size, markerfacecolor='none',

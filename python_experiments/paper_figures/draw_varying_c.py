@@ -3,6 +3,9 @@ from data_analysis.varying_c_statistics import *
 from draw_indexing_time_size import TICK_SIZE, LEGEND_SIZE, LABEL_SIZE
 import json
 
+us_to_ms_factor = 10 ** 3
+large_size_plus = 4
+
 
 def get_dict(file_path):
     with open(file_path) as ifs:
@@ -28,6 +31,7 @@ def draw_query_index_time():
         #     for offset in xrange(1, len(time_lst)):
         #         if time_lst[offset] > time_lst[offset - 1]:
         #             time_lst[offset] = time_lst[offset - 1]
+        time_lst = map(lambda val: float(val) / us_to_ms_factor, time_lst)
         lst_lst.append(time_lst)
         shape_lst = ['H-.', 's--', 'o:', 'x-', 'v-', '^-', '<-', '>-']
         color_lst = ['blue', 'orange', 'green', 'red', 'm', 'brown', 'pink', 'gray']
@@ -35,16 +39,18 @@ def draw_query_index_time():
         ax.set_yscale('log')
 
     # setup ticks for x and y axis
-    ax.set_ylim(0.4, 10 ** 8 / 4)
+    # ax.set_ylim(0.4, 10 ** 8 / 4)
+    ax.set_ylim(0.4 / us_to_ms_factor, 10 ** 8 / 4 / us_to_ms_factor)
     ax.set_xticks(c_lst)
     # ax.set_xscale('log')
     for tick in ax.yaxis.get_major_ticks():
-        tick.label.set_fontsize(TICK_SIZE)
+        tick.label.set_fontsize(TICK_SIZE + large_size_plus)
     for tick in ax.xaxis.get_major_ticks():
-        tick.label.set_fontsize(TICK_SIZE)
+        tick.label.set_fontsize(TICK_SIZE + large_size_plus)
     # setup labels and grid, legend
-    ax.set_ylabel('Avg Query Time ($\\mu$s)', fontsize=LABEL_SIZE)
-    ax.set_xlabel('$c$', fontsize=LABEL_SIZE)
+    # ax.set_ylabel('Avg Query Time ($\\mu$s)', fontsize=LABEL_SIZE)
+    ax.set_ylabel('Avg Query Time (ms)', fontsize=LABEL_SIZE + large_size_plus)
+    ax.set_xlabel('$c$', fontsize=LABEL_SIZE + large_size_plus)
     ax.grid(True, alpha=0.4)
     ax.legend(legend_lst, ncol=2, prop={'size': LEGEND_SIZE, "weight": "bold"}, loc=1)
 
@@ -74,12 +80,12 @@ def draw_query_index_time():
     ax.set_ylim(10 ** -3, 10 ** 5 * 2)
     # ax.set_xticks(map(lambda idx: c_lst[idx], [0, 2, 4, 6, 8]))
     for tick in ax.yaxis.get_major_ticks():
-        tick.label.set_fontsize(TICK_SIZE)
+        tick.label.set_fontsize(TICK_SIZE + large_size_plus)
     for tick in ax.xaxis.get_major_ticks():
-        tick.label.set_fontsize(TICK_SIZE)
+        tick.label.set_fontsize(TICK_SIZE + large_size_plus)
     # setup labels and grid, legend
-    ax.set_ylabel('Indexing Time (s)', fontsize=LABEL_SIZE)
-    ax.set_xlabel('$c$', fontsize=LABEL_SIZE)
+    ax.set_ylabel('Indexing Time (s)', fontsize=LABEL_SIZE + large_size_plus)
+    ax.set_xlabel('$c$', fontsize=LABEL_SIZE + large_size_plus)
     ax.grid(True, alpha=0.4)
     ax.legend(legend_lst, ncol=2, prop={'size': LEGEND_SIZE, "weight": "bold"}, loc=1)
 
