@@ -54,7 +54,9 @@ def run_exp():
     round_idx = 0
 
     # algorithm parameters
-    c_lst = list(reversed([0.1 * (i + 1) for i in xrange(9)]))
+    # c_lst = list(reversed([0.1 * (i + 1) for i in xrange(9)]))
+    # c_lst = list(([0.1 * (i + 1) for i in xrange(9)]))
+    c_lst = list(([0.1]))
     delta = 0.01
     eps = 0.01
 
@@ -76,7 +78,7 @@ def run_exp():
                                   delta, '>>',
                                   statistics_file_path])
                 cmd = ' '.join(params_lst)
-                time_out = 1200
+                time_out = 36000
 
                 # 2nd: run cmd
                 tle_flag, info, correct_info = time_out_util.run_with_timeout(cmd, timeout_sec=time_out)
@@ -93,6 +95,14 @@ def run_exp():
                     print 'too much time, not able to finish', cmd
                     break
 
+    exec_path_lst = [
+        # '/homes/ywangby/workspace/yche/git-repos/SimRank/LPMC-Profile/build/bprw-rand-varying',
+        # '/homes/ywangby/workspace/yche/git-repos/SimRank/LPMC-Profile/build/flpmc-rand-varying',
+        # '/homes/ywangby/workspace/yche/git-repos/SimRank/LPMC-Profile/build/bflpmc-rand-varying',
+        '/homes/ywangby/workspace/yche/git-repos/SimRank/SPS-Variants/sling/build/sling-rand-varying',
+        # '/homes/ywangby/workspace/yche/git-repos/SimRank/SPS-Variants/isp-yche/build/isp-rand-varying',
+        # '/homes/ywangby/workspace/yche/git-repos/SimRank/SPS-Variants/tsf/build/tsf-rand-varying'
+    ]
     one_round()
 
 

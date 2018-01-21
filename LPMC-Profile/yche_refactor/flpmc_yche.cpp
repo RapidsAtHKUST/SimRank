@@ -50,8 +50,8 @@ FLPMC::FLPMC(const FLPMC &other_obj) {
 
 double FLPMC::get_rmax() {
 //    double r = sqrt(epsilon);
-//    double r = pow(epsilon, 1.0 / 1.5);
-    double r = pow(pow(epsilon, 2) / (pow(c, 3) / log(2.0 / delta)), 1.0 / 3);
+    double r = pow(epsilon, 1.0 / 1.5);
+//    double r = pow(pow(epsilon, 2) / (pow(c, 3) / log(2.0 / delta)), 1.0 / 3);
 //    cout << format("r_max of local push: %s") % r << endl;
     return r;
 }
