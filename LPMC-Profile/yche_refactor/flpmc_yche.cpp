@@ -11,6 +11,33 @@
 using namespace std;
 using namespace boost::program_options;
 
+#ifdef VARYING_RMAX
+FLPMC::FLPMC(string g_name_, GraphYche &g_, double c_, double epsilon_, double delta_, size_t Q_, double r_max_) :
+        g_name(g_name_), g(&g_), c(c_), epsilon(epsilon_), delta(delta_), Q(Q_) {
+    // 1st: init r_max
+    r_max = r_max_;
+
+    // 2nd: compute or load index
+    size_t n = static_cast<size_t>(g->n);
+    cout << format("r_max: %s") % get_rmax() << endl;
+    lp = new Full_LocalPush(*g, g_name, c, get_lp_epsilon(), n);
+    if (!lp_file_exists(g_name, c, get_lp_epsilon(), n, true)) { // test wether the local push index exists
+        cout << "local push offline index doesn't exists.. " << endl;
+        auto start_time = std::chrono::high_resolution_clock::now();
+        lp->local_push(*g);
+        auto end_time = std::chrono::high_resolution_clock::now();
+        std::chrono::duration<double> elapsed = end_time - start_time;
+        cout << format("total indexing cost: %s s") % elapsed.count() << endl; // record the pre-processing time
+        cout << format("building compete, saving to %s ") % lp->get_file_path_base() << endl;
+        lp->save();
+        cout << "saved." << endl;
+    } else {
+        cout << "offline index exists..loading " << endl;
+        lp->load();
+    }
+}
+#else
+
 FLPMC::FLPMC(string g_name_, GraphYche &g_, double c_, double epsilon_, double delta_, size_t Q_) :
         g_name(g_name_), g(&g_), c(c_), epsilon(epsilon_), delta(delta_), Q(Q_) {
     // init local push
@@ -35,6 +62,9 @@ FLPMC::FLPMC(string g_name_, GraphYche &g_, double c_, double epsilon_, double d
     }
 }
 
+#endif
+
+
 FLPMC::FLPMC(const FLPMC &other_obj) {
 //    cout << "flpmc..." << endl;
     rand_gen = SFMTRand();
@@ -46,14 +76,23 @@ FLPMC::FLPMC(const FLPMC &other_obj) {
     c = other_obj.c;
     g = other_obj.g; // the pointer to the graph
     lp = other_obj.lp; // the pointer to the local push index
+
+    // rmax
+#ifdef VARYING_RMAX
+    r_max = other_obj.r_max;
+#endif
 }
 
 double FLPMC::get_rmax() {
 //    double r = sqrt(epsilon);
+#ifdef VARYING_RMAX
+    return r_max;
+#else
     double r = pow(epsilon, 1.0 / 1.5);
+    return r;
+#endif
 //    double r = pow(pow(epsilon, 2) / (pow(c, 3) / log(2.0 / delta)), 1.0 / 3);
 //    cout << format("r_max of local push: %s") % r << endl;
-    return r;
 }
 
 double FLPMC::get_lp_epsilon() {

@@ -122,6 +122,18 @@ add_executable(flpmc-rand-bench-gt ${FLPMC_SOURCE_FILES_RAND})
 InitFLPMC(flpmc-rand-bench-gt)
 target_compile_definitions(flpmc-rand-bench-gt PRIVATE -DSFMT=1 -DGROUND_TRUTH=1)
 
+#### flpmc(random pairs, varying r_max)
+set(FLPMC_RMAX_SOURCE_FILES_RAND ${LPMC_FILES} ${UTIL_FILES} ${GROUND_TRUTH_FILES}
+        playground/varying_rmax/main_flpmc_rand_pair_varying_rmax.cpp
+        util/random_pair_generator.cpp)
+add_executable(flpmc-rand-rmax ${FLPMC_RMAX_SOURCE_FILES_RAND})
+InitFLPMC(flpmc-rand-rmax)
+target_compile_definitions(flpmc-rand-rmax PRIVATE -DSFMT=1 -DVARYING_RMAX=1)
+
+add_executable(flpmc-rand-rmax-gt ${FLPMC_RMAX_SOURCE_FILES_RAND})
+InitFLPMC(flpmc-rand-rmax-gt)
+target_compile_definitions(flpmc-rand-rmax-gt PRIVATE -DSFMT=1 -DGROUND_TRUTH=1 -DVARYING_RMAX=1)
+
 #### flpmc(random pairs varying parameters)
 set(FLPMC_SOURCE_FILES_RAND ${LPMC_FILES} ${UTIL_FILES} ${GROUND_TRUTH_FILES}
         playground/varying_parameters/main_flpmc_rand_pair_varying_parameters.cpp
@@ -165,7 +177,21 @@ add_executable(bflpmc-rand-bench-gt ${BFLPMC_SOURCE_FILES_RAND})
 InitBFLPMC(bflpmc-rand-bench-gt)
 target_compile_definitions(bflpmc-rand-bench-gt PRIVATE -DSFMT=1 -DGROUND_TRUTH=1)
 
-#### bflpmc(...)
+#### bflpmc(random pairs, varying r_max)
+set(BFLPMC_RMAX_SOURCE_FILES_RAND ${LPMC_FILES} ${BPRW_FILES} ${UTIL_FILES} ${GROUND_TRUTH_FILES}
+        yche_refactor/bflpmc_yche.h yche_refactor/bflpmc_yche.cpp
+        playground/varying_rmax/main_bflpmc_rand_pair_varying_rmax.cpp
+        util/random_pair_generator.cpp)
+
+add_executable(bflpmc-rand-rmax ${BFLPMC_RMAX_SOURCE_FILES_RAND})
+InitBFLPMC(bflpmc-rand-rmax)
+target_compile_definitions(bflpmc-rand-rmax PRIVATE -DSFMT=1 -DVARYING_RMAX=1)
+
+add_executable(bflpmc-rand-rmax-gt ${BFLPMC_RMAX_SOURCE_FILES_RAND})
+InitBFLPMC(bflpmc-rand-rmax-gt)
+target_compile_definitions(bflpmc-rand-rmax-gt PRIVATE -DSFMT=1 -DGROUND_TRUTH=1 -DVARYING_RMAX=1)
+
+#### bflpmc(random pairs varying parameters)
 set(BFLPMC_SOURCE_FILES_RAND ${LPMC_FILES} ${BPRW_FILES} ${UTIL_FILES} ${GROUND_TRUTH_FILES}
         yche_refactor/bflpmc_yche.h yche_refactor/bflpmc_yche.cpp playground/varying_parameters/main_bflpmc_rand_pair_varying_parameters.cpp
         util/random_pair_generator.cpp)

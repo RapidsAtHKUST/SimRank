@@ -1,12 +1,26 @@
 #include "bflpmc_yche.h"
 #include "../util/search_yche.h"
 
+#ifdef VARYING_RMAX
+
+BFLPMC::BFLPMC(string g_name_, GraphYche &g_, double c_, double epsilon_, double delta_, double r_max_) :
+        g_name(g_name_), g(&g_), c(c_), epsilon(epsilon_), delta(delta_) {
+    // init the two components
+    flp = new FLPMC(g_name, *g, c, epsilon, delta, 0, r_max_); // Q is set to 0
+    assert(r_max_ == flp->get_rmax());
+    blp = new BackPush(g_name, *g, c, (1 - c) * epsilon / flp->get_rmax(), delta);
+}
+
+#else
+
 BFLPMC::BFLPMC(string g_name_, GraphYche &g_, double c_, double epsilon_, double delta_) :
         g_name(g_name_), g(&g_), c(c_), epsilon(epsilon_), delta(delta_) {
     // init the two components
     flp = new FLPMC(g_name, *g, c, epsilon, delta, 0); // Q is set to 0
     blp = new BackPush(g_name, *g, c, (1 - c) * epsilon / flp->get_rmax(), delta);
 }
+
+#endif
 
 BFLPMC::BFLPMC(const BFLPMC &other_obj) {
 //    cout << "copy constructor...bflpmc" << endl;
@@ -107,3 +121,4 @@ double BFLPMC::query_one2one(NodePair np) {
         return blp_p_i + h_p_r + c * r_sum * estimate_r_i / (1 - c);
     }
 }
+

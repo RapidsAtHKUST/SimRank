@@ -17,7 +17,15 @@ public:
 
     SFMTRand rand_gen;
 public:
+#ifdef VARYING_RMAX
+
+    BFLPMC(string g_name_, GraphYche &, double c_, double epsilon_, double delta_, double r_max_);
+
+#else
+
     BFLPMC(string g_name_, GraphYche &, double c_, double epsilon_, double delta_);
+
+#endif
 
     BFLPMC(const BFLPMC &other_obj);
 
