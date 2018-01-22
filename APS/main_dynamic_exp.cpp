@@ -14,19 +14,19 @@ void exp_dynamic(string data_name, double c, double epsilon, int num_updates = 1
     DirectedG g;
     load_graph(get_edge_list_path(data_name), g);
     size_t n = num_vertices(g);
-    cout << "begin rlp constructing" << endl;
-    Reduced_LocalPush rlp(g, data_name, c, epsilon, n);
+    cout << "begin flp constructing" << endl;
+    Full_LocalPush flp(g, data_name, c, epsilon, n);
 
     // 1st: generate edges
     cout << "begin generate edges..." << endl;
     vector<pair<unsigned int, unsigned int>> ins_edges;
     random_device rd;
     mt19937 gen(rd());
-    uniform_int_distribution<int> distribution(0, n - 1);
+    uniform_int_distribution<int> distribution(0, static_cast<int>(n - 1));
     while (ins_edges.size() < num_updates) {
         auto e1 = distribution(gen) % n;
         auto e2 = distribution(gen) % n;
-        if (!boost::edge(e1, e2, g).second) {
+        if (!boost::edge(e1, e2, g).second && boost::in_degree(e1, g) > 0 && boost::in_degree(e2, g) > 0) {
             ins_edges.emplace_back(e1, e2);
         }
     }
@@ -38,11 +38,11 @@ void exp_dynamic(string data_name, double c, double epsilon, int num_updates = 1
         // add to g
         add_edge(edge.first, edge.second, g);
         // update P and R
-        rlp.insert(edge.first, edge.second, g);
+        flp.insert(edge.first, edge.second, g);
     }
     cout << "begin local push..." << endl;
     auto middle = std::chrono::high_resolution_clock::now();
-    rlp.local_push(g);
+    flp.local_push(g);
     auto finish = std::chrono::high_resolution_clock::now();
     std::chrono::duration<double> elapsed = finish - start;
     cout << duration_cast<microseconds>(middle - start).count() / pow(10, 6) << endl;

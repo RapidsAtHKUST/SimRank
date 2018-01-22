@@ -103,6 +103,16 @@ struct DensePairMap {
     vector<sparse_hash_map<unsigned int, T, std::hash<unsigned int>>>
             v;
 
+    template<typename D>
+    T query(D a, D b) {
+        auto &table = v[a];
+        if (!table.contains(b)) {
+            return 0;
+        } else {
+            return table[b];
+        }
+    }
+
     T &operator[](NodePair np) {
         return v[np.first][np.second];
         // if(np.first <= np.second){

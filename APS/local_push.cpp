@@ -509,14 +509,60 @@ void LocalPush::show() {
 
 string Reduced_LocalPush::get_file_path_base() {
     // return the file path, exluding the suffix
-    return LOCAL_PUSH_DIR + str(format("RLP_%s-%.3f-%.6f") %
-                                g_name % c % epsilon);
+    return LOCAL_PUSH_DIR + str(format("RLP_%s-%.3f-%.6f") % g_name % c % epsilon);
 }
 
 string Full_LocalPush::get_file_path_base() {
     // return the file path, exluding the suffix
-    return LOCAL_PUSH_DIR + str(format("FLP_%s-%.3f-%.6f") %
-                                g_name % c % epsilon);
+    return LOCAL_PUSH_DIR + str(format("FLP_%s-%.3f-%.6f") % g_name % c % epsilon);
+}
+
+double Full_LocalPush::query_P(unsigned long a, unsigned long b) {
+    return P.query(a, b);
+}
+
+double Full_LocalPush::query_R(DirectedG::vertex_descriptor a, DirectedG::vertex_descriptor b) {
+    return R.query(a, b);
+}
+
+void Full_LocalPush::insert(DirectedG::vertex_descriptor u, DirectedG::vertex_descriptor v, DirectedG &g) {
+    DirectedG::vertex_iterator v_it, v_end;
+    tie(v_it, v_end) = vertices(g);
+    auto in_deg_v = in_degree(v, g);
+    for (; v_it != v_end; v_it++) {
+        auto a = *v_it;
+        if (a != v) {
+            update_residual(u, v, a, g, in_deg_v);
+        } else {
+            // a == v
+            R[NodePair(a, a)] = 1 - P.query(a, a);
+        }
+    }
+}
+
+void Full_LocalPush::update_residual(DirectedG::vertex_descriptor u, DirectedG::vertex_descriptor v,
+                                     DirectedG::vertex_descriptor a, DirectedG &g, int in_deg_v) {
+    // 1st: accumulate estimates
+    DirectedG::in_edge_iterator in_a_it, in_a_end;
+    tie(in_a_it, in_a_end) = in_edges(a, g);
+    float estimation_sum = 0;
+    for (; in_a_it != in_a_end; in_a_it++) {
+        auto ina = source(*in_a_it, g);
+        estimation_sum += P.query(u, ina);
+    }
+
+    // 2nd: update residual
+    auto np = NodePair(v, a);
+    float left_part = c * estimation_sum / (in_deg_v + 1) / in_degree(a, g);
+    float right_part = (P.query(v, a) + R.query(v, a)) / in_deg_v;
+    R[np] = left_part - right_part;
+    // 3rd: update queue
+    if (fabs(R[np]) > r_max) {
+        if (marker[np] == false) {
+            Q.push(np);
+            marker[np] = true;
+        }
+    }
 }
 
 void LocalPush::insert(DirectedG::vertex_descriptor u, DirectedG::vertex_descriptor v,
@@ -582,7 +628,7 @@ void Reduced_LocalPush::update_residual(DirectedG &g, DirectedG::vertex_descript
             }
         }
         // for(auto& item:indicator){
-        //     // cout << "collect neighbor P (" << item.first.first 
+        //     // cout << "collect neighbor P (" << item.first.first
         //     //     << "," << item.first.second <<"): " << P[item.first]  << endl;
         //     sum_neighbor_residuals += P[item.first]; // item.first is the node pair
         // }

@@ -33,7 +33,8 @@ struct LocalPush {
     queue<NodePair> Q; // the queue to hold invalid node pairs
     DensePairMap<bool> marker;
     double r_max;
-    double c;
+//    double c;
+    float c;
     size_t n;// we need to define total number of nodes in advance
     unsigned int n_push; // record number of push
     double cpu_time;// cpu_time for local push
@@ -47,27 +48,31 @@ struct LocalPush {
     LocalPush(DirectedG &, string, double c, double epsilon, size_t);
 
     void local_push(DirectedG &g); // empty funciton for local push
-    void virtual
-    push_to_neighbors(DirectedG &g, NodePair &np, double current_residual) {}// push np's residul to neighbors
+
+    // push np's residul to neighbors
+    virtual void push_to_neighbors(DirectedG &g, NodePair &np, double current_residual) {}
+
     void save();
 
     void load();
 
-    string virtual get_file_path_base() { return string(); } // get file path of local push data
+    virtual string get_file_path_base() { return string(); } // get file path of local push data
+
     void show(); // print values
+
     inline void push(NodePair &pab, double inc);
 
-    void insert(DirectedG::vertex_descriptor, DirectedG::vertex_descriptor, DirectedG &g);
+    virtual void insert(DirectedG::vertex_descriptor, DirectedG::vertex_descriptor, DirectedG &g);
 
-    void remove(DirectedG::vertex_descriptor, DirectedG::vertex_descriptor, DirectedG &g);
+    virtual void remove(DirectedG::vertex_descriptor, DirectedG::vertex_descriptor, DirectedG &g);
 
-    double query_P(DirectedG::vertex_descriptor a, DirectedG::vertex_descriptor b);
+    virtual double query_P(DirectedG::vertex_descriptor a, DirectedG::vertex_descriptor b);
 
-    double query_R(DirectedG::vertex_descriptor a, DirectedG::vertex_descriptor b);
+    virtual double query_R(DirectedG::vertex_descriptor a, DirectedG::vertex_descriptor b);
 
-    void virtual update_residual(DirectedG &g, DirectedG::vertex_descriptor a, DirectedG::vertex_descriptor b) {}
+    virtual void update_residual(DirectedG &g, DirectedG::vertex_descriptor a, DirectedG::vertex_descriptor b) {}
 
-    double virtual how_much_residual_to_push(DirectedG &g, NodePair &np) {}
+    virtual double how_much_residual_to_push(DirectedG &g, NodePair &np) {}
 };
 
 /*local push using reduced system*/
@@ -82,7 +87,7 @@ struct Reduced_LocalPush : LocalPush {
     /* update the residual score of R[a,b], we can assum a<b*/
     void update_residual(DirectedG &g, DirectedG::vertex_descriptor a, DirectedG::vertex_descriptor b) override;
 
-    string virtual get_file_path_base() override; // get file path of local push data
+    string get_file_path_base() override; // get file path of local push data
 
     double how_much_residual_to_push(DirectedG &g, NodePair &np) override;
 };
@@ -95,8 +100,18 @@ struct Full_LocalPush : LocalPush {
 
     void push_to_neighbors(DirectedG &g, NodePair &np, double current_residual) override;
 
-    string virtual get_file_path_base() override; // get file path of local push data
+    string get_file_path_base() override; // get file path of local push data
+
     double how_much_residual_to_push(DirectedG &g, NodePair &np) override;
+
+    double query_P(DirectedG::vertex_descriptor a, DirectedG::vertex_descriptor b) override;
+
+    double query_R(DirectedG::vertex_descriptor a, DirectedG::vertex_descriptor b) override;
+
+    void insert(DirectedG::vertex_descriptor u, DirectedG::vertex_descriptor v, DirectedG &g) override;
+
+    void update_residual(DirectedG::vertex_descriptor u, DirectedG::vertex_descriptor v, DirectedG::vertex_descriptor a,
+                         DirectedG &g, int in_deg_v);
 };
 
 
