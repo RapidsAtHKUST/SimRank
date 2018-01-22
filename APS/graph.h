@@ -216,6 +216,8 @@ typedef sparse_hash_map<int, int> Owg;
 // graph function
 extern void load_graph(string path, DirectedG &g);
 
+extern void load_reversed_graph(string path, DirectedG &g);
+
 extern void show_graph(DirectedG &g);
 
 extern string get_edge_list_path(string s);

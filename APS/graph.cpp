@@ -32,6 +32,23 @@ void load_graph(string path, DirectedG &g) {
     }
 }
 
+void load_reversed_graph(string path, DirectedG &g) {
+    // load graph from edge_list file
+    if (file_exists(path)) {
+        int a, b;
+        cout << "loading " << path << endl;;
+        ifstream edgeFile(path, ios::in);
+        while (edgeFile >> a >> b) {
+            add_edge(b, a, g);
+        }
+        edgeFile.close();
+        return;
+    } else {
+        cout << "file doesn't exit" << endl;
+        return;
+    }
+}
+
 void show_graph(DirectedG &g) {
     DirectedG::vertex_iterator v_it, v_end;
     DirectedG::out_edge_iterator e_it, e_end;

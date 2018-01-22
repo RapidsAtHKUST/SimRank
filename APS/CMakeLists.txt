@@ -53,6 +53,17 @@ target_include_directories(dynamic-flp PRIVATE ${Boost_INCLUDE_DIRS})
 target_link_libraries(dynamic-flp PRIVATE ${Boost_LIBRARIES})
 #target_link_libraries(dynamic-flp PRIVATE tcmalloc)
 target_compile_options(dynamic-flp PRIVATE -O3 -g ${SFMT_COMPILE_FLAGS})
+
+######
+add_executable(dynamic-tsf graph.cpp main_dynamic_tsf_exp.cpp)
+target_include_directories(dynamic-tsf PRIVATE ${Boost_INCLUDE_DIRS})
+target_compile_options(dynamic-tsf PRIVATE -O3 -g ${SFMT_COMPILE_FLAGS})
+target_include_directories(dynamic-tsf PRIVATE ../sparsehash-yche/include/)
+target_include_directories(dynamic-tsf PRIVATE ../sparsepp)
+target_include_directories(dynamic-tsf PRIVATE ../eigen)
+target_include_directories(dynamic-tsf PRIVATE ../SFMT)
+target_include_directories(dynamic-tsf PRIVATE ../include)
+
 ############################ playground #########################################3
 add_executable(ground_truth main_ground_truth.cpp graph.cpp simrank.cpp)
 target_include_directories(ground_truth PRIVATE ../eigen)
