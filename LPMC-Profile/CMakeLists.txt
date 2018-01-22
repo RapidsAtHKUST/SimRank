@@ -198,3 +198,8 @@ set(BFLPMC_SOURCE_FILES_RAND ${LPMC_FILES} ${BPRW_FILES} ${UTIL_FILES} ${GROUND_
 add_executable(bflpmc-rand-varying ${BFLPMC_SOURCE_FILES_RAND})
 InitBFLPMC(bflpmc-rand-varying)
 target_compile_definitions(bflpmc-rand-varying PRIVATE -DSFMT=1)
+
+####################### reduced local push testing
+add_executable(rlp playground/reduced_local_push/main_exec_reduced_local_push.cpp ${LPMC_FILES} ${UTIL_FILES} ${GROUND_TRUTH_FILES})
+InitFLPMC(rlp)
+target_compile_definitions(rlp PRIVATE -DSFMT=1)

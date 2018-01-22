@@ -1,6 +1,6 @@
 #include "graph.h"
 
-string EDGE_LIST_PATH = "./datasets/edge_list/";
+string EDGE_LIST_PATH = "/homes/ywangby/workspace/LinsysSimRank/datasets/edge_list/";
 vector<string> DATA_NAME = {
         "odlis",
         "ca-GrQc",

@@ -526,7 +526,7 @@ void LocalPush::insert(DirectedG::vertex_descriptor u, DirectedG::vertex_descrip
     tie(v_it, v_end) = vertices(g);
     for (; v_it != v_end; v_it++) {
         auto a = *v_it;
-        auto in_deg_v = in_degree(v, g); // the new degree of v
+//        auto in_deg_v = in_degree(v, g); // the new degree of v
         if (a > v) {
             update_residual(g, v, a);
         } else if (a < v) {
@@ -536,7 +536,7 @@ void LocalPush::insert(DirectedG::vertex_descriptor u, DirectedG::vertex_descrip
             R[NodePair(a, a)] = 1 - P[NodePair(a, a)];
         }
     }
-    local_push(g);
+//    local_push(g);
 }
 
 void LocalPush::remove(DirectedG::vertex_descriptor u, DirectedG::vertex_descriptor v,
@@ -570,6 +570,7 @@ void Reduced_LocalPush::update_residual(DirectedG &g, DirectedG::vertex_descript
     auto in_deg_a = in_degree(a, g);
     auto in_deg_b = in_degree(b, g);
     if (in_deg_a * in_deg_b > 0) {
+//        cout << format("in_deg_a:%s, in_deg_b:%s") % in_deg_a % in_deg_b << endl;
         double sum_neighbor_residuals = 0;
         for (; in_a_it != in_a_end; in_a_it++) {
             tie(in_b_it, in_b_end) = in_edges(b, g);
