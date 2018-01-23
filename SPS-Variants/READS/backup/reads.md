@@ -1,4 +1,14 @@
 ```cpp
+    int cc = int(RAND_MAX * sqrt(c));
+    leaf = new vector<array<int, 3> >[r];
+    inode = new vector<sparse_hash_map<int, array<int, 3> > >[r];
+    sparse_hash_map<int, array<int, 3> >::iterator jt;
+    // inode = new vector<dense_hash_map<int, array<int, 3> > >[r];
+    // dense_hash_map<int, array<int, 3> >::iterator jt;
+    // array<int, 3> ek = {-2,-2,-2};
+```
+
+```cpp
 void readsd::queryAll(int x, double *ansVal) {
     memset(ansVal, 0, sizeof(double) * n);
     if (eb[x].empty()) {

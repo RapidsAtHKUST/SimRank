@@ -11,70 +11,15 @@
 #include "sparsehash/dense_hash_map"
 
 #include "../util/timer.h"
-// #include "inBuf.h"
-// #include "outBuf.h"
-// #include "meminfo.h"
+#include "../util/inBuf.h"
+#include "../util/outBuf.h"
+#include "../util/meminfo.h"
+
 using google::sparse_hash_set;
 using google::dense_hash_map;
 
-readsd::readsd(char *gName_, int n_, int r_, double c_, int t_) {
-    sprintf(gName, "%s", gName_);
-    n = n_, r = r_, c = c_, t = t_;
-    t1 = t2 = qCnt = 0;
-    char iName[125];
-    sprintf(iName, "%s.readsd.%d_%d_%lf_%d", gName, n, r, c, t);
-    // if (fopen(iName, "rb") != NULL)
-    // {
-    // 	printf("load ");
-    // 	inBuf buf(iName);
-    // 	leaf = new vector<array<int,3> >[r];
-    // 	for (int i = 0; i < r; i++)
-    // 	{
-    // 		leaf[i].resize(n);
-    // 		for (int j = 0; j < n; j++)
-    // 		{
-    // 			buf.nextInt(leaf[i][j][0]);
-    // 			buf.nextInt(leaf[i][j][1]);
-    // 			buf.nextInt(leaf[i][j][2]);
-    // 		}
-    // 	}
-    // 	inode = new vector<sparse_hash_map<int, array<int, 3> > >[r];
-    // 	for (int i = 0, s, x[4]; i < r; i++)
-    // 	{
-    // 		inode[i].resize(t);
-    // 		for (int j = 0; j < t; j++)
-    // 		{
-    // 			inode[i][j].set_deleted_key(-1);
-    // 			buf.nextInt(s);
-    // 			for (int k = 0; k < s; k++)
-    // 			{
-    // 				buf.nextInt(x[0]);
-    // 				buf.nextInt(x[1]);
-    // 				buf.nextInt(x[2]);
-    // 				buf.nextInt(x[3]);
-    // 				inode[i][j][x[0]] = {x[1], x[2], x[3]};
-    // 			}
-    // 		}
-    // 	}
-    // 	ef.resize(n);
-    // 	for (int i = 0, s; i < n; i++)
-    // 	{
-    // 		buf.nextInt(s);
-    // 		ef[i].resize(s);
-    // 		for (int j = 0; j < s; j++)
-    // 			buf.nextInt(ef[i][j]);
-    // 	}
-    // 	eb.resize(n);
-    // 	for (int i = 0, s; i < n; i++)
-    // 	{
-    // 		buf.nextInt(s);
-    // 		eb[i].resize(s);
-    // 		for (int j = 0; j < s; j++)
-    // 			buf.nextInt(eb[i][j]);
-    // 	}
-    // 	rtime = 0;
-    // 	return;
-    // }
+
+void readsd::loadGraph(char *gName) {
     FILE *fg = fopen(gName, "r");
     if (fg == NULL) {
         printf("No graph %s\n", gName);
@@ -89,6 +34,9 @@ readsd::readsd(char *gName_, int n_, int r_, double c_, int t_) {
     }
     rtime = tm.getTime();
     fclose(fg);
+}
+
+void readsd::constructIndices() {
     int cc = int(RAND_MAX * sqrt(c));
     leaf = new vector<array<int, 3> >[r];
     inode = new vector<sparse_hash_map<int, array<int, 3> > >[r];
@@ -130,40 +78,100 @@ readsd::readsd(char *gName_, int n_, int r_, double c_, int t_) {
         random_shuffle(ef[i].begin(), ef[i].end());
         random_shuffle(eb[i].begin(), eb[i].end());
     }
-    // tm.reset();
-    // outBuf buf(iName);
-    // for (int i = 0; i < r; i++)
-    // 	for (int j = 0; j < n; j++)
-    // 	{
-    // 		buf.insert(leaf[i][j][0]);
-    // 		buf.insert(leaf[i][j][1]);
-    // 		buf.insert(leaf[i][j][2]);
-    // 	}
-    // for (int i = 0; i < r; i++)
-    // 	for (int j = 0; j < t; j++)
-    // 	{
-    // 		buf.insert(inode[i][j].size());
-    // 		for (auto it = inode[i][j].begin(); it != inode[i][j].end(); it++)
-    // 		{
-    // 			buf.insert(it->first);
-    // 			buf.insert(it->second[0]);
-    // 			buf.insert(it->second[1]);
-    // 			buf.insert(it->second[2]);
-    // 		}
-    // 	}
-    // for (int i = 0; i < n; i++)
-    // {
-    // 	buf.insert(ef[i].size());
-    // 	for (auto j = ef[i].begin(); j != ef[i].end(); j++)
-    // 		buf.insert(*j);
-    // }
-    // for (int i = 0; i < n; i++)
-    // {
-    // 	buf.insert(eb[i].size());
-    // 	for (auto j = eb[i].begin(); j != eb[i].end(); j++)
-    // 		buf.insert(*j);
-    // }
-    // rtime += tm.getTime();
+}
+
+void readsd::serializeForSingleSource(Timer &timer, char *iName) {
+    tm.reset();
+    outBuf buf(iName);
+    for (int i = 0; i < r; i++)
+        for (int j = 0; j < n; j++) {
+            buf.insert(leaf[i][j][0]);
+            buf.insert(leaf[i][j][1]);
+            buf.insert(leaf[i][j][2]);
+        }
+    for (int i = 0; i < r; i++)
+        for (int j = 0; j < t; j++) {
+            buf.insert(inode[i][j].size());
+            for (auto it = inode[i][j].begin(); it != inode[i][j].end(); it++) {
+                buf.insert(it->first);
+                buf.insert(it->second[0]);
+                buf.insert(it->second[1]);
+                buf.insert(it->second[2]);
+            }
+        }
+    for (int i = 0; i < n; i++) {
+        buf.insert(ef[i].size());
+        for (auto j = ef[i].begin(); j != ef[i].end(); j++)
+            buf.insert(*j);
+    }
+    for (int i = 0; i < n; i++) {
+        buf.insert(eb[i].size());
+        for (auto j = eb[i].begin(); j != eb[i].end(); j++)
+            buf.insert(*j);
+    }
+    rtime += tm.getTime();
+}
+
+void readsd::deserializeForSingleSource(char *iName) {
+    printf("load ");
+    inBuf buf(iName);
+    leaf = new vector<array<int, 3> >[r];
+    for (int i = 0; i < r; i++) {
+        leaf[i].resize(n);
+        for (int j = 0; j < n; j++) {
+            buf.nextInt(leaf[i][j][0]);
+            buf.nextInt(leaf[i][j][1]);
+            buf.nextInt(leaf[i][j][2]);
+        }
+    }
+    inode = new vector<sparse_hash_map<int, array<int, 3> > >[r];
+    for (int i = 0, s, x[4]; i < r; i++) {
+        inode[i].resize(t);
+        for (int j = 0; j < t; j++) {
+            inode[i][j].set_deleted_key(-1);
+            buf.nextInt(s);
+            for (int k = 0; k < s; k++) {
+                buf.nextInt(x[0]);
+                buf.nextInt(x[1]);
+                buf.nextInt(x[2]);
+                buf.nextInt(x[3]);
+                inode[i][j][x[0]] = {x[1], x[2], x[3]};
+            }
+        }
+    }
+    ef.resize(n);
+    for (int i = 0, s; i < n; i++) {
+        buf.nextInt(s);
+        ef[i].resize(s);
+        for (int j = 0; j < s; j++)
+            buf.nextInt(ef[i][j]);
+    }
+    eb.resize(n);
+    for (int i = 0, s; i < n; i++) {
+        buf.nextInt(s);
+        eb[i].resize(s);
+        for (int j = 0; j < s; j++)
+            buf.nextInt(eb[i][j]);
+    }
+    rtime = 0;
+}
+
+readsd::readsd(char *gName_, int n_, int r_, double c_, int t_) {
+    sprintf(gName, "%s", gName_);
+    n = n_, r = r_, c = c_, t = t_;
+    t1 = t2 = qCnt = 0;
+    char iName[125];
+    sprintf(iName, "%s.readsd.%d_%d_%lf_%d", gName, n, r, c, t);
+    if (fopen(iName, "rb") != NULL) {
+        deserializeForSingleSource(iName);
+        return;
+    }
+
+    loadGraph(gName);
+
+    constructIndices();
+
+    serializeForSingleSource(tm, iName);
 }
 
 readsd::~readsd() {
@@ -561,3 +569,4 @@ void readsd::delEdge(int x, int y) {
         }
     }
 }
+

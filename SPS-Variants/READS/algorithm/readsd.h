@@ -23,6 +23,15 @@ public:
 
     char gName[125];
 
+private:
+    void loadGraph(char *gName);
+
+    void constructIndices();
+
+    void serializeForSingleSource(Timer &timer, char *iName);
+
+    void deserializeForSingleSource(char *iName);
+
 public:
     readsd(char *gName_, int n_, int r_, double c_, int t_);
 
