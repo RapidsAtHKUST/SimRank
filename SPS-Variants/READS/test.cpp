@@ -1,8 +1,8 @@
 #include <iostream>
 
-#include "reads.h"
-#include "readsd.h"
-#include "readsrq.h"
+#include "algorithm/reads.h"
+#include "algorithm/readsd.h"
+#include "algorithm/readsrq.h"
 
 using namespace std;
 
@@ -23,13 +23,13 @@ int main(int argc, char **argv) {
         cout << ansVal[i] << "\n";
     }
     cout << endl;
-//    readsd i2(argv[1], n, r, c, t);
+    readsd i2(argv[1], n, r, c, t);
 //querying one-to-all simrank value from node o
-//    i2.queryAll(0, ansVal);
+    i2.queryAll(0, ansVal);
 
-//    readsrq i3(argv[1], n, r, rq, c, t);
+    readsrq i3(argv[1], n, r, rq, c, t);
 //querying one-to-all simrank value from node o
-//    i3.queryAll(0, ansVal);
+    i3.queryAll(0, ansVal);
 
 
     delete[] ansVal;

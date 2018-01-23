@@ -5,7 +5,7 @@
 #include <iostream>
 #include <chrono>
 
-#include "reads.h"
+#include "algorithm/reads.h"
 
 using namespace std;
 using namespace std::chrono;

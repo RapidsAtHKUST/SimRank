@@ -3,7 +3,7 @@
 
 #include <vector>
 
-#include "timer.h"
+#include "../util/timer.h"
 
 struct reads {
 // data:

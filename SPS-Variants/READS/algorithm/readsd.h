@@ -5,7 +5,7 @@
 #include <vector>
 //#include <sparsehash/sparse_hash_map>
 #include "sparsehash/sparse_hash_map"
-#include "timer.h"
+#include "../util/timer.h"
 
 using namespace std;
 using google::sparse_hash_map;

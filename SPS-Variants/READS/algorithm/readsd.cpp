@@ -1,5 +1,4 @@
-#include "readsrq.h"
-
+#include "readsd.h"
 #include <cmath>
 #include <cstdio>
 #include <cstring>
@@ -9,25 +8,24 @@
 
 #include "sparsehash/sparse_hash_set"
 #include "sparsehash/dense_hash_map"
-#include "sparsehash/dense_hash_set"
 
-#include "timer.h"
+#include "../util/timer.h"
+
 // #include "inBuf.h"
 // #include "outBuf.h"
 // #include "meminfo.h"
 
 using google::sparse_hash_set;
 using google::dense_hash_map;
-using google::dense_hash_set;
 
-readsrq::readsrq(char *gName_, int n_, int r_, int rq_, double c_, int t_) {
+
+readsd::readsd(char *gName_, int n_, int r_, double c_, int t_) {
     sprintf(gName, "%s", gName_);
     n = n_, r = r_, c = c_, t = t_;
-    rq = rq_;
     t1 = t2 = qCnt = 0;
 
     char iName[125];
-    sprintf(iName, "%s.readsrq.%d_%d_%lf_%d", gName, n, r, c, t);
+    sprintf(iName, "%s.readsd.%d_%d_%lf_%d", gName, n, r, c, t);
 
 
     // if (fopen(iName, "rb") != NULL)
@@ -104,7 +102,7 @@ readsrq::readsrq(char *gName_, int n_, int r_, int rq_, double c_, int t_) {
 
     fclose(fg);
 
-    int cc = int(RAND_MAX * c);
+    int cc = int(RAND_MAX * sqrt(c));
 
     leaf = new vector<array<int, 3> >[r];
     inode = new vector<sparse_hash_map<int, array<int, 3> > >[r];
@@ -113,8 +111,6 @@ readsrq::readsrq(char *gName_, int n_, int r_, int rq_, double c_, int t_) {
     // inode = new vector<dense_hash_map<int, array<int, 3> > >[r];
     // dense_hash_map<int, array<int, 3> >::iterator jt;
     // array<int, 3> ek = {-2,-2,-2};
-
-
 
 
 
@@ -208,16 +204,16 @@ readsrq::readsrq(char *gName_, int n_, int r_, int rq_, double c_, int t_) {
 }
 
 
-readsrq::~readsrq() {
+readsd::~readsd() {
     delete[] leaf;
     delete[] inode;
 }
 
 //todo
-double readsrq::queryOne(int x, int y) {
+double readsd::queryOne(int x, int y) {
 }
 
-void readsrq::queryAll(int x, double *ansVal) {
+void readsd::queryAll(int x, double *ansVal) {
 
     memset(ansVal, 0, sizeof(double) * n);
     if (eb[x].empty()) {
@@ -229,14 +225,33 @@ void readsrq::queryAll(int x, double *ansVal) {
         if (qCnt < 20) tm.reset();
 
         dense_hash_map<int, double> sim1;
+        dense_hash_map<int, double>::iterator sim1IT;
         sim1.set_empty_key(-1);
 
-        double cc = (1 - c) * r * rq / eb[x].size(), c1 = rq * r / c / eb[x].size();
+        // double * sim1 = new double[n];
+        // memset(sim1, 0, sizeof(double)*n);
+
+        //sim1, sim2, ansVal = real*g[x][0]*r/c^2
 
 
-        int p;
+        bool *nID = new bool[n];
+        memset(nID, 0, sizeof(bool) * n);
+
+
+        double cc = (1 - c) * r, c1 = r / c;
+
+        // for (int i = 1; i <= g[x][0]; i++)
+        // 	for (int j = 1, p = g[x][i]; j <= g[p][0]; j++)
+        // 		sim2[g[p][j]] += cc/g[p][0];
+
+        // for (int i = 0; i < n; i++)
+        // 	if (sim2[i] > 0)
+        // 	for (int j = 1; j <= f[i][0]; j++)
+        // 		sim1[f[i][j]] += sim2[i]/g[f[i][j]][0];
+
+
+        int p, q;
         for (auto i = eb[x].begin(); i != eb[x].end(); i++) {
-            int q;
             for (auto j = eb[p = *i].begin(); j != eb[p].end() && j - eb[p].begin() < 10; j++)
                 for (auto k = ef[q = *j].begin(); k != ef[q].end() && k - ef[q].begin() < 10; k++)
                     if (*k != p)
@@ -246,63 +261,123 @@ void readsrq::queryAll(int x, double *ansVal) {
         }
 
 
-        sparse_hash_map<int, array<int, 3> >::iterator inodeIT;
-        vector<int> q(t);
+        for (int i = 0, cnt, q; i < r; i++) {
+            for (auto j = eb[x].begin(); j != eb[x].end(); j++)
+                nID[*j] = 1;
 
+            for (auto j = eb[x].begin(); j != eb[x].end(); j++)
+                if (nID[q = *j] && (leaf[i][q][1] != -1 || leaf[i][q][2] != -1)) {
+                    cnt = 0;
+                    //	printf("--\n%d\n", q);
 
-        for (int i = 0, ncnt = 0; i < r; i++)
-            for (int ir = 0, k; ir < rq; ir++) {
-                int j = eb[x][(ncnt++) % eb[x].size()];
+                    for (int p = leaf[i][q][1]; p != -1; p = leaf[i][p][1]) {
+                        //	printf("%d\n", p);
+                        if (nID[p]) cnt++, nID[p] = 0;
+                        else sim1[p] += c;
+                    }
+                    //	printf("--\n%d\n", q);
+                    for (int p = leaf[i][q][2]; p != -1; p = leaf[i][p][2]) {
+                        //	printf("%d\n", p);
+                        if (nID[p]) cnt++, nID[p] = 0;
+                        else sim1[p] += c;
+                    }
 
-                if (eb[j].empty()) continue;
+                    if (cnt != 0) {
+                        cc = c * cnt;
+                        for (int p = leaf[i][q][1]; p != -1; p = leaf[i][p][1])
+                            sim1[p] += cc;
+                        for (int p = leaf[i][q][2]; p != -1; p = leaf[i][p][2])
+                            sim1[p] += cc;
 
-                for (q[k = 0] = eb[j][rand() % eb[j].size()]; !eb[q[k]].empty() && k < t - 1; k++) {
-                    if ((inodeIT = inode[i][k].find(q[k])) != inode[i][k].end()) {
-                        if (inodeIT->second[0] != -1) q[k + 1] = inodeIT->second[0];
-                        else {
-                            q[k + 1] = eb[q[k]][rand() % eb[q[k]].size()];
-                            q[k] -= n;
-                        }
-                    } else q[k + 1] = eb[q[k]][rand() % eb[q[k]].size()];
-                }
-
-                while (k >= 0 && q[k] >= 0 && inode[i][k].find(q[k]) == inode[i][k].end()) k--;
-                if (k < 0) continue;
-                if (q[k] >= 0) q[k] -= n;
-
-                for (; k >= 0; k--)
-                    if (q[k] < 0) {
-                        q[k] += n;
-                        for (int jj = inode[i][k][q[k]][1]; jj != -1; jj = leaf[i][jj][2])
-                            if (jj != j) sim1[jj] += c;
+                        sim1[q] += cc;
                     }
 
 
-            }
 
 
-        cc = c * c / r / rq;
+                    // cnt = 1;
+
+                    // for (int p = leaf[i][q][1]; p != -1; p = leaf[i][p][1])
+                    // 	cnt += nID[p];
+                    // for (int p = leaf[i][q][2]; p != -1; p = leaf[i][p][2])
+                    // 	cnt += nID[p];
+
+                    // for (int p = leaf[i][q][1]; p != -1; p = leaf[i][p][1])
+                    // {
+                    // 	if (nID[p])
+                    // 	{
+                    // 		sim1[p] += c*(cnt-1);
+                    // 		nID[p] = 0;
+                    // 	}
+                    // 	else sim1[p] += c*cnt;
+                    // }
+                    // for (int p = leaf[i][q][2]; p != -1; p = leaf[i][p][2])
+                    // {
+                    // 	if (nID[p])
+                    // 	{
+                    // 		sim1[p] += c*(cnt-1);
+                    // 		nID[p] = 0;
+                    // 	}
+                    // 	else sim1[p] += c*cnt;
+                    // }
+
+                    // sim1[q] += c*(cnt-1);
+                    // nID[q] = 0;
+                }
+
+        }
+
+
+        cc = c * c / eb[x].size() / r;
         for (auto it = sim1.begin(); it != sim1.end(); it++)
             for (auto jt = ef[p = it->first].begin(); jt != ef[p].end(); jt++)
                 ansVal[*jt] += it->second * cc / eb[*jt].size();
 
 
+        // 	for (int i = 0; i < n; i++)
+        // 		if (sim1[i] > 0)
+        // 		for (auto j = ef[i].begin(); j != ef[i].end(); j++)
+        // 			ansVal[*j] += sim1[i];
+        // //		for (int j = 0; j < ef[i].size(); j++)
+        // //			ansVal[ef[i][j]] += sim1[i];
+
+        // 	for (int i = 0; i < n; i++)
+        // 		if (eb[i].size() > 0)
+        // 		ansVal[i] = ansVal[i] / eb[x].size() / eb[i].size();
+
+        //	delete [] sim1;
+        delete[] nID;
         if (qCnt++ < 20) t1 += tm.getTime();
     } else {
 
         if (qCnt < 20) tm.reset();
+        // dense_hash_map<int, double> sim1;
+        // 	sim1.set_empty_key(-1);
 
         double *sim1 = new double[n];
         memset(sim1, 0, sizeof(double) * n);
 
         //sim1, sim2, ansVal = real*g[x][0]*r/c^2
 
-        double cc = (1 - c) * r * rq / eb[x].size(), c1 = rq * r / c / eb[x].size();
+
+        bool *nID = new bool[n];
+        memset(nID, 0, sizeof(bool) * n);
 
 
-        int p;
+        double cc = (1 - c) * r, c1 = r / c;
+
+        // for (int i = 1; i <= g[x][0]; i++)
+        // 	for (int j = 1, p = g[x][i]; j <= g[p][0]; j++)
+        // 		sim2[g[p][j]] += cc/g[p][0];
+
+        // for (int i = 0; i < n; i++)
+        // 	if (sim2[i] > 0)
+        // 	for (int j = 1; j <= f[i][0]; j++)
+        // 		sim1[f[i][j]] += sim2[i]/g[f[i][j]][0];
+
+
+        int p, q;
         for (auto i = eb[x].begin(); i != eb[x].end(); i++) {
-            int q;
             for (auto j = eb[p = *i].begin(); j != eb[p].end() && j - eb[p].begin() < 10; j++)
                 for (auto k = ef[q = *j].begin(); k != ef[q].end() && k - ef[q].begin() < 10; k++)
                     if (*k != p)
@@ -311,39 +386,76 @@ void readsrq::queryAll(int x, double *ansVal) {
         }
 
 
-        sparse_hash_map<int, array<int, 3> >::iterator inodeIT;
-        vector<int> q(t);
+        for (int i = 0, cnt, q; i < r; i++) {
+            for (auto j = eb[x].begin(); j != eb[x].end(); j++)
+                nID[*j] = 1;
 
+            for (auto j = eb[x].begin(); j != eb[x].end(); j++)
+                if (nID[q = *j] && (leaf[i][q][1] != -1 || leaf[i][q][2] != -1)) {
+                    cnt = 0;
+                    //	printf("--\n%d\n", q);
 
-        for (int i = 0, ncnt = 0; i < r; i++)
-            for (int ir = 0, k; ir < rq; ir++) {
-                int j = eb[x][(ncnt++) % eb[x].size()];
+                    for (int p = leaf[i][q][1]; p != -1; p = leaf[i][p][1]) {
+                        //	printf("%d\n", p);
+                        if (nID[p]) cnt++, nID[p] = 0;
+                        else sim1[p] += c;
+                    }
+                    //	printf("--\n%d\n", q);
+                    for (int p = leaf[i][q][2]; p != -1; p = leaf[i][p][2]) {
+                        //	printf("%d\n", p);
+                        if (nID[p]) cnt++, nID[p] = 0;
+                        else sim1[p] += c;
+                    }
 
-                if (eb[j].empty()) continue;
-
-                for (q[k = 0] = eb[j][rand() % eb[j].size()]; !eb[q[k]].empty() && k < t - 1; k++) {
-                    if ((inodeIT = inode[i][k].find(q[k])) != inode[i][k].end()) {
-                        if (inodeIT->second[0] != -1) q[k + 1] = inodeIT->second[0];
-                        else {
-                            q[k + 1] = eb[q[k]][rand() % eb[q[k]].size()];
-                            q[k] -= n;
-                        }
-                    } else q[k + 1] = eb[q[k]][rand() % eb[q[k]].size()];
-                }
-
-                while (k >= 0 && q[k] >= 0 && inode[i][k].find(q[k]) == inode[i][k].end()) k--;
-                if (k < 0) continue;
-                if (q[k] >= 0) q[k] -= n;
-
-                for (; k >= 0; k--)
-                    if (q[k] < 0) {
-                        q[k] += n;
-                        for (int jj = inode[i][k][q[k]][1]; jj != -1; jj = leaf[i][jj][2])
-                            if (jj != j) sim1[jj] += c;
+                    if (cnt != 0) {
+                        cc = c * cnt;
+                        for (int p = leaf[i][q][1]; p != -1; p = leaf[i][p][1])
+                            sim1[p] += cc;
+                        for (int p = leaf[i][q][2]; p != -1; p = leaf[i][p][2])
+                            sim1[p] += cc;
+                        sim1[q] += cc;
                     }
 
 
-            }
+
+
+                    // cnt = 1;
+
+                    // for (int p = leaf[i][q][1]; p != -1; p = leaf[i][p][1])
+                    // 	cnt += nID[p];
+                    // for (int p = leaf[i][q][2]; p != -1; p = leaf[i][p][2])
+                    // 	cnt += nID[p];
+
+                    // for (int p = leaf[i][q][1]; p != -1; p = leaf[i][p][1])
+                    // {
+                    // 	if (nID[p])
+                    // 	{
+                    // 		sim1[p] += c*(cnt-1);
+                    // 		nID[p] = 0;
+                    // 	}
+                    // 	else sim1[p] += c*cnt;
+                    // }
+                    // for (int p = leaf[i][q][2]; p != -1; p = leaf[i][p][2])
+                    // {
+                    // 	if (nID[p])
+                    // 	{
+                    // 		sim1[p] += c*(cnt-1);
+                    // 		nID[p] = 0;
+                    // 	}
+                    // 	else sim1[p] += c*cnt;
+                    // }
+
+                    // sim1[q] += c*(cnt-1);
+                    // nID[q] = 0;
+                }
+
+        }
+
+
+        // q = eb[x].size();
+        // for (auto it = sim1.begin(); it != sim1.end(); it++)
+        // 	for (auto jt = ef[p=it->first].begin(); jt != ef[p].end(); jt++)
+        // 		ansVal[*jt] += it->second/eb[*jt].size()/q;
 
 
         for (int i = 0; i < n; i++)
@@ -352,18 +464,20 @@ void readsrq::queryAll(int x, double *ansVal) {
                     ansVal[*j] += sim1[i];
         //		for (int j = 0; j < ef[i].size(); j++)
         //			ansVal[ef[i][j]] += sim1[i];
-        cc = c * c / r / rq;
+        cc = c * c / r / eb[x].size();
         for (int i = 0; i < n; i++)
             if (eb[i].size() > 0)
                 ansVal[i] = cc * ansVal[i] / eb[i].size();
 
+        //	delete [] sim1;
+        delete[] nID;
         if (qCnt++ < 20) t2 += tm.getTime();
 
     }
 
 }
 
-// void readsrq::queryK(int x, int k, int * ansNode)
+// void readsd::queryK(int x, int k, int * ansNode)
 // {
 // 	double * ansVal = new double[n];
 // //	memset(ansVal, 0, sizeof(double)*n);
@@ -500,7 +614,7 @@ void readsrq::queryAll(int x, double *ansVal) {
 
 
 
-// void readsrq::insEdge(int x, int y)
+// void readsd::insEdge(int x, int y)
 // {
 
 // //x = 1499, y = 6728;
@@ -796,14 +910,15 @@ void readsrq::queryAll(int x, double *ansVal) {
 
 
 
-void readsrq::insEdge(int x, int y) {
+
+void readsd::insEdge(int x, int y) {
 
     ef[x].push_back(y);
     eb[y].push_back(x);
 
     sparse_hash_map<int, array<int, 3> >::iterator it, kt;
     array<int, 3> *jt;
-    int cc = int(RAND_MAX * c);
+    int cc = int(RAND_MAX * sqrt(c));
 
 
     for (int i = 0, o1, o2, rr; i < r; i++) {
@@ -959,11 +1074,18 @@ void readsrq::insEdge(int x, int y) {
 
 
             }
+
+
         }
+
+
     }
+
+
 }
 
-void readsrq::delEdge(int x, int y) {
+
+void readsd::delEdge(int x, int y) {
     bool fy = 0;
     for (auto it = ef[x].begin(); it != ef[x].end(); it++)
         if (*it == y) {
@@ -981,7 +1103,7 @@ void readsrq::delEdge(int x, int y) {
 
     sparse_hash_map<int, array<int, 3> >::iterator it, kt;
     array<int, 3> *jt;
-    int cc = int(RAND_MAX * c);
+    int cc = int(RAND_MAX * sqrt(c));
 
 
 //printf("%d %d\n", x, y);
