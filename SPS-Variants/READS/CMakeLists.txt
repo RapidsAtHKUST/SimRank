@@ -10,9 +10,7 @@ set(GROUND_TRUTH_FILES ground_truth/simrank.cpp ground_truth/simrank.h ground_tr
         ground_truth/sparse_matrix_utils.h ground_truth/file_serialization.h ground_truth/stat.cpp ground_truth/stat.h)
 
 find_package(Boost)
-
 find_package(OpenMP)
-
 if (OPENMP_FOUND)
     set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} ${OpenMP_C_FLAGS}")
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${OpenMP_CXX_FLAGS}")
@@ -54,8 +52,8 @@ add_executable(reads-original-release ${COMMON_FILES} algorithm/readsd.h algorit
 target_compile_options(reads-original-release PRIVATE -O3 -g -w)
 target_include_directories(reads-original-release PRIVATE ../../sparsehash-yche/include/)
 
-#### reads dynamic
-add_executable(reads-d-ssource ${COMMON_FILES} ${GROUND_TRUTH_FILES} algorithm/readsd.cpp test_single_source_readsd.cpp)
+#### reads dynamic single-pair
+add_executable(reads-d-ssource ${COMMON_FILES} ${GROUND_TRUTH_FILES} algorithm/readsd.cpp test_readsd_sp.cpp)
 InitREADS(reads-d-ssource)
 target_compile_definitions(reads-d-ssource PRIVATE STORE_INDEX=1)
 
