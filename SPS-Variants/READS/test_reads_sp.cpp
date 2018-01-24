@@ -13,6 +13,7 @@
 
 #include "ground_truth/graph_yche.h"
 #include "ground_truth/simrank.h"
+#include "ground_truth/random_pair_generator.h"
 
 using namespace std;
 using namespace std::chrono;
@@ -79,8 +80,8 @@ int main(int argc, char **argv) {
             auto *ansVal = new double[n];
 
 #pragma omp for schedule(dynamic, 1)
-            for (auto u = 0; u < 1000; u++) {
-                for (auto v = u; v < 1000; v++) {
+            for (auto u = 0; u < 100; u++) {
+                for (auto v = u; v < 100; v++) {
                     i1.queryAll(u, ansVal);
                     auto result = u == v ? 1 : ansVal[v];
                 }

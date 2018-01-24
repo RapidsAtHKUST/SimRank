@@ -6,6 +6,8 @@
 #include <queue>
 #include <algorithm>
 #include <iostream>
+#include <chrono>
+
 #include <boost/format.hpp>
 
 #include "sparsehash/dense_hash_map"
@@ -16,6 +18,7 @@
 
 using google::dense_hash_map;
 using namespace std;
+using namespace std::chrono;
 
 void reads::loadGraph(char *gName) {
     FILE *fg = fopen(gName, "r");
@@ -239,7 +242,10 @@ reads::reads(string gName_, int n_, int r_, double c_, int t_) {
         deserializeForSingleSource(const_cast<char *>(iName.c_str()));
     } else {
         loadGraph(gName);
+        auto start = high_resolution_clock::now();
         constructIndices();
+        auto end = high_resolution_clock::now();
+        cout << "indexing time:" << duration_cast<microseconds>(end - start).count() / pow(10, 6) << " s\n";
         cout << iName << endl;
         serializeForSingleSource(tm, const_cast<char *>(iName.c_str()));
     }

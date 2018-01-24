@@ -87,7 +87,6 @@ void readsrq::constructIndices() {
 //		if (i % 100 == 0) {printf("%d ", i); print_mem_info();}
     }
 
-
     for (int i = 0; i < n; i++) {
         random_shuffle(ef[i].begin(), ef[i].end());
         random_shuffle(eb[i].begin(), eb[i].end());
@@ -221,7 +220,10 @@ readsrq::readsrq(string gName_, int n_, int r_, int rq_, double c_, int t_) {
         deserializeForSingleSource(const_cast<char *>(iName.c_str()));
     } else {
         loadGraph(gName);
+        auto start = high_resolution_clock::now();
         constructIndices();
+        auto end = high_resolution_clock::now();
+        cout << "indexing time:" << duration_cast<microseconds>(end - start).count() / pow(10, 6) << " s\n";
         cout << iName << endl;
         serializeForSingleSource(tm, const_cast<char *>(iName.c_str()));
     }
@@ -382,6 +384,9 @@ void readsrq::queryAll(int x, double *ansVal) {
 }
 
 void readsrq::insEdge(int x, int y) {
+    random_device rd;
+    mt19937 gen(rd());
+    uniform_int_distribution<int> distribution(0, RAND_MAX);
 
     ef[x].push_back(y);
     eb[y].push_back(x);
@@ -392,7 +397,7 @@ void readsrq::insEdge(int x, int y) {
 
 
     for (int i = 0, o1, o2, rr; i < r; i++) {
-        if ((jt = &leaf[i][y])->at(0) == -1 || rand() < RAND_MAX / eb[y].size() && jt->at(0) != x) {
+        if ((jt = &leaf[i][y])->at(0) == -1 || distribution(gen) < RAND_MAX / eb[y].size() && jt->at(0) != x) {
 
             if (jt->at(0) != -1) {
 
@@ -431,7 +436,7 @@ void readsrq::insEdge(int x, int y) {
                 int j = 0, p = x;
 
                 for (int q; j < t - 1; j++) {
-                    if (eb[p].empty() || (rr = rand()) >= cc && j != 0) {
+                    if (eb[p].empty() || (rr = distribution(gen)) >= cc && j != 0) {
                         inode[i][j][p] = {-1, y, y};
                         break;
                     } else {
@@ -467,7 +472,7 @@ void readsrq::insEdge(int x, int y) {
 
             if ((kt = inode[i][j].find(y)) != inode[i][j].end() &&
                 (j == 0 && kt->second[0] == -1 ||
-                 kt->second[0] != -1 && kt->second[0] != x && rand() < RAND_MAX / eb[y].size())) {
+                 kt->second[0] != -1 && kt->second[0] != x && distribution(gen) < RAND_MAX / eb[y].size())) {
 
 
                 if (kt->second[0] != -1) {
@@ -511,7 +516,7 @@ void readsrq::insEdge(int x, int y) {
                     leaf[i][kt->second[1]][1] = leaf[i][kt->second[2]][2] = -1;
                     int k = j + 1, p = x;
                     for (int q; k < t - 1; k++) {
-                        if (eb[p].empty() || (rr = rand()) >= cc) {
+                        if (eb[p].empty() || (rr = distribution(gen)) >= cc) {
                             inode[i][k][p] = {-1, kt->second[1], kt->second[2]};
                             break;
                         } else {
@@ -549,6 +554,10 @@ void readsrq::insEdge(int x, int y) {
 }
 
 void readsrq::delEdge(int x, int y) {
+    random_device rd;
+    mt19937 gen(rd());
+    uniform_int_distribution<int> distribution(0, RAND_MAX);
+
     bool fy = 0;
     for (auto it = ef[x].begin(); it != ef[x].end(); it++)
         if (*it == y) {
@@ -589,7 +598,7 @@ void readsrq::delEdge(int x, int y) {
             if (eb[y].empty()) {
                 *jt = {-1, -1, -1};
                 continue;
-            } else z = eb[y][rand() % eb[y].size()];
+            } else z = eb[y][distribution(gen) % eb[y].size()];
 
             if ((it = inode[i][0].find(z)) != inode[i][0].end()) {
 
@@ -610,7 +619,7 @@ void readsrq::delEdge(int x, int y) {
                 int j = 0, p = z;
 
                 for (int q; j < t - 1; j++) {
-                    if (eb[p].empty() || (rr = rand()) >= cc && j != 0) {
+                    if (eb[p].empty() || (rr = distribution(gen)) >= cc && j != 0) {
                         inode[i][j][p] = {-1, y, y};
                         break;
                     } else {
@@ -668,7 +677,7 @@ void readsrq::delEdge(int x, int y) {
                     kt->second[0] = -1;
                     leaf[i][kt->second[1]][1] = leaf[i][kt->second[2]][2] = -1;
                     continue;
-                } else z = eb[y][rand() % eb[y].size()];
+                } else z = eb[y][distribution(gen) % eb[y].size()];
 
 
                 if ((it = inode[i][j + 1].find(z)) != inode[i][j + 1].end()) {
@@ -690,7 +699,7 @@ void readsrq::delEdge(int x, int y) {
                     leaf[i][kt->second[1]][1] = leaf[i][kt->second[2]][2] = -1;
                     int k = j + 1, p = z;
                     for (int q; k < t - 1; k++) {
-                        if (eb[p].empty() || (rr = rand()) >= cc) {
+                        if (eb[p].empty() || (rr = distribution(gen)) >= cc) {
                             inode[i][k][p] = {-1, kt->second[1], kt->second[2]};
                             break;
                         } else {
