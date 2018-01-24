@@ -62,3 +62,7 @@ add_executable(reads-d ${COMMON_FILES} ${GROUND_TRUTH_FILES} algorithm/readsd.cp
 InitREADS(reads-d)
 target_compile_definitions(reads-d PRIVATE STORE_INDEX=1)
 
+############### 3rd: reads-rq single-pair
+add_executable(reads-rq ${COMMON_FILES} ${GROUND_TRUTH_FILES} algorithm/readsrq.cpp test_reads_rq_sp.cpp)
+InitREADS(reads-rq)
+target_compile_definitions(reads-rq PRIVATE STORE_INDEX=1)

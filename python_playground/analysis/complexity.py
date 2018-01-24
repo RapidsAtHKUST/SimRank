@@ -41,6 +41,15 @@ def reads_sample_num(c=0.6, eps=0.01, delta=0.01):
     print '(2017reads) requiring sample#:', math.log(delta / 2) * (c ** 6) / (-2 * eps * eps)
 
 
+def reads_rq_sample_num(c=0.6, eps=0.01, delta=0.01, r=100):
+    numerator = c ** 6
+    left_part = -r * (eps ** 2) / math.log(delta / 2)
+    right_part = 2 * eps * (c ** 3) / 3
+    print left_part, right_part
+    divide_by = 2 * (left_part - right_part)
+    print 'reads rq #:', numerator / divide_by
+
+
 if __name__ == '__main__':
     power_method_iter_num()
     # sling_eps_bound()
@@ -50,6 +59,7 @@ if __name__ == '__main__':
     tsf_parameters()
     sling_parameters()
     reads_sample_num()
+    reads_rq_sample_num()
 
     tsf_parameters(0.4)
     tsf_parameters(0.5)

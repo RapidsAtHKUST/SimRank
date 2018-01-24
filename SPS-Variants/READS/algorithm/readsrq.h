@@ -11,7 +11,7 @@ using namespace std;
 using google::sparse_hash_map;
 
 struct readsrq {
-// data:
+public:
     double c;
     int r, n, t, qCnt, rq;
     double rtime, t1, t2;
@@ -19,8 +19,6 @@ struct readsrq {
 
     vector<array<int, 3> > *leaf;
     vector<sparse_hash_map<int, array<int, 3> > > *inode;
-    // vector<dense_hash_map<int, array<int, 3> > > *inode;
-
 /*
 leaf[i][x]: i-th simulation, leaf node x
 [0]: father(its upper level is level 0)
@@ -33,13 +31,11 @@ inode[i][j][p]: i-th simulation, level j(starting from 0), node p
 .second[1]: left most leaf node
 .second[2]: right most leaf node
 */
-
     vector<vector<int> > ef, eb;
-
 
     char gName[125];
 
-// method:
+public:
     readsrq(char *gName_, int n_, int r_, int rq_, double c_, int t_);
 
     ~readsrq();
@@ -53,7 +49,6 @@ inode[i][j][p]: i-th simulation, level j(starting from 0), node p
     void insEdge(int x, int y);
 
     void delEdge(int x, int y);
-
 };
 
 
