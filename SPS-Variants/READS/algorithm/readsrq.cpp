@@ -7,6 +7,9 @@
 #include <vector>
 #include <algorithm>
 #include <random>
+#include <chrono>
+#include <iostream>
+#include <boost/format.hpp>
 
 #include "sparsehash/sparse_hash_set"
 #include "sparsehash/dense_hash_map"
@@ -21,64 +24,9 @@ using google::sparse_hash_set;
 using google::dense_hash_map;
 using google::dense_hash_set;
 
-readsrq::readsrq(char *gName_, int n_, int r_, int rq_, double c_, int t_) {
-    sprintf(gName, "%s", gName_);
-    n = n_, r = r_, c = c_, t = t_;
-    rq = rq_;
-    t1 = t2 = qCnt = 0;
+using namespace std::chrono;
 
-    char iName[125];
-    sprintf(iName, "%s.readsrq.%d_%d_%lf_%d", gName, n, r, c, t);
-
-    if (fopen(iName, "rb") != NULL) {
-        printf("load ");
-        inBuf buf(iName);
-        leaf = new vector<array<int, 3> >[r];
-
-        for (int i = 0; i < r; i++) {
-            leaf[i].resize(n);
-            for (int j = 0; j < n; j++) {
-                buf.nextInt(leaf[i][j][0]);
-                buf.nextInt(leaf[i][j][1]);
-                buf.nextInt(leaf[i][j][2]);
-            }
-        }
-
-        inode = new vector<sparse_hash_map<int, array<int, 3> > >[r];
-        for (int i = 0, s, x[4]; i < r; i++) {
-            inode[i].resize(t);
-            for (int j = 0; j < t; j++) {
-                inode[i][j].set_deleted_key(-1);
-                buf.nextInt(s);
-                for (int k = 0; k < s; k++) {
-                    buf.nextInt(x[0]);
-                    buf.nextInt(x[1]);
-                    buf.nextInt(x[2]);
-                    buf.nextInt(x[3]);
-                    inode[i][j][x[0]] = {x[1], x[2], x[3]};
-                }
-            }
-        }
-
-        ef.resize(n);
-        for (int i = 0, s; i < n; i++) {
-            buf.nextInt(s);
-            ef[i].resize(s);
-            for (int j = 0; j < s; j++)
-                buf.nextInt(ef[i][j]);
-        }
-
-        eb.resize(n);
-        for (int i = 0, s; i < n; i++) {
-            buf.nextInt(s);
-            eb[i].resize(s);
-            for (int j = 0; j < s; j++)
-                buf.nextInt(eb[i][j]);
-        }
-        rtime = 0;
-        return;
-    }
-
+void readsrq::loadGraph(char *gName) {
     FILE *fg = fopen(gName, "r");
     if (fg == NULL) {
         printf("No graph %s\n", gName);
@@ -95,7 +43,9 @@ readsrq::readsrq(char *gName_, int n_, int r_, int rq_, double c_, int t_) {
     rtime = tm.getTime();
 
     fclose(fg);
+}
 
+void readsrq::constructIndices() {
     int cc = int(RAND_MAX * c);
 
     leaf = new vector<array<int, 3> >[r];
@@ -142,10 +92,10 @@ readsrq::readsrq(char *gName_, int n_, int r_, int rq_, double c_, int t_) {
         random_shuffle(ef[i].begin(), ef[i].end());
         random_shuffle(eb[i].begin(), eb[i].end());
     }
+}
 
-
+void readsrq::serializeForSingleSource(Timer &timer, char *iName) {
     tm.reset();
-
     outBuf buf(iName);
 
     for (int i = 0; i < r; i++)
@@ -180,9 +130,102 @@ readsrq::readsrq(char *gName_, int n_, int r_, int rq_, double c_, int t_) {
     }
 
     rtime += tm.getTime();
-
 }
 
+void readsrq::deserializeForSingleSource(char *iName) {
+    printf("load ");
+    inBuf buf(iName);
+    leaf = new vector<array<int, 3> >[r];
+
+    for (int i = 0; i < r; i++) {
+        leaf[i].resize(n);
+        for (int j = 0; j < n; j++) {
+            buf.nextInt(leaf[i][j][0]);
+            buf.nextInt(leaf[i][j][1]);
+            buf.nextInt(leaf[i][j][2]);
+        }
+    }
+
+    inode = new vector<sparse_hash_map<int, array<int, 3> > >[r];
+    for (int i = 0, s, x[4]; i < r; i++) {
+        inode[i].resize(t);
+        for (int j = 0; j < t; j++) {
+            inode[i][j].set_deleted_key(-1);
+            buf.nextInt(s);
+            for (int k = 0; k < s; k++) {
+                buf.nextInt(x[0]);
+                buf.nextInt(x[1]);
+                buf.nextInt(x[2]);
+                buf.nextInt(x[3]);
+                inode[i][j][x[0]] = {x[1], x[2], x[3]};
+            }
+        }
+    }
+
+    ef.resize(n);
+    for (int i = 0, s; i < n; i++) {
+        buf.nextInt(s);
+        ef[i].resize(s);
+        for (int j = 0; j < s; j++)
+            buf.nextInt(ef[i][j]);
+    }
+
+    eb.resize(n);
+    for (int i = 0, s; i < n; i++) {
+        buf.nextInt(s);
+        eb[i].resize(s);
+        for (int j = 0; j < s; j++)
+            buf.nextInt(eb[i][j]);
+    }
+    rtime = 0;
+}
+
+readsrq::readsrq(char *gName_, int n_, int r_, int rq_, double c_, int t_) {
+    sprintf(gName, "%s", gName_);
+    n = n_, r = r_, c = c_, t = t_;
+    rq = rq_;
+    t1 = t2 = qCnt = 0;
+
+    char iName[125];
+    sprintf(iName, "%s.readsrq.%d_%d_%lf_%d", gName, n, r, c, t);
+
+    if (fopen(iName, "rb") != NULL) {
+        deserializeForSingleSource(iName);
+    } else {
+        loadGraph(gName);
+        auto start = high_resolution_clock::now();
+        constructIndices();
+        auto end = high_resolution_clock::now();
+        cout << "indexing time:" << duration_cast<microseconds>(end - start).count() / pow(10, 6) << " s\n";
+        serializeForSingleSource(tm, iName);
+    }
+}
+
+readsrq::readsrq(string gName_, int n_, int r_, int rq_, double c_, int t_) {
+    n = n_, r = r_, c = c_, t = t_;
+    rq = rq_;
+    t1 = t2 = qCnt = 0;
+
+    // init graph path
+    string input_graph_full_path =
+            "/homes/ywangby/workspace/yche/git-repos/SimRank/LPMC-Profile/build/datasets/edge_list/" + gName_ + ".txt";
+    memcpy(gName, input_graph_full_path.c_str(), sizeof(char) * input_graph_full_path.size());
+    gName[input_graph_full_path.size()] = '\0';
+
+    // init index path
+    string iName = boost::str(boost::format(
+            "/homes/ywangby/workspace/yche/git-repos/SimRank/LPMC-Profile/build/datasets/readsrq/%s_%d_%d_%lf_%d.bin") %
+                              gName_ % n % r % c % t);
+
+    if (fopen(iName.c_str(), "rb") != nullptr) {
+        deserializeForSingleSource(const_cast<char *>(iName.c_str()));
+    } else {
+        loadGraph(gName);
+        constructIndices();
+        cout << iName << endl;
+        serializeForSingleSource(tm, const_cast<char *>(iName.c_str()));
+    }
+}
 
 readsrq::~readsrq() {
     delete[] leaf;

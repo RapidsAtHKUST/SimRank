@@ -38,7 +38,7 @@ int main(int argc, char **argv) {
 
     // 3rd: construct index
     auto start = high_resolution_clock::now();
-    readsrq i3(const_cast<char *>(full_path.c_str()), n, r, rq, c, t);
+    readsrq i3(data_name, n, r, rq, c, t);
     auto end = high_resolution_clock::now();
     cout << "construct time:" << duration_cast<microseconds>(end - start).count() / pow(10, 6) << " s\n";
 

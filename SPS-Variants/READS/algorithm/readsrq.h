@@ -34,9 +34,19 @@ inode[i][j][p]: i-th simulation, level j(starting from 0), node p
     vector<vector<int> > ef, eb;
 
     char gName[125];
+private:
+    void loadGraph(char *gName);
+
+    void constructIndices();
+
+    void serializeForSingleSource(Timer &timer, char *iName);
+
+    void deserializeForSingleSource(char *iName);
 
 public:
     readsrq(char *gName_, int n_, int r_, int rq_, double c_, int t_);
+
+    readsrq(string gName_, int n_, int r_, int rq_, double c_, int t_);
 
     ~readsrq();
 
