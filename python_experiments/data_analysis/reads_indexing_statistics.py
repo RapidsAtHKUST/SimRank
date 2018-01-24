@@ -38,7 +38,26 @@ def get_index_size(data_set, algorithm_name):
     return float(format_str(os.path.getsize(index_naming) / (1024. ** 2)))
 
 
+# collected information (in case that we need to remove large files)
+reads_d_size_dict = {
+    'ca-GrQc': 298646704,
+    'ca-HepTh': 532953712,
+    'wiki-Vote': 142430960,
+    'p2p-Gnutella06': 299125744,
+    'email-Enron': 1364548016,
+    'email-EuAll': 4374869768,
+    'web-BerkStan': 27234698312,
+    'web-Google': 29823990656,
+    'web-NotreDame': 8626791720,
+    'web-Stanford': 12135352960,
+    'cit-Patents:': 104277969456,
+    'soc-LiveJournal1': 0
+}
+
+
 def get_index_size_dict(algorithm_name):
+    if algorithm_name in [reads_d_tag]:
+        return []
     return dict(zip(data_set_lst, map(lambda data_set: get_index_size(data_set, algorithm_name), data_set_lst)))
 
 

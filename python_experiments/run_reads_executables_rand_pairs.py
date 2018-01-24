@@ -33,7 +33,11 @@ def signal_handler(signal, frame):
 
 def run_exp():
     exec_root = '/homes/ywangby/workspace/yche/git-repos/SimRank/SPS-Variants/READS/build'
-    exec_name_lst = ['reads-s-rand-bench', 'reads-d-rand-bench', 'reads-rq-rand-bench']
+    exec_name_lst = [
+        # 'reads-s-rand-bench',
+        'reads-d-rand-bench',
+        # 'reads-rq-rand-bench'
+    ]
     other_exec_path_lst = map(lambda exec_name: exec_root + os.sep + exec_name, exec_name_lst)
 
     data_set_lst = ['ca-GrQc', 'ca-HepTh', 'p2p-Gnutella06', 'wiki-Vote']
@@ -85,8 +89,28 @@ def run_exp():
     # 1st: accuracy
     # one_round()
 
-    sample_num_lst = [10 ** 4, 10 ** 5]
+    sample_num_lst = [
+        10 ** 4,
+        10 ** 5
+    ]
     range_idx_lst = [0]
+    data_set_lst = [
+        # 'ca-GrQc', 'ca-HepTh', 'p2p-Gnutella06', 'wiki-Vote',
+        # 'email-Enron', 'email-EuAll',
+        # 'web-NotreDame', 'web-Stanford', 'web-BerkStan', 'web-Google',
+        'cit-Patents',
+        'soc-LiveJournal1'
+    ]
+
+    # 2nd: efficiency
+    one_round()
+
+    # 3rd: another round for reads-rq
+    exec_name_lst = ['reads-rq-rand-bench']
+    other_exec_path_lst = map(lambda exec_name: exec_root + os.sep + exec_name, exec_name_lst)
+    # os.system('ll /homes/ywangby/workspace/LinsysSimRank/datasets/readsd/* >> tmp_ll.log')
+    # os.system('du -b /homes/ywangby/workspace/LinsysSimRank/datasets/readsd/* >> tmp_du.log')
+    # os.system('rm /homes/ywangby/workspace/LinsysSimRank/datasets/readsd/* >> tmp_rm.log')
     data_set_lst = [
         'ca-GrQc', 'ca-HepTh', 'p2p-Gnutella06', 'wiki-Vote',
         'email-Enron', 'email-EuAll',
@@ -94,8 +118,10 @@ def run_exp():
         'cit-Patents',
         'soc-LiveJournal1'
     ]
-
-    # 2nd: efficiency
+    sample_num_lst = [
+        10 ** 4,
+        10 ** 5
+    ]
     one_round()
 
 
