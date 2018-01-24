@@ -2,6 +2,7 @@
 #define __READS__
 
 #include <vector>
+#include <string>
 
 #include "../util/timer.h"
 
@@ -17,7 +18,7 @@ struct reads {
 
 // methods:
 private:
-    void loadGraph(char* gName);
+    void loadGraph(char *gName);
 
     void constructIndices();
 
@@ -30,9 +31,13 @@ private:
 public:
     reads(char *gName_, int n_, int r_, double c_, int t_);
 
+    reads(string gName_, int n_, int r_, double c_, int t_);
+
     ~reads();
 
     double queryOne(int x, int y);
+
+    double queryOne(int x, int y, double *ansVal);
 
     void queryAll(int x, double *ansVal);
 };

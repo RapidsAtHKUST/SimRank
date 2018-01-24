@@ -52,8 +52,13 @@ add_executable(reads-original-release ${COMMON_FILES} algorithm/readsd.h algorit
 target_compile_options(reads-original-release PRIVATE -O3 -g -w)
 target_include_directories(reads-original-release PRIVATE ../../sparsehash-yche/include/)
 
-#### reads dynamic single-pair
-add_executable(reads-d-ssource ${COMMON_FILES} ${GROUND_TRUTH_FILES} algorithm/readsd.cpp test_readsd_sp.cpp)
-InitREADS(reads-d-ssource)
-target_compile_definitions(reads-d-ssource PRIVATE STORE_INDEX=1)
+############### 1st: reads static single-pair
+add_executable(reads-s ${COMMON_FILES} ${GROUND_TRUTH_FILES} algorithm/reads.cpp test_reads_sp.cpp)
+InitREADS(reads-s)
+target_compile_definitions(reads-s PRIVATE STORE_INDEX=1)
+
+############### 2nd: reads dynamic single-pair
+add_executable(reads-d ${COMMON_FILES} ${GROUND_TRUTH_FILES} algorithm/readsd.cpp test_readsd_sp.cpp)
+InitREADS(reads-d)
+target_compile_definitions(reads-d PRIVATE STORE_INDEX=1)
 

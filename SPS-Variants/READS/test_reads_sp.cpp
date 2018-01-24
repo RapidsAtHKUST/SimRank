@@ -37,7 +37,7 @@ int main(int argc, char **argv) {
 
     // 3rd: construct index
     auto start = high_resolution_clock::now();
-    readsd i2(data_name, n, r, c, t);
+    reads i1(data_name, n, r, c, t);
     auto end = high_resolution_clock::now();
     cout << "construct time:" << duration_cast<microseconds>(end - start).count() / pow(10, 6) << " s\n";
 
@@ -55,7 +55,7 @@ int main(int argc, char **argv) {
 #pragma omp for reduction(max:max_err) schedule(dynamic, 1)
             for (auto u = 0; u < 1000; u++) {
                 for (auto v = u; v < 1000; v++) {
-                    auto result = i2.queryOne(u, v, ansVal);
+                    auto result = i1.queryOne(u, v, ansVal);
                     max_err = max(max_err, abs(ts.sim(u, v) - result));
                     if (abs(ts.sim(u, v) - result) > 0.01) {
 #pragma omp critical
@@ -81,7 +81,7 @@ int main(int argc, char **argv) {
 #pragma omp for schedule(dynamic, 1)
             for (auto u = 0; u < 1000; u++) {
                 for (auto v = u; v < 1000; v++) {
-                    i2.queryAll(u, ansVal);
+                    i1.queryAll(u, ansVal);
                     auto result = u == v ? 1 : ansVal[v];
                 }
             }

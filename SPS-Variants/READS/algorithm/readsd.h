@@ -3,7 +3,9 @@
 
 #include <array>
 #include <vector>
+
 #include "sparsehash/sparse_hash_map"
+
 #include "../util/timer.h"
 
 using namespace std;
@@ -16,13 +18,12 @@ public:
     double rtime, t1, t2;
     Timer tm;
 
-    vector<array<int, 3> > *leaf;
-    vector<sparse_hash_map<int, array<int, 3> > > *inode;
+    vector<array<int, 3>> *leaf;
+    vector<sparse_hash_map<int, array<int, 3>>> *inode;
 
-    vector<vector<int> > ef, eb;
+    vector<vector<int>> ef, eb;
 
     char gName[125];
-
 private:
     void loadGraph(char *gName);
 
@@ -35,9 +36,11 @@ private:
 public:
     readsd(char *gName_, int n_, int r_, double c_, int t_);
 
+    readsd(string gName_, int n_, int r_, double c_, int t_);
+
     ~readsd();
 
-    double queryOne(int x, int y);
+    double queryOne(int x, int y, double *ansVal);
 
     void queryAll(int x, double *ansVal);
 

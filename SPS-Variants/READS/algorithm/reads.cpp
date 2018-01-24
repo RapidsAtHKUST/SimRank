@@ -6,6 +6,7 @@
 #include <queue>
 #include <algorithm>
 #include <iostream>
+#include <boost/format.hpp>
 
 #include "sparsehash/dense_hash_map"
 
@@ -217,6 +218,34 @@ reads::reads(char *gName_, int n_, int r_, double c_, int t_) {
 #endif
 }
 
+
+reads::reads(string gName_, int n_, int r_, double c_, int t_) {
+    // init parameters
+    n = n_, r = r_, c = c_, t = t_;
+    t1 = t2 = qCnt = 0;
+
+    // init graph path
+    string input_graph_full_path =
+            "/homes/ywangby/workspace/yche/git-repos/SimRank/LPMC-Profile/build/datasets/edge_list/" + gName_ + ".txt";
+    memcpy(gName, input_graph_full_path.c_str(), sizeof(char) * input_graph_full_path.size());
+    gName[input_graph_full_path.size()] = '\0';
+
+    // init index path
+    string iName = boost::str(boost::format(
+            "/homes/ywangby/workspace/yche/git-repos/SimRank/LPMC-Profile/build/datasets/reads/%s_%d_%d_%lf_%d.bin") %
+                              gName_ % n % r % c % t);
+
+    if (fopen(iName.c_str(), "rb") != nullptr) {
+        deserializeForSingleSource(const_cast<char *>(iName.c_str()));
+    } else {
+        loadGraph(gName);
+        constructIndices();
+        cout << iName << endl;
+        serializeForSingleSource(tm, const_cast<char *>(iName.c_str()));
+    }
+}
+
+
 reads::~reads() = default;
 
 double reads::queryOne(int x, int y) {
@@ -232,6 +261,12 @@ double reads::queryOne(int x, int y) {
     return static_cast<double>(match_count) * c / r;
 }
 
+double reads::queryOne(int x, int y, double *ansVal) {
+    if (x == y) { return 1; }
+    queryAll(x, ansVal);
+    return ansVal[y];
+}
+
 void reads::queryAll(int x, double *ansVal) {
     memset(ansVal, 0, sizeof(double) * n);
     if (eb[x].empty()) {
@@ -239,114 +274,117 @@ void reads::queryAll(int x, double *ansVal) {
         return;
     }
 
+#ifdef SHIFT_ARRAY_HASH_TABLE
     if (qCnt >= 20 && t1 < t2 || qCnt < 20 && qCnt % 2 == 0) {
         if (qCnt < 20) tm.reset();
+#endif
+    dense_hash_map<int, double> sim1;
+    sim1.set_empty_key(-1);
 
-        dense_hash_map<int, double> sim1;
-        sim1.set_empty_key(-1);
+    auto *nID = new bool[n];
+    memset(nID, 0, sizeof(bool) * n);
 
-        auto *nID = new bool[n];
-        memset(nID, 0, sizeof(bool) * n);
+    double cc = (1 - c) * r, c1 = r / c;
 
-        double cc = (1 - c) * r, c1 = r / c;
-
-        int p, q;
-        for (auto i = eb[x].begin(); i != eb[x].end(); i++) {
-            for (auto j = eb[p = *i].begin(); j != eb[p].end() && j - eb[p].begin() < 10; j++)
-                for (auto k = ef[q = *j].begin(); k != ef[q].end() && k - ef[q].begin() < 10; k++)
-                    if (*k != p)
-                        sim1[*k] += cc / eb[p].size() / eb[*k].size();
-            sim1[*i] += c1;
-        }
-
-        for (int i = 0, cnt, q; i < r; i++) {
-            for (int j : eb[x])
-                nID[j] = true;
-
-            for (auto j = eb[x].begin(); j != eb[x].end(); j++)
-                if (nID[q = *j] && nt[i][q] != q && nt[i][q] != -1) {
-                    cnt = 0;
-
-                    for (int p = nt[i][q]; p != q; p = nt[i][p]) {
-                        if (nID[p]) cnt++, nID[p] = false;
-                        else sim1[p] += c;
-                    }
-
-                    if (cnt != 0) {
-                        cc = c * cnt;
-                        for (int p = nt[i][q]; p != q; p = nt[i][p])
-                            sim1[p] += cc;
-                        sim1[q] += cc;
-                    }
-                }
-
-        }
-        cc = c * c / eb[x].size() / r;
-        for (auto &it : sim1)
-            for (auto jt = ef[p = it.first].begin(); jt != ef[p].end(); jt++)
-                ansVal[*jt] += it.second * cc / eb[*jt].size();
-
-        delete[] nID;
-
-        if (qCnt++ < 20) t1 += tm.getTime();
-
-    } else {
-
-        if (qCnt < 20) tm.reset();
-
-        auto *sim1 = new double[n];
-        memset(sim1, 0, sizeof(double) * n);
-
-
-        auto *nID = new bool[n];
-        memset(nID, 0, sizeof(bool) * n);
-
-        double cc = (1 - c) * r, c1 = r / c;
-
-        int p, q;
-        for (auto i = eb[x].begin(); i != eb[x].end(); i++) {
-            for (auto j = eb[p = *i].begin(); j != eb[p].end() && j - eb[p].begin() < 10; j++)
-                for (auto k = ef[q = *j].begin(); k != ef[q].end() && k - ef[q].begin() < 10; k++)
-                    if (*k != p)
-                        sim1[*k] += cc / eb[p].size() / eb[*k].size();
-            sim1[*i] += c1;
-        }
-
-        for (int i = 0, cnt, q; i < r; i++) {
-            for (int j : eb[x])
-                nID[j] = true;
-
-            for (auto j = eb[x].begin(); j != eb[x].end(); j++)
-                if (nID[q = *j] && nt[i][q] != q && nt[i][q] != -1) {
-                    cnt = 0;
-
-                    for (int p = nt[i][q]; p != q; p = nt[i][p]) {
-                        if (nID[p]) cnt++, nID[p] = false;
-                        else sim1[p] += c;
-                    }
-
-                    if (cnt != 0) {
-                        cc = c * cnt;
-                        for (int p = nt[i][q]; p != q; p = nt[i][p])
-                            sim1[p] += cc;
-                        sim1[q] += cc;
-                    }
-                }
-
-        }
-
-        for (int i = 0; i < n; i++)
-            if (sim1[i] > 0)
-                for (auto j = ef[i].begin(); j != ef[i].end(); j++)
-                    ansVal[*j] += sim1[i];
-
-        cc = c * c / r / eb[x].size();
-        for (int i = 0; i < n; i++)
-            if (!eb[i].empty())
-                ansVal[i] = ansVal[i] * cc / eb[i].size();
-
-        delete[] nID;
-
-        if (qCnt++ < 20) t2 += tm.getTime();
+    int p, q;
+    for (auto i = eb[x].begin(); i != eb[x].end(); i++) {
+        for (auto j = eb[p = *i].begin(); j != eb[p].end() && j - eb[p].begin() < 10; j++)
+            for (auto k = ef[q = *j].begin(); k != ef[q].end() && k - ef[q].begin() < 10; k++)
+                if (*k != p)
+                    sim1[*k] += cc / eb[p].size() / eb[*k].size();
+        sim1[*i] += c1;
     }
+
+    for (int i = 0, cnt, q; i < r; i++) {
+        for (int j : eb[x])
+            nID[j] = true;
+
+        for (auto j = eb[x].begin(); j != eb[x].end(); j++)
+            if (nID[q = *j] && nt[i][q] != q && nt[i][q] != -1) {
+                cnt = 0;
+
+                for (int p = nt[i][q]; p != q; p = nt[i][p]) {
+                    if (nID[p]) cnt++, nID[p] = false;
+                    else sim1[p] += c;
+                }
+
+                if (cnt != 0) {
+                    cc = c * cnt;
+                    for (int p = nt[i][q]; p != q; p = nt[i][p])
+                        sim1[p] += cc;
+                    sim1[q] += cc;
+                }
+            }
+
+    }
+    cc = c * c / eb[x].size() / r;
+    for (auto &it : sim1)
+        for (auto jt = ef[p = it.first].begin(); jt != ef[p].end(); jt++)
+            ansVal[*jt] += it.second * cc / eb[*jt].size();
+
+    delete[] nID;
+
+#ifdef SHIFT_ARRAY_HASH_TABLE
+    if (qCnt++ < 20) t1 += tm.getTime();
+} else {
+
+    if (qCnt < 20) tm.reset();
+
+    auto *sim1 = new double[n];
+    memset(sim1, 0, sizeof(double) * n);
+
+
+    auto *nID = new bool[n];
+    memset(nID, 0, sizeof(bool) * n);
+
+    double cc = (1 - c) * r, c1 = r / c;
+
+    int p, q;
+    for (auto i = eb[x].begin(); i != eb[x].end(); i++) {
+        for (auto j = eb[p = *i].begin(); j != eb[p].end() && j - eb[p].begin() < 10; j++)
+            for (auto k = ef[q = *j].begin(); k != ef[q].end() && k - ef[q].begin() < 10; k++)
+                if (*k != p)
+                    sim1[*k] += cc / eb[p].size() / eb[*k].size();
+        sim1[*i] += c1;
+    }
+
+    for (int i = 0, cnt, q; i < r; i++) {
+        for (int j : eb[x])
+            nID[j] = true;
+
+        for (auto j = eb[x].begin(); j != eb[x].end(); j++)
+            if (nID[q = *j] && nt[i][q] != q && nt[i][q] != -1) {
+                cnt = 0;
+
+                for (int p = nt[i][q]; p != q; p = nt[i][p]) {
+                    if (nID[p]) cnt++, nID[p] = false;
+                    else sim1[p] += c;
+                }
+
+                if (cnt != 0) {
+                    cc = c * cnt;
+                    for (int p = nt[i][q]; p != q; p = nt[i][p])
+                        sim1[p] += cc;
+                    sim1[q] += cc;
+                }
+            }
+
+    }
+
+    for (int i = 0; i < n; i++)
+        if (sim1[i] > 0)
+            for (auto j = ef[i].begin(); j != ef[i].end(); j++)
+                ansVal[*j] += sim1[i];
+
+    cc = c * c / r / eb[x].size();
+    for (int i = 0; i < n; i++)
+        if (!eb[i].empty())
+            ansVal[i] = ansVal[i] * cc / eb[i].size();
+
+    delete[] nID;
+
+    if (qCnt++ < 20) t2 += tm.getTime();
 }
+#endif
+}
+

@@ -6,6 +6,10 @@
 
 #include <vector>
 #include <algorithm>
+#include <chrono>
+#include <iostream>
+
+#include <boost/format.hpp>
 
 #include "sparsehash/sparse_hash_set"
 #include "sparsehash/dense_hash_map"
@@ -17,7 +21,7 @@
 
 using google::sparse_hash_set;
 using google::dense_hash_map;
-
+using namespace std::chrono;
 
 void readsd::loadGraph(char *gName) {
     FILE *fg = fopen(gName, "r");
@@ -41,9 +45,7 @@ void readsd::constructIndices() {
     leaf = new vector<array<int, 3> >[r];
     inode = new vector<sparse_hash_map<int, array<int, 3> > >[r];
     sparse_hash_map<int, array<int, 3> >::iterator jt;
-    // inode = new vector<dense_hash_map<int, array<int, 3> > >[r];
-    // dense_hash_map<int, array<int, 3> >::iterator jt;
-    // array<int, 3> ek = {-2,-2,-2};
+
     for (int i = 0; i < r; i++) {
         leaf[i].resize(n);
         inode[i].resize(t);
@@ -156,6 +158,33 @@ void readsd::deserializeForSingleSource(char *iName) {
     rtime = 0;
 }
 
+
+readsd::readsd(string gName_, int n_, int r_, double c_, int t_) {
+    // init parameters
+    n = n_, r = r_, c = c_, t = t_;
+    t1 = t2 = qCnt = 0;
+
+    // init graph path
+    string input_graph_full_path =
+            "/homes/ywangby/workspace/yche/git-repos/SimRank/LPMC-Profile/build/datasets/edge_list/" + gName_ + ".txt";
+    memcpy(gName, input_graph_full_path.c_str(), sizeof(char) * input_graph_full_path.size());
+    gName[input_graph_full_path.size()] = '\0';
+
+    // init index path
+    string iName = boost::str(boost::format(
+            "/homes/ywangby/workspace/yche/git-repos/SimRank/LPMC-Profile/build/datasets/readsd/%s_%d_%d_%lf_%d.bin") %
+                              gName_ % n % r % c % t);
+
+    if (fopen(iName.c_str(), "rb") != nullptr) {
+        deserializeForSingleSource(const_cast<char *>(iName.c_str()));
+    } else {
+        loadGraph(gName);
+        constructIndices();
+        cout << iName << endl;
+        serializeForSingleSource(tm, const_cast<char *>(iName.c_str()));
+    }
+}
+
 readsd::readsd(char *gName_, int n_, int r_, double c_, int t_) {
     sprintf(gName, "%s", gName_);
     n = n_, r = r_, c = c_, t = t_;
@@ -164,14 +193,14 @@ readsd::readsd(char *gName_, int n_, int r_, double c_, int t_) {
     sprintf(iName, "%s.readsd.%d_%d_%lf_%d", gName, n, r, c, t);
     if (fopen(iName, "rb") != NULL) {
         deserializeForSingleSource(iName);
-        return;
+    } else {
+        loadGraph(gName);
+        auto start = high_resolution_clock::now();
+        constructIndices();
+        auto end = high_resolution_clock::now();
+        cout << "indexing time:" << duration_cast<microseconds>(end - start).count() / pow(10, 6) << " s\n";
+        serializeForSingleSource(tm, iName);
     }
-
-    loadGraph(gName);
-
-    constructIndices();
-
-    serializeForSingleSource(tm, iName);
 }
 
 readsd::~readsd() {
@@ -180,7 +209,10 @@ readsd::~readsd() {
 }
 
 //todo
-double readsd::queryOne(int x, int y) {
+double readsd::queryOne(int x, int y, double *ansVal) {
+    if (x == y) { return 1; }
+    queryAll(x, ansVal);
+    return ansVal[y];
 }
 
 void readsd::queryAll(int x, double *ansVal) {
@@ -189,54 +221,59 @@ void readsd::queryAll(int x, double *ansVal) {
         ansVal[x] = 1;
         return;
     }
+
+#ifdef SHIFT_ARRAY_HASH_TABLE
     if (qCnt >= 20 && t1 < t2 || qCnt < 20 && qCnt % 2 == 0) {
-        if (qCnt < 20) tm.reset();
-        dense_hash_map<int, double> sim1;
-        dense_hash_map<int, double>::iterator sim1IT;
-        sim1.set_empty_key(-1);
+    if (qCnt < 20) tm.reset();
+#endif
+    dense_hash_map<int, double> sim1;
+    sim1.set_empty_key(-1);
 
-        bool *nID = new bool[n];
-        memset(nID, 0, sizeof(bool) * n);
-        double cc = (1 - c) * r, c1 = r / c;
+    bool *nID = new bool[n];
+    memset(nID, 0, sizeof(bool) * n);
+    double cc = (1 - c) * r, c1 = r / c;
 
-        int p, q;
-        for (auto i = eb[x].begin(); i != eb[x].end(); i++) {
-            for (auto j = eb[p = *i].begin(); j != eb[p].end() && j - eb[p].begin() < 10; j++)
-                for (auto k = ef[q = *j].begin(); k != ef[q].end() && k - ef[q].begin() < 10; k++)
-                    if (*k != p)
-                        sim1[*k] += cc / eb[p].size() / eb[*k].size();
-            sim1[*i] += c1;
-        }
-        for (int i = 0, cnt, q; i < r; i++) {
-            for (auto j = eb[x].begin(); j != eb[x].end(); j++)
-                nID[*j] = 1;
-            for (auto j = eb[x].begin(); j != eb[x].end(); j++)
-                if (nID[q = *j] && (leaf[i][q][1] != -1 || leaf[i][q][2] != -1)) {
-                    cnt = 0;
-                    for (int p = leaf[i][q][1]; p != -1; p = leaf[i][p][1]) {
-                        if (nID[p]) cnt++, nID[p] = 0;
-                        else sim1[p] += c;
-                    }
-                    for (int p = leaf[i][q][2]; p != -1; p = leaf[i][p][2]) {
-                        if (nID[p]) cnt++, nID[p] = 0;
-                        else sim1[p] += c;
-                    }
-                    if (cnt != 0) {
-                        cc = c * cnt;
-                        for (int p = leaf[i][q][1]; p != -1; p = leaf[i][p][1])
-                            sim1[p] += cc;
-                        for (int p = leaf[i][q][2]; p != -1; p = leaf[i][p][2])
-                            sim1[p] += cc;
-                        sim1[q] += cc;
-                    }
+    // same logic begins, using dense hash map here 
+    int p, q;
+    for (auto i = eb[x].begin(); i != eb[x].end(); i++) {
+        for (auto j = eb[p = *i].begin(); j != eb[p].end() && j - eb[p].begin() < 10; j++)
+            for (auto k = ef[q = *j].begin(); k != ef[q].end() && k - ef[q].begin() < 10; k++)
+                if (*k != p)
+                    sim1[*k] += cc / eb[p].size() / eb[*k].size();
+        sim1[*i] += c1;
+    }
+    for (int i = 0, cnt, q; i < r; i++) {
+        for (auto j = eb[x].begin(); j != eb[x].end(); j++)
+            nID[*j] = 1;
+        for (auto j = eb[x].begin(); j != eb[x].end(); j++)
+            if (nID[q = *j] && (leaf[i][q][1] != -1 || leaf[i][q][2] != -1)) {
+                cnt = 0;
+                for (int p = leaf[i][q][1]; p != -1; p = leaf[i][p][1]) {
+                    if (nID[p]) cnt++, nID[p] = 0;
+                    else sim1[p] += c;
                 }
-        }
-        cc = c * c / eb[x].size() / r;
-        for (auto it = sim1.begin(); it != sim1.end(); it++)
-            for (auto jt = ef[p = it->first].begin(); jt != ef[p].end(); jt++)
-                ansVal[*jt] += it->second * cc / eb[*jt].size();
-        delete[] nID;
-        if (qCnt++ < 20) t1 += tm.getTime();
+                for (int p = leaf[i][q][2]; p != -1; p = leaf[i][p][2]) {
+                    if (nID[p]) cnt++, nID[p] = 0;
+                    else sim1[p] += c;
+                }
+                if (cnt != 0) {
+                    cc = c * cnt;
+                    for (int p = leaf[i][q][1]; p != -1; p = leaf[i][p][1])
+                        sim1[p] += cc;
+                    for (int p = leaf[i][q][2]; p != -1; p = leaf[i][p][2])
+                        sim1[p] += cc;
+                    sim1[q] += cc;
+                }
+            }
+    }
+    cc = c * c / eb[x].size() / r;
+    for (auto it = sim1.begin(); it != sim1.end(); it++)
+        for (auto jt = ef[p = it->first].begin(); jt != ef[p].end(); jt++)
+            ansVal[*jt] += it->second * cc / eb[*jt].size();
+    delete[] nID;
+
+#ifdef SHIFT_ARRAY_HASH_TABLE
+    if (qCnt++ < 20) t1 += tm.getTime();
     } else {
         if (qCnt < 20) tm.reset();
         double *sim1 = new double[n];
@@ -246,6 +283,7 @@ void readsd::queryAll(int x, double *ansVal) {
         memset(nID, 0, sizeof(bool) * n);
         double cc = (1 - c) * r, c1 = r / c;
 
+        // same logic begins, using dense hash map here 
         int p, q;
         for (auto i = eb[x].begin(); i != eb[x].end(); i++) {
             for (auto j = eb[p = *i].begin(); j != eb[p].end() && j - eb[p].begin() < 10; j++)
@@ -290,6 +328,7 @@ void readsd::queryAll(int x, double *ansVal) {
         delete[] nID;
         if (qCnt++ < 20) t2 += tm.getTime();
     }
+#endif
 }
 
 void readsd::insEdge(int x, int y) {
@@ -569,4 +608,3 @@ void readsd::delEdge(int x, int y) {
         }
     }
 }
-
