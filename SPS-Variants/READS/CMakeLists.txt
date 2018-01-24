@@ -4,7 +4,8 @@ project(release)
 set(CMAKE_CXX_STANDARD 11)
 
 # environmental variables
-set(COMMON_FILES util/inBuf.h util/outBuf.h util/meminfo.cpp util/meminfo.h util/timer.h util/sample_num.h)
+set(COMMON_FILES util/inBuf.h util/outBuf.h util/meminfo.cpp util/meminfo.h util/timer.h util/sample_num.h
+        ground_truth/stat.cpp)
 set(STATIC_GRAPH_FILES algorithm/reads.cpp algorithm/reads.h)
 set(GROUND_TRUTH_FILES ground_truth/simrank.cpp ground_truth/simrank.h ground_truth/graph_yche.cpp ground_truth/graph_yche.h
         ground_truth/sparse_matrix_utils.h ground_truth/file_serialization.h ground_truth/stat.cpp ground_truth/stat.h

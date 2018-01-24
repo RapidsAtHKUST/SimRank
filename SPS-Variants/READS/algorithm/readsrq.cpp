@@ -19,6 +19,7 @@
 #include "../util/inBuf.h"
 #include "../util/outBuf.h"
 #include "../util/meminfo.h"
+#include "../ground_truth/stat.h"
 
 using google::sparse_hash_set;
 using google::dense_hash_map;
@@ -227,6 +228,7 @@ readsrq::readsrq(string gName_, int n_, int r_, int rq_, double c_, int t_) {
         cout << iName << endl;
         serializeForSingleSource(tm, const_cast<char *>(iName.c_str()));
     }
+    cout << "mem size:" << getValue() << " KB" << endl;
 }
 
 readsrq::~readsrq() {
