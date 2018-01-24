@@ -42,10 +42,10 @@ def get_tag_info(file_path, tag, functor):
 
 
 # 1st: accuracy related
-def get_accuracy_lst(data_set, pair_num, round_num, result_file_name):
+def get_accuracy_lst(data_set, pair_num, round_num, result_file_name, stat_folder=other_algo_indexing_stat_root_folder):
     accuracy_lst = []
     algorithm_lst = [bflpmc_tag, flpmc_tag, bprw_tag]
-    stat_folder = other_algo_indexing_stat_root_folder
+
     for algorithm in algorithm_lst:
         if result_file_name.startswith(algorithm):
             stat_folder = our_algo_indexing_stat_root_folder

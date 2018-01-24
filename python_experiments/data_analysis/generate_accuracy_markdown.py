@@ -1,20 +1,31 @@
 from querying_time_accuracy_statistics import *
+from reads_accuracy_statistics import *
 import decimal
 
 
-def get_accuracy_dict(root_dir='.'):
-    with open(root_dir + os.sep + 'data-json' + os.sep + 'accuracy_result' + '.json') as ifs:
+def get_accuracy_dict(root_dir='.', file_name='accuracy_result'):
+    with open(root_dir + os.sep + 'data-json' + os.sep + file_name + '.json') as ifs:
         return json.load(ifs)
 
 
 def format_str(float_num):
-    return str(decimal.Decimal.from_float(float_num * (10 ** 2)).quantize(decimal.Decimal('0.000')))
+    my_str = str(decimal.Decimal.from_float(float_num * (10 ** 2)).quantize(decimal.Decimal('0.000')))
+    if (float_num < 0.01):
+        return my_str
+    else:
+        return '**' + my_str + '**'
 
 
 if __name__ == '__main__':
-    algorithm_tag_lst = [bflpmc_tag, flpmc_tag, bprw_tag, sling_tag, isp_tag, tsf_tag, lind_tag, cw_tag]
+    algorithm_tag_lst = [bflpmc_tag, flpmc_tag, bprw_tag, sling_tag,
+                         reads_tag, reads_d_tag, reads_rq_tag,
+                         isp_tag, tsf_tag, lind_tag, cw_tag]
 
     accuracy_dict = get_accuracy_dict()
+    read_dict = get_accuracy_dict(file_name='accuracy_result_reads')
+    assert isinstance(read_dict, dict)
+    for key, val in read_dict.iteritems():
+        accuracy_dict[key] = val
 
 
     def get_time_table(round_lst, data_set):
