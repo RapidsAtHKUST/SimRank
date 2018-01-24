@@ -42,7 +42,18 @@ def get_index_size_dict(algorithm_name):
     return dict(zip(data_set_lst, map(lambda data_set: get_index_size(data_set, algorithm_name), data_set_lst)))
 
 
+def get_algorithm_index_info_dict(algorithm_name):
+    return {
+        index_time_tag: get_index_time_dict(algorithm_name),
+        index_size_tag: get_index_size_dict(algorithm_name)
+    }
+
+
 if __name__ == '__main__':
     data_set = data_set_lst[-1]
-    print get_index_time_dict(reads_tag)
-    print get_index_size_dict(reads_tag)
+    algorithm_tag_lst = [reads_tag]
+
+    with open('data-json/index_result_reads.json', 'w') as ofs:
+        ofs.write(json.dumps(
+            dict(zip(algorithm_tag_lst, map(lambda tag: get_algorithm_index_info_dict(tag), algorithm_tag_lst))),
+            indent=4))

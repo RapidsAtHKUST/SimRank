@@ -1,15 +1,22 @@
 from indexing_time_space_statistics import *
+from reads_indexing_statistics import reads_tag
 
 
-def get_index_dict(root_dir='.'):
-    with open(root_dir + os.sep + 'data-json' + os.sep + 'index_result' + '.json') as ifs:
+def get_index_dict(root_dir='.', file_name='index_result'):
+    with open(root_dir + os.sep + 'data-json' + os.sep + file_name + '.json') as ifs:
         return json.load(ifs)
 
 
 if __name__ == '__main__':
-    algorithm_lst = [local_push_tag, sling_tag, linear_d_tag, cloud_walker_tag, tsf_tag]
+    algorithm_lst = [local_push_tag, reads_tag, sling_tag,
+                     linear_d_tag, cloud_walker_tag, tsf_tag]
 
     index_dict = get_index_dict()
+    read_dict = get_index_dict(file_name='index_result_reads')
+    assert isinstance(read_dict, dict)
+    for key, val in read_dict.iteritems():
+        print key
+        index_dict[key] = val
 
 
     def get_time_table(data_set_lst):
@@ -67,7 +74,7 @@ if __name__ == '__main__':
         ofs.writelines([get_index_size_table(data_set_lst[0:6]), '\n\n'])
         ofs.writelines([get_index_size_table(data_set_lst[6:len(data_set_lst)]), '\n\n'])
 
-        ofs.writelines(['## Max Mem Consumption', '\n\n'])
-        ofs.writelines([get_mem_size_table(data_set_lst[0:6]), '\n\n'])
-        ofs.writelines(
-            [get_mem_size_table(data_set_lst[6:len(data_set_lst)]), '\n\n'])
+        # ofs.writelines(['## Max Mem Consumption', '\n\n'])
+        # ofs.writelines([get_mem_size_table(data_set_lst[0:6]), '\n\n'])
+        # ofs.writelines(
+        #     [get_mem_size_table(data_set_lst[6:len(data_set_lst)]), '\n\n'])
