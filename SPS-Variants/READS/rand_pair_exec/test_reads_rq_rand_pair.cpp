@@ -26,6 +26,13 @@ int main(int argc, char **argv) {
     double delta = 0.01;
     double c = 0.6;
     int r = 100;
+    if (argc == 7) {
+        cout << "varying parameters" << endl;
+        c = atof(argv[4]);
+        eps = atof(argv[5]);
+        delta = atof(argv[6]);
+        cout << boost::format("c:%s, eps:%s, delta:%s") % c % eps % delta << endl;
+    }
     int rq = compute_reads_rq_num(eps, delta, c, r);
     cout << "sample num:" << r << ", on-line rand-walk:" << rq << endl;
 

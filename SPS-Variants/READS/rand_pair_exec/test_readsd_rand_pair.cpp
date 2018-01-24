@@ -25,6 +25,13 @@ int main(int argc, char **argv) {
     double eps = 0.01;
     double delta = 0.01;
     double c = 0.6;
+    if (argc == 7) {
+        cout << "varying parameters" << endl;
+        c = atof(argv[4]);
+        eps = atof(argv[5]);
+        delta = atof(argv[6]);
+        cout << boost::format("c:%s, eps:%s, delta:%s") % c % eps % delta << endl;
+    }
     int r = compute_reads_sample_num(eps, delta, c);
     cout << "sample num:" << r << endl;
 
