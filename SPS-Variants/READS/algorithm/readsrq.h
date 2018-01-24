@@ -50,7 +50,7 @@ public:
 
     ~readsrq();
 
-    double queryOne(int x, int y);
+    double queryOne(int x, int y, double * ansVal);
 
     void queryAll(int x, double *ansVal);
 

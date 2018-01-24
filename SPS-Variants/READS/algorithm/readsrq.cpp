@@ -234,8 +234,10 @@ readsrq::~readsrq() {
     delete[] inode;
 }
 
-//todo
-double readsrq::queryOne(int x, int y) {
+double readsrq::queryOne(int x, int y, double *ansVal) {
+    if (x == y) { return 1; }
+    queryAll(x, ansVal);
+    return ansVal[y];
 }
 
 void readsrq::queryAll(int x, double *ansVal) {
@@ -728,8 +730,6 @@ void readsrq::delEdge(int x, int y) {
                         inode[i][k][p] = {-1, kt->second[1], kt->second[2]};
                     }
                 }
-
-
             }
         }
     }
