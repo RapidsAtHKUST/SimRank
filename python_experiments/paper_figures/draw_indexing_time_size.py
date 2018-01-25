@@ -59,7 +59,8 @@ def draw_figures():
         fig, ax = plt.subplots()
         # 1st: bars
         for idx, tag in enumerate(algorithm_tag_lst):
-            ax.bar(indent_lst[idx], get_algorithm_indexing_time_lst(tag), width, hatch=hatch_lst[idx],
+            my_data_lst = get_algorithm_indexing_time_lst(tag)
+            ax.bar(indent_lst[idx], my_data_lst, width, hatch=hatch_lst[idx],
                    label=label_lst[idx],
                    edgecolor=color_lst[idx],
                    fill=False)
@@ -83,7 +84,11 @@ def draw_figures():
         fig, ax = plt.subplots()
         # 1st: bars
         for idx, tag in enumerate(algorithm_tag_lst):
-            ax.bar(indent_lst[idx], get_algorithm_index_size_lst(tag), width, hatch=hatch_lst[idx],
+            my_data_lst = get_algorithm_index_size_lst(tag)
+            if idx == 0:
+                # make use of symmetric
+                my_data_lst = map(lambda flp_val: flp_val / 2., my_data_lst)
+            ax.bar(indent_lst[idx], my_data_lst, width, hatch=hatch_lst[idx],
                    label=label_lst[idx],
                    edgecolor=color_lst[idx],
                    fill=False)

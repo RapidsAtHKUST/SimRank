@@ -31,6 +31,7 @@ def get_algorithm_time_lst(algorithm, data_lst, cpu_time_dict=g_cpu_time_dict):
 
 
 def draw_average_query_one_pair_time():
+    print data_set_lst
     g_names = map(lambda data: data_names[data], data_set_lst)
 
     size_of_fig = (FIG_SIZE_MULTIPLE)

@@ -4,7 +4,8 @@ import os
 data_set_lst = [
     'ca-GrQc', 'ca-HepTh', 'p2p-Gnutella06', 'wiki-Vote',
     'email-Enron', 'email-EuAll',
-    'web-NotreDame', 'web-Stanford', 'web-BerkStan', 'web-Google',
+    # 'web-NotreDame',
+    'web-Stanford', 'web-BerkStan', 'web-Google',
     'cit-Patents', 'soc-LiveJournal1']
 
 accuracy_data_set_lst = data_set_lst[0:4]

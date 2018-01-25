@@ -6,13 +6,15 @@ import os
 data_set_lst = [
     'ca-GrQc', 'ca-HepTh', 'p2p-Gnutella06', 'wiki-Vote',
     'email-Enron', 'email-EuAll',
-    'web-NotreDame', 'web-Stanford', 'web-BerkStan', 'web-Google',
+    # 'web-NotreDame',
+    'web-Stanford', 'web-BerkStan', 'web-Google',
     'cit-Patents', 'soc-LiveJournal1']
 
 # for tsf indexing space computation
 v_num_dict = dict(zip(data_set_lst, [5242, 9877, 8717, 7115,
                                      36692, 265214,
-                                     325729, 281903, 685230, 875713,
+                                     # 325729,
+                                     281903, 685230, 875713,
                                      3774768, 4847571]))
 size_of_int = 4
 
