@@ -18,9 +18,8 @@ LABEL_SIZE = 22
 TICK_SIZE = 22
 LEGEND_SIZE = 22
 
+# get the data for figures
 index_info_dict = get_index_dict_with_reads('../data_analysis')
-index_info_dict[reads_d_tag][index_time_tag][data_set_lst[-1]] = 6000
-index_info_dict[reads_d_tag][index_size_tag][data_set_lst[-1]] = 200 * 1024
 
 
 def get_algorithm_indexing_time_lst(algorithm_tag):
@@ -32,10 +31,12 @@ def get_algorithm_index_size_lst(algorithm_tag):
 
 
 def draw_figures():
-    # indent lst
+    # init graph names and size
     g_names = map(lambda data: data_names[data], data_set_lst)
     size_of_fig = (FIG_SIZE_MULTIPLE)
     N = len(g_names)
+
+    # indent lst
     width = 0.14
     ind = 1.14 * np.arange(N)  # the x locations for the groups
     indent_lst = map(lambda idx: ind + idx * width, range(7))
@@ -96,7 +97,7 @@ def draw_figures():
         ax.set_ylabel("Index Size (MB)", fontsize=LABEL_SIZE)
         plt.yticks(fontsize=TICK_SIZE)
 
-        plt.ylim(10 ** -2, 10 ** 6 * 1.5)
+        plt.ylim(10 ** -2, 10 ** 6 * 2)
 
         # 3rd: figure properties
         fig.set_size_inches(*size_of_fig)  # set ratio

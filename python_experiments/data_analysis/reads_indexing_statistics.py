@@ -54,7 +54,7 @@ reads_d_size_dict = {
     'web-NotreDame': 8626791720,
     'web-Stanford': 12135352960,
     'cit-Patents': 104277969456,
-    'soc-LiveJournal1': 999999999999999 * (1024 ** 2)
+    'soc-LiveJournal1': 197627796 * 1024
 }
 
 

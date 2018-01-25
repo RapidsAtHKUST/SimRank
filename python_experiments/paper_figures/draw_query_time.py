@@ -3,8 +3,6 @@ from data_analysis.querying_time_accuracy_statistics import *
 from data_analysis.generate_speedup_over_sling_markdown import get_cpu_time_dict_with_reads
 
 g_cpu_time_dict = get_cpu_time_dict_with_reads(root_dir='../data_analysis')
-# temporary
-g_cpu_time_dict[reads_d_tag][data_set_lst[-1]][str(10 ** 5)] = [99000]
 us_to_ms_factor = 10 ** 3
 
 
