@@ -38,8 +38,9 @@ def run_exp():
                     'cit-Patents', 'soc-LiveJournal1']
     insert_edge_num = 100
     dynamic_exec_tag_lst = [
-        # 'reads-d-dynamic-exp',
-        'reads-rq-dynamic-exp']
+        'reads-rq-dynamic-exp',
+        'reads-d-dynamic-exp',
+    ]
 
     def one_round():
         for exec_name in dynamic_exec_tag_lst:
@@ -51,6 +52,7 @@ def run_exp():
                 cmd = ' '.join(params_lst)
                 time_out = 1000 if data_set_name != 'soc-LiveJournal1' else 3600
 
+                print cmd
                 tle_flag, info, correct_info = time_out_util.run_with_timeout(cmd, timeout_sec=time_out)
                 write_split(statistics_file_path)
 
@@ -61,7 +63,7 @@ def run_exp():
                     ifs.write('\n\n\n\n')
                 print 'finish:', cmd
 
-    one_round()
+    # one_round()
     insert_edge_num = 1000
     one_round()
 
