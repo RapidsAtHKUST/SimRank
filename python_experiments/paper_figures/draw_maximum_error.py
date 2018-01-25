@@ -7,7 +7,7 @@ data_names = get_name_dict()
 
 
 def get_algorithm_max_err_lst(algorithm_tag, data_set):
-    accuracy_dict = get_accuracy_dict('../data_analysis')
+    accuracy_dict = get_accuracy_dict_with_reads('../data_analysis')
     return accuracy_dict[algorithm_tag][data_set][str(10 ** 5)]
 
 
@@ -25,7 +25,7 @@ def draw_figures_max_err():
             max_err_lst_lst.append(time_lst)
             color_lst = ['blue', 'orange', 'green', 'red', 'm', 'brown', 'k', 'gray']
             shape_lst = ['D-.', 's--', 'o:', 'x-', 'v-', '^-', '<-', '>-']
-            cur_mark_size = 22
+            cur_mark_size = 22 - 6
             ax.plot(round_lst, time_lst, shape_lst[idx], markersize=cur_mark_size if idx != 0 else cur_mark_size - 4,
                     markerfacecolor='none',
                     color=color_lst[idx])

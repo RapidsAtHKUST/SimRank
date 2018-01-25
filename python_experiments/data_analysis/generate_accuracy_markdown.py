@@ -8,6 +8,15 @@ def get_accuracy_dict(root_dir='.', file_name='accuracy_result'):
         return json.load(ifs)
 
 
+def get_accuracy_dict_with_reads(root_dir='.', file_name='accuracy_result'):
+    accuracy_dict = get_accuracy_dict(root_dir)
+    read_dict = get_accuracy_dict(root_dir, file_name='accuracy_result_reads')
+    assert isinstance(read_dict, dict)
+    for key, val in read_dict.iteritems():
+        accuracy_dict[key] = val
+    return accuracy_dict
+
+
 def format_str(float_num):
     my_str = str(decimal.Decimal.from_float(float_num * (10 ** 2)).quantize(decimal.Decimal('0.000')))
     if (float_num < 0.01):
@@ -21,11 +30,7 @@ if __name__ == '__main__':
                          reads_tag, reads_d_tag, reads_rq_tag,
                          isp_tag, tsf_tag, lind_tag, cw_tag]
 
-    accuracy_dict = get_accuracy_dict()
-    read_dict = get_accuracy_dict(file_name='accuracy_result_reads')
-    assert isinstance(read_dict, dict)
-    for key, val in read_dict.iteritems():
-        accuracy_dict[key] = val
+    accuracy_dict = get_accuracy_dict_with_reads()
 
 
     def get_time_table(round_lst, data_set):

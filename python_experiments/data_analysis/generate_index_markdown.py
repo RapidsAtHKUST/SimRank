@@ -7,16 +7,21 @@ def get_index_dict(root_dir='.', file_name='index_result'):
         return json.load(ifs)
 
 
-if __name__ == '__main__':
-    algorithm_lst = [local_push_tag, reads_tag, reads_d_tag, reads_rq_tag, sling_tag,
-                     linear_d_tag, cloud_walker_tag, tsf_tag]
-
-    index_dict = get_index_dict()
-    read_dict = get_index_dict(file_name='index_result_reads')
+def get_index_dict_with_reads(root_dir='.'):
+    index_dict = get_index_dict(root_dir)
+    read_dict = get_index_dict(root_dir, file_name='index_result_reads')
     assert isinstance(read_dict, dict)
     for key, val in read_dict.iteritems():
         print key
         index_dict[key] = val
+    return index_dict
+
+
+if __name__ == '__main__':
+    algorithm_lst = [local_push_tag, reads_tag, reads_d_tag, reads_rq_tag, sling_tag,
+                     linear_d_tag, cloud_walker_tag, tsf_tag]
+
+    index_dict = get_index_dict_with_reads()
 
 
     def get_time_table(data_set_lst):

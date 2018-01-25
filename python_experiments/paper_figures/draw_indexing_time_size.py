@@ -18,7 +18,7 @@ LABEL_SIZE = 22
 TICK_SIZE = 22
 LEGEND_SIZE = 22
 
-index_info_dict = get_index_dict('../data_analysis')
+index_info_dict = get_index_dict_with_reads('../data_analysis')
 
 
 def get_algorithm_indexing_time_lst(algorithm_tag):

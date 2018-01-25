@@ -1,13 +1,8 @@
 from draw_indexing_time_size import *
 from data_analysis.querying_time_accuracy_statistics import *
+from data_analysis.generate_speedup_over_sling_markdown import get_cpu_time_dict_with_reads
 
-
-def get_cpu_time_dict(root_dir='.'):
-    with open(root_dir + os.sep + 'data-json' + os.sep + 'query_result_full_total_query_cpu_time' + '.json') as ifs:
-        return json.load(ifs)
-
-
-g_cpu_time_dict = get_cpu_time_dict('../data_analysis')
+g_cpu_time_dict = get_cpu_time_dict_with_reads(root_dir='../data_analysis')
 
 us_to_ms_factor = 10 ** 3
 
