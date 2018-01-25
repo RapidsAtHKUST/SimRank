@@ -34,7 +34,8 @@ def get_index_size(data_set, algorithm_name):
         index_naming = index_folder_path + os.sep + '_'.join(
             map(str, [data_set, v_num_dict[data_set], 1236, '0.600000', 10])) + '.bin'
     else:
-        index_naming = ''
+        index_naming = index_folder_path + os.sep + '_'.join(
+            map(str, [data_set, v_num_dict[data_set], 100, '0.600000', 10])) + '.bin'
     return float(format_str(os.path.getsize(index_naming) / (1024. ** 2)))
 
 
@@ -70,7 +71,7 @@ def get_algorithm_index_info_dict(algorithm_name):
 
 if __name__ == '__main__':
     data_set = data_set_lst[-1]
-    algorithm_tag_lst = [reads_tag]
+    algorithm_tag_lst = [reads_tag, reads_rq_tag]
 
     with open('data-json/index_result_reads.json', 'w') as ofs:
         ofs.write(json.dumps(

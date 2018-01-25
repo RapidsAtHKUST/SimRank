@@ -28,5 +28,35 @@
             "ca-GrQc": 0.858131, 
             "email-Enron": 3.93099
         }
+    }, 
+    "reads-rq": {
+        "index disk size": {
+            "wiki-Vote": 11.633, 
+            "cit-Patents": 8034.227, 
+            "email-EuAll": 341.25, 
+            "web-Stanford": 834.059, 
+            "ca-HepTh": 35.016, 
+            "web-BerkStan": 1911.173, 
+            "web-NotreDame": 631.341, 
+            "p2p-Gnutella06": 21.141, 
+            "soc-LiveJournal1": 13557.021, 
+            "web-Google": 2132.538, 
+            "ca-GrQc": 19.409, 
+            "email-Enron": 95.649
+        }, 
+        "indexing time": {
+            "wiki-Vote": 0.083002, 
+            "cit-Patents": 161.747, 
+            "email-EuAll": 1.58863, 
+            "web-Stanford": 16.2519, 
+            "ca-HepTh": 0.71189, 
+            "web-BerkStan": 69.4419, 
+            "web-NotreDame": 11.5245, 
+            "p2p-Gnutella06": 0.366277, 
+            "soc-LiveJournal1": 671, 
+            "web-Google": 42.6829, 
+            "ca-GrQc": 0.49778, 
+            "email-Enron": 2.05814
+        }
     }
 }

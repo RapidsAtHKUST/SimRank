@@ -68,7 +68,7 @@ def run_exp():
                                                statistics_file_path])
                         cmd = ' '.join(params_lst)
                         # time_out = 1200 if data_set_name != 'soc-LiveJournal1' else 3600
-                        time_out = 3600
+                        time_out = 4800
 
                         tle_flag, info, correct_info = time_out_util.run_with_timeout(cmd, timeout_sec=time_out)
                         write_split(statistics_file_path)
@@ -99,30 +99,30 @@ def run_exp():
         # 'email-Enron', 'email-EuAll',
         # 'web-NotreDame', 'web-Stanford', 'web-BerkStan', 'web-Google',
         'cit-Patents',
-        'soc-LiveJournal1'
+        # 'soc-LiveJournal1'
     ]
 
     # 2nd: efficiency
     one_round()
 
     # 3rd: another round for reads-rq
-    exec_name_lst = ['reads-rq-rand-bench']
-    other_exec_path_lst = map(lambda exec_name: exec_root + os.sep + exec_name, exec_name_lst)
-    # os.system('ll /homes/ywangby/workspace/LinsysSimRank/datasets/readsd/* >> tmp_ll.log')
-    # os.system('du -b /homes/ywangby/workspace/LinsysSimRank/datasets/readsd/* >> tmp_du.log')
-    # os.system('rm /homes/ywangby/workspace/LinsysSimRank/datasets/readsd/* >> tmp_rm.log')
-    data_set_lst = [
-        'ca-GrQc', 'ca-HepTh', 'p2p-Gnutella06', 'wiki-Vote',
-        'email-Enron', 'email-EuAll',
-        'web-NotreDame', 'web-Stanford', 'web-BerkStan', 'web-Google',
-        'cit-Patents',
-        'soc-LiveJournal1'
-    ]
-    sample_num_lst = [
-        10 ** 4,
-        10 ** 5
-    ]
-    one_round()
+    # exec_name_lst = ['reads-rq-rand-bench']
+    # other_exec_path_lst = map(lambda exec_name: exec_root + os.sep + exec_name, exec_name_lst)
+    # # os.system('ll /homes/ywangby/workspace/LinsysSimRank/datasets/readsd/* >> tmp_ll.log')
+    # # os.system('du -b /homes/ywangby/workspace/LinsysSimRank/datasets/readsd/* >> tmp_du.log')
+    # # os.system('rm /homes/ywangby/workspace/LinsysSimRank/datasets/readsd/* >> tmp_rm.log')
+    # data_set_lst = [
+    #     'ca-GrQc', 'ca-HepTh', 'p2p-Gnutella06', 'wiki-Vote',
+    #     'email-Enron', 'email-EuAll',
+    #     'web-NotreDame', 'web-Stanford', 'web-BerkStan', 'web-Google',
+    #     'cit-Patents',
+    #     'soc-LiveJournal1'
+    # ]
+    # sample_num_lst = [
+    #     10 ** 4,
+    #     10 ** 5
+    # ]
+    # one_round()
 
 
 if __name__ == '__main__':
