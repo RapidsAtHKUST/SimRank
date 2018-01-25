@@ -38,14 +38,18 @@ def run_exp():
         '/homes/ywangby/workspace/yche/git-repos/SimRank/LPMC-Profile/build/bflpmc-rand-varying',
         '/homes/ywangby/workspace/yche/git-repos/SimRank/SPS-Variants/sling/build/sling-rand-varying',
         '/homes/ywangby/workspace/yche/git-repos/SimRank/SPS-Variants/isp-yche/build/isp-rand-varying',
-        '/homes/ywangby/workspace/yche/git-repos/SimRank/SPS-Variants/tsf/build/tsf-rand-varying'
+        '/homes/ywangby/workspace/yche/git-repos/SimRank/SPS-Variants/tsf/build/tsf-rand-varying',
+        '/homes/ywangby/workspace/yche/git-repos/SimRank/SPS-Variants/READS/build/reads-d-rand-bench',
+        '/homes/ywangby/workspace/yche/git-repos/SimRank/SPS-Variants/READS/build/reads-rq-rand-bench',
     ]
     sample_num_lst = [10 ** 6,
                       10 ** 6,
                       10 ** 6,
                       10 ** 6,
                       10 ** 5,
-                      10 ** 3]
+                      10 ** 3,
+                      10 ** 5,
+                      10 ** 5]
     sample_num_dict = dict(zip(exec_path_lst, sample_num_lst))
 
     tag = 'exp_results'
@@ -54,9 +58,7 @@ def run_exp():
     round_idx = 0
 
     # algorithm parameters
-    # c_lst = list(reversed([0.1 * (i + 1) for i in xrange(9)]))
     c_lst = list(([0.1 * (i + 1) for i in xrange(8)]))
-    # c_lst = list(([0.1]))
     delta = 0.01
     eps = 0.01
 
@@ -75,8 +77,7 @@ def run_exp():
                     ['echo', my_splitter + time.ctime() + my_splitter, '>>', statistics_file_path]))
                 params_lst = map(str,
                                  [algorithm_path, data_set_name, sample_num_dict[algorithm_path], round_idx, c, eps,
-                                  delta, '>>',
-                                  statistics_file_path])
+                                  delta, '>>', statistics_file_path])
                 cmd = ' '.join(params_lst)
                 time_out = 36000
 
@@ -101,7 +102,9 @@ def run_exp():
         # '/homes/ywangby/workspace/yche/git-repos/SimRank/LPMC-Profile/build/bflpmc-rand-varying',
         # '/homes/ywangby/workspace/yche/git-repos/SimRank/SPS-Variants/sling/build/sling-rand-varying',
         # '/homes/ywangby/workspace/yche/git-repos/SimRank/SPS-Variants/isp-yche/build/isp-rand-varying',
-        '/homes/ywangby/workspace/yche/git-repos/SimRank/SPS-Variants/tsf/build/tsf-rand-varying'
+        # '/homes/ywangby/workspace/yche/git-repos/SimRank/SPS-Variants/tsf/build/tsf-rand-varying'
+        '/homes/ywangby/workspace/yche/git-repos/SimRank/SPS-Variants/READS/build/reads-d-rand-bench',
+        '/homes/ywangby/workspace/yche/git-repos/SimRank/SPS-Variants/READS/build/reads-rq-rand-bench',
     ]
     one_round()
 

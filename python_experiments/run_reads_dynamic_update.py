@@ -33,12 +33,14 @@ def signal_handler(signal, frame):
 
 def run_exp():
     our_exec_path = '/homes/ywangby/workspace/yche/git-repos/SimRank/SPS-Variants/READS/build'
-    data_set_lst = ['ca-GrQc', 'ca-HepTh', 'p2p-Gnutella06', 'wiki-Vote',
-                    'email-Enron', 'email-EuAll', 'web-NotreDame', 'web-Stanford', 'web-BerkStan', 'web-Google',
-                    'cit-Patents', 'soc-LiveJournal1']
+    data_set_lst = [
+        # 'ca-GrQc', 'ca-HepTh', 'p2p-Gnutella06', 'wiki-Vote',
+        #             'email-Enron', 'email-EuAll', 'web-NotreDame', 'web-Stanford',
+        # 'web-BerkStan', 'web-Google',
+        'cit-Patents', 'soc-LiveJournal1']
     insert_edge_num = 100
     dynamic_exec_tag_lst = [
-        'reads-rq-dynamic-exp',
+        # 'reads-rq-dynamic-exp',
         'reads-d-dynamic-exp',
     ]
 
@@ -50,8 +52,8 @@ def run_exp():
                     insert_edge_num) + '.txt'
                 params_lst = map(str, [algorithm_path, data_set_name, insert_edge_num, '>>', statistics_file_path])
                 cmd = ' '.join(params_lst)
-                time_out = 1000 if data_set_name != 'soc-LiveJournal1' else 3600
-
+                # time_out = 1000 if data_set_name != 'soc-LiveJournal1' else 3600
+                time_out = 36000
                 print cmd
                 tle_flag, info, correct_info = time_out_util.run_with_timeout(cmd, timeout_sec=time_out)
                 write_split(statistics_file_path)
