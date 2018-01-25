@@ -4,6 +4,7 @@ algo\data | ca-GrQc | ca-HepTh | p2p-Gnutella06 | wiki-Vote | email-Enron | emai
 --- | --- | --- | --- | --- | --- | ---
 full local push | 0.074 s | 0.152 s | 0.289 s | 0.792 s | 10.389 s | 11.972 s
 reads-s | 0.858 s | 1.327 s | 0.752 s | 0.228 s | 3.931 s | 6.189 s
+reads-d | 5.605 s | 10.350 s | 4.352 s | 0.990 s | 29.322 s | 19.157 s
 reads-rq | 0.498 s | 0.712 s | 0.366 s | 0.083 s | 2.058 s | 1.589 s
 sling | 27.825 s | 46.405 s | 9.119 s | 3.431 s | 149.528 s | 40.899 s
 linear d | 1.306 s | 3.080 s | 2.267 s | 0.279 s | 12.741 s | 6.867 s
@@ -14,6 +15,7 @@ algo\data | web-NotreDame | web-Stanford | web-BerkStan | web-Google | cit-Paten
 --- | --- | --- | --- | --- | --- | ---
 full local push | 347.515 s | 178.046 s | 322.794 s | 25.235 s | 210.592 s | 1752.620 s
 reads-s | 23.120 s | 33.643 s | 83.716 s | 127.261 s | 736.124 s | 1317.810 s
+reads-d | 157.269 s | 226.997 s | 970.182 s | 597.664 s | 1979.910 s | 999999999999999.000 s
 reads-rq | 11.524 s | 16.252 s | 69.442 s | 42.683 s | 161.747 s | 671.000 s
 sling | 1027.976 s | 1734.798 s | 3777.746 s | 2781.000 s | 2019.548 s | 21571.125 s
 linear d | 73.362 s | 55.788 s | 137.716 s | 146.213 s | 186.031 s | 2780.590 s
@@ -26,6 +28,7 @@ algo\data | ca-GrQc | ca-HepTh | p2p-Gnutella06 | wiki-Vote | email-Enron | emai
 --- | --- | --- | --- | --- | --- | ---
 full local push | 1.872 MB | 4.472 MB | 13.324 MB | 24.769 MB | 292.075 MB | 305.251 MB
 reads-s | 24.977 MB | 47.042 MB | 41.407 MB | 34.392 MB | 176.087 MB | 1255.703 MB
+reads-d | 298646704.000 MB | 532953712.000 MB | 299125744.000 MB | 142430960.000 MB | 1364548016.000 MB | 4374869768.000 MB
 reads-rq | 19.409 MB | 35.016 MB | 21.141 MB | 11.633 MB | 95.649 MB | 341.250 MB
 sling | 62.395 MB | 127.290 MB | 115.335 MB | 6.362 MB | 409.886 MB | 211.237 MB
 linear d | 0.743 MB | 1.340 MB | 0.855 MB | 2.482 MB | 8.975 MB | 13.661 MB
@@ -36,6 +39,7 @@ algo\data | web-NotreDame | web-Stanford | web-BerkStan | web-Google | cit-Paten
 --- | --- | --- | --- | --- | --- | ---
 full local push | 7660.588 MB | 930.064 MB | 1564.381 MB | 509.086 MB | 5603.594 MB | 36777.005 MB
 reads-s | 1549.708 MB | 1348.957 MB | 3294.052 MB | 4174.586 MB | 17952.731 MB | 23419.496 MB
+reads-d | 8626791720.000 MB | 12135352960.000 MB | 27234698312.000 MB | 29823990656.000 MB | 104277969456.000 MB | 999999999999999.000 MB
 reads-rq | 631.341 MB | 834.059 MB | 1911.173 MB | 2132.538 MB | 8034.227 MB | 13557.021 MB
 sling | 4187.683 MB | 2999.271 MB | 7392.115 MB | 6957.387 MB | 5559.157 MB | 44850.682 MB
 linear d | 39.237 MB | 57.230 MB | 184.420 MB | 130.207 MB | 435.687 MB | 1653.110 MB

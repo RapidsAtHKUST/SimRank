@@ -1,4 +1,5 @@
 from querying_time_accuracy_statistics import *
+from reads_indexing_statistics import reads_tag, reads_d_tag, reads_rq_tag
 import decimal
 
 
@@ -13,6 +14,10 @@ def get_cpu_time_dict(root_dir='.'):
 
 
 g_cpu_time_dict = get_cpu_time_dict()
+with open('data-json/query_result_full_cpu_time_reads.json') as ifs:
+    reads_dict = json.load(ifs)
+for key, val in reads_dict.iteritems():
+    g_cpu_time_dict[key] = val
 
 
 def lst_divide(l_lst, r_lst):
@@ -24,12 +29,12 @@ def select_first_data_set(my_lst):
     return my_lst[0]
 
 
-def get_algorithm_time_lst(algorithm, data_lst, cpu_time_dict= g_cpu_time_dict):
+def get_algorithm_time_lst(algorithm, data_lst, cpu_time_dict=g_cpu_time_dict):
     def get_time(data_set):
         ret_data = 9999999999
         if algorithm in [bflpmc_tag, flpmc_tag, bprw_tag, sling_tag]:
             ret_data = select_first_data_set(cpu_time_dict[algorithm][data_set][str(10 ** 6)])
-        elif algorithm in [tsf_tag, isp_tag]:
+        elif algorithm in [tsf_tag, isp_tag, reads_tag, reads_d_tag, reads_rq_tag]:
             ret_data = select_first_data_set(cpu_time_dict[algorithm][data_set][str(10 ** 5)]) * 10
         else:
             lst = map(lambda my_str: select_first_data_set(cpu_time_dict[algorithm][data_set][my_str]),
@@ -55,7 +60,9 @@ def get_time_table(data_set_lst):
                 ' | '.join(
                     [algorithm] + map(lambda num: format_str(num) + " us",
                                       get_algorithm_time_lst(algorithm, data_set_lst)))
-                , [bflpmc_tag, flpmc_tag, bprw_tag, sling_tag, isp_tag, tsf_tag, lind_tag, cw_tag])
+                , [bflpmc_tag, flpmc_tag, bprw_tag, sling_tag, isp_tag,
+                   reads_tag, reads_d_tag, reads_rq_tag,
+                   tsf_tag, lind_tag, cw_tag])
     table_lines.extend(lines)
     return '\n'.join(table_lines)
 

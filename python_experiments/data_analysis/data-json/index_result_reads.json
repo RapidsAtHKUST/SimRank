@@ -1,4 +1,34 @@
 {
+    "reads-d": {
+        "index disk size": {
+            "wiki-Vote": 142430960, 
+            "cit-Patents": 104277969456, 
+            "email-EuAll": 4374869768, 
+            "web-Stanford": 12135352960, 
+            "ca-HepTh": 532953712, 
+            "web-BerkStan": 27234698312, 
+            "web-NotreDame": 8626791720, 
+            "p2p-Gnutella06": 299125744, 
+            "soc-LiveJournal1": 999999999999999, 
+            "web-Google": 29823990656, 
+            "ca-GrQc": 298646704, 
+            "email-Enron": 1364548016
+        }, 
+        "indexing time": {
+            "wiki-Vote": 0.990355, 
+            "cit-Patents": 1979.91, 
+            "email-EuAll": 19.1573, 
+            "web-Stanford": 226.997, 
+            "ca-HepTh": 10.3503, 
+            "web-BerkStan": 970.182, 
+            "web-NotreDame": 157.269, 
+            "p2p-Gnutella06": 4.35229, 
+            "soc-LiveJournal1": 999999999999999.0, 
+            "web-Google": 597.664, 
+            "ca-GrQc": 5.60486, 
+            "email-Enron": 29.3222
+        }
+    }, 
     "reads-s": {
         "index disk size": {
             "wiki-Vote": 34.392, 

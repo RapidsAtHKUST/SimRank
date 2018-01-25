@@ -1,5 +1,5 @@
 from indexing_time_space_statistics import *
-from reads_indexing_statistics import reads_tag, reads_rq_tag
+from reads_indexing_statistics import reads_tag, reads_rq_tag, reads_d_tag
 
 
 def get_index_dict(root_dir='.', file_name='index_result'):
@@ -8,7 +8,7 @@ def get_index_dict(root_dir='.', file_name='index_result'):
 
 
 if __name__ == '__main__':
-    algorithm_lst = [local_push_tag, reads_tag, reads_rq_tag, sling_tag,
+    algorithm_lst = [local_push_tag, reads_tag, reads_d_tag, reads_rq_tag, sling_tag,
                      linear_d_tag, cloud_walker_tag, tsf_tag]
 
     index_dict = get_index_dict()

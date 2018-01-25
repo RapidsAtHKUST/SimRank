@@ -20,6 +20,8 @@ def get_index_time(data_set, algorithm_name):
     algorithm_log_name = algorithm_name + suffix_str
     file_path = os.sep.join([reads_efficiency_folder, data_set, '10000', '0', algorithm_log_name])
     indexing_time = get_tag_info(file_path, 'indexing time')
+    if indexing_time is None:
+        return 999999999999999.
     return indexing_time
 
 
@@ -51,14 +53,14 @@ reads_d_size_dict = {
     'web-Google': 29823990656,
     'web-NotreDame': 8626791720,
     'web-Stanford': 12135352960,
-    'cit-Patents:': 104277969456,
-    'soc-LiveJournal1': 0
+    'cit-Patents': 104277969456,
+    'soc-LiveJournal1': 999999999999999
 }
 
 
 def get_index_size_dict(algorithm_name):
     if algorithm_name in [reads_d_tag]:
-        return []
+        return dict(zip(data_set_lst, map(lambda data_set: reads_d_size_dict[data_set], data_set_lst)))
     return dict(zip(data_set_lst, map(lambda data_set: get_index_size(data_set, algorithm_name), data_set_lst)))
 
 
@@ -71,7 +73,7 @@ def get_algorithm_index_info_dict(algorithm_name):
 
 if __name__ == '__main__':
     data_set = data_set_lst[-1]
-    algorithm_tag_lst = [reads_tag, reads_rq_tag]
+    algorithm_tag_lst = [reads_tag, reads_d_tag, reads_rq_tag]
 
     with open('data-json/index_result_reads.json', 'w') as ofs:
         ofs.write(json.dumps(
