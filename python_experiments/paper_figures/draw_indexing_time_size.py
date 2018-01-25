@@ -42,7 +42,7 @@ def draw_figures():
     indent_lst = map(lambda idx: ind + idx * width, range(7))
 
     # other lst
-    hatch_lst = ["//", ".", '', 'O', '-', 'x', '++']
+    hatch_lst = ["//", "**", '', 'O', '-', 'x', '++']
     algorithm_tag_lst = [local_push_tag, sling_tag,
                          reads_d_tag, reads_rq_tag,
                          tsf_tag, linear_d_tag, cloud_walker_tag]
