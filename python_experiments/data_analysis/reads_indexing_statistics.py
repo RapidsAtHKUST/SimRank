@@ -54,13 +54,13 @@ reads_d_size_dict = {
     'web-NotreDame': 8626791720,
     'web-Stanford': 12135352960,
     'cit-Patents': 104277969456,
-    'soc-LiveJournal1': 999999999999999
+    'soc-LiveJournal1': 999999999999999 * (1024 ** 2)
 }
 
 
 def get_index_size_dict(algorithm_name):
     if algorithm_name in [reads_d_tag]:
-        return dict(zip(data_set_lst, map(lambda data_set: reads_d_size_dict[data_set], data_set_lst)))
+        return dict(zip(data_set_lst, map(lambda data_set: reads_d_size_dict[data_set] / (1024. ** 2), data_set_lst)))
     return dict(zip(data_set_lst, map(lambda data_set: get_index_size(data_set, algorithm_name), data_set_lst)))
 
 
