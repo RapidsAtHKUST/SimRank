@@ -68,7 +68,7 @@ def run_exp():
                                                statistics_file_path])
                         cmd = ' '.join(params_lst)
                         # time_out = 1200 if data_set_name != 'soc-LiveJournal1' else 3600
-                        time_out = 4800
+                        time_out = 4800 if data_set_name != 'soc-LiveJournal1' else 36000
 
                         tle_flag, info, correct_info = time_out_util.run_with_timeout(cmd, timeout_sec=time_out)
                         write_split(statistics_file_path)
