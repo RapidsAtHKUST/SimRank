@@ -37,7 +37,9 @@ def run_exp():
                     'email-Enron', 'email-EuAll', 'web-NotreDame', 'web-Stanford', 'web-BerkStan', 'web-Google',
                     'cit-Patents', 'soc-LiveJournal1']
     insert_edge_num = 100
-    dynamic_exec_tag_lst = ['reads-d-dynamic-exp', 'reads-rq-dynamic-exp']
+    dynamic_exec_tag_lst = [
+        # 'reads-d-dynamic-exp',
+        'reads-rq-dynamic-exp']
 
     def one_round():
         for exec_name in dynamic_exec_tag_lst:
