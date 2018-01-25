@@ -15,17 +15,23 @@ def draw_figures_max_err():
     data_set_lst = accuracy_data_set_lst
     round_lst = xrange(10)
     exp_figure, ax_tuple = plt.subplots(1, 4, sharex=True, figsize=(32, 6))
-    algorithm_tag_lst = [bflpmc_tag, flpmc_tag, bprw_tag, sling_tag, isp_tag, tsf_tag, lind_tag, cw_tag]
-    legend_lst = ['FBLPMC', 'FLPMC', 'BLPMC', 'SLING', 'ISP', 'TSF', 'LIN', 'MCSP']
+    algorithm_tag_lst = [bflpmc_tag, flpmc_tag, bprw_tag, sling_tag,
+                         reads_d_tag, reads_rq_tag,
+                         isp_tag, tsf_tag, lind_tag, cw_tag]
+    legend_lst = ['FBLPMC', 'FLPMC', 'BLPMC', 'SLING',
+                  'READS-D', 'READS-RQ', 'ISP', 'TSF', 'LIN', 'MCSP']
 
     for ax_idx, ax in enumerate(ax_tuple):
         max_err_lst_lst = []
         for idx, algorithm in enumerate(algorithm_tag_lst):
             time_lst = get_algorithm_max_err_lst(algorithm, data_set_lst[ax_idx])
             max_err_lst_lst.append(time_lst)
-            color_lst = ['blue', 'orange', 'green', 'red', 'm', 'brown', 'k', 'gray']
-            shape_lst = ['D-.', 's--', 'o:', 'x-', 'v-', '^-', '<-', '>-']
-            cur_mark_size = 22 - 6
+            color_lst = ['blue', 'orange', 'green', 'red',
+                         '#fe01b1', '#ceb301', 'm', 'brown', 'k', 'gray']
+            shape_lst = ['D-.', 's--', 'o:', 'x-',
+                         'P-', '*-',
+                         'v-', '^-', '<-', '>-']
+            cur_mark_size = 22 - 8
             ax.plot(round_lst, time_lst, shape_lst[idx], markersize=cur_mark_size if idx != 0 else cur_mark_size - 4,
                     markerfacecolor='none',
                     color=color_lst[idx])
@@ -51,9 +57,9 @@ def draw_figures_max_err():
 
     exp_figure.subplots_adjust(wspace=0)
     plt.tight_layout()
-    plt.subplots_adjust(top=0.8)
+    plt.subplots_adjust(top=0.82)
     plt.legend(legend_lst, ncol=len(legend_lst), fontsize=LEGEND_SIZE, prop={'size': LEGEND_SIZE + 3, "weight": "bold"},
-               bbox_to_anchor=(0.32, 1.25))
+               bbox_to_anchor=(0.85, 1.25))
     plt.savefig('figures/' + 'max_err' + '.pdf', bbox_inches='tight', dpi=300)
     # exp_figure.show()
     plt.close()
