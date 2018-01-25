@@ -22,6 +22,8 @@ file | description
 
 ## Avg Query Time and Speedup over Sling
 
+json file: [query_result_full_total_query_cpu_time.json](data-json/query_result_full_total_query_cpu_time.json)
+
 markdown file: [speedup_over_sling.md](data-markdown/speedup_over_sling.md)
 
 file | description
@@ -30,3 +32,5 @@ file | description
 [querying_time_accuracy_statistics.py](querying_time_accuracy_statistics.py) | generate json for query time, given different pair numbers
 
 ## Varying Parameters
+
+see folder [data-json/varying_parameters](data-json/varying_parameters)
