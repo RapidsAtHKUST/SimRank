@@ -66,3 +66,13 @@ target_compile_definitions(reads-rq PRIVATE STORE_INDEX=1)
 add_executable(reads-rq-rand-bench ${COMMON_FILES} ${GROUND_TRUTH_FILES} algorithm/readsrq.cpp rand_pair_exec/test_reads_rq_rand_pair.cpp)
 InitREADS(reads-rq-rand-bench)
 target_compile_definitions(reads-rq-rand-bench PRIVATE STORE_INDEX=1)
+
+############## 4th: dynamic experiments
+add_executable(reads-d-dynamic-exp ${COMMON_FILES} ${GROUND_TRUTH_FILES} algorithm/readsd.cpp dynamic_update_exp/main_dynamic_update_reads_d.cpp)
+InitREADS(reads-d-dynamic-exp)
+target_compile_definitions(reads-d-dynamic-exp PRIVATE STORE_INDEX=1)
+
+add_executable(reads-rq-dynamic-exp ${COMMON_FILES} ${GROUND_TRUTH_FILES} algorithm/readsrq.cpp dynamic_update_exp/main_dynamic_update_reads_rq.cpp)
+InitREADS(reads-rq-dynamic-exp)
+target_compile_definitions(reads-rq-dynamic-exp PRIVATE STORE_INDEX=1)
+
