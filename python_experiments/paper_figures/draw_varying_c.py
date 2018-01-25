@@ -76,7 +76,7 @@ def draw_query_index_time():
     # setup labels and grid, legend
     ax.set_ylabel('Indexing Time (s)', fontsize=LABEL_SIZE + large_size_plus)
     ax.set_xlabel('$c$', fontsize=LABEL_SIZE + large_size_plus)
-    ax.grid(True, alpha=0.4)
+    ax.grid(True, alpha=0.2)
     ax.legend(legend_lst, ncol=2, prop={'size': LEGEND_SIZE, "weight": "bold"}, loc=1)
 
     # 3rd: save the figure

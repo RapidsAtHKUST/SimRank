@@ -53,7 +53,7 @@ def draw_figures_max_err():
         my_ax.set_xlabel('Round Number\n' + sub_titles[idx], fontsize=LABEL_SIZE + 4)
         my_ax.set_xticks(range(10))
         my_ax.set_xticklabels([i + 1 for i in range(10)], fontsize=TICK_SIZE)
-        my_ax.grid(True, alpha=0.4)
+        my_ax.grid(True, alpha=0.2)
 
     exp_figure.subplots_adjust(wspace=0)
     plt.tight_layout()

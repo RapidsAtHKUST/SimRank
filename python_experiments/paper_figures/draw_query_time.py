@@ -48,7 +48,7 @@ def draw_average_query_one_pair_time():
                          isp_tag, tsf_tag, lind_tag, cw_tag]
     is_fill = [False] * len(algorithm_tag_lst)
     is_fill[1] = True
-    hatch_lst = ['//', '', '.', "**", '', 'O', '\\', '-', 'x', '++']
+    hatch_lst = ['//', '', '.', "**", '', 'O', '\\', '--', 'x', '++']
     label_lst = ["FBLPMC", "FLPMC", "BLPMC", "SLING", 'READS-D', 'READS-RQ', "ISP", "TSF", "LIN", "MCSP"]
     color_lst = ['blue', 'orange', 'green', 'red', '#fe01b1', '#ceb301', 'm', 'brown', 'k', 'gray']
 
@@ -62,7 +62,7 @@ def draw_average_query_one_pair_time():
                label=label_lst[idx], fill=is_fill[idx])
 
     # 2nd: x and y's ticks and labels
-    ax.set_xticks(ind + 5 * width)
+    ax.set_xticks(ind + 4.5 * width)
     ax.set_xticklabels(g_names, fontsize=LABEL_SIZE)
     plt.xticks(fontsize=TICK_SIZE)
 

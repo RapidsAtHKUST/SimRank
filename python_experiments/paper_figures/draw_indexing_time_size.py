@@ -42,7 +42,7 @@ def draw_figures():
     indent_lst = map(lambda idx: ind + idx * width, range(7))
 
     # other lst
-    hatch_lst = ["//", "**", '', 'O', '-', 'x', '++']
+    hatch_lst = ["//", "**", '', 'O', '--', 'x', '++']
     algorithm_tag_lst = [local_push_tag, sling_tag,
                          reads_d_tag, reads_rq_tag,
                          tsf_tag, linear_d_tag, cloud_walker_tag]
@@ -72,7 +72,7 @@ def draw_figures():
         plt.yscale('log')
         ax.set_ylabel("Indexing Time (s)", fontsize=LABEL_SIZE)
         plt.yticks(fontsize=TICK_SIZE)
-        plt.ylim(10 ** (-4), 10 ** 7)
+        plt.ylim(10 ** (-3), 10 ** 6)
 
         # 3rd: figure properties
         fig.set_size_inches(*size_of_fig)  # set ratio
