@@ -87,6 +87,13 @@ add_executable(bprw-rand-varying ${BPRW_FILES} ${UTIL_FILES} ${GROUND_TRUTH_FILE
 InitBprw(bprw-rand-varying)
 target_compile_definitions(bprw-rand-varying PRIVATE -DSFMT=1)
 
+## add groud-truth support
+add_executable(bprw-rand-varying-gt ${BPRW_FILES} ${UTIL_FILES} ${GROUND_TRUTH_FILES}
+        playground/varying_parameters/main_bprw_rand_pair_varying_parameters.cpp
+        util/random_pair_generator.cpp)
+InitBprw(bprw-rand-varying-gt)
+target_compile_definitions(bprw-rand-varying-gt PRIVATE -DSFMT=1 -DGROUND_TRUTH=1)
+
 #### 2nd: flpmc #######################################################################################################
 macro(InitFLPMC exec_name)
     InitBoostHashSFMTEigen(${exec_name})
@@ -141,6 +148,10 @@ set(FLPMC_SOURCE_FILES_RAND ${LPMC_FILES} ${UTIL_FILES} ${GROUND_TRUTH_FILES}
 add_executable(flpmc-rand-varying ${FLPMC_SOURCE_FILES_RAND})
 InitFLPMC(flpmc-rand-varying)
 target_compile_definitions(flpmc-rand-varying PRIVATE -DSFMT=1)
+
+add_executable(flpmc-rand-varying-gt ${FLPMC_SOURCE_FILES_RAND})
+InitFLPMC(flpmc-rand-varying-gt)
+target_compile_definitions(flpmc-rand-varying-gt PRIVATE -DSFMT=1 -DGROUND_TRUTH=1)
 
 #### 3rd: bflpmc #######################################################################################################
 macro(InitBFLPMC exec_name)
@@ -198,6 +209,10 @@ set(BFLPMC_SOURCE_FILES_RAND ${LPMC_FILES} ${BPRW_FILES} ${UTIL_FILES} ${GROUND_
 add_executable(bflpmc-rand-varying ${BFLPMC_SOURCE_FILES_RAND})
 InitBFLPMC(bflpmc-rand-varying)
 target_compile_definitions(bflpmc-rand-varying PRIVATE -DSFMT=1)
+
+add_executable(bflpmc-rand-varying-gt ${BFLPMC_SOURCE_FILES_RAND})
+InitBFLPMC(bflpmc-rand-varying-gt)
+target_compile_definitions(bflpmc-rand-varying-gt PRIVATE -DSFMT=1 -DGROUND_TRUTH=1)
 
 ####################### reduced local push testing
 add_executable(rlp playground/reduced_local_push/main_exec_reduced_local_push.cpp ${LPMC_FILES} ${UTIL_FILES} ${GROUND_TRUTH_FILES})
