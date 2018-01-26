@@ -51,7 +51,7 @@ def draw_max_err():
 
     ax.set_ylim(0, 0.016)
     ax.set_yticks([0, 0.005, 0.010, 0.015])
-    ax.set_yticklabels(['0', '0.005', '0.010', '>0.015'])
+    ax.set_yticklabels(['0', '0.005', '0.010', '> 0.015'])
     ax.set_xticks(xtick_lst)
     for tick in ax.yaxis.get_major_ticks():
         tick.label.set_fontsize(TICK_SIZE)
