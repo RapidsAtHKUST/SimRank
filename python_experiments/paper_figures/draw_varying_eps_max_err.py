@@ -3,8 +3,6 @@ from data_analysis.varying_eps_statistics import *
 from draw_indexing_time_size import TICK_SIZE, LEGEND_SIZE, LABEL_SIZE, reads_d_tag, reads_rq_tag
 import json
 
-from paper_figures.draw_varying_c import large_size_plus
-
 
 def get_dict(file_path):
     with open(file_path) as ifs:
@@ -48,7 +46,6 @@ def draw_max_err():
 
         ax.plot(eps_lst, max_err_lst, shape_lst[idx], color=color_lst[idx], markersize=get_marker_size(idx),
                 markerfacecolor='none')
-        # ax.set_yscale('log')
     ax.plot(eps_lst, eps_lst, '--', color='black', markerfacecolor='none')
     # setup ticks for x and y axis
 
@@ -60,12 +57,12 @@ def draw_max_err():
         tick.label.set_fontsize(TICK_SIZE)
     for tick in ax.xaxis.get_major_ticks():
         tick.label.set_fontsize(TICK_SIZE)
+
     # setup labels and grid, legend
-    ax.set_ylabel('Maximum Error', fontsize=LABEL_SIZE+2)
+    ax.set_ylabel('Maximum Error', fontsize=LABEL_SIZE + 2)
     ax.set_xlabel('$\\epsilon$', fontsize=LABEL_SIZE)
     ax.grid(True, alpha=0.4)
     plt.tight_layout()
-    # plt.subplots_adjust(right=0.5)
     plt.legend(legend_lst, ncol=1, fontsize=LEGEND_SIZE, prop={'size': LEGEND_SIZE - 2, "weight": "bold"},
                bbox_to_anchor=(1.05, 1.1))
     exp_figure.subplots_adjust(wspace=0)

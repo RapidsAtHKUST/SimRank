@@ -6,6 +6,10 @@ Scripts: see [data_analysis](data_analysis).
 
 ## Paper Figures Scripts
 
+Figures: see [paper_figures/figures](paper_figures/figures)
+
+Scripts: see [paper_figures](paper_figures)
+
 ## Run-Exp Scripts
 
 utility files: [time_out_util.py](time_out_util.py), [generate_random_pairs.py](generate_random_pairs.py)
