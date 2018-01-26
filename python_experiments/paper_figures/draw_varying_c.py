@@ -45,11 +45,11 @@ def draw_query_index_time():
 
         def get_marker_size():
             if idx == 0:
-                return 16
-            elif idx == 5:
-                return 20
-            else:
                 return 18
+            elif idx == 5:
+                return 26
+            else:
+                return 22
 
         ax.plot(c_lst, time_lst, shape_lst[idx], color=color_lst[idx],
                 markersize=get_marker_size(),
@@ -87,11 +87,11 @@ def draw_query_index_time():
 
         def get_marker_size():
             if idx == 0:
-                return 16
-            elif idx == 3:
-                return 20
-            else:
                 return 18
+            elif idx == 3:
+                return 26
+            else:
+                return 22
 
         ax.plot(c_lst, time_lst, shape_lst[idx], color=color_lst[idx],
                 markersize=get_marker_size(),
