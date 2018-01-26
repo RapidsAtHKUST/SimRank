@@ -42,7 +42,7 @@ def get_algorithm_indexing_time_lst(tag):
 def draw_index_update_time():
     g_names = map(lambda data: data_names[data], data_set_lst)
 
-    size_of_fig = (FIG_SIZE_MULTIPLE[0] * 0.75, FIG_SIZE_MULTIPLE[1])
+    size_of_fig = (FIG_SIZE_MULTIPLE[0], FIG_SIZE_MULTIPLE[1])
     fig, ax = plt.subplots()
     N = len(g_names)
 
