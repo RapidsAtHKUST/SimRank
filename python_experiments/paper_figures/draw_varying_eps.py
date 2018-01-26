@@ -22,7 +22,8 @@ eps_query_dict = dict(itertools.chain(eps_query_dict.iteritems(), eps_reads_quer
 
 
 def draw_query_index_time():
-    eps_lst = [0.001 * (i + 1) for i in xrange(1, 22, 1)]
+    eps_lst = [0.001 * (i + 1) for i in xrange(1, 20, 1)]
+    xtick_lst = [0.002, 0.008, 0.014, 0.02]
     exp_figure, ax_tuple = plt.subplots(1, 2, sharex=True, figsize=(16, 6))
 
     # 1st: draw querying time
@@ -62,7 +63,7 @@ def draw_query_index_time():
 
     # setup ticks for x and y axis
     ax.set_ylim(0.8 / us_to_ms_factor, 10 ** 10 * 4 / us_to_ms_factor)
-    ax.set_xticks([0.002, 0.007, 0.012, 0.017, 0.022])
+    ax.set_xticks(xtick_lst)
     for tick in ax.yaxis.get_major_ticks():
         tick.label.set_fontsize(TICK_SIZE + large_size_plus)
     for tick in ax.xaxis.get_major_ticks():
@@ -107,7 +108,7 @@ def draw_query_index_time():
 
     # setup ticks for x and y axis
     ax.set_ylim(10 ** -3, 10 ** 6)
-    ax.set_xticks([0.002, 0.007, 0.012, 0.017, 0.022])
+    ax.set_xticks(xtick_lst)
     for tick in ax.yaxis.get_major_ticks():
         tick.label.set_fontsize(TICK_SIZE + large_size_plus)
     for tick in ax.xaxis.get_major_ticks():
