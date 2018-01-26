@@ -68,7 +68,7 @@ if __name__ == '__main__':
 
         with open(os.sep.join([data_folder, 'varying_eps_query_reads.json']), 'w') as ofs:
             time_dict = dict(zip(algorithm_lst, time_lst))
-            for eps_str in map(format_str, [0.1 * i for i in xrange(1, 8)]):
+            for eps_str in map(format_str, [0.001 * i for i in xrange(1, 8)]):
                 time_dict[reads_rq_tag][eps_str] = None
             ofs.write(json.dumps(time_dict, indent=4))
 

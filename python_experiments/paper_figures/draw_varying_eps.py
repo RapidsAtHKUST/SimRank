@@ -1,6 +1,7 @@
+import itertools
 import matplotlib.pyplot as plt
 from data_analysis.varying_eps_statistics import *
-from draw_indexing_time_size import TICK_SIZE, LEGEND_SIZE, LABEL_SIZE
+from draw_indexing_time_size import TICK_SIZE, LEGEND_SIZE, LABEL_SIZE, reads_d_tag, reads_rq_tag
 import json
 
 from paper_figures.draw_varying_c import us_to_ms_factor, large_size_plus
@@ -12,7 +13,12 @@ def get_dict(file_path):
 
 
 eps_index_dict = get_dict('../data_analysis/data-json/varying_parameters/varying_eps_index.json')
+eps_reads_index_dict = get_dict('../data_analysis/data-json/varying_parameters/varying_eps_index_reads.json')
+eps_index_dict = dict(itertools.chain(eps_index_dict.iteritems(), eps_reads_index_dict.iteritems()))
+
 eps_query_dict = get_dict('../data_analysis/data-json/varying_parameters/varying_eps_query.json')
+eps_reads_query_dict = get_dict('../data_analysis/data-json/varying_parameters/varying_eps_query_reads.json')
+eps_query_dict = dict(itertools.chain(eps_query_dict.iteritems(), eps_reads_query_dict.iteritems()))
 
 
 def draw_query_index_time():
@@ -20,8 +26,10 @@ def draw_query_index_time():
     exp_figure, ax_tuple = plt.subplots(1, 2, sharex=True, figsize=(16, 6))
 
     # 1st: draw querying time
-    algorithm_tag_lst = [bflpmc_tag, flpmc_tag, bprw_tag, sling_tag, isp_tag, tsf_tag]
-    legend_lst = ['FBLPMC', 'FLPMC', 'BLPMC', 'SLING', 'ISP', 'TSF']
+    algorithm_tag_lst = [bflpmc_tag, flpmc_tag, bprw_tag, sling_tag,
+                         reads_d_tag, reads_rq_tag, isp_tag, tsf_tag]
+    legend_lst = ['FBLPMC', 'FLPMC', 'BLPMC', 'SLING',
+                  'READS-D', 'READS-RQ', 'ISP', 'TSF']
 
     ax = ax_tuple[0]
     lst_lst = []
@@ -32,16 +40,28 @@ def draw_query_index_time():
                 if time_lst[offset] > time_lst[offset - 1]:
                     time_lst[offset] = time_lst[offset - 1]
 
-        time_lst = map(lambda val: float(val) / us_to_ms_factor, time_lst)
+        time_lst = map(lambda val: float(val) / us_to_ms_factor if val is not None else None, time_lst)
         lst_lst.append(time_lst)
-        shape_lst = ['D-.', 's--', 'o:', 'x-', 'v-', '^-', '<-', '>-']
-        color_lst = ['blue', 'orange', 'green', 'red', 'm', 'brown', 'pink', 'gray']
-        ax.plot(eps_lst, time_lst, shape_lst[idx], color=color_lst[idx], markersize=18 if idx != 0 else 14,
+        color_lst = ['blue', 'orange', 'green', 'red',
+                     '#fe01b1', '#ceb301', 'm', 'brown', 'k', 'gray']
+        shape_lst = ['D-.', 's--', 'o:', 'x-',
+                     'P-', '*-',
+                     'v-', '^-', '<-', '>-']
+
+        def get_marker_size(idx):
+            if idx == 0:
+                return 12
+            elif idx == 5:
+                return 16
+            else:
+                return 14
+
+        ax.plot(eps_lst, time_lst, shape_lst[idx], color=color_lst[idx], markersize=get_marker_size(idx),
                 markerfacecolor='none')
         ax.set_yscale('log')
 
     # setup ticks for x and y axis
-    ax.set_ylim(0.8 / us_to_ms_factor, 10 ** 8 * 1.5 / us_to_ms_factor)
+    ax.set_ylim(0.8 / us_to_ms_factor, 10 ** 10 * 4 / us_to_ms_factor)
     ax.set_xticks([0.002, 0.007, 0.012, 0.017, 0.022])
     for tick in ax.yaxis.get_major_ticks():
         tick.label.set_fontsize(TICK_SIZE + large_size_plus)
@@ -54,8 +74,8 @@ def draw_query_index_time():
     ax.legend(legend_lst, ncol=2, prop={'size': LEGEND_SIZE, "weight": "bold"}, loc=1)
 
     # 2nd: draw the index
-    algorithm_tag_lst = [flp_tag, sling_tag, tsf_tag]
-    legend_lst = ['FLP', 'SLING', 'TSF']
+    algorithm_tag_lst = [flp_tag, sling_tag, reads_d_tag, reads_rq_tag, tsf_tag]
+    legend_lst = ['FLP', 'SLING', 'READS-D', 'READS-RQ', 'TSF']
 
     ax = ax_tuple[1]
     lst_lst = []
@@ -70,14 +90,23 @@ def draw_query_index_time():
 
         lst_lst.append(time_lst)
 
-        shape_lst = ['D-.', 'x-', '^-']
-        color_lst = ['blue', 'red', 'brown']
-        ax.plot(eps_lst, time_lst, shape_lst[idx], color=color_lst[idx], markersize=18 if idx != 0 else 14,
+        shape_lst = ['D-.', 'x-', 'P-', '*-', '^-']
+        color_lst = ['blue', 'red', '#fe01b1', '#ceb301', 'brown']
+
+        def get_marker_size(idx):
+            if idx == 0:
+                return 12
+            elif idx == 3:
+                return 16
+            else:
+                return 14
+
+        ax.plot(eps_lst, time_lst, shape_lst[idx], color=color_lst[idx], markersize=get_marker_size(idx),
                 markerfacecolor='none')
         ax.set_yscale('log')
 
     # setup ticks for x and y axis
-    ax.set_ylim(10 ** -3, 10 ** 4)
+    ax.set_ylim(10 ** -3, 10 ** 6)
     ax.set_xticks([0.002, 0.007, 0.012, 0.017, 0.022])
     for tick in ax.yaxis.get_major_ticks():
         tick.label.set_fontsize(TICK_SIZE + large_size_plus)

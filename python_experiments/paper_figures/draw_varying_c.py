@@ -42,7 +42,17 @@ def draw_query_index_time():
         shape_lst = ['D-.', 's--', 'o:', 'x-',
                      'P-', '*-',
                      'v-', '^-', '<-', '>-']
-        ax.plot(c_lst, time_lst, shape_lst[idx], color=color_lst[idx], markersize=22 if idx != 0 else 18,
+
+        def get_marker_size():
+            if idx == 0:
+                return 16
+            elif idx == 5:
+                return 20
+            else:
+                return 18
+
+        ax.plot(c_lst, time_lst, shape_lst[idx], color=color_lst[idx],
+                markersize=get_marker_size(),
                 markerfacecolor='none')
         ax.set_yscale('log')
 
@@ -74,7 +84,17 @@ def draw_query_index_time():
 
         shape_lst = ['D-.', 'x-', 'P-', '*-', '^-']
         color_lst = ['blue', 'red', '#fe01b1', '#ceb301', 'brown']
-        ax.plot(c_lst, time_lst, shape_lst[idx], color=color_lst[idx], markersize=22 if idx != 0 else 18,
+
+        def get_marker_size():
+            if idx == 0:
+                return 16
+            elif idx == 3:
+                return 20
+            else:
+                return 18
+
+        ax.plot(c_lst, time_lst, shape_lst[idx], color=color_lst[idx],
+                markersize=get_marker_size(),
                 markerfacecolor='none')
         ax.set_yscale('log')
 
