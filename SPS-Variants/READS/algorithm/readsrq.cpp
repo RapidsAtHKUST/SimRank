@@ -189,16 +189,16 @@ readsrq::readsrq(char *gName_, int n_, int r_, int rq_, double c_, int t_) {
     char iName[125];
     sprintf(iName, "%s.readsrq.%d_%d_%lf_%d", gName, n, r, c, t);
 
-    if (fopen(iName, "rb") != NULL) {
-        deserializeForSingleSource(iName);
-    } else {
-        loadGraph(gName);
-        auto start = high_resolution_clock::now();
-        constructIndices();
-        auto end = high_resolution_clock::now();
-        cout << "indexing time:" << duration_cast<microseconds>(end - start).count() / pow(10, 6) << " s\n";
-        serializeForSingleSource(tm, iName);
-    }
+//    if (fopen(iName, "rb") != NULL) {
+//        deserializeForSingleSource(iName);
+//    } else {
+    loadGraph(gName);
+    auto start = high_resolution_clock::now();
+    constructIndices();
+    auto end = high_resolution_clock::now();
+    cout << "indexing time:" << duration_cast<microseconds>(end - start).count() / pow(10, 6) << " s\n";
+    serializeForSingleSource(tm, iName);
+//    }
 }
 
 readsrq::readsrq(string gName_, int n_, int r_, int rq_, double c_, int t_) {

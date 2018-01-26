@@ -26,7 +26,8 @@ int main(int argc, char **argv) {
     double delta = 0.01;
     double c = 0.6;
     int r = 100;
-    if (argc == 7) {
+    cout << "argc:" << argc << endl;
+    if (argc >= 7) {
         cout << "varying parameters" << endl;
         c = atof(argv[4]);
         eps = atof(argv[5]);
