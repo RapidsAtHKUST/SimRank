@@ -39,10 +39,10 @@ def get_algorithm_indexing_time_lst(tag):
                 0.102021, 0.271308, 0.268973, 1.25391, 2.47118]
 
 
-def draw_indexing_time():
+def draw_index_update_time():
     g_names = map(lambda data: data_names[data], data_set_lst)
 
-    size_of_fig = (FIG_SIZE_MULTIPLE)
+    size_of_fig = (FIG_SIZE_MULTIPLE[0] * 0.75, FIG_SIZE_MULTIPLE[1])
     fig, ax = plt.subplots()
     N = len(g_names)
 
@@ -82,4 +82,4 @@ def draw_indexing_time():
 
 if __name__ == '__main__':
     os.system('mkdir -p figures')
-    draw_indexing_time()
+    draw_index_update_time()

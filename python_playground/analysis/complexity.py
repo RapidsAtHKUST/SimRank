@@ -61,6 +61,8 @@ if __name__ == '__main__':
     reads_sample_num()
     reads_rq_sample_num()
 
+    reads_rq_sample_num(c=0.7, r=200)
+
     tsf_parameters(0.4)
     tsf_parameters(0.5)
     tsf_parameters(0.6)

@@ -217,17 +217,17 @@ readsrq::readsrq(string gName_, int n_, int r_, int rq_, double c_, int t_) {
             "/homes/ywangby/workspace/yche/git-repos/SimRank/LPMC-Profile/build/datasets/readsrq/%s_%d_%d_%lf_%d.bin") %
                               gName_ % n % r % c % t);
 
-    if (fopen(iName.c_str(), "rb") != nullptr) {
-        deserializeForSingleSource(const_cast<char *>(iName.c_str()));
-    } else {
-        loadGraph(gName);
-        auto start = high_resolution_clock::now();
-        constructIndices();
-        auto end = high_resolution_clock::now();
-        cout << "indexing time:" << duration_cast<microseconds>(end - start).count() / pow(10, 6) << " s\n";
-        cout << iName << endl;
-        serializeForSingleSource(tm, const_cast<char *>(iName.c_str()));
-    }
+//    if (fopen(iName.c_str(), "rb") != nullptr) {
+//        deserializeForSingleSource(const_cast<char *>(iName.c_str()));
+//    } else {
+    loadGraph(gName);
+    auto start = high_resolution_clock::now();
+    constructIndices();
+    auto end = high_resolution_clock::now();
+    cout << "indexing time:" << duration_cast<microseconds>(end - start).count() / pow(10, 6) << " s\n";
+    cout << iName << endl;
+//        serializeForSingleSource(tm, const_cast<char *>(iName.c_str()));
+//    }
     cout << "mem size:" << getValue() << " KB" << endl;
 }
 
