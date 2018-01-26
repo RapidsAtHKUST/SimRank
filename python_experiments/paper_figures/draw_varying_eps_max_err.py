@@ -40,7 +40,7 @@ def draw_max_err():
             if idx == 0:
                 return 12
             elif idx == 5:
-                return 16
+                return 20
             else:
                 return 14
 

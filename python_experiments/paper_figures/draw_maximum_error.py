@@ -31,7 +31,7 @@ def draw_figures_max_err():
             shape_lst = ['D-.', 's--', 'o:', 'x-',
                          'P-', '*-',
                          'v-', '^-', '<-', '>-']
-            cur_mark_size = 16 if idx != 5 else 18
+            cur_mark_size = 16 if idx != 5 else 20
             ax.plot(round_lst, time_lst, shape_lst[idx], markersize=cur_mark_size if idx != 0 else cur_mark_size - 4,
                     markerfacecolor='none',
                     color=color_lst[idx])

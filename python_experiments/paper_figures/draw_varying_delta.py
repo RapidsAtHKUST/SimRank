@@ -51,7 +51,7 @@ def draw_query_index_time():
             if idx == 0:
                 return 16
             elif idx == 5:
-                return 20
+                return 22
             else:
                 return 18
 
@@ -96,7 +96,7 @@ def draw_query_index_time():
             if idx == 0:
                 return 16
             elif idx == 3:
-                return 20
+                return 22
             else:
                 return 18
 
