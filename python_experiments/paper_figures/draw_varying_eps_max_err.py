@@ -15,13 +15,13 @@ eps_max_err_dict = get_dict('../data_analysis/data-json/varying_parameters/varyi
 def draw_max_err():
     eps_lst = [0.001 * (i + 1) for i in xrange(1, 15, 1)]
     xtick_lst = [0.005, 0.01, 0.015]
-    exp_figure, ax_tuple = plt.subplots(1, 1, sharex=True, figsize=(7, 4))
+    exp_figure, ax_tuple = plt.subplots(1, 1, sharex=True, figsize=(9, 5))
 
     # 1st: draw querying time
     algorithm_tag_lst = [bflpmc_tag, flpmc_tag, bprw_tag, sling_tag,
                          reads_d_tag, reads_rq_tag, isp_tag, tsf_tag]
     legend_lst = ['FBLPMC', 'FLPMC', 'BLPMC', 'SLING',
-                  'READS-D', 'READS-RQ', 'ISP', 'TSF', 'Bound']
+                  'READS-D', 'READS-RQ', 'ISP', 'TSF', '$\\epsilon$-Bound']
 
     ax = ax_tuple
     lst_lst = []
@@ -63,8 +63,8 @@ def draw_max_err():
     ax.set_xlabel('$\\epsilon$', fontsize=LABEL_SIZE)
     ax.grid(True, alpha=0.4)
     plt.tight_layout()
-    plt.legend(legend_lst, ncol=1, fontsize=LEGEND_SIZE, prop={'size': LEGEND_SIZE - 2, "weight": "bold"},
-               bbox_to_anchor=(1.05, 1.1))
+    plt.legend(legend_lst, ncol=1, fontsize=LEGEND_SIZE, prop={'size': LEGEND_SIZE, "weight": "bold"},
+               bbox_to_anchor=(1.05, 1.0))
     exp_figure.subplots_adjust(wspace=0)
     plt.tight_layout()
     plt.savefig('figures/' + 'varying_eps_max_err' + '.pdf', bbox_inches='tight', dpi=300)

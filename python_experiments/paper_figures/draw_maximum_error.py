@@ -14,12 +14,12 @@ def get_algorithm_max_err_lst(algorithm_tag, data_set):
 def draw_figures_max_err():
     data_set_lst = accuracy_data_set_lst
     round_lst = xrange(10)
-    exp_figure, ax_tuple = plt.subplots(1, 4, sharex=True, figsize=(32, 6))
+    exp_figure, ax_tuple = plt.subplots(1, 4, sharex=True, figsize=(32, 7))
     algorithm_tag_lst = [bflpmc_tag, flpmc_tag, bprw_tag, sling_tag,
                          reads_d_tag, reads_rq_tag,
                          isp_tag, tsf_tag, lind_tag, cw_tag]
     legend_lst = ['FBLPMC', 'FLPMC', 'BLPMC', 'SLING',
-                  'READS-D', 'READS-RQ', 'ISP', 'TSF', 'LIN', 'MCSP']
+                  'READS-D', 'READS-RQ', 'ISP', 'TSF', 'LIN', 'MCSP', '$\\epsilon$-Bound']
 
     for ax_idx, ax in enumerate(ax_tuple):
         max_err_lst_lst = []
@@ -28,14 +28,21 @@ def draw_figures_max_err():
             max_err_lst_lst.append(time_lst)
             color_lst = ['blue', 'orange', 'green', 'red',
                          '#fe01b1', '#ceb301', 'm', 'brown', 'k', 'gray']
-            shape_lst = ['D-.', 's--', 'o:', 'x-',
-                         'P-', '*-',
-                         'v-', '^-', '<-', '>-']
+            # shape_lst = ['D-.', 's--', 'o:', 'x-',
+            #              'P-', '*-',
+            #              'v-', '^-', '<-', '>-']
+            shape_lst = ['D', 's', 'o', 'x',
+                         'P', '*',
+                         'v', '^', '<', '>']
             cur_mark_size = 16 if idx != 5 else 20
             ax.plot(round_lst, time_lst, shape_lst[idx], markersize=cur_mark_size if idx != 0 else cur_mark_size - 4,
                     markerfacecolor='none',
                     color=color_lst[idx])
             ax.set_yscale('log')
+        ax.plot(round_lst, [10 ** (-2) for _ in xrange(len(round_lst))], '--',
+                markersize=cur_mark_size if idx != 0 else cur_mark_size - 4,
+                markerfacecolor='none',
+                color='black')
         plt.yticks(fontsize=TICK_SIZE)
 
     # sub title on the top
@@ -53,13 +60,13 @@ def draw_figures_max_err():
         my_ax.set_xlabel('Round Number\n' + sub_titles[idx], fontsize=LABEL_SIZE + 4)
         my_ax.set_xticks(range(10))
         my_ax.set_xticklabels([i + 1 for i in range(10)], fontsize=TICK_SIZE)
-        my_ax.grid(True, alpha=0.2)
+        # my_ax.grid(True, alpha=0.2)
 
     exp_figure.subplots_adjust(wspace=0)
     plt.tight_layout()
-    plt.subplots_adjust(top=0.82)
+    # plt.subplots_adjust(top=0.85)
     plt.legend(legend_lst, ncol=len(legend_lst), fontsize=LEGEND_SIZE, prop={'size': LEGEND_SIZE + 3, "weight": "bold"},
-               bbox_to_anchor=(0.85, 1.25))
+               bbox_to_anchor=(1.15, 1.15))
     plt.savefig('figures/' + 'max_err' + '.pdf', bbox_inches='tight', dpi=300)
     # exp_figure.show()
     plt.close()
