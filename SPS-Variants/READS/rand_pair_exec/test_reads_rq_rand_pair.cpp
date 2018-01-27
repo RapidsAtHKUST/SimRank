@@ -26,6 +26,8 @@ int main(int argc, char **argv) {
     double delta = 0.01;
     double c = 0.6;
     int r = 100;
+    random_device rd;
+    srand(rd());
     cout << "argc:" << argc << endl;
     if (argc >= 7) {
         cout << "varying parameters" << endl;
