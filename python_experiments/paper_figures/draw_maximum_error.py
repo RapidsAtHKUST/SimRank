@@ -19,7 +19,7 @@ def draw_figures_max_err():
                          reads_d_tag, reads_rq_tag,
                          isp_tag, tsf_tag, lind_tag, cw_tag]
     legend_lst = ['FBLPMC', 'FLPMC', 'BLPMC', 'SLING',
-                  'READS-D', 'READS-RQ', 'ISP', 'TSF', 'LIN', 'MCSP', '$\\epsilon$-Bound']
+                  'READS-D', 'READS-Rq', 'ISP', 'TSF', 'LIN', 'MCSP', '$\\epsilon$-Bound']
 
     for ax_idx, ax in enumerate(ax_tuple):
         max_err_lst_lst = []

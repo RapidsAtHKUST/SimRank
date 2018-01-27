@@ -46,7 +46,7 @@ def draw_figures():
     algorithm_tag_lst = [local_push_tag, sling_tag,
                          reads_d_tag, reads_rq_tag,
                          tsf_tag, linear_d_tag, cloud_walker_tag]
-    label_lst = ["FLP", "SLING", 'READS-D', 'READS-RQ', "TSF", "LIN", "MCSP"]
+    label_lst = ["FLP", "SLING", 'READS-D', 'READS-Rq', "TSF", "LIN", "MCSP"]
     color_lst = ['blue',
                  # 'orange', 'green',
                  'red', '#fe01b1', '#ceb301',

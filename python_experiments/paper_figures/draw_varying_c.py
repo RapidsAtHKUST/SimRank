@@ -29,7 +29,7 @@ def draw_query_index_time():
     algorithm_tag_lst = [bflpmc_tag, flpmc_tag, bprw_tag, sling_tag,
                          reads_d_tag, reads_rq_tag, isp_tag, tsf_tag]
     legend_lst = ['FBLPMC', 'FLPMC', 'BLPMC', 'SLING',
-                  'READS-D', 'READS-RQ', 'ISP', 'TSF']
+                  'READS-D', 'READS-Rq', 'ISP', 'TSF']
 
     ax = ax_tuple[0]
     lst_lst = []
@@ -72,7 +72,7 @@ def draw_query_index_time():
 
     # 2nd: draw the index
     algorithm_tag_lst = [flp_tag, sling_tag, reads_d_tag, reads_rq_tag, tsf_tag]
-    legend_lst = ['FLP', 'SLING', 'READS-D', 'READS-RQ', 'TSF']
+    legend_lst = ['FLP', 'SLING', 'READS-D', 'READS-Rq', 'TSF']
 
     ax = ax_tuple[1]
     lst_lst = []

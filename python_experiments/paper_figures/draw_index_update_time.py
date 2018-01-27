@@ -54,7 +54,7 @@ def draw_index_update_time():
     # other lst
     hatch_lst = ["//", '', 'O', '--', ]
     algorithm_tag_lst = [local_push_tag, reads_d_tag, reads_rq_tag, tsf_tag]
-    label_lst = ["FLP", "READS_D", "READS-RQ", "TSF"]
+    label_lst = ["FLP", "READS_D", "READS-Rq", "TSF"]
     color_lst = ['blue', '#fe01b1', '#ceb301', 'brown']
 
     # 1st: bars

@@ -21,7 +21,7 @@ def draw_max_err():
     algorithm_tag_lst = [bflpmc_tag, flpmc_tag, bprw_tag, sling_tag,
                          reads_d_tag, reads_rq_tag, isp_tag, tsf_tag]
     legend_lst = ['FBLPMC', 'FLPMC', 'BLPMC', 'SLING',
-                  'READS-D', 'READS-RQ', 'ISP', 'TSF', '$\\epsilon$-Bound']
+                  'READS-D', 'READS-Rq', 'ISP', 'TSF', '$\\epsilon$-Bound']
 
     ax = ax_tuple
     lst_lst = []

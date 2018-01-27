@@ -50,7 +50,7 @@ def draw_average_query_one_pair_time():
     is_fill = [False] * len(algorithm_tag_lst)
     is_fill[1] = True
     hatch_lst = ['//', '', '.', "**", '', 'O', '\\', '--', 'x', '++']
-    label_lst = ["FBLPMC", "FLPMC", "BLPMC", "SLING", 'READS-D', 'READS-RQ', "ISP", "TSF", "LIN", "MCSP"]
+    label_lst = ["FBLPMC", "FLPMC", "BLPMC", "SLING", 'READS-D', 'READS-Rq', "ISP", "TSF", "LIN", "MCSP"]
     color_lst = ['blue', 'orange', 'green', 'red', '#fe01b1', '#ceb301', 'm', 'brown', 'k', 'gray']
 
     # 1st: bars
