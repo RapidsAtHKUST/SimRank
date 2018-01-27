@@ -50,7 +50,8 @@ def get_tag_no_colon_info(file_path, tag, functor):
 
 def get_max_err_lst(algorithm, pair_num=10 ** 6):
     def get_estimated_single_thread_time(eps):
-        result = get_tag_info(get_file_path(eps, algorithm, pair_num), 'max err', min)
+        # result = get_tag_info(get_file_path(eps, algorithm, pair_num), 'max err', min)
+        result = get_tag_info(get_file_path(eps, algorithm, pair_num), 'max err', lambda x: x[-1])
         return result
 
     return dict(zip(map(format_str, eps_lst), map(get_estimated_single_thread_time, eps_lst)))

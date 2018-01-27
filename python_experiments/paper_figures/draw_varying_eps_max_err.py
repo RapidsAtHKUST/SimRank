@@ -14,7 +14,7 @@ eps_max_err_dict = get_dict('../data_analysis/data-json/varying_parameters/varyi
 
 def draw_max_err():
     eps_lst = [0.001 * (i + 1) for i in xrange(1, 15, 1)]
-    xtick_lst = [0.005, 0.01, 0.015]
+    xtick_lst = [0, 0.005, 0.01, 0.015]
     exp_figure, ax_tuple = plt.subplots(1, 1, sharex=True, figsize=(9, 5))
 
     # 1st: draw querying time
@@ -46,9 +46,11 @@ def draw_max_err():
 
         ax.plot(eps_lst, max_err_lst, shape_lst[idx], color=color_lst[idx], markersize=get_marker_size(idx),
                 markerfacecolor='none')
-    ax.plot(eps_lst, eps_lst, '--', color='black', markerfacecolor='none')
+    total_eps_lst = [0.001 * i for i in xrange(16)]
+    ax.plot(total_eps_lst, total_eps_lst, '--', color='black', markerfacecolor='none')
     # setup ticks for x and y axis
 
+    ax.set_xlim(0, 0.016)
     ax.set_ylim(0, 0.016)
     ax.set_yticks([0, 0.005, 0.010, 0.015])
     ax.set_yticklabels(['0', '0.005', '0.010', '> 0.015'])
