@@ -13,7 +13,7 @@ def get_algorithm_max_err_lst(algorithm_tag, data_set):
 
 def draw_figures_max_err():
     data_set_lst = accuracy_data_set_lst
-    round_lst = xrange(10)
+    round_lst = range(10)
     exp_figure, ax_tuple = plt.subplots(1, 4, sharex=True, figsize=(32, 7))
     algorithm_tag_lst = [bflpmc_tag, flpmc_tag, bprw_tag, sling_tag,
                          reads_d_tag, reads_rq_tag,
@@ -39,10 +39,8 @@ def draw_figures_max_err():
                     markerfacecolor='none',
                     color=color_lst[idx])
             ax.set_yscale('log')
-        ax.plot(round_lst, [10 ** (-2) for _ in xrange(len(round_lst))], '--',
-                markersize=cur_mark_size if idx != 0 else cur_mark_size - 4,
-                markerfacecolor='none',
-                color='black')
+        ax.plot([-1] + round_lst + [10], [10 ** (-2) for _ in xrange(len(round_lst) + 2)], '--',
+                markerfacecolor='none', color='black')
         plt.yticks(fontsize=TICK_SIZE)
 
     # sub title on the top
@@ -58,13 +56,13 @@ def draw_figures_max_err():
         for tick in my_ax.yaxis.get_major_ticks():
             tick.label.set_fontsize(TICK_SIZE)
         my_ax.set_xlabel('Round Number\n' + sub_titles[idx], fontsize=LABEL_SIZE + 4)
+        my_ax.set_xlim(-0.5, 9.5)
         my_ax.set_xticks(range(10))
         my_ax.set_xticklabels([i + 1 for i in range(10)], fontsize=TICK_SIZE)
         # my_ax.grid(True, alpha=0.2)
 
     exp_figure.subplots_adjust(wspace=0)
     plt.tight_layout()
-    # plt.subplots_adjust(top=0.85)
     plt.legend(legend_lst, ncol=len(legend_lst), fontsize=LEGEND_SIZE, prop={'size': LEGEND_SIZE + 3, "weight": "bold"},
                bbox_to_anchor=(1.15, 1.15))
     plt.savefig('figures/' + 'max_err' + '.pdf', bbox_inches='tight', dpi=300)
