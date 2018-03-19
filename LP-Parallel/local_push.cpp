@@ -4,7 +4,6 @@
 #include <boost/format.hpp>
 
 #include "local_push.h"
-#include "util/file_serialization.h"
 
 using boost::format;
 
@@ -19,7 +18,7 @@ void Full_LocalPush::push(NodePair &pab, double inc) {
     // cout << pab.first << " " << pab.second << endl ;
     if (fabs(R[pab]) > r_max) {
         // Q.insert(pab);
-        if (marker[pab] == false) {
+        if (!marker[pab]) {
             Q.push(pab);
             marker[pab] = true;
         }
@@ -32,7 +31,7 @@ void Reduced_LocalPush::push(NodePair &pab, double inc) {
     R[pab] += inc;
     if (fabs(R[pab]) / sqrt(2) > r_max) { // the criteria for reduced linear system
         // Q.insert(pab);
-        if (marker[pab] == false) {
+        if (!marker[pab]) {
             Q.push(pab);
             marker[pab] = true;
         }
@@ -90,14 +89,13 @@ void Reduced_LocalPush::push_to_neighbors(DirectedG &g, NodePair &np, double cur
     // the push method using reduced linear system
     // out-neighbors of a,b
     DirectedG::out_edge_iterator outi_iter, outi_end, outj_iter, outj_end;
-    bool is_singleton = np.first == np.second ? true : false;
     // /* only push to partial pairs*/
 
     tie(outi_iter, outi_end) = out_edges(np.first, g);
     tie(outj_iter, outj_end) = out_edges(np.second, g);// init the iterator
 
     tie(outi_iter, outi_end) = out_edges(np.first, g);
-    if (is_singleton) {
+    if (np.first == np.second) {
         /* starting push for singleton nodes*/
         for (; outi_iter != outi_end; outi_iter++) {
             tie(outj_iter, outj_end) = out_edges(np.second, g);// init the iterator
@@ -141,11 +139,7 @@ void Reduced_LocalPush::push_to_neighbors(DirectedG &g, NodePair &np, double cur
 }
 
 void Full_LocalPush::push_to_neighbors(DirectedG &g, NodePair &np, double current_residual) {
-    DirectedG::out_edge_iterator
-            outi_iter,
-            outi_end,
-            outj_iter,
-            outj_end;
+    DirectedG::out_edge_iterator outi_iter, outi_end, outj_iter, outj_end;
 
     tie(outi_iter, outi_end) = out_edges(np.first, g);
     for (; outi_iter != outi_end; outi_iter++) {
