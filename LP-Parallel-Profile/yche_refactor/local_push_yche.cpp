@@ -113,10 +113,10 @@ void Reduced_LocalPush::push_to_neighbors(GraphYche &g, NodePair &np, double cur
     auto b = np.second;
     if (a == b) {
         /* starting push for singleton nodes*/
-        for (auto off_out_a = g.off_out[a]; off_out_a < g.off_out[a + 1]; off_out_a++) {
-            auto out_nei_a = g.neighbors_out[off_out_a];
-            for (auto off_out_b = g.off_out[b]; off_out_b < g.off_out[b + 1]; off_out_b++) {
-                auto out_nei_b = g.neighbors_out[off_out_b];
+        for (auto off_a = g.off_out[a]; off_a < g.off_out[a + 1]; off_a++) {
+            auto out_nei_a = g.neighbors_out[off_a];
+            for (auto off_b = g.off_out[b]; off_b < g.off_out[b + 1]; off_b++) {
+                auto out_nei_b = g.neighbors_out[off_b];
                 auto in_degree_a = g.in_degree(out_nei_a);
                 auto in_degree_b = g.in_degree(out_nei_b);
                 auto total_in = in_degree_a * in_degree_b;
@@ -180,11 +180,10 @@ double Full_LocalPush::how_much_residual_to_push(GraphYche &g, NodePair &np) {
 double Reduced_LocalPush::how_much_residual_to_push(GraphYche &g, NodePair &np) {
     // determine the residual value for current pair to push
     double r = R[np];
-
     if (np.first == np.second) { //singleton node
         return r - r_max / (1 - c); // singleton nodes do not need to push all residual as 1
     }
-
+    return r;
     /* check whether np forms a self-loop */
 //    if (g.exists_edge(np.first, np.second) && g.exists_edge(np.second, np.first)) { // check whether exists reverse edge
 //        auto in_deg_a = g.in_degree(np.first);
