@@ -21,7 +21,7 @@
 using boost::format;
 const string LOCAL_PUSH_DIR = "./datasets/local_push/";
 
-extern double cal_rmax(DirectedG &g, double c, double epsilon, double delta);//calculate r_,max
+//calculate r_,max
 
 extern double cal_rmax(double c, double epsilon); // the r_max for general case
 
@@ -29,11 +29,13 @@ extern double cal_rmax(double c, double epsilon); // the r_max for general case
 struct LocalPush {
     /* data members */
     string g_name; // the name of graph data
-    DensePairMap<float> P; // the estimates 
+    DensePairMap<float> P; // the estimates
+
     DensePairMap<float> R; // the residuals
-    // PairHashMap R; // the residuals
-    queue<NodePair> Q; // the queue to hold invalid node pairs
     DensePairMap<bool> marker;
+
+    queue<NodePair> Q; // the queue to hold invalid node pairs
+
     double r_max;
     double c;
     size_t n;// we need to define total number of nodes in advance
@@ -56,8 +58,11 @@ struct LocalPush {
     void load();
 
     void init_PR(); // init or load the data of P and R
+
     string virtual get_file_path_base() { return string(); } // get file path of local push data
+
     void show(); // print values
+
     void virtual push(NodePair &pab, double inc) {}
 
     void insert(DirectedG::vertex_descriptor, DirectedG::vertex_descriptor, DirectedG &g);
@@ -129,4 +134,3 @@ struct Parallel_LocalPush : LocalPush {
 };
 
 #endif
-

@@ -12,18 +12,6 @@ double cal_rmax(double c, double epsilon) {
     return (1 - c) * epsilon;
 }
 
-double cal_rmax(DirectedG &g, double c, double epsilon, double delta) {
-    // calculate r_max
-    int m, n;
-    m = num_edges(g);
-    n = num_vertices(g);
-    double d = double(m) / double(n);
-    // cout << d << endl;
-    double a = (1 - c) * pow(d, 2) * pow(epsilon, 2) / (c * log(2 / delta));
-    // cout << pow(a,1.0/3.0) << endl;
-    return pow(a, 1.0 / 3.0);
-}
-
 void Full_LocalPush::push(NodePair &pab, double inc) {
     // the actually action of push
     n_push++;
@@ -86,41 +74,27 @@ LocalPush::LocalPush(DirectedG &g, string gName_, double c_, double epsilon_, si
     string path = get_edge_list_path(gName_);
     n_push = 0;
     cpu_time = -1; // set the init value
-
 }
 
-Full_LocalPush::Full_LocalPush(DirectedG &g, string name, double c_, double r_max_, size_t n_) : LocalPush(g, name, c_,
-                                                                                                           r_max_, n_) {
+Full_LocalPush::Full_LocalPush(DirectedG &g, string name, double c_, double r_max_, size_t n_) :
+        LocalPush(g, name, c_, r_max_, n_) {
     init_PR();
 }
 
-Reduced_LocalPush::Reduced_LocalPush(DirectedG &g, string name, double c_, double r_max_, size_t n_) : LocalPush(g,
-                                                                                                                 name,
-                                                                                                                 c_,
-                                                                                                                 r_max_,
-                                                                                                                 n_) {
+Reduced_LocalPush::Reduced_LocalPush(DirectedG &g, string name, double c_, double r_max_, size_t n_) :
+        LocalPush(g, name, c_, r_max_, n_) {
     init_PR();
 }
 
 void Reduced_LocalPush::push_to_neighbors(DirectedG &g, NodePair &np, double current_residual) {
     // the push method using reduced linear system
-    // out-neighbros of a,b
-    DirectedG::out_edge_iterator
-            outi_iter,
-            outi_end,
-            outj_iter,
-            outj_end;
+    // out-neighbors of a,b
+    DirectedG::out_edge_iterator outi_iter, outi_end, outj_iter, outj_end;
     bool is_singleton = np.first == np.second ? true : false;
     // /* only push to partial pairs*/
-    size_t out_degree_i = out_degree(np.first, g);
-    size_t out_degree_j = out_degree(np.second, g);
 
     tie(outi_iter, outi_end) = out_edges(np.first, g);
     tie(outj_iter, outj_end) = out_edges(np.second, g);// init the iterator
-    /*the indicator whether the position is common neighbor */
-    vector<bool> outs_i_common(out_degree_i, false);
-    vector<bool> outs_j_common(out_degree_j, false);
-    // cout << "------" << endl;
 
     tie(outi_iter, outi_end) = out_edges(np.first, g);
     if (is_singleton) {
@@ -137,7 +111,6 @@ void Reduced_LocalPush::push_to_neighbors(DirectedG &g, NodePair &np, double cur
                     NodePair pab(out_a, out_b); // the node-pair to be pushed to
                     double inc = c * current_residual / total_in; //
                     push(pab, sqrt(2) * inc); // do the push action, sqrt(2) factor is because it is from singleton node
-                    // cout << format("pushing to (%s,%s) with factor %s") % pab.first % pab.second % sqrt(2) << endl;
                 }
             }
         }
@@ -146,20 +119,17 @@ void Reduced_LocalPush::push_to_neighbors(DirectedG &g, NodePair &np, double cur
         for (; outi_iter != outi_end; outi_iter++) {
             tie(outj_iter, outj_end) = out_edges(np.second, g);// init the iterator
             auto j_begin = outj_iter;
-            bool is_i_common = outs_i_common[outi_iter - i_begin_iter];// indicator of whether i is a common neighbor
             for (; outj_iter != outj_end; outj_iter++) {
-                bool is_j_common = outs_j_common[outj_iter - j_begin];
                 auto out_a = target(*outi_iter, g); // out-neighbor
                 auto out_b = target(*outj_iter, g);
                 auto indegree_a = in_degree(out_a, g);
                 auto indegree_b = in_degree(out_b, g);
                 auto total_in = indegree_a * indegree_b;
                 double inc = c * current_residual / total_in;
-                bool oa_less_ob = out_a < out_b ? true : false;
                 if (out_a == out_b) { //don't push to singleton nodes
                     continue;
                 } else { //  a, b is normal in-neighbors of out_a and out_b
-                    if (!oa_less_ob) {
+                    if (out_a > out_b) {
                         swap(out_a, out_b);
                     }
                     NodePair pab(out_a, out_b);
@@ -168,7 +138,6 @@ void Reduced_LocalPush::push_to_neighbors(DirectedG &g, NodePair &np, double cur
             }
         }
     }
-    // cout << "------" << endl;
 }
 
 void Full_LocalPush::push_to_neighbors(DirectedG &g, NodePair &np, double current_residual) {
@@ -220,7 +189,6 @@ double Reduced_LocalPush::how_much_residual_to_push(DirectedG &g, NodePair &np) 
     //     return push_residual;
     // }
     return r;
-
 }
 
 void LocalPush::local_push(DirectedG &g) { // local push given current P and R

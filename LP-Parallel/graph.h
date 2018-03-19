@@ -1,24 +1,30 @@
 #ifndef __GRAPH_H__
 #define __GRAPH_H__
 
-#include <iostream>
 #include <cstdint>
 #include <cstdio>
+
+#include <sys/stat.h>
+
+#include <iostream>
 #include <chrono>  // for high_resolution_clock
 #include <algorithm>
-#include <Eigen/Dense>
-#include <Eigen/Sparse>
 #include <utility>
 #include <fstream>
+#include <functional>
+
 #include <boost/format.hpp>
-#include <sparsepp/spp.h>
-#include <google/dense_hash_map>
 #include <boost/graph/adjacency_list.hpp>
 #include <boost/multi_array.hpp>
+
+#include <Eigen/Dense>
+#include <Eigen/Sparse>
+
+#include <sparsepp/spp.h>
+#include <google/dense_hash_map>
+
 #include "util/file_serialization.h"
 #include "util/stat.h"
-#include <sys/stat.h>
-#include <functional>
 
 #define SPP_MIX_HASH
 using namespace boost;
