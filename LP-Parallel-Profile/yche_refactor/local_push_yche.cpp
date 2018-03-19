@@ -68,17 +68,39 @@ void LocalPush::init_PR() {
     }
 }
 
-Full_LocalPush::Full_LocalPush(GraphYche &g, string name, double c_, double r_max_, size_t n_) :
-        LocalPush(g, name, c_, r_max_, n_) {
+Full_LocalPush::Full_LocalPush(GraphYche &g, string name, double c_, double epsilon, size_t n_) :
+        LocalPush(g, name, c_, epsilon, n_) {
     string data_path = get_file_path_base() + ".P";
-    cout << "data path " << data_path << endl;
     init_PR();
 }
 
-Reduced_LocalPush::Reduced_LocalPush(GraphYche &g, string name, double c_, double r_max_, size_t n_) :
-        LocalPush(g, name, c_, r_max_, n_) {
+Reduced_LocalPush::Reduced_LocalPush(GraphYche &g, string name, double c_, double epsilon, size_t n_) :
+        LocalPush(g, name, c_, epsilon, n_) {
     string data_path = get_file_path_base() + ".P";
     init_PR();
+}
+
+void LocalPush::local_push(GraphYche &g) { // local push given current P and R
+    auto start = std::chrono::high_resolution_clock::now();
+//    double sum_of_est = 0;
+
+    while (!Q.empty()) {
+        NodePair np = Q.front();
+        Q.pop();
+        marker[np] = false;
+        double residual_to_push = how_much_residual_to_push(g, np);
+//        sum_of_est += residual_to_push;
+
+        R[np] -= residual_to_push;
+        P[np] += residual_to_push;
+        push_to_neighbors(g, np, residual_to_push); // push residuals to neighbors of np
+    }
+    auto finish = std::chrono::high_resolution_clock::now();
+    std::chrono::duration<double> elapsed = finish - start;
+    if (cpu_time == -1) {
+        cpu_time = elapsed.count();
+        mem_size = getValue();
+    }
 }
 
 void Full_LocalPush::push(NodePair &pab, double inc) {
@@ -105,6 +127,31 @@ void Reduced_LocalPush::push(NodePair &pab, double inc) {
             marker[pab] = true;
         }
     }
+}
+
+double Full_LocalPush::how_much_residual_to_push(GraphYche &g, NodePair &np) {
+    return R[np];
+}
+
+double Reduced_LocalPush::how_much_residual_to_push(GraphYche &g, NodePair &np) {
+    // determine the residual value for current pair to push
+    double r = R[np];
+    if (np.first == np.second) { //singleton node
+        return r - r_max / (1 - c); // singleton nodes do not need to push all residual as 1
+    }
+
+#ifdef SELF_LOOP_MERGE
+    /* check whether np forms a self-loop */
+    if (g.exists_edge(np.first, np.second) && g.exists_edge(np.second, np.first)) { // check whether exists reverse edge
+        auto in_deg_a = g.in_degree(np.first);
+        auto in_deg_b = g.in_degree(np.second);
+        double alpha = c / (in_deg_a * in_deg_b);
+        int k = ceil(log(r_max / fabs(r)) / log(alpha));
+        double residual_to_push = (1 - pow(alpha, k)) * r / (1 - alpha);
+        return residual_to_push;
+    }
+#endif
+    return r;
 }
 
 void Reduced_LocalPush::push_to_neighbors(GraphYche &g, NodePair &np, double current_residual) {
@@ -171,56 +218,6 @@ void Full_LocalPush::push_to_neighbors(GraphYche &g, NodePair &np, double curren
             double inc = c * current_residual / total_in;
             push(pab, inc);
         }
-    }
-}
-
-double Full_LocalPush::how_much_residual_to_push(GraphYche &g, NodePair &np) {
-    return R[np];
-}
-
-double Reduced_LocalPush::how_much_residual_to_push(GraphYche &g, NodePair &np) {
-    // determine the residual value for current pair to push
-    double r = R[np];
-    if (np.first == np.second) { //singleton node
-        return r - r_max / (1 - c); // singleton nodes do not need to push all residual as 1
-    }
-    return r;
-    /* check whether np forms a self-loop */
-//    if (g.exists_edge(np.first, np.second) && g.exists_edge(np.second, np.first)) { // check whether exists reverse edge
-//        auto in_deg_a = g.in_degree(np.first);
-//        auto in_deg_b = g.in_degree(np.second);
-//        double alpha = c / (in_deg_a * in_deg_b);
-//        int k = ceil(log(r_max / fabs(r)) / log(alpha));
-//        double residual_to_push = (1 - pow(alpha, k)) * r / (1 - alpha);
-//        return residual_to_push;
-//    } else {
-//        auto push_residual = r;
-//        return push_residual;
-//    }
-}
-
-void LocalPush::local_push(GraphYche &g) { // local push given current P and R
-    auto start = std::chrono::high_resolution_clock::now();
-    double sum_of_est = 0;
-
-    while (!Q.empty()) {
-        NodePair np = Q.front();
-        Q.pop();
-        marker[np] = false;
-        double residual_to_push = how_much_residual_to_push(g, np);
-        sum_of_est += residual_to_push;
-
-        // R.erase(np); //  remove from residual
-        R[np] -= residual_to_push;
-        P[np] += residual_to_push;
-        push_to_neighbors(g, np, residual_to_push); // push residuals to neighbors of np
-
-    }
-    auto finish = std::chrono::high_resolution_clock::now();
-    std::chrono::duration<double> elapsed = finish - start;
-    if (cpu_time == -1) {
-        cpu_time = elapsed.count();
-        mem_size = getValue();
     }
 }
 

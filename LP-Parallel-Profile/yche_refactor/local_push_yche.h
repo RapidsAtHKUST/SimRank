@@ -79,7 +79,7 @@ public:
 struct Reduced_LocalPush : LocalPush {
     Reduced_LocalPush() = default;
 
-    Reduced_LocalPush(GraphYche &g, string name, double c_, double r_max_, size_t n_);
+    Reduced_LocalPush(GraphYche &g, string name, double c_, double epsilon, size_t n_);
 
     string get_file_path_base() override; // get file path of local push data
 public:
@@ -97,7 +97,7 @@ public:
 struct Full_LocalPush : LocalPush {
     Full_LocalPush() = default;
 
-    Full_LocalPush(GraphYche &g, string name, double c_, double r_max_, size_t n_);
+    Full_LocalPush(GraphYche &g, string name, double c_, double epsilon, size_t n_);
 
     string get_file_path_base() override; // get file path of local push data
 
