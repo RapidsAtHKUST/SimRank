@@ -51,7 +51,6 @@ LocalPush::LocalPush(GraphYche &g, string gName_, double c_, double epsilon_, si
     cpu_time = -1; // set the init value
 }
 
-
 void LocalPush::init_PR() {
     string data_path = get_file_path_base() + ".P";
     cout << "data path " << data_path << endl;
@@ -85,8 +84,9 @@ Reduced_LocalPush::Reduced_LocalPush(GraphYche &g, string name, double c_, doubl
 void Full_LocalPush::push(NodePair &pab, double inc) {
     // the actually action of push
     n_push++;
-    R[pab] += inc;
-    if (fabs(R[pab]) > r_max) {
+    float new_val = R[pab] + inc;
+    R[pab] = new_val;
+    if (fabs(new_val) > r_max) {
         if (!marker[pab]) {
             Q.push(pab);
             marker[pab] = true;
@@ -97,8 +97,9 @@ void Full_LocalPush::push(NodePair &pab, double inc) {
 void Reduced_LocalPush::push(NodePair &pab, double inc) {
     // the actually action of push
     n_push++;
-    R[pab] += inc;
-    if (fabs(R[pab]) / sqrt(2) > r_max) { // the criteria for reduced linear system
+    float new_val = R[pab] + inc;
+    R[pab] = new_val;
+    if (fabs(new_val) / sqrt(2) > r_max) { // the criteria for reduced linear system
         if (!marker[pab]) {
             Q.push(pab);
             marker[pab] = true;
