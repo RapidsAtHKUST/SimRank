@@ -44,3 +44,7 @@ endmacro()
 add_subdirectory(playground)
 add_executable(rlp playground/main_exec_reduced_local_push.cpp ${LPMC_FILES} ${UTIL_FILES} ${GROUND_TRUTH_FILES})
 InitFLPMC(rlp)
+
+add_executable(flp playground/main_exec_reduced_local_push.cpp ${LPMC_FILES} ${UTIL_FILES} ${GROUND_TRUTH_FILES})
+InitFLPMC(flp)
+target_compile_definitions(flp PRIVATE -DFLP=1)

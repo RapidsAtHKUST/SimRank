@@ -54,24 +54,25 @@ public:
     // constructor, init members
     LocalPush(GraphYche &, string, double c, double epsilon, size_t);
 
-    void local_push(GraphYche &g); // empty function for local push
+    virtual string get_file_path_base() { return string(); } // get file path of local push data
 
-    // push np's residul to neighbors
+    void init_PR(); // init or load the data of P and R
+public:
+    virtual double how_much_residual_to_push(GraphYche &g, NodePair &np) {}
+
+    virtual void push(NodePair &pab, double inc) {};
+
     virtual void push_to_neighbors(GraphYche &g, NodePair &np, double current_residual) {}
 
+    void local_push(GraphYche &g); // empty function for local push
+public:
     void save();
 
     void load();
 
-    virtual string get_file_path_base() { return string(); } // get file path of local push data
-
-    inline void push(NodePair &pab, double inc);
-
     virtual double query_P(int a, int b) { return 0; }
 
-    virtual double query_R(int a, int b) { return 0; }
-
-    virtual double how_much_residual_to_push(GraphYche &g, NodePair &np) {}
+    double query_R(int a, int b);
 };
 
 /*local push using reduced system*/
@@ -80,16 +81,16 @@ struct Reduced_LocalPush : LocalPush {
 
     Reduced_LocalPush(GraphYche &g, string name, double c_, double r_max_, size_t n_);
 
-    // LocalPush(g, name, c_,r_max_, n_){} // invode the base constructor
-    void push_to_neighbors(GraphYche &g, NodePair &np, double current_residual) override;
-
-    virtual string get_file_path_base() override; // get file path of local push data
-
+    string get_file_path_base() override; // get file path of local push data
+public:
     double how_much_residual_to_push(GraphYche &g, NodePair &np) override;
 
-    double query_P(int a, int b) override;
+    void push(NodePair &pab, double) override;
 
-    double query_R(int a, int b) override;
+    void push_to_neighbors(GraphYche &g, NodePair &np, double current_residual) override;
+
+public:
+    double query_P(int a, int b) override;
 };
 
 /* local push using full system*/
@@ -98,14 +99,17 @@ struct Full_LocalPush : LocalPush {
 
     Full_LocalPush(GraphYche &g, string name, double c_, double r_max_, size_t n_);
 
-    void push_to_neighbors(GraphYche &g, NodePair &np, double current_residual) override;
+    string get_file_path_base() override; // get file path of local push data
 
-    virtual string get_file_path_base() override; // get file path of local push data
+public:
     double how_much_residual_to_push(GraphYche &g, NodePair &np) override;
 
-    double query_P(int a, int b) override;
+    void push(NodePair &pab, double) override;
 
-    double query_R(int a, int b) override;
+    void push_to_neighbors(GraphYche &g, NodePair &np, double current_residual) override;
+
+public:
+    double query_P(int a, int b) override;
 };
 
 #endif

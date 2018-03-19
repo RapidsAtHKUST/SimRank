@@ -13,27 +13,23 @@ using namespace boost::program_options;
 int main(int argc, char *argv[]) {
     // 1st: compute reduce local push
     string g_name = argv[1];
+    double eps = atof(argv[2]);
     string path = get_edge_list_path(g_name);
     GraphYche g(path);
     double c = 0.6;
-    double eps = 0.0001;
+//    double eps = 0.0001;
 
     auto n = g.n;
+#ifdef FLP
+    auto lp = new Full_LocalPush(g, g_name, c, eps, n);
+#else
     auto lp = new Reduced_LocalPush(g, g_name, c, eps, n);
-    if (!lp_file_exists(g_name, c, eps, n, false)) { // test wether the local push index exists
-        cout << "local push offline index doesn't exists.. " << endl;
-        auto start_time = std::chrono::high_resolution_clock::now();
-        lp->local_push(g);
-        auto end_time = std::chrono::high_resolution_clock::now();
-        std::chrono::duration<double> elapsed = end_time - start_time;
-        cout << format("total indexing cost: %s s") % elapsed.count() << endl; // record the pre-processing time
-        cout << format("building compete, saving to %s ") % lp->get_file_path_base() << endl;
-        lp->save();
-        cout << "saved." << endl;
-    } else {
-        cout << "offline index exists..loading " << endl;
-        lp->load();
-    }
+#endif
+    auto start_time = std::chrono::high_resolution_clock::now();
+    lp->local_push(g);
+    auto end_time = std::chrono::high_resolution_clock::now();
+    std::chrono::duration<double> elapsed = end_time - start_time;
+    cout << format("total indexing cost: %s s") % elapsed.count() << endl; // record the pre-processing time
 
     // 2nd: verify the correcness
     if (n < 10000) {

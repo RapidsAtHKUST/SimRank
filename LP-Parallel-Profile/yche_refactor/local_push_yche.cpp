@@ -38,19 +38,6 @@ double cal_rmax(GraphYche &g, double c, double epsilon, double delta) {
     return pow(a, 1.0 / 3.0);
 }
 
-void LocalPush::push(NodePair &pab, double inc) {
-    // the actually action of push
-    n_push++;
-    R[pab] += inc;
-    if (fabs(R[pab]) > r_max) {
-        // Q.insert(pab);
-        if (!marker[pab]) {
-            Q.push(pab);
-            marker[pab] = true;
-        }
-    }
-}
-
 LocalPush::LocalPush(GraphYche &g, string gName_, double c_, double epsilon_, size_t n_) {
     // init data members
     g_name = gName_;
@@ -64,44 +51,57 @@ LocalPush::LocalPush(GraphYche &g, string gName_, double c_, double epsilon_, si
     cpu_time = -1; // set the init value
 }
 
+
+void LocalPush::init_PR() {
+    string data_path = get_file_path_base() + ".P";
+    cout << "data path " << data_path << endl;
+
+    P.add(n);
+    R.add(n);
+    marker.add(n);
+
+    cout << "file not exists, compute from scratch" << endl;
+    for (int i = 0; i < n; i++) {
+        NodePair np(i, i);
+        R[np] = 1;
+        Q.push(np);
+        marker[np] = true;
+    }
+}
+
 Full_LocalPush::Full_LocalPush(GraphYche &g, string name, double c_, double r_max_, size_t n_) :
         LocalPush(g, name, c_, r_max_, n_) {
     string data_path = get_file_path_base() + ".P";
     cout << "data path " << data_path << endl;
-
-    if (!file_exists(data_path)) {
-        /* init the P and R */
-        P.add(n);
-        R.add(n);
-        marker.add(n);
-
-        cout << "file not exists, compute from scratch" << endl;
-        for (int i = 0; i < n; i++) {
-            NodePair np(i, i);
-            // R.insert({np,1});
-            R[np] = 1;
-            Q.push(np);
-            marker[np] = true;
-        }
-    }
+    init_PR();
 }
 
 Reduced_LocalPush::Reduced_LocalPush(GraphYche &g, string name, double c_, double r_max_, size_t n_) :
         LocalPush(g, name, c_, r_max_, n_) {
     string data_path = get_file_path_base() + ".P";
-    if (!file_exists(data_path)) {
-        /* init the P and R */
-        P.add(n);
-        R.add(n);
-        marker.add(n);
+    init_PR();
+}
 
-        cout << "file not exists, compute from scratch!!!" << endl;
-        for (int i = 0; i < n; i++) {
-            NodePair np(i, i);
-            // R.insert({np,1});
-            R[np] = 1;
-            Q.push(np);
-            marker[np] = true;
+void Full_LocalPush::push(NodePair &pab, double inc) {
+    // the actually action of push
+    n_push++;
+    R[pab] += inc;
+    if (fabs(R[pab]) > r_max) {
+        if (!marker[pab]) {
+            Q.push(pab);
+            marker[pab] = true;
+        }
+    }
+}
+
+void Reduced_LocalPush::push(NodePair &pab, double inc) {
+    // the actually action of push
+    n_push++;
+    R[pab] += inc;
+    if (fabs(R[pab]) / sqrt(2) > r_max) { // the criteria for reduced linear system
+        if (!marker[pab]) {
+            Q.push(pab);
+            marker[pab] = true;
         }
     }
 }
@@ -111,17 +111,7 @@ void Reduced_LocalPush::push_to_neighbors(GraphYche &g, NodePair &np, double cur
     // out-neighbors of a,b
     auto a = np.first;
     auto b = np.second;
-    bool is_singleton = (a == b);
-
-    // /* only push to partial pairs*/
-    auto out_degree_i = static_cast<size_t>(g.out_degree(a));
-    auto out_degree_j = static_cast<size_t>(g.out_degree(b));
-
-    /*the indicator whether the position is common neighbor */
-    vector<bool> outs_i_common(out_degree_i, false);
-    vector<bool> outs_j_common(out_degree_j, false);
-
-    if (is_singleton) {
+    if (a == b) {
         /* starting push for singleton nodes*/
         for (auto off_out_a = g.off_out[a]; off_out_a < g.off_out[a + 1]; off_out_a++) {
             auto out_nei_a = g.neighbors_out[off_out_a];
@@ -133,32 +123,14 @@ void Reduced_LocalPush::push_to_neighbors(GraphYche &g, NodePair &np, double cur
                 if (out_nei_a < out_nei_b) { // only push to partial pairs for a < b
                     NodePair pab(out_nei_a, out_nei_b); // the node-pair to be pushed to
                     double inc = c * current_residual / total_in;
-                    push(pab, inc); // do the push action
+                    push(pab, sqrt(2) * inc);
                 }
             }
         }
     } else {
-        /* mark the common neighbors */
-        const auto off_beg_a = g.off_out[a];
-        const auto off_beg_b = g.off_out[b];
-        for (auto off_a = off_beg_a; off_a < g.off_out[a + 1]; off_a++) {
-            auto out_nei_a = g.neighbors_out[off_a];
-            for (auto off_b = off_beg_b; off_b < g.off_out[b + 1]; off_b++) {
-                auto out_nei_b = g.neighbors_out[off_b];
-                if (out_nei_a == out_nei_b) {
-                    outs_i_common[off_a - off_beg_a] = true;
-                    outs_j_common[off_b - off_beg_b] = true;
-                    break;
-                }
-            }
-        }
-
         /* starting push for non-singleton nodes*/
-        for (auto off_a = off_beg_a; off_a < g.off_out[a + 1]; off_a++) {
-            auto is_i_common = outs_i_common[off_a - off_beg_a];
-
-            for (auto off_b = off_beg_b; off_b < g.off_out[b + 1]; off_b++) {
-                auto is_j_common = outs_j_common[off_b - off_beg_b];
+        for (auto off_a = g.off_out[a]; off_a < g.off_out[a + 1]; off_a++) {
+            for (auto off_b = g.off_out[b]; off_b < g.off_out[b + 1]; off_b++) {
                 // put out_nei_a here, since swap happens later
                 auto out_nei_a = g.neighbors_out[off_a];
                 auto out_nei_b = g.neighbors_out[off_b];
@@ -169,25 +141,12 @@ void Reduced_LocalPush::push_to_neighbors(GraphYche &g, NodePair &np, double cur
                 double inc = c * current_residual / total_in;
                 if (out_nei_a == out_nei_b) { //don't push to singleton nodes
                     continue;
-                }
-                bool oa_less_ob = (out_nei_a < out_nei_b);
-                if (!oa_less_ob) {
-                    swap(out_nei_a, out_nei_b);
-                }
-
-                NodePair pab(out_nei_a, out_nei_b);
-                if (!is_i_common) {
-                    // i is not common neighbor
-                    push(pab, inc);
-                } else {
-                    // i is a common neighbor
-                    if (is_j_common) {
-                        if (oa_less_ob) {
-                            push(pab, 2 * inc); // push twice for two commons
-                        }
-                    } else {// normal case
-                        push(pab, inc);
+                } else { //  a, b is normal in-neighbors of out_a and out_b
+                    if (out_nei_a > out_nei_b) {
+                        swap(out_nei_a, out_nei_b);
                     }
+                    NodePair pab(out_nei_a, out_nei_b);
+                    push(pab, 1 * inc);
                 }
             }
         }
@@ -221,32 +180,26 @@ double Full_LocalPush::how_much_residual_to_push(GraphYche &g, NodePair &np) {
 double Reduced_LocalPush::how_much_residual_to_push(GraphYche &g, NodePair &np) {
     // determine the residual value for current pair to push
     double r = R[np];
-    if (r > 1.01) {
-        cout << "err" << endl;
-        exit(0);
-    }
+
     if (np.first == np.second) { //singleton node
         return r - r_max / (1 - c); // singleton nodes do not need to push all residual as 1
-        // return r;
-        // return 1;
     }
 
     /* check whether np forms a self-loop */
-    if (g.exists_edge(np.first, np.second) && g.exists_edge(np.second, np.first)) { // check whether exists reverse edge
-        auto in_deg_a = g.in_degree(np.first);
-        auto in_deg_b = g.in_degree(np.second);
-        double alpha = c / (in_deg_a * in_deg_b);
-        int k = ceil(log(r_max / fabs(r)) / log(alpha));
-        double residual_to_push = (1 - pow(alpha, k)) * r / (1 - alpha);
-        return residual_to_push;
-    } else {
-        auto push_residual = r;
-        return push_residual;
-    }
+//    if (g.exists_edge(np.first, np.second) && g.exists_edge(np.second, np.first)) { // check whether exists reverse edge
+//        auto in_deg_a = g.in_degree(np.first);
+//        auto in_deg_b = g.in_degree(np.second);
+//        double alpha = c / (in_deg_a * in_deg_b);
+//        int k = ceil(log(r_max / fabs(r)) / log(alpha));
+//        double residual_to_push = (1 - pow(alpha, k)) * r / (1 - alpha);
+//        return residual_to_push;
+//    } else {
+//        auto push_residual = r;
+//        return push_residual;
+//    }
 }
 
 void LocalPush::local_push(GraphYche &g) { // local push given current P and R
-    // cout << r_max << endl;
     auto start = std::chrono::high_resolution_clock::now();
     double sum_of_est = 0;
 
@@ -256,12 +209,11 @@ void LocalPush::local_push(GraphYche &g) { // local push given current P and R
         marker[np] = false;
         double residual_to_push = how_much_residual_to_push(g, np);
         sum_of_est += residual_to_push;
-//        cout << residual_to_push << endl;
 
         // R.erase(np); //  remove from residual
         R[np] -= residual_to_push;
         P[np] += residual_to_push;
-        push_to_neighbors(g, np, residual_to_push); // push residuals to neighbros of np
+        push_to_neighbors(g, np, residual_to_push); // push residuals to neighbors of np
 
     }
     auto finish = std::chrono::high_resolution_clock::now();
@@ -302,7 +254,6 @@ void LocalPush::save() {
 
     // save exp data
     cout << "save complete" << endl;
-
 }
 
 void LocalPush::load() {
@@ -325,35 +276,31 @@ void LocalPush::load() {
 }
 
 string Reduced_LocalPush::get_file_path_base() {
-    // return the file path, exluding the suffix
     return LOCAL_PUSH_DIR + str(format("RLP_%s-%.3f-%.6f") % g_name % c % epsilon);
 }
 
-double Reduced_LocalPush::query_P(int a, int b) {
-    if (a > b) {
-        return P.query(b, a);
-    } else {
-        return P.query(a, b);
-    }
-}
-
-double Reduced_LocalPush::query_R(int a, int b) {
-    if (a > b) {
-        return R.query(b, a);
-    } else {
-        return R.query(a, b);
-    }
-}
-
 string Full_LocalPush::get_file_path_base() {
-    // return the file path, exluding the suffix
     return LOCAL_PUSH_DIR + str(format("FLP_%s-%.3f-%.6f") % g_name % c % epsilon);
+}
+
+double Reduced_LocalPush::query_P(int a, int b) {
+    if (a == b) {
+        return P.query(a, b);
+    } else if (a > b) {
+        return P.query(b, a) / sqrt(2);
+    } else {
+        return P.query(a, b) / sqrt(2);
+    }
 }
 
 double Full_LocalPush::query_P(int a, int b) {
     return P.query(a, b);
 }
 
-double Full_LocalPush::query_R(int a, int b) {
-    return R.query(a, b);
+double LocalPush::query_R(int a, int b) {
+    if (a > b) {
+        return R.query(b, a);
+    } else {
+        return R.query(a, b);
+    }
 }
