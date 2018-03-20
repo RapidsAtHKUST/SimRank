@@ -21,7 +21,7 @@ endif ()
 ################################ 3rd: source file environmental variables ######################################
 set(UTIL_FILES util/stat.cpp util/stat.h util/graph_yche.cpp util/file_serialization.h util/thread_pool.h)
 set(GROUND_TRUTH_FILES yche_refactor/simrank.cpp yche_refactor/simrank.h)
-set(LPMC_FILES yche_refactor/local_push_yche.h yche_refactor/local_push_yche.cpp util/sparse_matrix_utils.h)
+set(LPMC_FILES util/sparse_matrix_utils.h)
 
 ############################## general macros ###################
 macro(InitBoostHashSFMTEigen exec_name)
@@ -42,9 +42,17 @@ endmacro()
 
 ####################### reduced local push testing
 add_subdirectory(playground)
-add_executable(rlp playground/main_exec_reduced_local_push.cpp ${LPMC_FILES} ${UTIL_FILES} ${GROUND_TRUTH_FILES})
+add_executable(rlp playground/main_exec_reduced_local_push.cpp ${LPMC_FILES} ${UTIL_FILES} ${GROUND_TRUTH_FILES}
+        yche_refactor/local_push_yche.h yche_refactor/local_push_yche.cpp)
 InitFLPMC(rlp)
 
-add_executable(flp playground/main_exec_reduced_local_push.cpp ${LPMC_FILES} ${UTIL_FILES} ${GROUND_TRUTH_FILES})
+add_executable(flp playground/main_exec_reduced_local_push.cpp ${LPMC_FILES} ${UTIL_FILES} ${GROUND_TRUTH_FILES}
+        yche_refactor/local_push_yche.h yche_refactor/local_push_yche.cpp)
 InitFLPMC(flp)
 target_compile_definitions(flp PRIVATE -DFLP=1)
+
+
+#########3
+add_executable(pflp playground/main_exec_parallel_lp.cpp ${LPMC_FILES} ${UTIL_FILES} ${GROUND_TRUTH_FILES}
+        yche_refactor/parallel_local_push_yche.cpp yche_refactor/parallel_local_push_yche.h)
+InitFLPMC(pflp)

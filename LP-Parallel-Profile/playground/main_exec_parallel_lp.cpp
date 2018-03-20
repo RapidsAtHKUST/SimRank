@@ -5,7 +5,7 @@
 #include <boost/program_options.hpp>
 
 #include "../yche_refactor/simrank.h"
-#include "../yche_refactor/local_push_yche.h"
+#include "../yche_refactor/parallel_local_push_yche.h"
 
 using namespace std;
 using namespace boost::program_options;
@@ -20,11 +20,8 @@ int main(int argc, char *argv[]) {
 //    double eps = 0.0001;
 
     auto n = g.n;
-#ifdef FLP
-    auto lp = new Full_LocalPush(g, g_name, c, eps, n);
-#else
-    auto lp = new Reduced_LocalPush(g, g_name, c, eps, n);
-#endif
+    auto lp = new PFLP(g, g_name, c, eps, n);
+
     auto start_time = std::chrono::high_resolution_clock::now();
     lp->local_push(g);
     auto end_time = std::chrono::high_resolution_clock::now();

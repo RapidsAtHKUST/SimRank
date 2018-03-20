@@ -1,3 +1,13 @@
+## Observations
+
+* Q.size() is small, e.g, `./rlp email-EuAll 0.01 ` to produce `max queue size #: 18`; `./rlp email-Enron 0.01 ` to produce
+`max queue size #: 69`.
+
+## Parallelization Design
+
+* smallest task: `a'`, `b` (to be expanded), `residual_value`, `flag` (for the reduced linear system)
+* requirement: `a'` grouped together before submitting tasks
+
 ## Implementation Optimization Tricks
 
 * adopt bidirectional csr(better memory access)
