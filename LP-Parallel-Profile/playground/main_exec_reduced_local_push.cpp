@@ -33,6 +33,7 @@ int main(int argc, char *argv[]) {
     cout << format("push num: %s") % lp->n_push << endl;
     cout << format("P size: %s") % lp->P.size() << endl;
     cout << format("R size: %s") % lp->R.size() << endl;
+    cout << format("avg push merge #: %s") % (lp->n_push / lp->R.size()) << endl;
 
     // 2nd: verify the correcness
     if (n < 10000) {
@@ -44,7 +45,7 @@ int main(int argc, char *argv[]) {
             for (auto j = i; j < n; j++) {
                 auto res = lp->query_P(i, j);
                 max_err = max(max_err, abs(ts.sim(i, j) - res));
-                if (abs(ts.sim(i, j) - res) > eps) {
+                if (abs(ts.sim(i, j) - res) > eps + pow(10, -6)) {
 #pragma omp critical
                     cout << i << ", " << j << "," << ts.sim(i, j) << "," << res << endl;
                 }

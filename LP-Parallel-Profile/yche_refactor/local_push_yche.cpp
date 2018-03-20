@@ -42,7 +42,6 @@ LocalPush::LocalPush(GraphYche &g, string gName_, double c_, double epsilon_, si
     // init data members
     g_name = gName_;
     c = c_;
-    // r_max = r_max_;
     epsilon = epsilon_;
     r_max = cal_rmax(c, epsilon);
     n = n_;
@@ -82,14 +81,12 @@ Reduced_LocalPush::Reduced_LocalPush(GraphYche &g, string name, double c_, doubl
 
 void LocalPush::local_push(GraphYche &g) { // local push given current P and R
     auto start = std::chrono::high_resolution_clock::now();
-//    double sum_of_est = 0;
 
     while (!Q.empty()) {
         NodePair np = Q.front();
         Q.pop();
         marker[np] = false;
         double residual_to_push = how_much_residual_to_push(g, np);
-//        sum_of_est += residual_to_push;
 
         R[np] -= residual_to_push;
         P[np] += residual_to_push;
@@ -104,27 +101,29 @@ void LocalPush::local_push(GraphYche &g) { // local push given current P and R
 }
 
 void Full_LocalPush::push(NodePair &pab, double inc) {
-    // the actually action of push
     n_push++;
-    float new_val = R[pab] + inc;
-    R[pab] = new_val;
-    if (fabs(new_val) > r_max) {
-        if (!marker[pab]) {
+    // only probing once
+    auto &res_ref = R[pab];
+    res_ref += inc;
+    if (fabs(res_ref) > r_max) {
+        auto &is_in_q_flag_ref = marker[pab];
+        if (!is_in_q_flag_ref) {
             Q.push(pab);
-            marker[pab] = true;
+            is_in_q_flag_ref = true;
         }
     }
 }
 
 void Reduced_LocalPush::push(NodePair &pab, double inc) {
-    // the actually action of push
+    // only probing once
     n_push++;
-    float new_val = R[pab] + inc;
-    R[pab] = new_val;
-    if (fabs(new_val) / sqrt(2) > r_max) { // the criteria for reduced linear system
-        if (!marker[pab]) {
+    auto &res_ref = R[pab];
+    res_ref += inc;
+    if (fabs(res_ref) / sqrt(2) > r_max) { // the criteria for reduced linear system
+        auto &is_in_q_flag_ref = marker[pab];
+        if (!is_in_q_flag_ref) {
             Q.push(pab);
-            marker[pab] = true;
+            is_in_q_flag_ref = true;
         }
     }
 }
