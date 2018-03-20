@@ -1,3 +1,5 @@
+#include <omp.h>
+
 #include <fstream>
 
 #include <boost/format.hpp>
@@ -64,11 +66,13 @@ void LP::local_push(GraphYche &g) { // local push given current P and R
     }
 }
 
-void PRLP::local_push(GraphYche &g){
-  
+void PRLP::local_push(GraphYche &g) {
+
 }
 
 void PFLP::local_push(GraphYche &g) {
+    vector<pair<int, vector<FLPTask>>> task_vec;
+
     while (!Q.empty()) {
         // 1st: generate tasks
         max_q_size = max(max_q_size, Q.size());
@@ -81,18 +85,12 @@ void PFLP::local_push(GraphYche &g) {
         P[np] += residual_to_push;
         push_to_neighbors(g, np, residual_to_push); // push residuals to neighbors of np
 
-        // 2nd: computation
-        vector<pair<int, vector<FLPTask>>> task_vec;
-
+        // 2nd: task preparation
+        task_vec.clear();
         for (auto &key_val: tmp_task_hash_table) { task_vec.emplace_back(std::move(key_val)); }
         tmp_task_hash_table.clear();
 
-#pragma omp parallel
-{
-
-        std::vector<NodePair> tmp_pairs;
-
-#pragma omp for
+        // 3rd: computation
         for (auto i = 0; i < task_vec.size(); i++) {
             auto out_nei_a = task_vec[i].first;
             auto task_info = task_vec[i].second;
@@ -110,22 +108,18 @@ void PFLP::local_push(GraphYche &g) {
                     double inc = c * task.residual_ / total_in;
 
                     // push
+                    n_push++;
                     auto &res_ref = R[pab];
                     res_ref += inc;
                     if (fabs(res_ref) > r_max) {
                         auto &is_in_q_flag_ref = marker[pab];
                         if (!is_in_q_flag_ref) {
-                            tmp_pairs.emplace_back(pab);
+                            Q.push(pab);
                             is_in_q_flag_ref = true;
                         }
                     }
                 }
             }
-        }
-#pragma omp critical
-    for(auto node_pair: tmp_pairs){
-      Q.push(node_pair);
-    }
         }
     }
 }
