@@ -44,6 +44,10 @@ PRLP::PRLP(GraphYche &g, string name, double c_, double epsilon, size_t n_) : LP
 }
 
 void LP::local_push(GraphYche &g) { // local push given current P and R
+
+}
+
+void PRLP::local_push(GraphYche &g) {
     auto start = std::chrono::high_resolution_clock::now();
 
     while (!Q.empty()) {
@@ -66,66 +70,71 @@ void LP::local_push(GraphYche &g) { // local push given current P and R
     }
 }
 
-void PRLP::local_push(GraphYche &g) {
-
-}
-
 void PFLP::local_push(GraphYche &g) {
     vector<pair<int, vector<FLPTask>>> task_vec;
+    int counter = 0;
+#pragma omp parallel
+    {
+        while (!Q.empty()) {
+#pragma omp barrier
+            // 1st: generate tasks
+#pragma omp master
+            {
+                max_q_size = max(max_q_size, Q.size());
+                NodePair np = Q.front();
+                Q.pop();
+                marker[np] = false;
+                double residual_to_push = R[np];
 
-    while (!Q.empty()) {
-        // 1st: generate tasks
-        max_q_size = max(max_q_size, Q.size());
-        NodePair np = Q.front();
-        Q.pop();
-        marker[np] = false;
-        double residual_to_push = how_much_residual_to_push(g, np);
+                R[np] -= residual_to_push;
+                P[np] += residual_to_push;
 
-        R[np] -= residual_to_push;
-        P[np] += residual_to_push;
-        push_to_neighbors(g, np, residual_to_push); // push residuals to neighbors of np
-
-        // 2nd: task preparation
-        task_vec.clear();
-        for (auto &key_val: tmp_task_hash_table) { task_vec.emplace_back(std::move(key_val)); }
-        tmp_task_hash_table.clear();
-
-        // 3rd: computation
-        for (auto i = 0; i < task_vec.size(); i++) {
-            auto out_nei_a = task_vec[i].first;
-            auto task_info = task_vec[i].second;
-            for (auto &task :task_info) {
-                auto b = task.b_;
-                for (auto off_b = g.off_out[b]; off_b < g.off_out[b + 1]; off_b++) {
-                    auto out_nei_b = g.neighbors_out[off_b];
-                    if (out_nei_a == out_nei_b) {
-                        continue;
+                // 2nd: push to neighbors to form tasks
+                auto a = np.first;
+                auto b = np.second;
+                for (auto off_a = g.off_out[a]; off_a < g.off_out[a + 1]; off_a++) {
+                    auto out_nei_a = g.neighbors_out[off_a];
+                    if (tmp_task_hash_table.find(out_nei_a) == tmp_task_hash_table.end()) {
+                        tmp_task_hash_table[out_nei_a] = vector<FLPTask>();
                     }
-                    auto in_degree_a = g.in_degree(out_nei_a);
-                    auto in_degree_b = g.in_degree(out_nei_b);
-                    auto total_in = in_degree_a * in_degree_b;
-                    NodePair pab(out_nei_a, out_nei_b);
-                    double inc = c * task.residual_ / total_in;
+                    tmp_task_hash_table[out_nei_a].emplace_back(b, static_cast<float>(residual_to_push));
+                }
 
-                    // push
-                    n_push++;
-                    auto &res_ref = R[pab];
-                    res_ref += inc;
-                    if (fabs(res_ref) > r_max) {
-                        auto &is_in_q_flag_ref = marker[pab];
-                        if (!is_in_q_flag_ref) {
-                            Q.push(pab);
-                            is_in_q_flag_ref = true;
+                // 3rd: task preparation
+                task_vec.clear();
+                for (auto &key_val: tmp_task_hash_table) { task_vec.emplace_back(std::move(key_val)); }
+                tmp_task_hash_table.clear();
+                counter++;
+            };
+#pragma omp barrier
+            // 4th: computation
+#pragma omp for
+            for (auto i = 0; i < task_vec.size(); i++) {
+                auto out_nei_a = task_vec[i].first;
+                for (auto &task :task_vec[i].second) {
+                    auto local_b = task.b_;
+                    for (auto off_b = g.off_out[local_b]; off_b < g.off_out[local_b + 1]; off_b++) {
+                        auto out_nei_b = g.neighbors_out[off_b];
+                        if (out_nei_a != out_nei_b) {
+                            NodePair pab(out_nei_a, out_nei_b);
+                            double inc = c * task.residual_ / (g.in_degree(out_nei_a) * g.in_degree(out_nei_b));
+                            auto &res_ref = R[pab];
+                            res_ref += inc;
+                            if (fabs(res_ref) > r_max) {
+                                auto &is_in_q_flag_ref = marker[pab];
+                                if (!is_in_q_flag_ref) {
+#pragma omp critical
+                                    Q.push(pab);
+                                    is_in_q_flag_ref = true;
+                                }
+                            }
                         }
                     }
                 }
             }
-        }
+        };
     }
-}
-
-void PFLP::push(NodePair &pab, double inc) {
-
+    cout << "rounds:" << counter << endl;
 }
 
 void PRLP::push(NodePair &pab, double inc) {
@@ -140,10 +149,6 @@ void PRLP::push(NodePair &pab, double inc) {
             is_in_q_flag_ref = true;
         }
     }
-}
-
-double PFLP::how_much_residual_to_push(GraphYche &g, NodePair &np) {
-    return R[np];
 }
 
 double PRLP::how_much_residual_to_push(GraphYche &g, NodePair &np) {
@@ -214,16 +219,16 @@ void PRLP::push_to_neighbors(GraphYche &g, NodePair &np, double current_residual
     }
 }
 
+double PFLP::how_much_residual_to_push(GraphYche &g, NodePair &np) {
+    return R[np];
+}
+
+void PFLP::push(NodePair &pab, double inc) {
+
+}
+
 void PFLP::push_to_neighbors(GraphYche &g, NodePair &np, double current_residual) {
-    auto a = np.first;
-    auto b = np.second;
-    for (auto off_a = g.off_out[a]; off_a < g.off_out[a + 1]; off_a++) {
-        auto out_nei_a = g.neighbors_out[off_a];
-        if (tmp_task_hash_table.find(out_nei_a) == tmp_task_hash_table.end()) {
-            tmp_task_hash_table[out_nei_a] = vector<FLPTask>();
-        }
-        tmp_task_hash_table[out_nei_a].emplace_back(b, static_cast<float>(current_residual));
-    }
+
 }
 
 double PRLP::query_P(int a, int b) {
