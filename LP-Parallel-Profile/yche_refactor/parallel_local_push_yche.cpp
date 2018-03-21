@@ -36,7 +36,8 @@ void LP::init_PR() {
 }
 
 PFLP::PFLP(GraphYche &g, string name, double c_, double epsilon, size_t n_) : LP(g, name, c_, epsilon, n_) {
-    init_PR();
+//    init_PR();
+    `
 }
 
 PRLP::PRLP(GraphYche &g, string name, double c_, double epsilon, size_t n_) : LP(g, name, c_, epsilon, n_) {
@@ -71,85 +72,109 @@ void PRLP::local_push(GraphYche &g) {
 }
 
 void PFLP::local_push(GraphYche &g) {
-    vector<pair<int, vector<FLPTask>>> task_vec;
+    vector<std::unordered_map<int, vector<FLPTask>>> tmp_task_hash_table_lst(omp_get_num_threads());
+    vector<vector<pair<int, vector<FLPTask>>>> task_vec_lst(omp_get_num_threads());
+
     int counter = 0;
+    bool is_go_on;
 #pragma omp parallel
     {
+        auto thread_id = omp_get_thread_num();
+        auto &tmp_task_hash_table = tmp_task_hash_table_lst[thread_id];
+        auto &task_vec = task_vec_lst[thread_id];
+
         vector<NodePair> my_task_vec;
 
-        while (!Q.empty()) {
-#pragma omp barrier
-            // it remains to run in parallel, currently only sequentially
-#pragma omp single
+        while (true) {
             {
+                is_go_on = false;
+#pragma omp barrier
+                if (thread_id == 0) { cout << "gen" << endl; }
+
                 // 1st: generate tasks
-                while (!Q.empty()) {
-                    max_q_size = max(max_q_size, Q.size());
-                    NodePair np = Q.front();
-                    Q.pop();
-                    marker[np] = false;
-                    double residual_to_push = R[np];
+                for (auto &expansion_set: thread_local_expansion_set_lst) {
+                    if (!expansion_set.empty()) { is_go_on = true; }
+#pragma omp for nowait
+                    for (auto i = 0; i < expansion_set.size(); i++) {
+                        auto a = expansion_set[i];
+                        for (auto b:expansion_pair_lst[a]) {
+                            NodePair np(a, b);
+                            auto &residual_ref = R[np];
+                            double residual_to_push = residual_ref;
 
-                    R[np] -= residual_to_push;
-                    P[np] += residual_to_push;
+                            marker[np] = false;
+                            residual_ref -= residual_to_push;
+                            P[np] += residual_to_push;
 
-                    // push to neighbors to form tasks
-                    auto a = np.first;
-                    auto b = np.second;
-                    for (auto off_a = g.off_out[a]; off_a < g.off_out[a + 1]; off_a++) {
-                        auto out_nei_a = g.neighbors_out[off_a];
-                        if (tmp_task_hash_table.find(out_nei_a) == tmp_task_hash_table.end()) {
-                            tmp_task_hash_table[out_nei_a] = vector<FLPTask>();
-                        }
-                        tmp_task_hash_table[out_nei_a].emplace_back(b, static_cast<float>(residual_to_push));
-                    }
-                }
-                // 2nd: task preparation
-                task_vec.clear();
-                for (auto &key_val: tmp_task_hash_table) { task_vec.emplace_back(std::move(key_val)); }
-                tmp_task_hash_table.clear();
-
-                counter++;
-            };
-
-            // 3rd: computation
-#pragma omp for schedule(dynamic, 10)
-            for (auto i = 0; i < task_vec.size(); i++) {
-                auto out_nei_a = task_vec[i].first;
-                for (auto &task :task_vec[i].second) {
-                    auto local_b = task.b_;
-                    for (auto off_b = g.off_out[local_b]; off_b < g.off_out[local_b + 1]; off_b++) {
-                        auto out_nei_b = g.neighbors_out[off_b];
-                        if (out_nei_a != out_nei_b) {
-                            NodePair pab(out_nei_a, out_nei_b);
-                            double inc = c * task.residual_ / (g.in_degree(out_nei_a) * g.in_degree(out_nei_b));
-                            auto &res_ref = R[pab];
-                            res_ref += inc;
-                            if (fabs(res_ref) > r_max) {
-                                auto &is_in_q_flag_ref = marker[pab];
-                                if (!is_in_q_flag_ref) {
-                                    my_task_vec.emplace_back(pab);
-                                    is_in_q_flag_ref = true;
+                            for (auto off_a = g.off_out[a]; off_a < g.off_out[a + 1]; off_a++) {
+                                auto out_nei_a = g.neighbors_out[off_a];
+                                if (tmp_task_hash_table.find(out_nei_a) == tmp_task_hash_table.end()) {
+                                    tmp_task_hash_table[out_nei_a] = vector<FLPTask>();
                                 }
+                                tmp_task_hash_table[out_nei_a].emplace_back(b, static_cast<float>(residual_to_push));
                             }
                         }
                     }
                 }
-            }
 
-            // 4th: form the queue and invoke an explicit barrier
-#pragma omp critical
-            {
-                for (auto &task: my_task_vec) {
-                    Q.push(std::move(task));
-                }
-            }
-            my_task_vec.clear();
+                // clear previous, then emplace back current
+                task_vec_lst[thread_id].clear();
+                for (auto &key_val: tmp_task_hash_table) { task_vec.emplace_back(std::move(key_val)); }
+                tmp_task_hash_table.clear();
 #pragma omp barrier
 
+#pragma omp single
+                {
+                    // 2nd: task preparation
+                    counter++;
+                    cout << "gen finished," << counter << endl;
+                }
+
+#pragma omp barrier
+                if (!is_go_on) { break; }
+
+                for (auto vertex:thread_local_expansion_set_lst[thread_id]) {
+                    expansion_pair_lst[vertex].clear();
+                }
+                thread_local_expansion_set_lst.clear();
+#pragma omp barrier
+
+                // 3rd: computation
+                for (auto &task_vec_g: task_vec_lst) {
+#pragma omp for schedule(dynamic, 10)
+                    for (auto i = 0; i < task_vec_g.size(); i++) {
+                        auto out_nei_a = task_vec_g[i].first;
+                        bool is_enqueue = false;
+
+                        for (auto &task :task_vec_g[i].second) {
+                            auto local_b = task.b_;
+                            for (auto off_b = g.off_out[local_b]; off_b < g.off_out[local_b + 1]; off_b++) {
+                                auto out_nei_b = g.neighbors_out[off_b];
+                                if (out_nei_a != out_nei_b) {
+                                    NodePair pab(out_nei_a, out_nei_b);
+
+                                    auto &residual_ref = R[pab];
+                                    residual_ref +=
+                                            c * task.residual_ / (g.in_degree(out_nei_a) * g.in_degree(out_nei_b));
+                                    if (fabs(residual_ref) > r_max) {
+                                        auto &is_in_q_ref = marker[pab];
+                                        if (!is_in_q_ref) {
+                                            expansion_pair_lst[out_nei_a].emplace_back(out_nei_b);
+                                            is_enqueue = true;
+                                            is_in_q_ref = true;
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                        if (is_enqueue) { thread_local_expansion_set_lst[thread_id].emplace_back(out_nei_a); }
+                    }
+                }
+            }
         }
+
+        cout << "rounds:" << counter << endl;
     }
-    cout << "rounds:" << counter << endl;
 }
 
 void PRLP::push(NodePair &pab, double inc) {

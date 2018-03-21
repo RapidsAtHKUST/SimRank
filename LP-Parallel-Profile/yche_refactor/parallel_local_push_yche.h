@@ -98,7 +98,10 @@ public:
 
 /* local push using full system*/
 struct PFLP : LP {
-    std::unordered_map<int, vector<FLPTask>> tmp_task_hash_table;
+    vector<vector<int>> thread_local_expansion_set_lst;
+
+    vector<vector<int>> expansion_pair_lst;
+
 public:
     PFLP(GraphYche &g, string name, double c_, double epsilon, size_t n_);
 
