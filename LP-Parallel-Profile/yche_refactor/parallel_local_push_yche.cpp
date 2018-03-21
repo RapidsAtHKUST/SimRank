@@ -78,37 +78,39 @@ void PFLP::local_push(GraphYche &g) {
         while (!Q.empty()) {
 #pragma omp barrier
             // 1st: generate tasks
-#pragma omp master
+#pragma omp single
             {
-                max_q_size = max(max_q_size, Q.size());
-                NodePair np = Q.front();
-                Q.pop();
-                marker[np] = false;
-                double residual_to_push = R[np];
+                while (!Q.empty()) {
+                    max_q_size = max(max_q_size, Q.size());
+                    NodePair np = Q.front();
+                    Q.pop();
+                    marker[np] = false;
+                    double residual_to_push = R[np];
 
-                R[np] -= residual_to_push;
-                P[np] += residual_to_push;
+                    R[np] -= residual_to_push;
+                    P[np] += residual_to_push;
 
-                // 2nd: push to neighbors to form tasks
-                auto a = np.first;
-                auto b = np.second;
-                for (auto off_a = g.off_out[a]; off_a < g.off_out[a + 1]; off_a++) {
-                    auto out_nei_a = g.neighbors_out[off_a];
-                    if (tmp_task_hash_table.find(out_nei_a) == tmp_task_hash_table.end()) {
-                        tmp_task_hash_table[out_nei_a] = vector<FLPTask>();
+                    // 2nd: push to neighbors to form tasks
+                    auto a = np.first;
+                    auto b = np.second;
+                    for (auto off_a = g.off_out[a]; off_a < g.off_out[a + 1]; off_a++) {
+                        auto out_nei_a = g.neighbors_out[off_a];
+                        if (tmp_task_hash_table.find(out_nei_a) == tmp_task_hash_table.end()) {
+                            tmp_task_hash_table[out_nei_a] = vector<FLPTask>();
+                        }
+                        tmp_task_hash_table[out_nei_a].emplace_back(b, static_cast<float>(residual_to_push));
                     }
-                    tmp_task_hash_table[out_nei_a].emplace_back(b, static_cast<float>(residual_to_push));
                 }
-
                 // 3rd: task preparation
                 task_vec.clear();
                 for (auto &key_val: tmp_task_hash_table) { task_vec.emplace_back(std::move(key_val)); }
                 tmp_task_hash_table.clear();
+
                 counter++;
             };
-#pragma omp barrier
+            
             // 4th: computation
-#pragma omp for
+#pragma omp for schedule(dynamic, 10)
             for (auto i = 0; i < task_vec.size(); i++) {
                 auto out_nei_a = task_vec[i].first;
                 for (auto &task :task_vec[i].second) {
