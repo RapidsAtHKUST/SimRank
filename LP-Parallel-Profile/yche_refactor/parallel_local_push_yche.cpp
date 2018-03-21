@@ -75,11 +75,14 @@ void PFLP::local_push(GraphYche &g) {
     int counter = 0;
 #pragma omp parallel
     {
+        vector<NodePair> my_task_vec;
+
         while (!Q.empty()) {
 #pragma omp barrier
-            // 1st: generate tasks
+            // it remains to run in parallel, currently only sequentially
 #pragma omp single
             {
+                // 1st: generate tasks
                 while (!Q.empty()) {
                     max_q_size = max(max_q_size, Q.size());
                     NodePair np = Q.front();
@@ -90,7 +93,7 @@ void PFLP::local_push(GraphYche &g) {
                     R[np] -= residual_to_push;
                     P[np] += residual_to_push;
 
-                    // 2nd: push to neighbors to form tasks
+                    // push to neighbors to form tasks
                     auto a = np.first;
                     auto b = np.second;
                     for (auto off_a = g.off_out[a]; off_a < g.off_out[a + 1]; off_a++) {
@@ -101,15 +104,15 @@ void PFLP::local_push(GraphYche &g) {
                         tmp_task_hash_table[out_nei_a].emplace_back(b, static_cast<float>(residual_to_push));
                     }
                 }
-                // 3rd: task preparation
+                // 2nd: task preparation
                 task_vec.clear();
                 for (auto &key_val: tmp_task_hash_table) { task_vec.emplace_back(std::move(key_val)); }
                 tmp_task_hash_table.clear();
 
                 counter++;
             };
-            
-            // 4th: computation
+
+            // 3rd: computation
 #pragma omp for schedule(dynamic, 10)
             for (auto i = 0; i < task_vec.size(); i++) {
                 auto out_nei_a = task_vec[i].first;
@@ -125,8 +128,7 @@ void PFLP::local_push(GraphYche &g) {
                             if (fabs(res_ref) > r_max) {
                                 auto &is_in_q_flag_ref = marker[pab];
                                 if (!is_in_q_flag_ref) {
-#pragma omp critical
-                                    Q.push(pab);
+                                    my_task_vec.emplace_back(pab);
                                     is_in_q_flag_ref = true;
                                 }
                             }
@@ -134,7 +136,18 @@ void PFLP::local_push(GraphYche &g) {
                     }
                 }
             }
-        };
+
+            // 4th: form the queue and invoke an explicit barrier
+#pragma omp critical
+            {
+                for (auto &task: my_task_vec) {
+                    Q.push(std::move(task));
+                }
+            }
+            my_task_vec.clear();
+#pragma omp barrier
+
+        }
     }
     cout << "rounds:" << counter << endl;
 }
