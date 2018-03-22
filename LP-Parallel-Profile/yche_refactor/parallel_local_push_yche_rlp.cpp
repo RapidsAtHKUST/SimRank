@@ -118,28 +118,50 @@ void PRLP::local_push(GraphYche &g) {
                     bool is_enqueue = false;
 
                     for (auto &task :task_vec_g[i].second) {
-                        auto b = task.b_;
+                        // push to neighbors
+                        auto local_b = task.b_;
                         if (task.is_singleton_) {
-                            for (auto off_b = g.off_out[b]; off_b < g.off_out[b + 1]; off_b++) {
+                            for (auto off_b = g.off_out[local_b]; off_b < g.off_out[local_b + 1]; off_b++) {
                                 auto out_nei_b = g.neighbors_out[off_b];
-                                if (a_prime < out_nei_b) { // only push to partial pairs for a < b
-                                    NodePair pab(a_prime, out_nei_b); // the node-pair to be pushed to
-                                    double inc = c * task.residual_ / (g.in_degree(a_prime) * g.in_degree(out_nei_b));
-                                    push(pab, sqrt(2) * inc, is_enqueue);
+                                if (a_prime < out_nei_b) { // only push to partial pairs for a < local_b
+                                    NodePair pab(a_prime, out_nei_b);
+
+                                    // push
+                                    auto &res_ref = R[pab];
+                                    res_ref += sqrt(2) * c * task.residual_ /
+                                               (g.in_degree(a_prime) * g.in_degree(out_nei_b));
+                                    if (fabs(res_ref) / sqrt(2) > r_max) { // the criteria for reduced linear system
+                                        auto &is_in_q_ref = marker[pab];
+                                        if (!is_in_q_ref) {
+                                            expansion_pair_lst[pab.first].emplace_back(pab.second);
+                                            is_enqueue = true;
+                                            is_in_q_ref = true;
+                                        }
+                                    }
                                 }
                             }
                         } else {
-                            for (auto off_b = g.off_out[b]; off_b < g.off_out[b + 1]; off_b++) {
+                            for (auto off_b = g.off_out[local_b]; off_b < g.off_out[local_b + 1]; off_b++) {
                                 auto out_nei_a = a_prime;
                                 auto out_nei_b = g.neighbors_out[off_b];
 
-                                double inc = c * task.residual_ / (g.in_degree(a_prime) * g.in_degree(out_nei_b));
                                 if (out_nei_a != out_nei_b) {
                                     if (out_nei_a > out_nei_b) {
                                         swap(out_nei_a, out_nei_b);
                                     }
                                     NodePair pab(out_nei_a, out_nei_b);
-                                    push(pab, 1 * inc, is_enqueue);
+
+                                    // push
+                                    auto &res_ref = R[pab];
+                                    res_ref += c * task.residual_ / (g.in_degree(a_prime) * g.in_degree(out_nei_b));
+                                    if (fabs(res_ref) / sqrt(2) > r_max) { // the criteria for reduced linear system
+                                        auto &is_in_q_ref = marker[pab];
+                                        if (!is_in_q_ref) {
+                                            expansion_pair_lst[out_nei_a].emplace_back(out_nei_b);
+                                            is_enqueue = true;
+                                            is_in_q_ref = true;
+                                        }
+                                    }
                                 }
                             }
                         }
@@ -157,11 +179,11 @@ void PRLP::push(NodePair &pab, double inc, bool &is_enqueue) {
     auto &res_ref = R[pab];
     res_ref += inc;
     if (fabs(res_ref) / sqrt(2) > r_max) { // the criteria for reduced linear system
-        auto &is_in_q_flag_ref = marker[pab];
-        if (!is_in_q_flag_ref) {
-            is_enqueue = true;
+        auto &is_in_q_ref = marker[pab];
+        if (!is_in_q_ref) {
             expansion_pair_lst[pab.first].emplace_back(pab.second);
-            is_in_q_flag_ref = true;
+            is_enqueue = true;
+            is_in_q_ref = true;
         }
     }
 }

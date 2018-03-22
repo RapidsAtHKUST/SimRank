@@ -46,8 +46,8 @@ int main(int argc, char *argv[]) {
                 auto res = lp->query_P(i, j);
                 max_err = max(max_err, abs(ts.sim(i, j) - res));
                 if (abs(ts.sim(i, j) - res) > eps + pow(10, -6)) {
-//#pragma omp critical
-//                    cout << i << ", " << j << "," << ts.sim(i, j) << "," << res << endl;
+#pragma omp critical
+                    cout << i << ", " << j << "," << ts.sim(i, j) << "," << res << endl;
                 }
             }
         }

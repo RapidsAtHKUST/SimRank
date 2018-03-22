@@ -123,6 +123,7 @@ void PFLP::local_push(GraphYche &g) {
                     bool is_enqueue = false;
 
                     for (auto &task :task_vec_g[i].second) {
+                        // push to neighbors
                         auto local_b = task.b_;
                         for (auto off_b = g.off_out[local_b]; off_b < g.off_out[local_b + 1]; off_b++) {
                             auto out_nei_b = g.neighbors_out[off_b];
