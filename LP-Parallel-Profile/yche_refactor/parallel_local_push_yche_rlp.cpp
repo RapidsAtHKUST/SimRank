@@ -70,7 +70,9 @@ void PRLP::local_push(GraphYche &g) {
                 expansion_set_g.clear();
                 std::copy(std::begin(my_set), std::end(my_set), back_inserter(expansion_set_g));
             }
-
+            if (thread_id == 0) {
+                cout << "size:" << expansion_set_g.size() << endl;
+            }
             // 1st: generate tasks
 #pragma omp for schedule(dynamic, 50)
             for (auto i = 0; i < expansion_set_g.size(); i++) {

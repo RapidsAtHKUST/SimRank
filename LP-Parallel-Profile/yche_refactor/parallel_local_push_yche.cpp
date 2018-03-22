@@ -80,15 +80,15 @@ void PFLP::local_push(GraphYche &g) {
                 std::copy(std::begin(my_set), std::end(my_set), back_inserter(expansion_set_g));
             }
 
-            // 1st: generate tasks
-#pragma omp for schedule(dynamic, 50)
+            // 1st: local update, generate tasks
+#pragma omp for schedule(dynamic, 50) nowait
             for (auto i = 0; i < expansion_set_g.size(); i++) {
                 auto a = expansion_set_g[i];
                 for (auto b:expansion_pair_lst[a]) {
                     NodePair np(a, b);
+
                     auto &residual_ref = R[np];
                     double residual_to_push = residual_ref;
-
                     marker[np] = false;
                     residual_ref -= residual_to_push;
                     P[np] += residual_to_push;
@@ -99,6 +99,7 @@ void PFLP::local_push(GraphYche &g) {
                     }
                 }
             }
+            // generate tasks to the task_vec
             task_vec.clear();
             for (auto &key_val: task_hash_table) { task_vec.emplace_back(std::move(key_val)); }
             task_hash_table.clear();
@@ -111,7 +112,8 @@ void PFLP::local_push(GraphYche &g) {
             }
 
             // 2nd: task preparation
-            for (auto v_a:local_expansion_set) { expansion_pair_lst[v_a].clear(); }
+#pragma omp for nowait
+            for (auto i = 0; i < expansion_set_g.size(); i++) { expansion_pair_lst[expansion_set_g[i]].clear(); }
             local_expansion_set.clear();
 #pragma omp barrier
 
@@ -123,14 +125,14 @@ void PFLP::local_push(GraphYche &g) {
                     bool is_enqueue = false;
 
                     for (auto &task :task_vec_g[i].second) {
-                        // push to neighbors
+                        // push to neighbors (fixed a', varying b' \in N_out(b))
                         auto local_b = task.b_;
                         for (auto off_b = g.off_out[local_b]; off_b < g.off_out[local_b + 1]; off_b++) {
                             auto out_nei_b = g.neighbors_out[off_b];
                             if (out_nei_a != out_nei_b) {
                                 NodePair pab(out_nei_a, out_nei_b);
 
-                                // push residual to the pair pab
+                                // push residual to the pair (a', b')
                                 auto &residual_ref = R[pab];
                                 residual_ref +=
                                         c * task.residual_ / (g.in_degree(out_nei_a) * g.in_degree(out_nei_b));
