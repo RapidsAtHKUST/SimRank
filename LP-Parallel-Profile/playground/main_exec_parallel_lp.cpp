@@ -20,7 +20,12 @@ int main(int argc, char *argv[]) {
 //    double eps = 0.0001;
 
     auto n = g.n;
+
+#ifdef FLP
     auto lp = new PFLP(g, g_name, c, eps, n);
+#else
+    auto lp = new PRLP(g, g_name, c, eps, n);
+#endif
 
     auto start_time = std::chrono::high_resolution_clock::now();
     lp->local_push(g);

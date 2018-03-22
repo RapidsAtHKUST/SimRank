@@ -20,8 +20,6 @@
 using boost::format;
 using PairMarker= sparse_hash_map<NodePair, bool>;
 
-const string LOCAL_PUSH_DIR = "/homes/ywangby/workspace/yche/git-repos/SimRank/LPMC-Profile/build/datasets/local_push/";
-
 extern double cal_rmax(double c, double epsilon); // the r_max for general case
 
 struct FLPTask {
@@ -35,9 +33,15 @@ struct FLPTask {
 };
 
 struct RLPTask {
-    int b;
-    float residual;
-    bool is_singleton;
+    int b_;
+    float residual_;
+    bool is_singleton_;
+
+    RLPTask(int b, float residual, bool is_singleton) {
+        b_ = b;
+        residual_ = residual;
+        is_singleton_ = is_singleton;
+    }
 };
 
 struct LP {
@@ -46,7 +50,6 @@ public:
 
     DensePairMap<float> P;          // the estimates
     DensePairMap<float> R;          // the residuals
-    queue<NodePair> Q;              // the queue to hold invalid node pairs
     DensePairMap<bool> marker;
 
     double r_max;
@@ -61,7 +64,11 @@ public:
 
 /*local push using reduced system*/
 struct PRLP : LP {
-    std::unordered_map<int, vector<RLPTask>> tmp_task_hash_table;
+    vector<vector<int>> thread_local_expansion_set_lst;
+
+    vector<vector<int>> expansion_pair_lst;
+
+    size_t num_threads;
 public:
     PRLP(GraphYche &g, string name, double c_, double epsilon, size_t n_);
 
@@ -70,9 +77,7 @@ public:
 public:
     double how_much_residual_to_push(GraphYche &g, NodePair &np);
 
-    void push(NodePair &pab, double);
-
-    void push_to_neighbors(GraphYche &g, NodePair &np, double current_residual);
+    void push(NodePair &pab, double, bool &);
 
     void local_push(GraphYche &g);
 };

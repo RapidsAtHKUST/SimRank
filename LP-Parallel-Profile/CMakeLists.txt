@@ -56,5 +56,10 @@ target_compile_definitions(flp PRIVATE -DFLP=1)
 
 #########3
 add_executable(pflp playground/main_exec_parallel_lp.cpp ${LPMC_FILES} ${UTIL_FILES} ${GROUND_TRUTH_FILES}
-        yche_refactor/parallel_local_push_yche.cpp yche_refactor/parallel_local_push_yche.h)
+        yche_refactor/parallel_local_push_yche.cpp yche_refactor/parallel_local_push_yche.h yche_refactor/parallel_local_push_yche_rlp.cpp)
 InitFLPMC(pflp)
+target_compile_definitions(pflp PRIVATE -DFLP=1)
+
+add_executable(prlp playground/main_exec_parallel_lp.cpp ${LPMC_FILES} ${UTIL_FILES} ${GROUND_TRUTH_FILES}
+        yche_refactor/parallel_local_push_yche.cpp yche_refactor/parallel_local_push_yche.h yche_refactor/parallel_local_push_yche_rlp.cpp)
+InitFLPMC(prlp)
