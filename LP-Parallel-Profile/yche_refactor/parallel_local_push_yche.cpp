@@ -15,35 +15,15 @@ double cal_rmax(double c, double epsilon) {
 LP::LP(GraphYche &g, string gName_, double c_, double epsilon_, size_t n_) :
         g_name(gName_), c(c_), epsilon(epsilon_), n(n_) {
     r_max = cal_rmax(c, epsilon);
-
-    max_q_size = 0;
-    n_push = 0;
-    cpu_time = -1; // set the init value
-}
-
-void LP::init_PR() {
-    string data_path = get_file_path_base() + ".P";
-    P.add(n);
-    R.add(n);
-    marker.add(n);
-
-    for (int i = 0; i < n; i++) {
-        NodePair np(i, i);
-        R[np] = 1;
-        Q.push(np);
-        marker[np] = true;
-    }
 }
 
 PFLP::PFLP(GraphYche &g, string name, double c_, double epsilon, size_t n_) : LP(g, name, c_, epsilon, n_) {
-//    init_PR();
-    num_threads = 56u;
-    thread_local_expansion_set_lst = vector<vector<int>>(num_threads);
-
     P.add(n);
     R.add(n);
     marker.add(n);
 
+    num_threads = 56u;
+    thread_local_expansion_set_lst = vector<vector<int>>(num_threads);
     thread_local_expansion_set_lst[0].reserve(n);
     expansion_pair_lst.resize(n);
 
@@ -57,34 +37,10 @@ PFLP::PFLP(GraphYche &g, string name, double c_, double epsilon, size_t n_) : LP
 }
 
 PRLP::PRLP(GraphYche &g, string name, double c_, double epsilon, size_t n_) : LP(g, name, c_, epsilon, n_) {
-    init_PR();
-}
-
-void LP::local_push(GraphYche &g) { // local push given current P and R
-
 }
 
 void PRLP::local_push(GraphYche &g) {
-    auto start = std::chrono::high_resolution_clock::now();
 
-    while (!Q.empty()) {
-        max_q_size = max(max_q_size, Q.size());
-        NodePair np = Q.front();
-        Q.pop();
-        marker[np] = false;
-        double residual_to_push = how_much_residual_to_push(g, np);
-
-        R[np] -= residual_to_push;
-        P[np] += residual_to_push;
-        push_to_neighbors(g, np, residual_to_push); // push residuals to neighbors of np
-    }
-
-    auto finish = std::chrono::high_resolution_clock::now();
-    std::chrono::duration<double> elapsed = finish - start;
-    if (cpu_time == -1) {
-        cpu_time = elapsed.count();
-        mem_size = getValue();
-    }
 }
 
 void PFLP::local_push(GraphYche &g) {
@@ -96,7 +52,11 @@ void PFLP::local_push(GraphYche &g) {
 
 #pragma omp parallel
     {
+#ifdef HAS_OPENMP
         auto thread_id = omp_get_thread_num();
+#else
+        auto thread_id = 0;
+#endif
         auto &task_hash_table = thread_local_task_hash_table_lst[thread_id];
         auto &task_vec = thread_local_task_vec_lst[thread_id];
         auto &local_expansion_set = thread_local_expansion_set_lst[thread_id];
@@ -116,7 +76,7 @@ void PFLP::local_push(GraphYche &g) {
 
 #pragma omp single
             {
-                // aggregation
+                // aggregation of v_a for expansion
                 std::unordered_set<int> my_set;
                 for (auto &expansion_set: thread_local_expansion_set_lst) {
                     for (auto u:expansion_set) {
@@ -176,6 +136,7 @@ void PFLP::local_push(GraphYche &g) {
                             if (out_nei_a != out_nei_b) {
                                 NodePair pab(out_nei_a, out_nei_b);
 
+                                // push residual to the pair pab
                                 auto &residual_ref = R[pab];
                                 residual_ref +=
                                         c * task.residual_ / (g.in_degree(out_nei_a) * g.in_degree(out_nei_b));
@@ -200,7 +161,6 @@ void PFLP::local_push(GraphYche &g) {
 
 void PRLP::push(NodePair &pab, double inc) {
     // only probing once
-    n_push++;
     auto &res_ref = R[pab];
     res_ref += inc;
     if (fabs(res_ref) / sqrt(2) > r_max) { // the criteria for reduced linear system
@@ -280,18 +240,6 @@ void PRLP::push_to_neighbors(GraphYche &g, NodePair &np, double current_residual
     }
 }
 
-double PFLP::how_much_residual_to_push(GraphYche &g, NodePair &np) {
-    return R[np];
-}
-
-void PFLP::push(NodePair &pab, double inc) {
-
-}
-
-void PFLP::push_to_neighbors(GraphYche &g, NodePair &np, double current_residual) {
-
-}
-
 double PRLP::query_P(int a, int b) {
     if (a == b) {
         return P.query(a, b);
@@ -306,10 +254,3 @@ double PFLP::query_P(int a, int b) {
     return P.query(a, b);
 }
 
-double LP::query_R(int a, int b) {
-    if (a > b) {
-        return R.query(b, a);
-    } else {
-        return R.query(a, b);
-    }
-}

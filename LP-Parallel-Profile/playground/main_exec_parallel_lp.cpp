@@ -27,12 +27,8 @@ int main(int argc, char *argv[]) {
     auto end_time = std::chrono::high_resolution_clock::now();
     std::chrono::duration<double> elapsed = end_time - start_time;
     cout << format("computation time: %s s") % elapsed.count() << endl; // record the pre-processing time
-    cout << format("push num: %s") % lp->n_push << endl;
-//    cout << format("max queue size #: %s") % (lp->n_push / lp->max_q_size) << endl;
-
     cout << format("P size: %s") % lp->P.size() << endl;
     cout << format("R size: %s") % lp->R.size() << endl;
-//    cout << format("avg push merge #: %s") % (lp->n_push / lp->R.size()) << endl;
 
     // 2nd: verify the correcness
     if (n < 10000) {

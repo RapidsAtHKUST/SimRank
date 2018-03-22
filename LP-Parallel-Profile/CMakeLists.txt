@@ -37,7 +37,9 @@ macro(InitFLPMC exec_name)
     target_link_libraries(${exec_name} PRIVATE tcmalloc)
     target_compile_options(${exec_name} PRIVATE -O3 -g -march=native)
     target_link_libraries(${exec_name} PRIVATE ${CMAKE_THREAD_LIBS_INIT})
-
+    if (OPENMP_FOUND)
+        target_compile_definitions(${exec_name} PRIVATE -DHAS_OPENMP=1)
+    endif ()
 endmacro()
 
 ####################### reduced local push testing

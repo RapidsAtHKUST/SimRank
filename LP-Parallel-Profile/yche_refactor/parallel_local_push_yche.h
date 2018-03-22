@@ -52,30 +52,11 @@ public:
     double r_max;
     double c;
     size_t n;               // we need to define total number of nodes in advance
-    unsigned int n_push;    // record number of push
-    double cpu_time;        // cpu_time for local push
     double epsilon;         // the error bound
-    int mem_size;           // the memory usage
-
-    size_t max_q_size;
 public:
     LP(GraphYche &, string, double c, double epsilon, size_t);
 
-    virtual string get_file_path_base() { return string(); } // get file path of local push data
-
-    void init_PR(); // init or load the data of P and R
-public:
-    virtual double how_much_residual_to_push(GraphYche &g, NodePair &np) {}
-
-    virtual void push(NodePair &pab, double inc) {};
-
-    virtual void push_to_neighbors(GraphYche &g, NodePair &np, double current_residual) {}
-
-    virtual void local_push(GraphYche &g); // empty function for local push
-public:
-    virtual double query_P(int a, int b) { return 0; }
-
-    double query_R(int a, int b);
+    virtual double query_P(int a, int b) {};
 };
 
 /*local push using reduced system*/
@@ -87,11 +68,11 @@ public:
     double query_P(int a, int b) override;
 
 public:
-    double how_much_residual_to_push(GraphYche &g, NodePair &np) override;
+    double how_much_residual_to_push(GraphYche &g, NodePair &np);
 
-    void push(NodePair &pab, double) override;
+    void push(NodePair &pab, double);
 
-    void push_to_neighbors(GraphYche &g, NodePair &np, double current_residual) override;
+    void push_to_neighbors(GraphYche &g, NodePair &np, double current_residual);
 
     void local_push(GraphYche &g);
 };
@@ -109,12 +90,6 @@ public:
     double query_P(int a, int b) override;
 
 public:
-    double how_much_residual_to_push(GraphYche &g, NodePair &np) override;
-
-    void push(NodePair &pab, double) override;
-
-    void push_to_neighbors(GraphYche &g, NodePair &np, double current_residual) override;
-
     void local_push(GraphYche &g); // empty function for local push
 };
 
