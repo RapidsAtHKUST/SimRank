@@ -37,7 +37,8 @@ void LP::init_PR() {
 
 PFLP::PFLP(GraphYche &g, string name, double c_, double epsilon, size_t n_) : LP(g, name, c_, epsilon, n_) {
 //    init_PR();
-    thread_local_expansion_set_lst = vector<vector<int>>(omp_get_num_threads());
+    num_threads = 56u;
+    thread_local_expansion_set_lst = vector<vector<int>>(num_threads);
 
     P.add(n);
     R.add(n);
@@ -87,11 +88,12 @@ void PRLP::local_push(GraphYche &g) {
 }
 
 void PFLP::local_push(GraphYche &g) {
-    vector<std::unordered_map<int, vector<FLPTask>>> thread_local_task_hash_table_lst(omp_get_num_threads());
-    vector<vector<pair<int, vector<FLPTask>>>> thread_local_task_vec_lst(omp_get_num_threads());
-
+    vector<std::unordered_map<int, vector<FLPTask>>> thread_local_task_hash_table_lst(num_threads);
+    vector<vector<pair<int, vector<FLPTask>>>> thread_local_task_vec_lst(num_threads);
+    vector<int> expansion_set_g;
     int counter = 0;
     bool is_go_on;
+
 #pragma omp parallel
     {
         auto thread_id = omp_get_thread_num();
@@ -100,42 +102,50 @@ void PFLP::local_push(GraphYche &g) {
         auto &local_expansion_set = thread_local_expansion_set_lst[thread_id];
 
         while (true) {
+            // 0th: initialize is_go_on flag
 #pragma omp single
             {
                 is_go_on = false;
                 cout << "gen" << endl;
             }
-
             if (!local_expansion_set.empty()) { is_go_on = true; }
 #pragma omp barrier
-            if (!is_go_on) { break; }
+            if (!is_go_on) {
+                break;
+            }
+
+#pragma omp single
+            {
+                // aggregation
+                std::unordered_set<int> my_set;
+                for (auto &expansion_set: thread_local_expansion_set_lst) {
+                    for (auto u:expansion_set) {
+                        my_set.emplace(u);
+                    }
+                }
+                expansion_set_g.clear();
+                std::copy(std::begin(my_set), std::end(my_set), back_inserter(expansion_set_g));
+            }
 
             // 1st: generate tasks
-            for (auto &expansion_set: thread_local_expansion_set_lst) {
-#pragma omp for nowait
-                for (auto i = 0; i < expansion_set.size(); i++) {
-                    auto a = expansion_set[i];
-                    for (auto b:expansion_pair_lst[a]) {
-                        NodePair np(a, b);
-                        auto &residual_ref = R[np];
-                        double residual_to_push = residual_ref;
+#pragma omp for schedule(dynamic, 50)
+            for (auto i = 0; i < expansion_set_g.size(); i++) {
+                auto a = expansion_set_g[i];
+                for (auto b:expansion_pair_lst[a]) {
+                    NodePair np(a, b);
+                    auto &residual_ref = R[np];
+                    double residual_to_push = residual_ref;
 
-                        marker[np] = false;
-                        residual_ref -= residual_to_push;
-                        P[np] += residual_to_push;
+                    marker[np] = false;
+                    residual_ref -= residual_to_push;
+                    P[np] += residual_to_push;
 
-                        for (auto off_a = g.off_out[a]; off_a < g.off_out[a + 1]; off_a++) {
-                            auto out_nei_a = g.neighbors_out[off_a];
-                            if (task_hash_table.find(out_nei_a) == task_hash_table.end()) {
-                                task_hash_table[out_nei_a] = vector<FLPTask>();
-                            }
-                            task_hash_table[out_nei_a].emplace_back(b, static_cast<float>(residual_to_push));
-                        }
+                    for (auto off_a = g.off_out[a]; off_a < g.off_out[a + 1]; off_a++) {
+                        auto out_nei_a = g.neighbors_out[off_a];
+                        task_hash_table[out_nei_a].emplace_back(b, residual_to_push);
                     }
                 }
             }
-
-            // clear previous, then emplace back current
             task_vec.clear();
             for (auto &key_val: task_hash_table) { task_vec.emplace_back(std::move(key_val)); }
             task_hash_table.clear();
@@ -143,13 +153,13 @@ void PFLP::local_push(GraphYche &g) {
 
 #pragma omp single
             {
-                // 2nd: task preparation
                 counter++;
                 cout << "gen finished," << counter << endl;
             }
 
-            for (auto v_a:thread_local_expansion_set_lst[thread_id]) { expansion_pair_lst[v_a].clear(); }
-            thread_local_expansion_set_lst[thread_id].clear();
+            // 2nd: task preparation
+            for (auto v_a:local_expansion_set) { expansion_pair_lst[v_a].clear(); }
+            local_expansion_set.clear();
 #pragma omp barrier
 
             // 3rd: computation
@@ -180,13 +190,12 @@ void PFLP::local_push(GraphYche &g) {
                             }
                         }
                     }
-                    if (is_enqueue) { thread_local_expansion_set_lst[thread_id].emplace_back(out_nei_a); }
+                    if (is_enqueue) { local_expansion_set.emplace_back(out_nei_a); }
                 }
             }
         }
-
-        cout << "rounds:" << counter << endl;
     }
+    cout << "rounds:" << counter << endl;
 }
 
 void PRLP::push(NodePair &pab, double inc) {

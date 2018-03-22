@@ -102,6 +102,7 @@ struct PFLP : LP {
 
     vector<vector<int>> expansion_pair_lst;
 
+    size_t num_threads;
 public:
     PFLP(GraphYche &g, string name, double c_, double epsilon, size_t n_);
 
