@@ -149,10 +149,11 @@ void PRLP::local_push(GraphYche &g) {
                             for (auto off_b = g.off_out[local_b]; off_b < g.off_out[local_b + 1]; off_b++) {
                                 auto out_nei_a = a_prime;
                                 auto out_nei_b = g.neighbors_out[off_b];
-
+                                bool is_swap = false;
                                 if (out_nei_a != out_nei_b) {
                                     if (out_nei_a > out_nei_b) {
                                         swap(out_nei_a, out_nei_b);
+                                        is_swap = true;
                                     }
                                     NodePair pab(out_nei_a, out_nei_b);
 
@@ -164,6 +165,7 @@ void PRLP::local_push(GraphYche &g) {
                                         auto &is_in_q_ref = marker[pab];
                                         if (!is_in_q_ref) {
                                             expansion_pair_lst[out_nei_a].emplace_back(out_nei_b);
+                                            local_expansion_set.emplace_back(out_nei_a);
                                             is_enqueue = true;
                                             is_in_q_ref = true;
                                         }
