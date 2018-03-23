@@ -95,6 +95,13 @@ void PRLP::local_push(GraphYche &g) {
                         task_hash_table[out_nei_a].emplace_back(b, static_cast<float>(residual_to_push),
                                                                 a == b);
                     }
+                    if (a != b) {
+                        for (auto off_b = g.off_out[b]; off_b < g.off_out[b + 1]; off_b++) {
+                            auto out_nei_b = g.neighbors_out[off_b];
+                            task_hash_table[out_nei_b].emplace_back(a, static_cast<float>(residual_to_push),
+                                                                    false);
+                        }
+                    }
                 }
             }
             task_vec.clear();
@@ -149,12 +156,7 @@ void PRLP::local_push(GraphYche &g) {
                             for (auto off_b = g.off_out[local_b]; off_b < g.off_out[local_b + 1]; off_b++) {
                                 auto out_nei_a = a_prime;
                                 auto out_nei_b = g.neighbors_out[off_b];
-                                bool is_swap = false;
-                                if (out_nei_a != out_nei_b) {
-                                    if (out_nei_a > out_nei_b) {
-                                        swap(out_nei_a, out_nei_b);
-                                        is_swap = true;
-                                    }
+                                if (out_nei_a < out_nei_b) {
                                     NodePair pab(out_nei_a, out_nei_b);
 
                                     // push
@@ -165,7 +167,6 @@ void PRLP::local_push(GraphYche &g) {
                                         auto &is_in_q_ref = marker[pab];
                                         if (!is_in_q_ref) {
                                             expansion_pair_lst[out_nei_a].emplace_back(out_nei_b);
-                                            local_expansion_set.emplace_back(out_nei_a);
                                             is_enqueue = true;
                                             is_in_q_ref = true;
                                         }
