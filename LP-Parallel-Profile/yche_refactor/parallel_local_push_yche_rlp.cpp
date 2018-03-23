@@ -34,6 +34,8 @@ void PRLP::local_push(GraphYche &g) {
     int counter = 0;
     bool is_go_on;
 
+    cout << "r_max:" << r_max << endl;
+
 #pragma omp parallel
     {
 #ifdef HAS_OPENMP
@@ -54,9 +56,7 @@ void PRLP::local_push(GraphYche &g) {
             }
             if (!local_expansion_set.empty()) { is_go_on = true; }
 #pragma omp barrier
-            if (!is_go_on) {
-                break;
-            }
+            if (!is_go_on) { break; }
 
 #pragma omp single
             {
@@ -78,21 +78,22 @@ void PRLP::local_push(GraphYche &g) {
             for (auto i = 0; i < expansion_set_g.size(); i++) {
                 auto a = expansion_set_g[i];
                 for (auto b:expansion_pair_lst[a]) {
-                    bool is_singleton = (a == b);
 
                     NodePair np(a, b);
                     auto &residual_ref = R[np];
                     double residual_to_push = residual_ref;
-                    if (is_singleton) {
+                    if (a == b) {
                         residual_to_push -= r_max / (1 - c); // singleton nodes do not need to push all residual as 1
                     }
 
                     marker[np] = false;
                     residual_ref -= residual_to_push;
                     P[np] += residual_to_push;
+
                     for (auto off_a = g.off_out[a]; off_a < g.off_out[a + 1]; off_a++) {
                         auto out_nei_a = g.neighbors_out[off_a];
-                        task_hash_table[out_nei_a].emplace_back(b, residual_to_push, is_singleton);
+                        task_hash_table[out_nei_a].emplace_back(b, static_cast<float>(residual_to_push),
+                                                                a == b);
                     }
                 }
             }
@@ -108,7 +109,8 @@ void PRLP::local_push(GraphYche &g) {
             }
 
             // 2nd: task preparation
-            for (auto v_a:local_expansion_set) { expansion_pair_lst[v_a].clear(); }
+#pragma omp for nowait
+            for (auto i = 0; i < expansion_set_g.size(); i++) { expansion_pair_lst[expansion_set_g[i]].clear(); }
             local_expansion_set.clear();
 #pragma omp barrier
 
@@ -132,10 +134,11 @@ void PRLP::local_push(GraphYche &g) {
                                     auto &res_ref = R[pab];
                                     res_ref += sqrt(2) * c * task.residual_ /
                                                (g.in_degree(a_prime) * g.in_degree(out_nei_b));
+
                                     if (fabs(res_ref) / sqrt(2) > r_max) { // the criteria for reduced linear system
                                         auto &is_in_q_ref = marker[pab];
                                         if (!is_in_q_ref) {
-                                            expansion_pair_lst[pab.first].emplace_back(pab.second);
+                                            expansion_pair_lst[a_prime].emplace_back(out_nei_b);
                                             is_enqueue = true;
                                             is_in_q_ref = true;
                                         }
@@ -155,7 +158,8 @@ void PRLP::local_push(GraphYche &g) {
 
                                     // push
                                     auto &res_ref = R[pab];
-                                    res_ref += c * task.residual_ / (g.in_degree(a_prime) * g.in_degree(out_nei_b));
+                                    res_ref += c * task.residual_ / (g.in_degree(out_nei_a) * g.in_degree(out_nei_b));
+
                                     if (fabs(res_ref) / sqrt(2) > r_max) { // the criteria for reduced linear system
                                         auto &is_in_q_ref = marker[pab];
                                         if (!is_in_q_ref) {
@@ -173,6 +177,7 @@ void PRLP::local_push(GraphYche &g) {
             }
         }
     }
+
     cout << "rounds:" << counter << endl;
 }
 
