@@ -93,6 +93,7 @@ void PRLP::local_push(GraphYche &g) {
                         task_hash_table[out_nei_a].emplace_back(b, static_cast<float>(residual_to_push),
                                                                 a == b);
                     }
+                    // important for the later local push-to-neighbors
                     if (a != b) {
                         for (auto off_b = g.off_out[b]; off_b < g.off_out[b + 1]; off_b++) {
                             auto out_nei_b = g.neighbors_out[off_b];

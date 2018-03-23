@@ -7,6 +7,7 @@
 
 * smallest task: `a'`, `b` (to be expanded), `residual_value`, `flag` (for the reduced linear system)
 * requirement: `a'` grouped together before submitting tasks
+* some difference in the rlp parallelization
 
 ## Implementation Optimization Tricks
 
@@ -32,7 +33,10 @@ profiling | [stat.h](util/stat.h), [stat.cpp](util/stat.cpp)
 
 all pair algorithms | files
 --- | ---
-local push(static) | [local_push_yche.h](yche_refactor/local_push_yche.h), [local_push_yche.cpp](yche_refactor/local_push_yche.cpp)
+prlp | [parallel_local_push_yche_rlp.cpp](yche_refactor/parallel_local_push_yche_rlp.cpp)
+pflp | [parallel_local_push_yche.cpp](yche_refactor/parallel_local_push_yche.cpp)
+flp | [local_push_yche.h](yche_refactor/local_push_yche.h), [local_push_yche.cpp](yche_refactor/local_push_yche.cpp)
+rlp | [local_push_yche_rlp.cpp](yche_refactor/local_push_yche_rlp.cpp)
 iterative(ground truth) | [simrank.h](yche_refactor/simrank.h), [simrank.cpp](yche_refactor/simrank.cpp)
 
 ## Build

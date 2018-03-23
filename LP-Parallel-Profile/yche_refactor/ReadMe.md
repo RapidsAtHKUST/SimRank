@@ -1,4 +1,4 @@
-### Still-Bug
+### More-Efficient Parallel
 
 ```cpp
 void PRLP::local_push(GraphYche &g) {
@@ -44,9 +44,7 @@ void PRLP::local_push(GraphYche &g) {
                 expansion_set_g.clear();
                 std::copy(std::begin(my_set), std::end(my_set), back_inserter(expansion_set_g));
             }
-            if (thread_id == 0) {
-                cout << "size:" << expansion_set_g.size() << endl;
-            }
+            if (thread_id == 0) { cout << "size:" << expansion_set_g.size() << endl; }
             // 1st: generate tasks
 #pragma omp for schedule(dynamic, 50)
             for (auto i = 0; i < expansion_set_g.size(); i++) {
@@ -68,6 +66,13 @@ void PRLP::local_push(GraphYche &g) {
                         auto out_nei_a = g.neighbors_out[off_a];
                         task_hash_table[out_nei_a].emplace_back(b, static_cast<float>(residual_to_push),
                                                                 a == b);
+                    }
+                    if (a != b) {
+                        for (auto off_b = g.off_out[b]; off_b < g.off_out[b + 1]; off_b++) {
+                            auto out_nei_b = g.neighbors_out[off_b];
+                            task_hash_table[out_nei_b].emplace_back(a, static_cast<float>(residual_to_push),
+                                                                    false);
+                        }
                     }
                 }
             }
@@ -92,7 +97,7 @@ void PRLP::local_push(GraphYche &g) {
             for (auto &task_vec_g: thread_local_task_vec_lst) {
 #pragma omp for schedule(dynamic, 10)
                 for (auto i = 0; i < task_vec_g.size(); i++) {
-                    auto a_prime = task_vec_g[i].first;
+                    auto out_nei_a = task_vec_g[i].first;
                     bool is_enqueue = false;
 
                     for (auto &task :task_vec_g[i].second) {
@@ -101,18 +106,18 @@ void PRLP::local_push(GraphYche &g) {
                         if (task.is_singleton_) {
                             for (auto off_b = g.off_out[local_b]; off_b < g.off_out[local_b + 1]; off_b++) {
                                 auto out_nei_b = g.neighbors_out[off_b];
-                                if (a_prime < out_nei_b) { // only push to partial pairs for a < local_b
-                                    NodePair pab(a_prime, out_nei_b);
+                                if (out_nei_a < out_nei_b) { // only push to partial pairs for a < local_b
+                                    NodePair pab(out_nei_a, out_nei_b);
 
                                     // push
                                     auto &res_ref = R[pab];
                                     res_ref += sqrt(2) * c * task.residual_ /
-                                               (g.in_degree(a_prime) * g.in_degree(out_nei_b));
+                                               (g.in_degree(out_nei_a) * g.in_degree(out_nei_b));
 
                                     if (fabs(res_ref) / sqrt(2) > r_max) { // the criteria for reduced linear system
                                         auto &is_in_q_ref = marker[pab];
                                         if (!is_in_q_ref) {
-                                            expansion_pair_lst[a_prime].emplace_back(out_nei_b);
+                                            expansion_pair_lst[out_nei_a].emplace_back(out_nei_b);
                                             is_enqueue = true;
                                             is_in_q_ref = true;
                                         }
@@ -121,13 +126,8 @@ void PRLP::local_push(GraphYche &g) {
                             }
                         } else {
                             for (auto off_b = g.off_out[local_b]; off_b < g.off_out[local_b + 1]; off_b++) {
-                                auto out_nei_a = a_prime;
                                 auto out_nei_b = g.neighbors_out[off_b];
-
-                                if (out_nei_a != out_nei_b) {
-                                    if (out_nei_a > out_nei_b) {
-                                        swap(out_nei_a, out_nei_b);
-                                    }
+                                if (out_nei_a < out_nei_b) {
                                     NodePair pab(out_nei_a, out_nei_b);
 
                                     // push
@@ -146,7 +146,7 @@ void PRLP::local_push(GraphYche &g) {
                             }
                         }
                     }
-                    if (is_enqueue) { local_expansion_set.emplace_back(a_prime); }
+                    if (is_enqueue) { local_expansion_set.emplace_back(out_nei_a); }
                 }
             }
         }
