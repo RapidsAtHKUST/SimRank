@@ -34,6 +34,9 @@ TruthSim::TruthSim(string name, GraphYche &g, double c_, double epsilon_) {
         for (size_t i = 0; i < n; i++) {
             sim(i, i) = 1;
         }
+        if (n < 10000) {
+            run(g);
+        }
     }
     // cout << "simrank matrix size: " << sim.size() << endl;
 }
@@ -58,45 +61,41 @@ void TruthSim::run(GraphYche &g) {
     }
 }
 
-//void basic_simrank(GraphYche &g, double c, SimRank_matrix &sim) {
-//    int K = 50;
-//    int n = num_vertices(g);
-//    for (int i = 0; i < n; i++) {
-//        for (int j = 0; j < n; j++) {
-//            if (i == j) {
-//                sim[i][j] = 1;
-//            } else {
-//                sim[i][j] = 0;
-//            }
-//        }
-//    }
-//    for (int k = 0; k < K; k++) {
-//        for (int i = 0; i < n; i++) {
-//            for (int j = 0; j < n; j++) {
-//                if (i != j) {
-//                    double current = 0; // accumulated current simrank
-//                    int i_indeg = in_degree(i, g);
-//                    int j_indeg = in_degree(j, g);
-//                    GraphYche::in_edge_iterator i_in, i_end;
-//                    tie(i_in, i_end) = in_edges(i, g);
-//                    for (; i_in != i_end; i_in++) {
-//                        GraphYche::in_edge_iterator j_in, j_end;
-//                        tie(j_in, j_end) = in_edges(j, g);
-//                        for (; j_in != j_end; j_in++) {
-//                            auto source_i = source(*i_in, g);
-//                            auto source_j = source(*j_in, g);
-//                            current += ((c * sim[source_i][source_j]) / (i_indeg * j_indeg));
-//                        }
-//                    }
-//                    sim[i][j] = current;
-//                }
-//            }
-//        }
-//    }
-//    // for(int i =0;i<n;i++){
-//    //     for(int j = 0;j < n;j++){
-//    //         cout << i << " " << j << ": " << sim[i][j] << endl;
-//    //     }
-//    // }
-//    return;
-//}
+#ifdef NAIVE_GROUND_TRUTH
+void basic_simrank(GraphYche &g, double c, SimRank_matrix &sim) {
+    int K = 50;
+    int n = num_vertices(g);
+    for (int i = 0; i < n; i++) {
+        for (int j = 0; j < n; j++) {
+            if (i == j) {
+                sim[i][j] = 1;
+            } else {
+                sim[i][j] = 0;
+            }
+        }
+    }
+    for (int k = 0; k < K; k++) {
+        for (int i = 0; i < n; i++) {
+            for (int j = 0; j < n; j++) {
+                if (i != j) {
+                    double current = 0; // accumulated current simrank
+                    int i_indeg = in_degree(i, g);
+                    int j_indeg = in_degree(j, g);
+                    GraphYche::in_edge_iterator i_in, i_end;
+                    tie(i_in, i_end) = in_edges(i, g);
+                    for (; i_in != i_end; i_in++) {
+                        GraphYche::in_edge_iterator j_in, j_end;
+                        tie(j_in, j_end) = in_edges(j, g);
+                        for (; j_in != j_end; j_in++) {
+                            auto source_i = source(*i_in, g);
+                            auto source_j = source(*j_in, g);
+                            current += ((c * sim[source_i][source_j]) / (i_indeg * j_indeg));
+                        }
+                    }
+                    sim[i][j] = current;
+                }
+            }
+        }
+    }
+}
+#endif

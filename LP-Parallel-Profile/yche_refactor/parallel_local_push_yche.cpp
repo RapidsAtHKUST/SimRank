@@ -1,4 +1,8 @@
+#ifdef HAS_OPENMP
+
 #include <omp.h>
+
+#endif
 
 #include <fstream>
 
@@ -78,6 +82,7 @@ void PFLP::local_push(GraphYche &g) {
                 }
                 expansion_set_g.clear();
                 std::copy(std::begin(my_set), std::end(my_set), back_inserter(expansion_set_g));
+                cout << expansion_set_g.size() << endl;
             }
 
             // 1st: local update, generate tasks

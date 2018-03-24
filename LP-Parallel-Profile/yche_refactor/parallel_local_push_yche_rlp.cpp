@@ -1,4 +1,9 @@
+#ifdef HAS_OPENMP
+
 #include <omp.h>
+
+#endif
+
 
 #include <fstream>
 
@@ -90,15 +95,13 @@ void PRLP::local_push(GraphYche &g) {
 
                     for (auto off_a = g.off_out[a]; off_a < g.off_out[a + 1]; off_a++) {
                         auto out_nei_a = g.neighbors_out[off_a];
-                        task_hash_table[out_nei_a].emplace_back(b, static_cast<float>(residual_to_push),
-                                                                a == b);
+                        task_hash_table[out_nei_a].emplace_back(b, static_cast<float>(residual_to_push), a == b);
                     }
                     // important for the later local push-to-neighbors
                     if (a != b) {
                         for (auto off_b = g.off_out[b]; off_b < g.off_out[b + 1]; off_b++) {
                             auto out_nei_b = g.neighbors_out[off_b];
-                            task_hash_table[out_nei_b].emplace_back(a, static_cast<float>(residual_to_push),
-                                                                    false);
+                            task_hash_table[out_nei_b].emplace_back(a, static_cast<float>(residual_to_push), false);
                         }
                     }
                 }

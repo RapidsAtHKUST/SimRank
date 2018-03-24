@@ -9,7 +9,6 @@
 #include <stack>
 #include <queue>
 
-#include <boost/graph/adjacency_list.hpp>
 #include <boost/format.hpp>
 
 #include <sparsepp/spp.h>
