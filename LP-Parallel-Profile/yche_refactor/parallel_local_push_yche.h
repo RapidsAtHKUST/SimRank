@@ -68,6 +68,12 @@ struct PRLP : LP {
 
     vector<vector<int>> expansion_pair_lst;
 
+    vector<int> expansion_set_g;
+
+    vector<vector<RLPTask>> task_hash_table;
+#ifdef HAS_OPENMP
+    vector<omp_lock_t> hash_table_lock;
+#endif
     size_t num_threads;
 public:
     PRLP(GraphYche &g, string name, double c_, double epsilon, size_t n_);

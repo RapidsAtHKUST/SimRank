@@ -46,7 +46,8 @@ macro(InitFLPMC exec_name)
 endmacro()
 
 ####################### reduced local push testing
-add_subdirectory(playground)
+#add_subdirectory(playground)
+
 add_executable(rlp playground/main_exec_reduced_local_push.cpp ${LPMC_FILES} ${UTIL_FILES} ${GROUND_TRUTH_FILES} ${LP_FILES})
 InitFLPMC(rlp)
 
