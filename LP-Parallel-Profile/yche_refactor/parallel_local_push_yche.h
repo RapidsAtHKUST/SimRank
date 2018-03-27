@@ -94,6 +94,12 @@ struct PFLP : LP {
 
     vector<vector<int>> expansion_pair_lst;
 
+    vector<int> expansion_set_g;
+
+    vector<vector<FLPTask>> task_hash_table;
+#ifdef HAS_OPENMP
+    vector<omp_lock_t> hash_table_lock;
+#endif
     size_t num_threads;
 public:
     PFLP(GraphYche &g, string name, double c_, double epsilon, size_t n_);
