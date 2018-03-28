@@ -61,7 +61,9 @@ void PRLP::local_push(GraphYche &g) {
 #pragma omp single
             {
                 is_go_on = false;
+#ifdef DEBUG
                 cout << "gen" << endl;
+#endif
             }
             if (!local_expansion_set.empty()) { is_go_on = true; }
 #pragma omp barrier
@@ -123,7 +125,9 @@ void PRLP::local_push(GraphYche &g) {
 #pragma omp single
             {
                 counter++;
+#ifdef DEBUG
                 cout << "gen finished," << counter << endl;
+#endif
             }
 
             // 2nd: task preparation

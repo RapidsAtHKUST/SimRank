@@ -3,10 +3,13 @@ import subprocess
 from threading import Timer
 
 
-def run_with_timeout(cmd, timeout_sec):
+def run_with_timeout(cmd, timeout_sec, env=None):
     global is_time_out
     is_time_out = False
-    proc = subprocess.Popen(shlex.split(cmd), stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+    if env is None:
+        proc = subprocess.Popen(shlex.split(cmd), stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+    else:
+        proc = subprocess.Popen(shlex.split(cmd), stdout=subprocess.PIPE, stderr=subprocess.PIPE, env=env)
 
     def time_out_call_back(p):
         print 'time out need to kill'
