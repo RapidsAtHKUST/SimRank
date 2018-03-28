@@ -4,7 +4,7 @@
 
 #endif
 
-
+#include <algorithm>
 #include <fstream>
 
 #include <boost/format.hpp>
@@ -142,45 +142,52 @@ void PRLP::local_push(GraphYche &g) {
                     // push to neighbors
                     auto local_b = task.b_;
                     if (task.is_singleton_) {
-                        for (auto off_b = g.off_out[local_b]; off_b < g.off_out[local_b + 1]; off_b++) {
+                        // assume neighbors are sorted
+                        auto it = std::lower_bound(std::begin(g.neighbors_out) + g.off_out[local_b],
+                                                   std::begin(g.neighbors_out) + g.off_out[local_b + 1], out_nei_a);
+                        for (auto off_b = it - std::begin(g.neighbors_out) + (*it == out_nei_a ? 1 : 0);
+                             off_b < g.off_out[local_b + 1]; off_b++) {
                             auto out_nei_b = g.neighbors_out[off_b];
-                            if (out_nei_a < out_nei_b) { // only push to partial pairs for a < local_b
-                                NodePair pab(out_nei_a, out_nei_b);
+//                            if (out_nei_a < out_nei_b) { // only push to partial pairs for a < local_b
+                            NodePair pab(out_nei_a, out_nei_b);
 
-                                // push
-                                auto &res_ref = R[pab];
-                                res_ref += sqrt(2) * c * task.residual_ /
-                                           (g.in_degree(out_nei_a) * g.in_degree(out_nei_b));
+                            // push
+                            auto &res_ref = R[pab];
+                            res_ref += sqrt(2) * c * task.residual_ /
+                                       (g.in_degree(out_nei_a) * g.in_degree(out_nei_b));
 
-                                if (fabs(res_ref) / sqrt(2) > r_max) { // the criteria for reduced linear system
-                                    auto &is_in_q_ref = marker[pab];
-                                    if (!is_in_q_ref) {
-                                        expansion_pair_lst[out_nei_a].emplace_back(out_nei_b);
-                                        is_enqueue = true;
-                                        is_in_q_ref = true;
-                                    }
+                            if (fabs(res_ref) / sqrt(2) > r_max) { // the criteria for reduced linear system
+                                auto &is_in_q_ref = marker[pab];
+                                if (!is_in_q_ref) {
+                                    expansion_pair_lst[out_nei_a].emplace_back(out_nei_b);
+                                    is_enqueue = true;
+                                    is_in_q_ref = true;
                                 }
                             }
+//                            }
                         }
                     } else {
-                        for (auto off_b = g.off_out[local_b]; off_b < g.off_out[local_b + 1]; off_b++) {
+                        auto it = std::lower_bound(std::begin(g.neighbors_out) + g.off_out[local_b],
+                                                   std::begin(g.neighbors_out) + g.off_out[local_b + 1], out_nei_a);
+                        for (auto off_b = it - std::begin(g.neighbors_out) + (*it == out_nei_a ? 1 : 0);
+                             off_b < g.off_out[local_b + 1]; off_b++) {
                             auto out_nei_b = g.neighbors_out[off_b];
-                            if (out_nei_a < out_nei_b) {
-                                NodePair pab(out_nei_a, out_nei_b);
+//                            if (out_nei_a < out_nei_b) {
+                            NodePair pab(out_nei_a, out_nei_b);
 
-                                // push
-                                auto &res_ref = R[pab];
-                                res_ref += c * task.residual_ / (g.in_degree(out_nei_a) * g.in_degree(out_nei_b));
+                            // push
+                            auto &res_ref = R[pab];
+                            res_ref += c * task.residual_ / (g.in_degree(out_nei_a) * g.in_degree(out_nei_b));
 
-                                if (fabs(res_ref) / sqrt(2) > r_max) { // the criteria for reduced linear system
-                                    auto &is_in_q_ref = marker[pab];
-                                    if (!is_in_q_ref) {
-                                        expansion_pair_lst[out_nei_a].emplace_back(out_nei_b);
-                                        is_enqueue = true;
-                                        is_in_q_ref = true;
-                                    }
+                            if (fabs(res_ref) / sqrt(2) > r_max) { // the criteria for reduced linear system
+                                auto &is_in_q_ref = marker[pab];
+                                if (!is_in_q_ref) {
+                                    expansion_pair_lst[out_nei_a].emplace_back(out_nei_b);
+                                    is_enqueue = true;
+                                    is_in_q_ref = true;
                                 }
                             }
+//                            }
                         }
                     }
                 }
