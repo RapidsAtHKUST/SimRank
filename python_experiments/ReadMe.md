@@ -1,3 +1,7 @@
+## Index Dir and Space Complexity
+
+see [IndexDir.md](IndexDir.md)
+
 ## Data Analysis Scripts
 
 Data: in [data_analysis/data-json](data_analysis/data-json) and [data_analysis/data-markdown](data_analysis/data-markdown).
