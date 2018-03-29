@@ -39,7 +39,7 @@ if __name__ == '__main__':
 
             time_lst = map(lambda thread_num:
                            get_tag_info(get_file_path(thread_num), time_tag, min), thread_num_lst)
-            if data_set_name == 'soc-LiveJournal1':
+            if data_set_name == 'soc-LiveJournal1' and our_algorithm == 'pflp':
                 time_lst[0] = 7280.
 
             tmp_dict[data_set_name] = {
