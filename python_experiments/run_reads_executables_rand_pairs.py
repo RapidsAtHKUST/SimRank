@@ -36,12 +36,12 @@ def run_exp():
     exec_name_lst = [
         # 'reads-s-rand-bench',
         'reads-d-rand-bench',
-        # 'reads-rq-rand-bench'
+        'reads-rq-rand-bench'
     ]
     other_exec_path_lst = map(lambda exec_name: exec_root + os.sep + exec_name, exec_name_lst)
 
     data_set_lst = ['ca-GrQc', 'ca-HepTh', 'p2p-Gnutella06', 'wiki-Vote']
-    folder_name = 'reads_01_24_efficiency'
+    folder_name = 'reads_03_31_efficiency'
     tag = 'exp_results'
     range_idx_lst = range(10)
 
@@ -68,7 +68,7 @@ def run_exp():
                                                statistics_file_path])
                         cmd = ' '.join(params_lst)
                         # time_out = 1200 if data_set_name != 'soc-LiveJournal1' else 3600
-                        time_out = 4800 if data_set_name != 'soc-LiveJournal1' else 36000
+                        time_out = 36000
 
                         tle_flag, info, correct_info = time_out_util.run_with_timeout(cmd, timeout_sec=time_out)
                         write_split(statistics_file_path)
@@ -87,7 +87,7 @@ def run_exp():
                         break
 
     # 1st: accuracy
-    # one_round()
+    one_round()
 
     sample_num_lst = [
         10 ** 4,
@@ -95,11 +95,12 @@ def run_exp():
     ]
     range_idx_lst = [0]
     data_set_lst = [
-        'ca-GrQc', 'ca-HepTh', 'p2p-Gnutella06', 'wiki-Vote',
-        'email-Enron', 'email-EuAll',
-        'web-NotreDame', 'web-Stanford', 'web-BerkStan', 'web-Google',
-        'cit-Patents',
+        # 'ca-GrQc', 'ca-HepTh', 'p2p-Gnutella06', 'wiki-Vote',
+        # 'email-Enron', 'email-EuAll',
+        # 'web-NotreDame', 'web-Stanford', 'web-BerkStan', 'web-Google',
+        # 'cit-Patents',
         # 'soc-LiveJournal1'
+        'wiki-Link'
     ]
 
     # 2nd: efficiency

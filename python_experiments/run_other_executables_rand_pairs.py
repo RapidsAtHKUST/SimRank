@@ -89,9 +89,9 @@ def run_exp():
 
     # one_round()
 
-    # sample_num_lst = [10 ** 3, 10 ** 4, 10 ** 5]
+    sample_num_lst = [10 ** 4, 10 ** 5]
     # sample_num_lst = [10 ** 3, 10 ** 4]
-    sample_num_lst = [10 ** 3]
+    # sample_num_lst = [10 ** 3]
     # sample_num_lst = [10 ** 6]
     range_idx_lst = range(1)
     data_set_lst = [
@@ -107,7 +107,7 @@ def run_exp():
         '/homes/ywangby/workspace/yche/git-repos/SimRank/SPS-Variants/isp-yche/build/isp-rand-bench',
         '/homes/ywangby/workspace/yche/git-repos/SimRank/SPS-Variants/LinearD/build/lind-rand-ben',
         '/homes/ywangby/workspace/yche/git-repos/SimRank/SPS-Variants/LinearD/build/cw-rand-gen',
-        '/homes/ywangby/workspace/yche/git-repos/SimRank/SPS-Variants/tsf/build/tsf-rand-bench'
+        # '/homes/ywangby/workspace/yche/git-repos/SimRank/SPS-Variants/tsf/build/tsf-rand-bench'
     ]
     one_round()
 
