@@ -251,3 +251,7 @@ double PRLP::query_P(int a, int b) {
         return P.query(a, b) / sqrt(2);
     }
 }
+
+string PRLP::get_file_path_base() {
+    return LOCAL_PUSH_DIR + str(format("RLP_%s-%.3f-%.6f") % g_name % c % epsilon);
+}

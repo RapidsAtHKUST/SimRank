@@ -20,6 +20,8 @@
 using boost::format;
 using PairMarker= sparse_hash_map<NodePair, bool>;
 
+const string LOCAL_PUSH_DIR = "/homes/ywangby/workspace/yche/git-repos/SimRank/LPMC-Profile/build/datasets/local_push/";
+
 extern double cal_rmax(double c, double epsilon); // the r_max for general case
 
 struct FLPTask {
@@ -60,6 +62,10 @@ public:
     LP(GraphYche &, string, double c, double epsilon, size_t);
 
     virtual double query_P(int a, int b) {};
+
+    virtual string get_file_path_base() { return string(); } // get file path of local push data
+
+    void save();
 };
 
 /*local push using reduced system*/
@@ -81,6 +87,8 @@ public:
     double query_P(int a, int b) override;
 
 public:
+    string get_file_path_base() override;
+
     double how_much_residual_to_push(GraphYche &g, NodePair &np);
 
     void push(NodePair &pab, double, bool &);
@@ -90,6 +98,8 @@ public:
 
 /* local push using full system*/
 struct PFLP : LP {
+    string get_file_path_base() override;
+
     vector<vector<int>> thread_local_expansion_set_lst;
 
     vector<vector<int>> expansion_pair_lst;

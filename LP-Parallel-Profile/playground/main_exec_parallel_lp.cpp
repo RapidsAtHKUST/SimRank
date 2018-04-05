@@ -30,10 +30,14 @@ int main(int argc, char *argv[]) {
     auto start_time = std::chrono::high_resolution_clock::now();
     lp->local_push(g);
     auto end_time = std::chrono::high_resolution_clock::now();
+
     std::chrono::duration<double> elapsed = end_time - start_time;
     cout << format("computation time: %s s") % elapsed.count() << endl; // record the pre-processing time
     cout << format("P size: %s") % lp->P.size() << endl;
     cout << format("R size: %s") % lp->R.size() << endl;
+
+    if (argc >= 4)
+        lp->save();
 
     // 2nd: verify the correcness
     if (n < 10000) {

@@ -21,6 +21,38 @@ LP::LP(GraphYche &g, string gName_, double c_, double epsilon_, size_t n_) :
     r_max = cal_rmax(c, epsilon);
 }
 
+void LP::save() {
+    // save data to disk
+    // save P
+    string p_path = get_file_path_base() + ".P";
+    P.save(p_path);
+
+    //save R
+    string r_path = get_file_path_base() + ".R";
+    R.save(r_path);
+
+    ofstream out;
+    // // save meta info
+    string meta_path = get_file_path_base() + ".meta";
+    out.open(meta_path);
+    out << g_name << endl;
+    out << n << endl;
+    out << epsilon << endl;
+    out << c << endl;
+    out << -1 << endl;
+    out << -1 << endl;
+    auto p_size = P.size();
+    auto r_size = R.size();
+    out << p_size << endl;
+    out << r_size << endl;
+    out << double(p_size) / (n * n) << endl;
+    out << double(r_size) / (n * n) << endl;
+    out.close();
+
+    // save exp data
+    cout << "save complete" << endl;
+}
+
 PFLP::PFLP(GraphYche &g, string name, double c_, double epsilon, size_t n_) : LP(g, name, c_, epsilon, n_) {
     P.add(n);
     R.add(n);
@@ -169,4 +201,8 @@ void PFLP::local_push(GraphYche &g) {
 
 double PFLP::query_P(int a, int b) {
     return P.query(a, b);
+}
+
+string PFLP::get_file_path_base() {
+    return LOCAL_PUSH_DIR + str(format("FLP_%s-%.3f-%.6f") % g_name % c % epsilon);
 }
