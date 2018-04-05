@@ -8,3 +8,4 @@ target_include_directories(random_pair_gen PRIVATE ../../SFMT)
 target_compile_options(random_pair_gen PRIVATE -O3 -g ${SFMT_COMPILE_FLAGS})
 target_link_libraries(random_pair_gen ${Boost_LIBRARIES})
 
+add_executable(test_string test_string.cpp)
