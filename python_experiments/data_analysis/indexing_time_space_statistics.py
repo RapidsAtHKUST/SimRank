@@ -6,9 +6,10 @@ import os
 data_set_lst = [
     'ca-GrQc', 'ca-HepTh', 'p2p-Gnutella06', 'wiki-Vote',
     'email-Enron', 'email-EuAll',
-    # 'web-NotreDame',
+    'web-NotreDame',
     'web-Stanford', 'web-BerkStan', 'web-Google',
-    'cit-Patents', 'soc-LiveJournal1']
+    'cit-Patents', 'soc-LiveJournal1',
+    'wiki-Link']
 
 # for tsf indexing space computation
 v_num_dict = dict(zip(data_set_lst, [5242, 9877, 8717, 7115,

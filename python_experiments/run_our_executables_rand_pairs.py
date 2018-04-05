@@ -33,16 +33,17 @@ def signal_handler(signal, frame):
 
 def run_exp():
     our_exec_path = '/homes/ywangby/workspace/yche/git-repos/SimRank/LPMC-Profile/build'
-    our_exec_name_lst = ['bprw-rand-bench-gt', 'flpmc-rand-bench-gt', 'bflpmc-rand-bench-gt']
+    our_exec_name_lst = ['flpmc-rand-bench-gt', 'bflpmc-rand-bench-gt', 'bprw-rand-bench-gt', ]
     data_set_lst = ['ca-GrQc', 'ca-HepTh', 'p2p-Gnutella06', 'wiki-Vote']
-    folder_name = 'our_methods_overview_01_17'
+    folder_name = 'our_methods_overview_04_05'
     tag = 'exp_results'
     range_idx_lst = range(10)
 
     def one_round():
         for data_set_name in data_set_lst:
             for our_algorithm in our_exec_name_lst:
-                for sample_num in [10 ** 3, 10 ** 4, 10 ** 5, 10 ** 6]:
+                # for sample_num in list(reversed([10 ** 3, 10 ** 4, 10 ** 5, 10 ** 6])):
+                for sample_num in [10 ** 6]:
                     is_cur_sample_scale_tle = False
                     for round_idx in range_idx_lst:
                         statistics_dir = os.sep.join(
@@ -57,7 +58,7 @@ def run_exp():
                         params_lst = map(str, [algorithm_path, data_set_name, sample_num, round_idx, '>>',
                                                statistics_file_path])
                         cmd = ' '.join(params_lst)
-                        time_out = 1200 if data_set_name != 'soc-LiveJournal1' else 3600
+                        time_out = 3600
 
                         tle_flag, info, correct_info = time_out_util.run_with_timeout(cmd, timeout_sec=time_out)
                         write_split(statistics_file_path)
@@ -75,15 +76,22 @@ def run_exp():
                     if is_cur_sample_scale_tle:
                         break
 
-    one_round()
+    # one_round()
 
-    range_idx_lst = range(2)
+    # range_idx_lst = range(2)
+    # range_idx_lst = range(1)
+    range_idx_lst = [0]
     data_set_lst = [
-        'ca-GrQc', 'ca-HepTh', 'p2p-Gnutella06', 'wiki-Vote',
-        'email-Enron', 'email-EuAll', 'web-NotreDame', 'web-Stanford', 'web-BerkStan', 'web-Google',
-        'cit-Patents', 'soc-LiveJournal1']
+        # 'ca-GrQc', 'ca-HepTh', 'p2p-Gnutella06', 'wiki-Vote',
+        # 'email-Enron', 'email-EuAll', 'web-NotreDame', 'web-Stanford', 'web-BerkStan', 'web-Google',
+        # 'cit-Patents',
+        'soc-LiveJournal1',
+        # 'wiki-Link'
+    ]
 
-    our_exec_name_lst = ['bprw-rand-bench', 'flpmc-rand-bench', 'bflpmc-rand-bench']
+    our_exec_name_lst = [
+        'flpmc-rand-bench', 'bflpmc-rand-bench',
+        'bprw-rand-bench', ]
     one_round()
 
 

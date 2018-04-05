@@ -4,9 +4,10 @@ import os
 data_set_lst = [
     'ca-GrQc', 'ca-HepTh', 'p2p-Gnutella06', 'wiki-Vote',
     'email-Enron', 'email-EuAll',
-    # 'web-NotreDame',
+    'web-NotreDame',
     'web-Stanford', 'web-BerkStan', 'web-Google',
-    'cit-Patents', 'soc-LiveJournal1']
+    'cit-Patents', 'soc-LiveJournal1',
+    'wiki-Link']
 
 accuracy_data_set_lst = data_set_lst[0:4]
 
@@ -148,18 +149,31 @@ def write_query_time_dict_to_json():
 
 if __name__ == '__main__':
     # 1st: accuracy
-    write_accuracy_dict_to_json()
-    pair_num_lst = [10 ** 5]
-    write_accuracy_dict_to_json()
+    def get_accuracy():
+        write_accuracy_dict_to_json()
+        global pair_num_lst
+        pair_num_lst = [10 ** 5]
+        write_accuracy_dict_to_json()
+
+
+    # get_accuracy()
 
     # 2nd: querying time
-    pair_num_lst = [10 ** 3, 10 ** 4, 10 ** 5, 10 ** 6]
-    write_query_time_dict_to_json()
-    pair_num_lst = [10 ** 5]
-    write_query_time_dict_to_json()
+    def get_query_time():
+        # cpu time
+        global pair_num_lst
+        pair_num_lst = [10 ** 3, 10 ** 4, 10 ** 5, 10 ** 6]
+        write_query_time_dict_to_json()
+        pair_num_lst = [10 ** 5]
+        write_query_time_dict_to_json()
 
-    query_time_tag = 'total query cost'
-    pair_num_lst = [10 ** 3, 10 ** 4, 10 ** 5, 10 ** 6]
-    write_query_time_dict_to_json()
-    pair_num_lst = [10 ** 5]
-    write_query_time_dict_to_json()
+        # elapsed time
+        global query_time_tag
+        query_time_tag = 'total query cost'
+        pair_num_lst = [10 ** 3, 10 ** 4, 10 ** 5, 10 ** 6]
+        write_query_time_dict_to_json()
+        pair_num_lst = [10 ** 5]
+        write_query_time_dict_to_json()
+
+
+    get_query_time()

@@ -23,6 +23,8 @@ def get_algorithm_time_lst(algorithm, data_lst, cpu_time_dict=g_cpu_time_dict):
                 if number is not None:
                     ret_data = number * (10 ** (idx + 1))
                     break
+        if ret_data is None:
+            ret_data = 9999999999
         if ret_data != 9999999999:
             ret_data = ret_data / 2
         return ret_data
@@ -31,7 +33,16 @@ def get_algorithm_time_lst(algorithm, data_lst, cpu_time_dict=g_cpu_time_dict):
 
 
 def draw_average_query_one_pair_time():
+    global data_set_lst
+    data_set_lst = [
+        'ca-GrQc', 'ca-HepTh', 'p2p-Gnutella06', 'wiki-Vote',
+        'email-Enron', 'email-EuAll',
+        # 'web-NotreDame',
+        'web-Stanford', 'web-BerkStan', 'web-Google',
+        'cit-Patents', 'soc-LiveJournal1',
+        'wiki-Link']
     print data_set_lst
+
     g_names = map(lambda data: data_names[data], data_set_lst)
 
     size_of_fig = (FIG_SIZE_MULTIPLE)
@@ -54,6 +65,7 @@ def draw_average_query_one_pair_time():
     color_lst = ['blue', 'orange', 'green', 'red', '#fe01b1', '#ceb301', 'm', 'brown', 'k', 'gray']
 
     # 1st: bars
+
     for idx, tag in enumerate(algorithm_tag_lst):
         ax.bar(indent_lst[idx],
                map(lambda val: float(val) / us_to_ms_factor, get_algorithm_time_lst(tag, data_set_lst)), width,

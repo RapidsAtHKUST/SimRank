@@ -35,9 +35,10 @@ def run_exp():
     our_exec_path = '/homes/ywangby/workspace/yche/git-repos/SimRank/LPMC-Parallel-Profile/build-icc'
 
     data_set_lst = [
-        'ca-GrQc', 'ca-HepTh', 'p2p-Gnutella06', 'wiki-Vote',
-        'email-Enron', 'email-EuAll', 'web-NotreDame', 'web-Stanford', 'web-BerkStan', 'web-Google',
-        'cit-Patents', 'soc-LiveJournal1', 'wiki-Link'
+        # 'ca-GrQc', 'ca-HepTh', 'p2p-Gnutella06', 'wiki-Vote',
+        # 'email-Enron', 'email-EuAll', 'web-NotreDame', 'web-Stanford', 'web-BerkStan', 'web-Google',
+        # 'cit-Patents', 'soc-LiveJournal1',
+        'wiki-Link'
     ]
     # our_algorithm_lst = ['pflp', 'prlp']
     our_algorithm_lst = ['pflp']
@@ -57,7 +58,7 @@ def run_exp():
 
                     params_lst = map(str, [algorithm_path, data_set_name, 0.116040, '>>', statistics_file_path])
                     cmd = ' '.join(params_lst)
-                    time_out = 3600
+                    time_out = 36000
 
                     my_env = os.environ.copy()
                     my_env["OMP_NUM_THREADS"] = str(thread_num)
