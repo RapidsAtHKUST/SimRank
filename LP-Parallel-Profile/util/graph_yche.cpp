@@ -3,8 +3,6 @@
 //
 #include <cassert>
 
-#include <iostream>
-#include <fstream>
 #include <sstream>
 #include <tuple>
 #include <chrono>
@@ -103,7 +101,14 @@ int GraphYche::out_degree(int u) {
 
 GraphYche::GraphYche(string &graph_path) {
     auto start_time = high_resolution_clock::now();
-    auto edge_lst = GetEdgeList(graph_path);
+    auto edge_lst = vector<pair<int, int>>();
+
+    if (file_exists(get_bin_list_path_from_txt(graph_path))) {
+        cout << "load from binary file..." << endl;
+        ReadFileToArr(get_bin_list_path_from_txt(graph_path), edge_lst);
+    } else {
+        edge_lst = GetEdgeList(graph_path);
+    }
     auto end_time = high_resolution_clock::now();
     cout << "load edge list time:" << duration_cast<milliseconds>(end_time - start_time).count()
          << " ms\n";
