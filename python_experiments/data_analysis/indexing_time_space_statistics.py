@@ -14,9 +14,10 @@ data_set_lst = [
 # for tsf indexing space computation
 v_num_dict = dict(zip(data_set_lst, [5242, 9877, 8717, 7115,
                                      36692, 265214,
-                                     # 325729,
+                                     325729,
                                      281903, 685230, 875713,
-                                     3774768, 4847571]))
+                                     3774768, 4847571,
+                                     12150976]))
 size_of_int = 4
 
 our_algo_indexing_stat_root_folder = '/home/yche/mnt/wangyue-clu/csproject/biggraph/ywangby/' \
@@ -26,6 +27,11 @@ our_algo_indexing_stat_root_folder = '/home/yche/mnt/wangyue-clu/csproject/biggr
 other_algo_indexing_stat_root_folder = '/home/yche/mnt/wangyue-clu/csproject/biggraph/ywangby/' \
                                        'yche/git-repos/SimRank/python_experiments/exp_results/' \
                                        'other_methods_overview_01_16'
+other_algo_indexing_stat_root_folder_new = '/home/yche/mnt/wangyue-clu/csproject/biggraph/ywangby/' \
+                                           'yche/git-repos/SimRank/python_experiments/exp_results/' \
+                                           'other_methods_overview_01_17'
+rand_pair_num_str = "1000"
+rand_round = "0"
 
 datasets_root_folder = '/home/yche/mnt/wangyue-clu/csproject/biggraph/ywangby/LinsysSimRank/datasets'
 
@@ -48,6 +54,7 @@ def ms_val_to_s(num):
 
 
 def get_tag_info(file_path, tag):
+    print file_path
     if not os.path.exists(file_path):
         return None
     with open(file_path) as ifs:
@@ -260,9 +267,12 @@ class TSFIndexingStat:
     def get_indexing_time():
         indexing_time_lst = []
         for data_set in data_set_lst:
-            for algorithm_name in ['tsf-ap', 'tsf-bench']:
+            # for algorithm_name in ['tsf-ap', 'tsf-bench']:
+            for algorithm_name in ['tsf-rand-bench-gt', 'tsf-rand-bench']:
                 indexing_time = get_tag_info(
-                    os.sep.join([other_algo_indexing_stat_root_folder, data_set, algorithm_name + '.txt']),
+                    os.sep.join(
+                        [other_algo_indexing_stat_root_folder_new, data_set, rand_pair_num_str, rand_round,
+                         algorithm_name + '.txt']),
                     tag='indexing computation time')
 
                 if indexing_time is not None:
@@ -275,9 +285,11 @@ class TSFIndexingStat:
     def get_mem_size():
         mem_size_lst = []
         for data_set in data_set_lst:
-            for algorithm_name in ['tsf-ap', 'tsf-bench']:
+            # for algorithm_name in ['tsf-ap', 'tsf-bench']:
+            for algorithm_name in ['tsf-rand-bench-gt', 'tsf-rand-bench']:
                 mem_size = get_tag_info(
-                    os.sep.join([other_algo_indexing_stat_root_folder, data_set, algorithm_name + '.txt']),
+                    os.sep.join([other_algo_indexing_stat_root_folder_new, data_set, rand_pair_num_str, rand_round,
+                                 algorithm_name + '.txt']),
                     tag='mem size')
                 if mem_size is not None:
                     mem_size_lst.append(float(format_str(mem_size / 1024.)))
@@ -303,14 +315,19 @@ if __name__ == '__main__':
         ret_dict = {
             index_time_tag: algorithm_obj.get_indexing_time(),
             index_size_tag: algorithm_obj.get_index_disk_size(),
-            max_mem_size_tag: algorithm_obj.get_mem_size()
+            # max_mem_size_tag: algorithm_obj.get_mem_size()
         }
         return ret_dict
 
 
-    algorithm_tag_lst = [local_push_tag, sling_tag, linear_d_tag, cloud_walker_tag, tsf_tag]
-    algorithm_obj_lst = [LocalPushIndexingStat(), SlingIndexingStat(), LinearDIndexingStat(), CloudWalkerIndexingStat(),
-                         TSFIndexingStat()]
+    algorithm_tag_lst = [
+        # local_push_tag, sling_tag,
+        linear_d_tag, cloud_walker_tag, tsf_tag]
+    algorithm_obj_lst = [
+        # LocalPushIndexingStat(), SlingIndexingStat(),
+        LinearDIndexingStat(), CloudWalkerIndexingStat(),
+        TSFIndexingStat()
+    ]
     index_info_dict = dict(zip(algorithm_tag_lst, map(get_dict, algorithm_obj_lst)))
     my_str = json.dumps(index_info_dict, indent=4)
     os.system('mkdir -p data-json')

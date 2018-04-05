@@ -32,17 +32,18 @@ def signal_handler(signal, frame):
 
 
 def run_exp():
-    our_exec_path = '/homes/ywangby/workspace/yche/git-repos/SimRank/LPMC-Parallel-Profile/build-icc'
+    our_exec_path = '/homes/ywangby/workspace/yche/git-repos/SimRank/LPMC-Parallel-Profile/build'
 
     data_set_lst = [
-        # 'ca-GrQc', 'ca-HepTh', 'p2p-Gnutella06', 'wiki-Vote',
-        # 'email-Enron', 'email-EuAll', 'web-NotreDame', 'web-Stanford', 'web-BerkStan', 'web-Google',
-        # 'cit-Patents', 'soc-LiveJournal1',
+        'ca-GrQc', 'ca-HepTh', 'p2p-Gnutella06', 'wiki-Vote',
+        'email-Enron', 'email-EuAll', 'web-NotreDame', 'web-Stanford', 'web-BerkStan', 'web-Google',
+        'cit-Patents', 'soc-LiveJournal1',
         'wiki-Link'
     ]
-    # our_algorithm_lst = ['pflp', 'prlp']
-    our_algorithm_lst = ['pflp']
-    thread_num_lst = [56]
+    our_algorithm_lst = ['pflp', 'prlp']
+    # our_algorithm_lst = ['pflp']
+    # thread_num_lst = [56]
+    thread_num_lst = [1]
 
     def one_round():
         for data_set_name in data_set_lst:
