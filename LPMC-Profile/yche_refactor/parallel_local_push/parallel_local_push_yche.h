@@ -1,5 +1,5 @@
-#ifndef __LOCAL_PUSH_H__
-#define __LOCAL_PUSH_H__
+#ifndef __PLOCAL_PUSH_H__
+#define __PLOCAL_PUSH_H__
 
 #include <cstdio>
 #include <cmath>
@@ -14,17 +14,15 @@
 
 #include <sparsepp/spp.h>
 
-#include "../util/graph_yche.h"
-#include "../util/sparse_matrix_utils.h"
+#include "../../util/graph_yche.h"
+#include "../../util/sparse_matrix_utils.h"
 
 using boost::format;
 using PairMarker= sparse_hash_map<NodePair, bool>;
 
-const string LOCAL_PUSH_DIR = "/homes/ywangby/workspace/yche/git-repos/SimRank/LPMC-Profile/build/datasets/local_push/";
+//const string LOCAL_PUSH_DIR = "/homes/ywangby/workspace/yche/git-repos/SimRank/LPMC-Profile/build/datasets/local_push/";
 
-inline double cal_rmax(double c, double epsilon) {
-    return (1 - c) * epsilon;
-} // the r_max for general case
+extern double cal_rmax(double c, double epsilon);
 
 struct FLPTask {
     int b_;

@@ -8,6 +8,8 @@
 #include "simrank.h"
 #include "../playground/pretty_print.h"
 
+#include "parallel_local_push/parallel_local_push_yche.h"
+
 using namespace std;
 using namespace boost::program_options;
 
@@ -43,23 +45,35 @@ FLPMC::FLPMC(string g_name_, GraphYche &g_, double c_, double epsilon_, double d
     // init local push
     size_t n = static_cast<size_t>(g->n);
     cout << format("r_max: %s") % get_rmax() << endl;
-//    lp = new Reduced_LocalPush(*g, g_name, c, get_lp_epsilon(), n);
     lp = new Full_LocalPush(*g, g_name, c, get_lp_epsilon(), n);
-//    if (!lp_file_exists(g_name, c, get_lp_epsilon(), n, false)) { // test wether the local push index exists
-    if (!lp_file_exists(g_name, c, get_lp_epsilon(), n, true)) { // test wether the local push index exists
-        cout << "local push offline index doesn't exists.. " << endl;
+
+    {
+        // directly compute the index, instead of reading and parsing
         auto start_time = std::chrono::high_resolution_clock::now();
-        lp->local_push(*g);
+
+        auto plp = PFLP(*g, g_name, c, get_lp_epsilon(), n);
+        plp.local_push(*g);
+        swap(lp->P, plp.P);
+        swap(lp->R, plp.R);
         auto end_time = std::chrono::high_resolution_clock::now();
         std::chrono::duration<double> elapsed = end_time - start_time;
         cout << format("total indexing cost: %s s") % elapsed.count() << endl; // record the pre-processing time
-        cout << format("building compete, saving to %s ") % lp->get_file_path_base() << endl;
-        lp->save();
-        cout << "saved." << endl;
-    } else {
-        cout << "offline index exists..loading " << endl;
-        lp->load();
     }
+
+//    if (!lp_file_exists(g_name, c, get_lp_epsilon(), n, true)) { // test wether the local push index exists
+//        cout << "local push offline index doesn't exists.. " << endl;
+//        auto start_time = std::chrono::high_resolution_clock::now();
+//        lp->local_push(*g);
+//        auto end_time = std::chrono::high_resolution_clock::now();
+//        std::chrono::duration<double> elapsed = end_time - start_time;
+//        cout << format("total indexing cost: %s s") % elapsed.count() << endl; // record the pre-processing time
+//        cout << format("building compete, saving to %s ") % lp->get_file_path_base() << endl;
+//        lp->save();
+//        cout << "saved." << endl;
+//    } else {
+//        cout << "offline index exists..loading " << endl;
+//        lp->load();
+//    }
 }
 
 #endif

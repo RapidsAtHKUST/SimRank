@@ -36,7 +36,8 @@ int main(int argc, char *argv[]) {
     cout << format("P size: %s") % lp->P.size() << endl;
     cout << format("R size: %s") % lp->R.size() << endl;
 
-    if (argc >= 4)
+    string save_str = "save";
+    if (argc >= 4 && string(argv[3]) == "save")
         lp->save();
 
     // 2nd: verify the correcness

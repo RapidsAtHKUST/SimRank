@@ -24,9 +24,11 @@ set(BIN_SEARCH_FIES util/search_yche.h util/search_yche.cpp)
 set(GROUND_TRUTH_FILES yche_refactor/simrank.cpp yche_refactor/simrank.h)
 set(SFMT_COMPILE_FLAGS -DSFMT_MEXP=607 -msse2 -DHAVE_SSE2)
 
-set(BPRW_FILES yche_refactor/bprw_yche.cpp yche_refactor/bprw_yche.h ${BIN_SEARCH_FIES} util/exp/flat_hash_map.hpp)
+set(BPRW_FILES yche_refactor/bprw_yche.cpp yche_refactor/bprw_yche.h ${BIN_SEARCH_FIES})
 set(LPMC_FILES yche_refactor/flpmc_yche.h yche_refactor/flpmc_yche.cpp
-        yche_refactor/local_push_yche.h yche_refactor/local_push_yche.cpp util/sparse_matrix_utils.h)
+        yche_refactor/local_push_yche.h yche_refactor/local_push_yche.cpp util/sparse_matrix_utils.h
+        yche_refactor/parallel_local_push/parallel_local_push_yche.h yche_refactor/parallel_local_push/parallel_local_push_yche.cpp
+        yche_refactor/parallel_local_push/parallel_local_push_yche_rlp.cpp)
 
 ############################## general macros ###################
 macro(InitBoostHashSFMTEigen exec_name)
@@ -35,6 +37,7 @@ macro(InitBoostHashSFMTEigen exec_name)
     target_include_directories(${exec_name} PRIVATE ../sparsepp)
     target_include_directories(${exec_name} PRIVATE ../SFMT)
     target_include_directories(${exec_name} PRIVATE ../include)
+    target_compile_definitions(${exec_name} PRIVATE -DHAS_OPENMP=1)
 endmacro()
 
 #### sub cmake dir: playground  ######################################
@@ -45,6 +48,7 @@ macro(InitBprw exec_name)
     InitBoostHashSFMTEigen(${exec_name})
     target_link_libraries(${exec_name} PRIVATE tcmalloc)
     target_compile_options(${exec_name} PRIVATE -O3 -g ${SFMT_COMPILE_FLAGS} -march=native)
+#    target_compile_options(${exec_name} PRIVATE -O3 -g ${SFMT_COMPILE_FLAGS})
 endmacro()
 
 set(BLPMC_SOURCE_FILES ${BPRW_FILES} ${UTIL_FILES} ${GROUND_TRUTH_FILES} playground/main_bprw.cpp)
