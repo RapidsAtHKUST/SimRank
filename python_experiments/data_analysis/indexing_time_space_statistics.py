@@ -38,7 +38,7 @@ datasets_root_folder_backup = '/home/yche/mnt/wangyue-clu/export/data/datasets'
 index_time_tag = "indexing time"
 index_size_tag = "index disk size"
 max_mem_size_tag = "max memory consumption"
-local_push_tag = "full local push"
+local_push_tag = "reduced local push"
 sling_tag = "sling"
 linear_d_tag = "linear d"
 cloud_walker_tag = "cloud walker"
@@ -98,9 +98,9 @@ class LocalPushIndexingStat:
         space_size_lst = []
         for data_set in data_set_lst:
             if data_set == 'wiki-Vote':
-                space_size_lst.append(float(format_str(2 * (174772 + 7735008) / (1024 ** 2))))
+                space_size_lst.append(float(format_str((174772 + 7735008) / (1024 ** 2))))
             elif data_set == 'wiki-Link':
-                space_size_lst.append(float(format_str(2 * (2237183088 + 50408583172) / (1024 ** 2))))
+                space_size_lst.append(float(format_str((2237183088 + 50408583172) / (1024 ** 2))))
             else:
                 index_naming = '_'.join(['FLP', '-'.join([data_set, '0.600', '0.116040'])])
                 p_size = os.path.getsize(os.sep.join([local_push_folder, index_naming + '.P'])) / (1024. ** 2)
