@@ -34,13 +34,8 @@ def get_algorithm_time_lst(algorithm, data_lst, cpu_time_dict=g_cpu_time_dict):
 
 def draw_average_query_one_pair_time():
     global data_set_lst
-    data_set_lst = [
-        'ca-GrQc', 'ca-HepTh', 'p2p-Gnutella06', 'wiki-Vote',
-        'email-Enron', 'email-EuAll',
-        # 'web-NotreDame',
-        'web-Stanford', 'web-BerkStan', 'web-Google',
-        'cit-Patents', 'soc-LiveJournal1',
-        'wiki-Link']
+    with open('data_set_lst.json') as ifs:
+        data_set_lst = json.load(ifs)
     print data_set_lst
 
     g_names = map(lambda data: data_names[data], data_set_lst)
