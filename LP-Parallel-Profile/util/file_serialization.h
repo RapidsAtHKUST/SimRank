@@ -49,10 +49,24 @@ public:
         return (*this)(fp, value.first) && (*this)(fp, value.second);
     }
 
+    // 0.001 cut for wiki-Vote, 0.0001 cut for wiki-Link
+//    template<class A>
+//    bool operator()(FILE *fp, const std::pair<const A, float> &value) {
+//        if (value.second < 0.001) { return true; }
+//        return (*this)(fp, value.first) && (*this)(fp, value.second);
+//    }
+
     template<class A, class B>
     bool operator()(FILE *fp, std::pair<const A, B> *value) {
         return (*this)(fp, (A *) &value->first) && (*this)(fp, &value->second);
     }
+
+//    template<class A>
+//    bool operator()(FILE *fp, std::pair<const A, float> *value) {
+//        if (value->second < 0.001) { return true; }
+//
+//        return (*this)(fp, (A *) &value->first) && (*this)(fp, &value->second);
+//    }
 };
 
 #endif

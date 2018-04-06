@@ -97,10 +97,15 @@ class LocalPushIndexingStat:
         local_push_folder = os.sep.join([datasets_root_folder_backup, 'local_push'])
         space_size_lst = []
         for data_set in data_set_lst:
-            index_naming = '_'.join(['FLP', '-'.join([data_set, '0.600', '0.116040'])])
-            p_size = os.path.getsize(os.sep.join([local_push_folder, index_naming + '.P'])) / (1024. ** 2)
-            r_size = os.path.getsize(os.sep.join([local_push_folder, index_naming + '.R'])) / (1024. ** 2)
-            space_size_lst.append(float(format_str(p_size + r_size)))
+            if data_set == 'wiki-Vote':
+                space_size_lst.append(float(format_str(2 * (174772 + 7735008) / (1024 ** 2))))
+            elif data_set == 'wiki-Link':
+                space_size_lst.append(float(format_str(2 * (2237183088 + 50408583172) / (1024 ** 2))))
+            else:
+                index_naming = '_'.join(['FLP', '-'.join([data_set, '0.600', '0.116040'])])
+                p_size = os.path.getsize(os.sep.join([local_push_folder, index_naming + '.P'])) / (1024. ** 2)
+                r_size = os.path.getsize(os.sep.join([local_push_folder, index_naming + '.R'])) / (1024. ** 2)
+                space_size_lst.append(float(format_str(p_size + r_size)))
         return dict(zip(data_set_lst, space_size_lst))
 
 

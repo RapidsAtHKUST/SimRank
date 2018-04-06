@@ -64,7 +64,7 @@ def draw_figures_max_err():
     exp_figure.subplots_adjust(wspace=0)
     plt.tight_layout()
     plt.legend(legend_lst, ncol=len(legend_lst), fontsize=LEGEND_SIZE, prop={'size': LEGEND_SIZE + 3, "weight": "bold"},
-               bbox_to_anchor=())
+               bbox_to_anchor=(1.15, 1.15))
     plt.savefig('figures/' + 'max_err' + '.pdf', bbox_inches='tight', dpi=300)
     # exp_figure.show()
     plt.close()

@@ -24,7 +24,7 @@ tsf | 0.280 s | 0.203 s | 0.585 s | 0.804 s | 2.592 s | 4.041 s | 9.741 s
 
 algo\data | ca-GrQc | ca-HepTh | p2p-Gnutella06 | wiki-Vote | email-Enron | email-EuAll
 --- | --- | --- | --- | --- | --- | ---
-full local push | 1.867 MB | 4.461 MB | 13.323 MB | 24.769 MB | 292.063 MB | 305.233 MB
+full local push | 1.867 MB | 4.461 MB | 13.323 MB | 15.000 MB | 292.063 MB | 305.233 MB
 reads-d | 284.812 MB | 508.264 MB | 285.269 MB | 135.833 MB | 1301.334 MB | 4172.201 MB
 reads-rq | 19.409 MB | 35.016 MB | 21.141 MB | 11.633 MB | 95.649 MB | 341.250 MB
 sling | 62.395 MB | 127.290 MB | 115.335 MB | 6.362 MB | 409.886 MB | 211.237 MB
@@ -34,7 +34,7 @@ tsf | 2.000 MB | 3.768 MB | 3.325 MB | 2.714 MB | 13.997 MB | 101.171 MB
 
 algo\data | web-NotreDame | web-Stanford | web-BerkStan | web-Google | cit-Patents | soc-LiveJournal1 | wiki-Link
 --- | --- | --- | --- | --- | --- | --- | ---
-full local push | 7578.660 MB | 926.771 MB | 1554.373 MB | 505.059 MB | 5603.474 MB | 36775.976 MB | 234548.683 MB
+full local push | 7578.660 MB | 926.771 MB | 1554.373 MB | 505.059 MB | 5603.474 MB | 36775.976 MB | 100413.000 MB
 reads-d | 8227.150 MB | 11573.174 MB | 25973.032 MB | 28442.374 MB | 99447.221 MB | 192995.895 MB | 324217.999 MB
 reads-rq | 631.341 MB | 834.059 MB | 1911.173 MB | 2132.538 MB | 8034.227 MB | 13557.021 MB | 27305.288 MB
 sling | 4187.683 MB | 2999.271 MB | 7392.115 MB | 6957.387 MB | 5559.157 MB | 44850.682 MB | 76771.478 MB

@@ -40,10 +40,11 @@ def run_exp():
         'cit-Patents', 'soc-LiveJournal1',
         'wiki-Link'
     ]
-    our_algorithm_lst = ['pflp', 'prlp']
-    # our_algorithm_lst = ['pflp']
-    # thread_num_lst = [56]
-    thread_num_lst = [1]
+    # our_algorithm_lst = ['pflp', 'prlp']
+    our_algorithm_lst = ['prlp']
+    thread_num_lst = [56]
+
+    # thread_num_lst = [1]
 
     def one_round():
         for data_set_name in data_set_lst:
@@ -57,7 +58,7 @@ def run_exp():
                     algorithm_path = os.sep.join([our_exec_path, our_algorithm])
                     statistics_file_path = os.sep.join([statistics_folder_path, str(thread_num) + ".txt"])
 
-                    params_lst = map(str, [algorithm_path, data_set_name, 0.116040, '>>', statistics_file_path])
+                    params_lst = map(str, [algorithm_path, data_set_name, 0.116040, 'save', '>>', statistics_file_path])
                     cmd = ' '.join(params_lst)
                     time_out = 36000
 
