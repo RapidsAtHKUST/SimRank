@@ -48,19 +48,19 @@
             "email-Enron": 292.063
         }, 
         "indexing time": {
-            "wiki-Vote": 0.516532, 
-            "cit-Patents": 116.193, 
-            "email-EuAll": 7.79154, 
-            "wiki-Link": 8674.55, 
-            "web-Stanford": 79.6597, 
-            "ca-HepTh": 0.142705, 
-            "web-BerkStan": 142.027, 
-            "web-NotreDame": 186.957, 
-            "p2p-Gnutella06": 0.262739, 
-            "soc-LiveJournal1": 694.549, 
-            "web-Google": 15.854, 
-            "ca-GrQc": 0.0826096, 
-            "email-Enron": 5.97847
+            "wiki-Vote": 0.337669, 
+            "cit-Patents": 65.7853, 
+            "email-EuAll": 4.09892, 
+            "wiki-Link": 4051.83, 
+            "web-Stanford": 42.0376, 
+            "ca-HepTh": 0.0872239, 
+            "web-BerkStan": 77.8198, 
+            "web-NotreDame": 80.9927, 
+            "p2p-Gnutella06": 0.0950805, 
+            "soc-LiveJournal1": 372.719, 
+            "web-Google": 9.73331, 
+            "ca-GrQc": 0.0508327, 
+            "email-Enron": 3.19364
         }
     }, 
     "cloud walker": {

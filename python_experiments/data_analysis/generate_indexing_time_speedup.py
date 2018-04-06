@@ -38,22 +38,20 @@ def get_speedup_table(data_set_lst):
     header = ['algo\\data'] + data_set_lst
     table_lines.append(' | '.join(header))
     table_lines.append(' | '.join(['---'] * (len(data_set_lst) + 1)))
-    lines = map(lambda algorithm:
-                ' | '.join(
-                    [algorithm] +
-                    map(lambda num: format_str(num),
-                        speedup_lst[algorithm], ))
-                , algorithm_lst)
+    lines = map(lambda algorithm: ' | '.join(
+        [algorithm] + map(lambda num: format_str(num), speedup_lst[algorithm], )), algorithm_lst)
     table_lines.extend(lines)
     return '\n'.join(table_lines)
 
 
 if __name__ == '__main__':
-    algorithm_lst = [reads_tag, reads_d_tag, reads_rq_tag, sling_tag, tsf_tag, linear_d_tag, cloud_walker_tag]
+    algorithm_lst = [
+        # reads_tag,
+        reads_d_tag, reads_rq_tag, sling_tag, tsf_tag, linear_d_tag, cloud_walker_tag]
     index_dict = get_index_dict_with_reads()
 
     print get_time_table(data_set_lst)
 
     with open('data-markdown/indexing_time_speedup.md', 'w') as ofs:
         ofs.writelines([get_speedup_table(data_set_lst[0:6]), '\n\n'])
-        ofs.writelines([get_speedup_table(data_set_lst[6:12]), '\n\n'])
+        ofs.writelines([get_speedup_table(data_set_lst[6:13]), '\n\n'])

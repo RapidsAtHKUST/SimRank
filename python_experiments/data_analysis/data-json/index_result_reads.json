@@ -4,6 +4,7 @@
             "wiki-Vote": 135.83274841308594, 
             "cit-Patents": 99447.22123718262, 
             "email-EuAll": 4172.2009353637695, 
+            "wiki-Link": 324217.99923706055, 
             "web-Stanford": 11573.174438476562, 
             "ca-HepTh": 508.26426696777344, 
             "web-BerkStan": 25973.03229522705, 
@@ -18,6 +19,7 @@
             "wiki-Vote": 0.990355, 
             "cit-Patents": 1979.91, 
             "email-EuAll": 19.1573, 
+            "wiki-Link": 9563.51, 
             "web-Stanford": 226.972, 
             "ca-HepTh": 10.3503, 
             "web-BerkStan": 964.855, 
@@ -29,41 +31,12 @@
             "email-Enron": 29.3222
         }
     }, 
-    "reads-s": {
-        "index disk size": {
-            "wiki-Vote": 34.392, 
-            "cit-Patents": 17952.731, 
-            "email-EuAll": 1255.703, 
-            "web-Stanford": 1348.957, 
-            "ca-HepTh": 47.042, 
-            "web-BerkStan": 3294.052, 
-            "web-NotreDame": 1549.708, 
-            "p2p-Gnutella06": 41.407, 
-            "soc-LiveJournal1": 23419.496, 
-            "web-Google": 4174.586, 
-            "ca-GrQc": 24.977, 
-            "email-Enron": 176.087
-        }, 
-        "indexing time": {
-            "wiki-Vote": 0.227624, 
-            "cit-Patents": 736.124, 
-            "email-EuAll": 6.18901, 
-            "web-Stanford": 33.6429, 
-            "ca-HepTh": 1.3267, 
-            "web-BerkStan": 83.7157, 
-            "web-NotreDame": 23.1204, 
-            "p2p-Gnutella06": 0.752121, 
-            "soc-LiveJournal1": 1317.81, 
-            "web-Google": 127.261, 
-            "ca-GrQc": 0.858131, 
-            "email-Enron": 3.93099
-        }
-    }, 
     "reads-rq": {
         "index disk size": {
             "wiki-Vote": 11.633, 
             "cit-Patents": 8034.227, 
             "email-EuAll": 341.25, 
+            "wiki-Link": 27305.288, 
             "web-Stanford": 834.059, 
             "ca-HepTh": 35.016, 
             "web-BerkStan": 1911.173, 
@@ -78,6 +51,7 @@
             "wiki-Vote": 0.083002, 
             "cit-Patents": 161.747, 
             "email-EuAll": 1.58863, 
+            "wiki-Link": 753.583, 
             "web-Stanford": 16.2519, 
             "ca-HepTh": 0.71189, 
             "web-BerkStan": 69.4419, 

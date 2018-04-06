@@ -6,10 +6,11 @@ import os
 reads_efficiency_folder = '/home/yche/mnt/wangyue-clu/csproject/biggraph/ywangby/' \
                           'yche/git-repos/SimRank/python_experiments/exp_results/reads_01_24_efficiency'
 
-index_root_folder = '/home/yche/mnt/wangyue-clu/csproject/biggraph/ywangby/LinsysSimRank/datasets'
+# index_root_folder = '/home/yche/mnt/wangyue-clu/csproject/biggraph/ywangby/LinsysSimRank/datasets'
+index_root_folder = '/home/yche/mnt/wangyue-clu/export/data/ywangby_reads'
 
 index_folder_dict = {
-    reads_tag: 'reads',
+    # reads_tag: 'reads',
     reads_d_tag: 'readsd',
     reads_rq_tag: 'readsrq'
 }
@@ -54,7 +55,8 @@ reads_d_size_dict = {
     'web-NotreDame': 8626791720,
     'web-Stanford': 12135352960,
     'cit-Patents': 104277969456,
-    'soc-LiveJournal1': 197627796 * 1024
+    'soc-LiveJournal1': 197627796 * 1024,
+    'wiki-Link': 339967212768
 }
 
 
@@ -73,7 +75,9 @@ def get_algorithm_index_info_dict(algorithm_name):
 
 if __name__ == '__main__':
     data_set = data_set_lst[-1]
-    algorithm_tag_lst = [reads_tag, reads_d_tag, reads_rq_tag]
+    algorithm_tag_lst = [
+        # reads_tag,
+        reads_d_tag, reads_rq_tag]
 
     with open('data-json/index_result_reads.json', 'w') as ofs:
         ofs.write(json.dumps(

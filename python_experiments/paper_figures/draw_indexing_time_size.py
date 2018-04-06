@@ -32,6 +32,14 @@ def get_algorithm_index_size_lst(algorithm_tag):
 
 def draw_figures():
     # init graph names and size
+    global data_set_lst
+    data_set_lst = [
+        'ca-GrQc', 'ca-HepTh', 'p2p-Gnutella06', 'wiki-Vote',
+        'email-Enron', 'email-EuAll',
+        # 'web-NotreDame',
+        'web-Stanford', 'web-BerkStan', 'web-Google',
+        'cit-Patents', 'soc-LiveJournal1',
+        'wiki-Link']
     g_names = map(lambda data: data_names[data], data_set_lst)
     size_of_fig = (FIG_SIZE_MULTIPLE)
     N = len(g_names)

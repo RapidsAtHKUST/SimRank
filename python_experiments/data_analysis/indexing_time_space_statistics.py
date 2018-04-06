@@ -83,7 +83,8 @@ class LocalPushIndexingStat:
     def get_indexing_time():
         indexing_time_lst = []
         for data_set in data_set_lst:
-            algorithm_name = 'pflp'
+            # algorithm_name = 'pflp'
+            algorithm_name = 'prlp'
             indexing_time = get_tag_info(
                 os.sep.join([our_algo_indexing_stat_root_folder, algorithm_name, data_set, '1.txt']),
                 tag='computation time')

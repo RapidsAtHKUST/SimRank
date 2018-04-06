@@ -18,7 +18,9 @@ def get_index_dict_with_reads(root_dir='.'):
 
 
 if __name__ == '__main__':
-    algorithm_lst = [local_push_tag, reads_tag, reads_d_tag, reads_rq_tag, sling_tag,
+    algorithm_lst = [local_push_tag,
+                     # reads_tag,
+                     reads_d_tag, reads_rq_tag, sling_tag,
                      linear_d_tag, cloud_walker_tag, tsf_tag]
 
     index_dict = get_index_dict_with_reads()
