@@ -21,8 +21,7 @@ v_num_dict = dict(zip(data_set_lst, [5242, 9877, 8717, 7115,
 size_of_int = 4
 
 our_algo_indexing_stat_root_folder = '/home/yche/mnt/wangyue-clu/csproject/biggraph/ywangby/' \
-                                     'yche/git-repos/SimRank/python_experiments/exp_results/' \
-                                     'our_methods_overview_01_16'
+                                     'yche/git-repos/SimRank/python_experiments/plp_parallel_gen_idx_0405'
 
 other_algo_indexing_stat_root_folder = '/home/yche/mnt/wangyue-clu/csproject/biggraph/ywangby/' \
                                        'yche/git-repos/SimRank/python_experiments/exp_results/' \
@@ -34,6 +33,7 @@ rand_pair_num_str = "1000"
 rand_round = "0"
 
 datasets_root_folder = '/home/yche/mnt/wangyue-clu/csproject/biggraph/ywangby/LinsysSimRank/datasets'
+datasets_root_folder_backup = '/home/yche/mnt/wangyue-clu/export/data/datasets'
 
 index_time_tag = "indexing time"
 index_size_tag = "index disk size"
@@ -54,7 +54,7 @@ def ms_val_to_s(num):
 
 
 def get_tag_info(file_path, tag):
-    print file_path
+    # print file_path
     if not os.path.exists(file_path):
         return None
     with open(file_path) as ifs:
@@ -83,30 +83,17 @@ class LocalPushIndexingStat:
     def get_indexing_time():
         indexing_time_lst = []
         for data_set in data_set_lst:
-            for algorithm_name in ['flpmc-ap', 'flpmc-bench']:
-                indexing_time = get_tag_info(
-                    os.sep.join([our_algo_indexing_stat_root_folder, data_set, algorithm_name + '.txt']),
-                    tag='total indexing cost')
-                if indexing_time is not None:
-                    indexing_time_lst.append(indexing_time)
-                    break
+            algorithm_name = 'pflp'
+            indexing_time = get_tag_info(
+                os.sep.join([our_algo_indexing_stat_root_folder, algorithm_name, data_set, '1.txt']),
+                tag='computation time')
+            indexing_time_lst.append(indexing_time)
         return dict(zip(data_set_lst, indexing_time_lst))
 
     # unit: MB
     @staticmethod
-    def get_mem_size():
-        local_push_folder = os.sep.join([datasets_root_folder, 'local_push'])
-        mem_size_lst = []
-        for data_set in data_set_lst:
-            index_naming = '_'.join(['FLP', '-'.join([data_set, '0.600', '0.116040'])])
-            with open(os.sep.join([local_push_folder, index_naming + '.meta'])) as ifs:
-                mem_size_lst.append(float(format_str(float(ifs.readlines()[5].strip()) / 1024.)))
-        return dict(zip(data_set_lst, mem_size_lst))
-
-    # unit: MB
-    @staticmethod
     def get_index_disk_size():
-        local_push_folder = os.sep.join([datasets_root_folder, 'local_push'])
+        local_push_folder = os.sep.join([datasets_root_folder_backup, 'local_push'])
         space_size_lst = []
         for data_set in data_set_lst:
             index_naming = '_'.join(['FLP', '-'.join([data_set, '0.600', '0.116040'])])
@@ -125,7 +112,7 @@ class SlingIndexingStat:
         sling_compute_d_time_lst = [24.868744, 39.719319, 3.928212, 1.050985,
                                     100.487657, 8.268188,
                                     820.528155, 1578.569044, 3371.547423, 2450.991423,
-                                    1693.183911, 13469.924516]
+                                    1693.183911, 13469.924516, 14415.177543]
         sling_compute_d_time_dict = dict(zip(data_set_lst, sling_compute_d_time_lst))
         indexing_time_lst = []
         for data_set in data_set_lst:
@@ -146,29 +133,33 @@ class SlingIndexingStat:
 
     # unit: MB
     @staticmethod
-    def get_mem_size():
-        mem_size_lst = []
-        for data_set in data_set_lst:
-            for algorithm_name in ['sling_all', 'sling_bench']:
-                mem_size = get_tag_info(
-                    os.sep.join([other_algo_indexing_stat_root_folder, data_set, algorithm_name + '.txt']),
-                    tag='mem size')
-                if mem_size is not None:
-                    mem_size_lst.append(float(format_str(mem_size / 1024.)))
-                    break
-        return dict(zip(data_set_lst, mem_size_lst))
-
-    # unit: MB
-    @staticmethod
     def get_index_disk_size():
-        index_folder = os.sep.join([datasets_root_folder, 'sling'])
+        index_folder = os.sep.join([datasets_root_folder_backup, 'sling'])
         space_size_lst = []
+        # use the previous values, since we remove *.p for saving space
+        index_dict = {
+            "wiki-Vote": 6.362,
+            "cit-Patents": 5559.157,
+            "email-EuAll": 211.237,
+            "web-Stanford": 2999.271,
+            "ca-HepTh": 127.29,
+            "web-BerkStan": 7392.115,
+            "web-NotreDame": 4187.683,
+            "p2p-Gnutella06": 115.335,
+            "soc-LiveJournal1": 44850.682,
+            "web-Google": 6957.387,
+            "ca-GrQc": 62.395,
+            "email-Enron": 409.886
+        }
         for data_set in data_set_lst:
-            index_naming = '_'.join(['RLP', '-'.join([data_set, '0.600', '0.002000', '0.000290'])])
-            d_size = os.path.getsize(os.sep.join([index_folder, index_naming + '.d'])) / (1024. ** 2)
-            p_size = os.path.getsize(os.sep.join([index_folder, index_naming + '.p'])) / (1024. ** 2)
-            pstart_size = os.path.getsize(os.sep.join([index_folder, index_naming + '.pstart'])) / (1024. ** 2)
-            space_size_lst.append(float(format_str(d_size + p_size + pstart_size)))
+            if data_set in index_dict:
+                space_size_lst.append(index_dict[data_set])
+            else:
+                index_naming = '_'.join(['RLP', '-'.join([data_set, '0.600', '0.002000', '0.000290'])])
+                d_size = os.path.getsize(os.sep.join([index_folder, index_naming + '.d'])) / (1024. ** 2)
+                p_size = os.path.getsize(os.sep.join([index_folder, index_naming + '.p'])) / (1024. ** 2)
+                pstart_size = os.path.getsize(os.sep.join([index_folder, index_naming + '.pstart'])) / (1024. ** 2)
+                space_size_lst.append(float(format_str(d_size + p_size + pstart_size)))
         return dict(zip(data_set_lst, space_size_lst))
 
 
@@ -179,7 +170,7 @@ class LinearDIndexingStat:
     def get_indexing_time():
         indexing_time_lst = []
         for data_set in data_set_lst:
-            for algorithm_name in ['LinSimAP', 'LinSimBench']:
+            for algorithm_name in ['LinSimAP', 'LinSimBench', 'lind-rand-ben']:
                 indexing_time = get_tag_info(
                     os.sep.join([other_algo_indexing_stat_root_folder, data_set, algorithm_name + '.txt']),
                     tag='indexing time')
@@ -188,20 +179,6 @@ class LinearDIndexingStat:
                     indexing_time_lst.append(float(format_str(indexing_time)))
                     break
         return dict(zip(data_set_lst, indexing_time_lst))
-
-    # unit: MB
-    @staticmethod
-    def get_mem_size():
-        mem_size_lst = []
-        for data_set in data_set_lst:
-            for algorithm_name in ['LinSimAP', 'LinSimBench']:
-                mem_size = get_tag_info(
-                    os.sep.join([other_algo_indexing_stat_root_folder, data_set, algorithm_name + '.txt']),
-                    tag='mem size')
-                if mem_size is not None:
-                    mem_size_lst.append(float(format_str(mem_size / 1024.)))
-                    break
-        return dict(zip(data_set_lst, mem_size_lst))
 
     # unit: MB
     @staticmethod
@@ -224,7 +201,7 @@ class CloudWalkerIndexingStat:
     def get_indexing_time():
         indexing_time_lst = []
         for data_set in data_set_lst:
-            for algorithm_name in ['CloudWalkerAP', 'CloudWalkerBench']:
+            for algorithm_name in ['CloudWalkerAP', 'CloudWalkerBench', 'cw-rand-gen']:
                 indexing_time = get_tag_info(
                     os.sep.join([other_algo_indexing_stat_root_folder, data_set, algorithm_name + '.txt']),
                     tag='indexing time')
@@ -233,20 +210,6 @@ class CloudWalkerIndexingStat:
                     indexing_time_lst.append(float(format_str(indexing_time)))
                     break
         return dict(zip(data_set_lst, indexing_time_lst))
-
-    # unit: MB
-    @staticmethod
-    def get_mem_size():
-        mem_size_lst = []
-        for data_set in data_set_lst:
-            for algorithm_name in ['CloudWalkerAP', 'CloudWalkerBench']:
-                mem_size = get_tag_info(
-                    os.sep.join([other_algo_indexing_stat_root_folder, data_set, algorithm_name + '.txt']),
-                    tag='mem size')
-                if mem_size is not None:
-                    mem_size_lst.append(float(format_str(mem_size / 1024.)))
-                    break
-        return dict(zip(data_set_lst, mem_size_lst))
 
     # unit: MB
     @staticmethod
@@ -267,34 +230,15 @@ class TSFIndexingStat:
     def get_indexing_time():
         indexing_time_lst = []
         for data_set in data_set_lst:
-            # for algorithm_name in ['tsf-ap', 'tsf-bench']:
-            for algorithm_name in ['tsf-rand-bench-gt', 'tsf-rand-bench']:
+            for algorithm_name in ['tsf-ap', 'tsf-bench', 'tsf-rand-bench']:
                 indexing_time = get_tag_info(
-                    os.sep.join(
-                        [other_algo_indexing_stat_root_folder_new, data_set, rand_pair_num_str, rand_round,
-                         algorithm_name + '.txt']),
+                    os.sep.join([other_algo_indexing_stat_root_folder, data_set, algorithm_name + '.txt']),
                     tag='indexing computation time')
 
                 if indexing_time is not None:
                     indexing_time_lst.append(float(format_str(indexing_time)))
                     break
         return dict(zip(data_set_lst, indexing_time_lst))
-
-    # unit: MB
-    @staticmethod
-    def get_mem_size():
-        mem_size_lst = []
-        for data_set in data_set_lst:
-            # for algorithm_name in ['tsf-ap', 'tsf-bench']:
-            for algorithm_name in ['tsf-rand-bench-gt', 'tsf-rand-bench']:
-                mem_size = get_tag_info(
-                    os.sep.join([other_algo_indexing_stat_root_folder_new, data_set, rand_pair_num_str, rand_round,
-                                 algorithm_name + '.txt']),
-                    tag='mem size')
-                if mem_size is not None:
-                    mem_size_lst.append(float(format_str(mem_size / 1024.)))
-                    break
-        return dict(zip(data_set_lst, mem_size_lst))
 
     # unit: MB
     @staticmethod
@@ -315,16 +259,17 @@ if __name__ == '__main__':
         ret_dict = {
             index_time_tag: algorithm_obj.get_indexing_time(),
             index_size_tag: algorithm_obj.get_index_disk_size(),
-            # max_mem_size_tag: algorithm_obj.get_mem_size()
         }
         return ret_dict
 
 
     algorithm_tag_lst = [
-        # local_push_tag, sling_tag,
-        linear_d_tag, cloud_walker_tag, tsf_tag]
+        local_push_tag, sling_tag,
+        linear_d_tag, cloud_walker_tag,
+        tsf_tag
+    ]
     algorithm_obj_lst = [
-        # LocalPushIndexingStat(), SlingIndexingStat(),
+        LocalPushIndexingStat(), SlingIndexingStat(),
         LinearDIndexingStat(), CloudWalkerIndexingStat(),
         TSFIndexingStat()
     ]
