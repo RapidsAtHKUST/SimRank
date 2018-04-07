@@ -62,8 +62,12 @@ def draw_average_query_one_pair_time():
     # 1st: bars
 
     for idx, tag in enumerate(algorithm_tag_lst):
+        # out of memory > 192GB
+        my_data_lst = map(lambda val: float(val) / us_to_ms_factor, get_algorithm_time_lst(tag, data_set_lst))
+        if tag == reads_d_tag:
+            my_data_lst[-1] = 0
         ax.bar(indent_lst[idx],
-               map(lambda val: float(val) / us_to_ms_factor, get_algorithm_time_lst(tag, data_set_lst)), width,
+               my_data_lst, width,
                hatch=hatch_lst[idx],
                edgecolor=color_lst[idx],
                # color=color_lst[idx],

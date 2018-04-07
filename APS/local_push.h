@@ -17,7 +17,7 @@
 #include "graph.h"
 
 using boost::format;
-const string LOCAL_PUSH_DIR = "/homes/ywangby/workspace/LinsysSimRank/datasets/local_push/";
+const string LOCAL_PUSH_DIR = "/export/data/ywangby_datasets/local_push/";
 
 extern double cal_rmax(DirectedG &g, double c, double epsilon, double delta);//calculate r_,max
 
@@ -94,7 +94,8 @@ struct Reduced_LocalPush : LocalPush {
 private:
     void update_residuals_by_adding_edge(DirectedG &g, DirectedG::vertex_descriptor a, DirectedG::vertex_descriptor b);
 
-    void update_residuals_by_deleting_edge(DirectedG &g, DirectedG::vertex_descriptor a, DirectedG::vertex_descriptor b);
+    void
+    update_residuals_by_deleting_edge(DirectedG &g, DirectedG::vertex_descriptor a, DirectedG::vertex_descriptor b);
 
 public:
     void update_edges(DirectedG &g, vector<NodePair> edges, char);

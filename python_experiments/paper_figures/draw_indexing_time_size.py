@@ -63,6 +63,9 @@ def draw_figures():
         # 1st: bars
         for idx, tag in enumerate(algorithm_tag_lst):
             my_data_lst = get_algorithm_indexing_time_lst(tag)
+            # out of memory > 192GB
+            if tag == reads_d_tag:
+                my_data_lst[-1] = 0
             ax.bar(indent_lst[idx], my_data_lst, width, hatch=hatch_lst[idx],
                    label=label_lst[idx],
                    edgecolor=color_lst[idx],
@@ -88,6 +91,9 @@ def draw_figures():
         # 1st: bars
         for idx, tag in enumerate(algorithm_tag_lst):
             my_data_lst = get_algorithm_index_size_lst(tag)
+            # out of memory > 192GB
+            if tag == reads_d_tag:
+                my_data_lst[-1] = 0
             if idx == 0:
                 # make use of symmetric
                 my_data_lst = map(lambda rlp_val: rlp_val / 1., my_data_lst)

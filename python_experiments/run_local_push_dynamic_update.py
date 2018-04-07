@@ -34,9 +34,11 @@ def signal_handler(signal, frame):
 def run_exp():
     our_exec_path = '/homes/ywangby/workspace/yche/git-repos/SimRank/APS/build'
 
-    data_set_lst = ['ca-GrQc', 'ca-HepTh', 'p2p-Gnutella06', 'wiki-Vote',
-                    'email-Enron', 'email-EuAll', 'web-NotreDame', 'web-Stanford', 'web-BerkStan', 'web-Google',
-                    'cit-Patents', 'soc-LiveJournal1']
+    data_set_lst = [
+        # 'ca-GrQc', 'ca-HepTh', 'p2p-Gnutella06', 'wiki-Vote',
+        #             'email-Enron', 'email-EuAll', 'web-NotreDame', 'web-Stanford', 'web-BerkStan', 'web-Google',
+        #             'cit-Patents', 'soc-LiveJournal1',
+        'wiki-Link']
     our_algorithm = 'dynamic-flp'
 
     insert_edge_num = 100
@@ -45,7 +47,7 @@ def run_exp():
         for data_set_name in data_set_lst:
             algorithm_path = our_exec_path + os.sep + our_algorithm
             statistics_file_path = 'exp_results/' + 'flp_dynamic_update_time_' + str(insert_edge_num) + '.txt'
-            params_lst = map(str, [algorithm_path, data_set_name, insert_edge_num, '>>', statistics_file_path])
+            params_lst = map(str, [algorithm_path, data_set_name, insert_edge_num, 'ins', '>>', statistics_file_path])
             cmd = ' '.join(params_lst)
             time_out = 1000 if data_set_name != 'soc-LiveJournal1' else 3600
 
