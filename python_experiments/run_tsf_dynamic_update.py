@@ -47,20 +47,23 @@ def run_exp():
     def one_round():
         for data_set_name in data_set_lst:
             algorithm_path = our_exec_path + os.sep + tsf_dynamic
-            statistics_file_path = 'exp_results/' + 'tsf_dynamic_update_time_' + str(insert_edge_num) + '.txt'
-            params_lst = map(str, [algorithm_path, data_set_name, insert_edge_num, '>>', statistics_file_path])
-            cmd = ' '.join(params_lst)
-            time_out = 1000 if data_set_name != 'soc-LiveJournal1' else 3600
+            for parameter in ['ins', 'del']:
+                statistics_file_path = 'exp_results/' + 'tsf_dynamic_update_time_' + str(
+                    insert_edge_num) + '_' + parameter + '_0407.txt'
+                params_lst = map(str, [algorithm_path, data_set_name, insert_edge_num, parameter, '>>',
+                                       statistics_file_path])
+                cmd = ' '.join(params_lst)
+                time_out = 1000 if data_set_name != 'soc-LiveJournal1' else 3600
 
-            tle_flag, info, correct_info = time_out_util.run_with_timeout(cmd, timeout_sec=time_out)
-            write_split(statistics_file_path)
+                tle_flag, info, correct_info = time_out_util.run_with_timeout(cmd, timeout_sec=time_out)
+                write_split(statistics_file_path)
 
-            with open(statistics_file_path, 'a+') as ifs:
-                ifs.write(correct_info)
-                ifs.write(my_splitter + time.ctime() + my_splitter)
-                ifs.write('is_time_out:' + str(tle_flag))
-                ifs.write('\n\n\n\n')
-            print 'finish:', cmd
+                with open(statistics_file_path, 'a+') as ifs:
+                    ifs.write(correct_info)
+                    ifs.write(my_splitter + time.ctime() + my_splitter)
+                    ifs.write('is_time_out:' + str(tle_flag))
+                    ifs.write('\n\n\n\n')
+                print 'finish:', cmd
 
     one_round()
     insert_edge_num = 1000
