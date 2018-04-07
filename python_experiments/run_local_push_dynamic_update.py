@@ -49,8 +49,8 @@ def run_exp():
             statistics_file_path = 'exp_results/' + 'flp_dynamic_update_time_' + str(insert_edge_num) + '.txt'
             params_lst = map(str, [algorithm_path, data_set_name, insert_edge_num, 'ins', '>>', statistics_file_path])
             cmd = ' '.join(params_lst)
-            time_out = 1000 if data_set_name != 'soc-LiveJournal1' else 3600
-
+            # time_out = 1000 if data_set_name != 'soc-LiveJournal1' else 3600
+            time_out = 7200
             tle_flag, info, correct_info = time_out_util.run_with_timeout(cmd, timeout_sec=time_out)
             write_split(statistics_file_path)
 

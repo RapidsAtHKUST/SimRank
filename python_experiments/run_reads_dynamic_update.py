@@ -36,12 +36,14 @@ def run_exp():
     data_set_lst = [
         'ca-GrQc', 'ca-HepTh', 'p2p-Gnutella06', 'wiki-Vote',
         'email-Enron', 'email-EuAll', 'web-NotreDame', 'web-Stanford',
-        'web-BerkStan', 'web-Google', 'cit-Patents', 'soc-LiveJournal1', 'wiki-Link']
+        'web-BerkStan', 'web-Google', 'cit-Patents', 'soc-LiveJournal1',
+        # 'wiki-Link'
+    ]
     dynamic_exec_tag_lst = [
-        'reads-rq-dynamic-del',
-        # 'reads-d-dynamic-del',
-        'reads-rq-dynamic-exp',
-        # 'reads-d-dynamic-exp',
+        # 'reads-rq-dynamic-del',
+        # 'reads-rq-dynamic-exp',
+        'reads-d-dynamic-del',
+        'reads-d-dynamic-exp',
     ]
 
     def one_round():
@@ -52,7 +54,7 @@ def run_exp():
                     insert_edge_num) + '_0407.txt'
                 params_lst = map(str, [algorithm_path, data_set_name, '>>', statistics_file_path])
                 cmd = ' '.join(params_lst)
-                time_out = 3600
+                time_out = 72000
                 print cmd
                 tle_flag, info, correct_info = time_out_util.run_with_timeout(cmd, timeout_sec=time_out)
                 write_split(statistics_file_path)
