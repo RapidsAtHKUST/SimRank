@@ -76,3 +76,11 @@ add_executable(reads-rq-dynamic-exp ${COMMON_FILES} ${GROUND_TRUTH_FILES} algori
 InitREADS(reads-rq-dynamic-exp)
 target_compile_definitions(reads-rq-dynamic-exp PRIVATE STORE_INDEX=1)
 
+add_executable(reads-d-dynamic-del ${COMMON_FILES} ${GROUND_TRUTH_FILES} algorithm/readsd.cpp dynamic_update_exp/main_dynamic_del_reads_d.cpp)
+InitREADS(reads-d-dynamic-del)
+target_compile_definitions(reads-d-dynamic-del PRIVATE STORE_INDEX=1)
+
+add_executable(reads-rq-dynamic-del ${COMMON_FILES} ${GROUND_TRUTH_FILES} algorithm/readsrq.cpp dynamic_update_exp/main_dynamic_del_reads_rq.cpp)
+InitREADS(reads-rq-dynamic-del)
+target_compile_definitions(reads-rq-dynamic-del PRIVATE STORE_INDEX=1)
+
