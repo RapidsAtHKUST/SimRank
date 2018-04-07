@@ -34,9 +34,10 @@ def signal_handler(signal, frame):
 def run_exp():
     our_exec_path = '/homes/ywangby/workspace/yche/git-repos/SimRank/SPS-Variants/READS/build'
     data_set_lst = [
-        'ca-GrQc', 'ca-HepTh', 'p2p-Gnutella06', 'wiki-Vote',
-        'email-Enron', 'email-EuAll', 'web-NotreDame', 'web-Stanford',
-        'web-BerkStan', 'web-Google', 'cit-Patents', 'soc-LiveJournal1',
+        # 'ca-GrQc', 'ca-HepTh', 'p2p-Gnutella06', 'wiki-Vote',
+        # 'email-Enron', 'email-EuAll', 'web-NotreDame', 'web-Stanford',
+        # 'web-BerkStan', 'web-Google',
+        'cit-Patents', 'soc-LiveJournal1',
         # 'wiki-Link'
     ]
     dynamic_exec_tag_lst = [

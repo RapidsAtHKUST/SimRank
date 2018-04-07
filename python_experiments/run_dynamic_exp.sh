@@ -1,0 +1,2 @@
+python2 run_local_push_dynamic_update.py
+python2 run_reads_dynamic_update.py
