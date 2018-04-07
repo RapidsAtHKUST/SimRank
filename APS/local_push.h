@@ -90,6 +90,15 @@ struct Reduced_LocalPush : LocalPush {
     string get_file_path_base() override; // get file path of local push data
 
     double how_much_residual_to_push(DirectedG &g, NodePair &np) override;
+
+private:
+    void update_residuals_by_adding_edge(DirectedG &g, DirectedG::vertex_descriptor a, DirectedG::vertex_descriptor b);
+
+    void update_residuals_by_deleting_edge(DirectedG &g, DirectedG::vertex_descriptor a, DirectedG::vertex_descriptor b);
+
+public:
+    void update_edges(DirectedG &g, vector<NodePair> edges, char);
+
 };
 
 /* local push using full system*/

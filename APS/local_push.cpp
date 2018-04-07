@@ -397,34 +397,22 @@ void LocalPush::local_push(DirectedG &g) { // local push given current P and R
         NodePair np = Q.front();
         Q.pop();
         marker[np] = false;
-        // cout << "Current: " << np.first << " " << np.second << ": " << R[np] << endl;
+
         double residual_to_push = how_much_residual_to_push(g, np);
         sum_of_est += residual_to_push;
-        // cout << " node pair " << np.first << " " << np.second << endl;
-        // R.erase(np); //  remove from residual
+
         R[np] -= residual_to_push;
         P[np] += residual_to_push;
         push_to_neighbors(g, np, residual_to_push); // push residuals to neighbros of np
-
     }
     auto finish = std::chrono::high_resolution_clock::now();
     std::chrono::duration<double> elapsed = finish - start;
+#ifdef OUTPUT
     if (cpu_time == -1) {
         cpu_time = elapsed.count();
         mem_size = getValue();
     }
-    // cout << "n: " << n << " m: " << num_edges(g) << " r_max: " << r_max << " time: " << elapsed.count() <<"s"<< endl;
-    // cout << sum_of_est * 2 - n << endl;
-    // cout << "number of push: " << n_push << endl;
-    // save the time to files
-
-    // save time info to file
-    // string time_file_name = get_file_path_base() + ".txt"; // the time file
-    // fstream time_file(time_file_name, ios::out);
-    // cout <<"timing " << "saving to " << time_file_name << endl;
-    // time_file << elapsed.count() << endl;
-    // time_file.close();
-    return;
+#endif
 }
 
 void LocalPush::save() {
@@ -558,7 +546,7 @@ void Full_LocalPush::update_residual(DirectedG::vertex_descriptor u, DirectedG::
     R[np] = left_part - right_part;
     // 3rd: update queue
     if (fabs(R[np]) > r_max) {
-        if (marker[np] == false) {
+        if (!marker[np]) {
             Q.push(np);
             marker[np] = true;
         }
@@ -644,5 +632,142 @@ void Reduced_LocalPush::update_residual(DirectedG &g, DirectedG::vertex_descript
     }
 }
 
+// dynamic update support: deleting and inserting edge, time complexity: O(E)
+void Reduced_LocalPush::update_residuals_by_deleting_edge(DirectedG &g, DirectedG::vertex_descriptor u,
+                                                          DirectedG::vertex_descriptor v) {
+    // udpate residual when an edge (u,v) is removed from G
+    // assumption: G has not been updated, (u,v) exists in G
+    // a: the iterated node over G
+    // v: the node whose in-neighbor is changed
+    DirectedG::vertex_iterator v_begin, v_end, v_it;
+    tie(v_begin, v_end) = vertices(g);
+    double updated_R = 0;
+    for (v_it = v_begin; v_it != v_end; v_it++) {
+        auto a = *v_it;
+        if (in_degree(a, g) == 0) {
+            continue;
+        }
+        if (a == v) {
+            // singleton node: do nothing
+        } else {
+            bool a_smaller_v = a < v ? true : false;
+            NodePair np; // the node pair to be updated
+            if (a_smaller_v) {
+                np = NodePair(a, v);
+            } else {
+                np = NodePair(v, a);
+            }
+            DirectedG::in_edge_iterator in_a_iter, in_v_iter, in_a_begin, in_a_end, in_v_begin, in_v_end;
+            double P_av = P[np]; // current P(a,v)
+            double R_av = R[np]; // current R(a,v)
+            //iterate over a's in-neighbors
+            double updated_R = P_av + R_av;
+            if (in_degree(v, g) == 1) {
+                // u is the only in-neighbor of v
+                updated_R = -P_av;
+            } else {
+                tie(in_a_begin, in_a_end) = in_edges(a, g);
+                double u_contrib = 0;
+                for (in_a_iter = in_a_begin; in_a_iter != in_a_end; in_a_iter++) {
+                    auto a_prime = source(*in_a_iter, g);
+                    double contrib = 0;
+                    if (a_prime > u) {
+                        contrib = c * P[NodePair(u, a_prime)];
+                    } else if (a_prime < u) {
+                        contrib = c * P[NodePair(a_prime, u)];
+                    } else if (a_prime == u) {
+                        contrib = c * sqrt(2) * P[NodePair(a_prime, u)];
+                    }
+                    u_contrib += contrib;
+                }
+                u_contrib = u_contrib / (in_degree(v, g) * in_degree(a, g));
+                updated_R = updated_R - u_contrib;
+                updated_R = updated_R * ((in_degree(v, g)) / (in_degree(v, g) - 1.0));
+                updated_R -= P_av;
+            }
+            R[np] = updated_R;
+
+            if (fabs(R[np]) / sqrt(2) > r_max) {
+                if (marker[np] == false) {
+                    Q.push(np);
+                    marker[np] = true;
+                }
+            }
+        }
+    }
+}
 
 
+void Reduced_LocalPush::update_residuals_by_adding_edge(DirectedG &g, DirectedG::vertex_descriptor u,
+                                                        DirectedG::vertex_descriptor v) {
+    // update the residual when an edge (u,v) is inserted to g
+    // node a: the iterated node over G
+    // node v: whose in-neighbor has changed (u added)
+    // assumption: g has not been updated, (u,v) does not exist in g
+    DirectedG::vertex_iterator v_begin, v_end, v_it;
+    tie(v_begin, v_end) = vertices(g);
+    for (v_it = v_begin; v_it != v_end; v_it++) { // ignore the starting node 0
+        auto a = *v_it;
+
+        if (a != v && in_degree(a, g) != 0) {
+            double u_contrib = 0; // the amount of R^{'} related to u
+            NodePair np = a < v ? NodePair(a, v) : NodePair(v, a); // the node pair to be updated
+
+            auto scaled_rest = (in_degree(v, g) / (in_degree(v, g) + 1.0)) *
+                               (R.query(np.first, np.second) + P.query(np.first, np.second));
+
+            // iterate over a's in-neighbors
+            DirectedG::in_edge_iterator in_a_iter, in_v_iter, in_a_begin, in_a_end;
+            tie(in_a_begin, in_a_end) = in_edges(a, g);
+            for (in_a_iter = in_a_begin; in_a_iter != in_a_end; in_a_iter++) {
+                auto a_prime = source(*in_a_iter, g);
+                double contrib = 0;
+                if (a_prime > u) {
+                    contrib = c * P.query(u, a_prime);
+                } else if (a_prime < u) {
+                    contrib = c * P.query(a_prime, u);
+                } else if (a_prime == u) {
+                    contrib = c * sqrt(2) * P.query(a_prime, u);
+                }
+                u_contrib += contrib;
+            }
+            u_contrib = u_contrib / ((in_degree(v, g) + 1.0) * in_degree(a, g));
+
+            auto updated_residual = u_contrib + scaled_rest - P.query(np.first, np.second);
+            R[np] = updated_residual;
+
+            if (fabs(updated_residual) / sqrt(2) > r_max) {
+                if (!marker[np]) {
+                    Q.push(np);
+                    marker[np] = true;
+                }
+            }
+        }
+    }
+}
+
+void Reduced_LocalPush::update_edges(DirectedG &g, vector<NodePair> edges, char update_type = '+') {
+    // update G by a set of edges
+    if (update_type == '+') {
+        for (auto &e: edges) {
+            int s = e.first;
+            int t = e.second;
+            update_residuals_by_adding_edge(g, s, t);
+            add_edge(s, t, g);
+        }
+    } else if (update_type == '-') {
+        for (auto &e: edges) {
+            int s = e.first;
+            int t = e.second;
+
+            if (edge(s, t, g).second) {
+                update_residuals_by_deleting_edge(g, s, t);
+                remove_edge(s, t, g);
+            }
+        }
+    } else {
+        cout << "Please indicate the edge update type" << endl;
+        return;
+    }
+    Reduced_LocalPush::local_push(g);
+}
