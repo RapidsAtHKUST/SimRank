@@ -55,15 +55,18 @@ def run_varying_eps_exp():
     tag = 'exp_results'
     folder_name = 'varying_eps_for_gt_exp'
     data_set_name_lst = [
-        'ca-GrQc',
-        'ca-HepTh', 'p2p-Gnutella06', 'wiki-Vote']
+        # 'ca-GrQc',
+        # 'ca-HepTh',
+        # 'p2p-Gnutella06',
+        'wiki-Vote'
+    ]
     round_idx = 0
 
     # algorithm parameters
     c = 0.6
     delta = 0.01
     # eps_lst = list(reversed([0.001 * (i + 1) for i in xrange(100)]))
-    eps_lst = list(([0.001 * (i + 1) for i in xrange(1, 30)]))
+    eps_lst = list(([0.001 * (i + 1) for i in xrange(10, 15)]))
 
     exec_path_lst = [
         # '/homes/ywangby/workspace/yche/git-repos/SimRank/LPMC-Profile/build/bprw-rand-varying-gt',
@@ -112,7 +115,7 @@ def run_varying_eps_exp():
                         print 'too much time, not able to finish', cmd
                         break
 
-    for _ in xrange(9):
+    for _ in xrange(5):
         one_round()
 
 
