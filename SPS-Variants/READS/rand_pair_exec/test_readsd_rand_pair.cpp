@@ -18,6 +18,8 @@
 using namespace std;
 using namespace std::chrono;
 
+int k = 200;
+
 // usage and example:
 // g++ reads*.h reads*.cpp timer.h -O3 -w -std=c++11 test.cpp -I . && ./a.out hp.data 3133
 int main(int argc, char **argv) {
@@ -28,12 +30,15 @@ int main(int argc, char **argv) {
     random_device rd;
     srand(rd());
     cout << "argc:" << argc << endl;
-    if (argc >= 7) {
+    bool is_varying_param = false;
+
+    if (argc >= 7 && string(argv[5]) != string(">") && string(argv[5]) != string(">>")) {
         cout << "varying parameters" << endl;
         c = atof(argv[4]);
         eps = atof(argv[5]);
         delta = atof(argv[6]);
         cout << boost::format("c:%s, eps:%s, delta:%s") % c % eps % delta << endl;
+        is_varying_param = true;
     }
     int r = compute_reads_sample_num(eps, delta, c);
     cout << "sample num:" << r << endl;
@@ -47,7 +52,9 @@ int main(int argc, char **argv) {
     GraphYche g_gt(full_path);
     int n = g_gt.n;
     cout << "vertex num:" << n << endl;
-
+    if (!is_varying_param) {
+        if (argc >= 5 && string(argv[4]) != string(">>") && string(argv[4]) != string(">")) { k = atoi(argv[4]); }
+    }
     // 3rd: construct index
     auto start = high_resolution_clock::now();
     readsd i2(data_name, n, r, c, t);
@@ -59,6 +66,19 @@ int main(int argc, char **argv) {
     if (n < 10000) {
         double max_err = 0;
         TruthSim ts(data_name, g_gt, c, 0.01);
+        vector<float> sim_val_arr(pair_num);
+
+        for (auto pair_i = 0; pair_i < pair_num; pair_i++) {
+            int i, j;
+            std::tie(i, j) = sample_pairs[pair_i];
+            sim_val_arr[pair_i] = ts.sim(i, j);
+        }
+        vector<int> idx_arr(sim_val_arr.size());
+        for (auto i = 0; i < idx_arr.size(); i++) { idx_arr[i] = i; }
+        std::sort(std::begin(idx_arr), std::end(idx_arr),
+                  [&sim_val_arr](int l, int r) { return sim_val_arr[l] > sim_val_arr[r]; });
+        vector<float> sim_val_computed(sim_val_arr.size());
+
         auto tmp_start = high_resolution_clock::now();
         auto clock_start = clock();
 
@@ -72,6 +92,8 @@ int main(int argc, char **argv) {
                 auto v = sample_pairs[pair_i].second;
 
                 auto result = i2.queryOne(u, v, ansVal);
+                sim_val_computed[pair_i] = static_cast<float>(result);
+
                 max_err = max(max_err, abs(ts.sim(u, v) - result));
                 if (abs(ts.sim(u, v) - result) > 0.01) {
 #pragma omp critical
@@ -85,6 +107,19 @@ int main(int argc, char **argv) {
         cout << "total query cpu time:" << static_cast<double>(clock_end - clock_start) / CLOCKS_PER_SEC << "s" << endl;
         cout << "query time:" << duration_cast<microseconds>(tmp_end - tmp_start).count() / pow(10, 6) << " s\n";
         cout << "max err:" << max_err << endl;
+
+
+        vector<int> idx_arr_our_sol(sim_val_arr.size());
+        for (auto i = 0; i < idx_arr_our_sol.size(); i++) { idx_arr_our_sol[i] = i; }
+        std::sort(std::begin(idx_arr_our_sol), std::end(idx_arr_our_sol),
+                  [&sim_val_computed](int l, int r) { return sim_val_computed[l] > sim_val_computed[r]; });
+        std::sort(std::begin(idx_arr), std::begin(idx_arr) + k);
+        std::sort(std::begin(idx_arr_our_sol), std::begin(idx_arr_our_sol) + k);
+
+        vector<int> intersection_arr;
+        std::set_intersection(std::begin(idx_arr), std::begin(idx_arr) + k, std::begin(idx_arr_our_sol),
+                              std::begin(idx_arr_our_sol) + k, back_inserter(intersection_arr));
+        cout << "precision #:" << intersection_arr.size() << "/" << k << endl;
     } else {
         auto tmp_start = high_resolution_clock::now();
         auto clock_start = clock();
