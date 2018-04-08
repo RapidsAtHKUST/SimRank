@@ -47,14 +47,14 @@ def run_varying_eps_exp():
                       10 ** 5,
                       10 ** 5,
                       10 ** 5,
-                      10 ** 4,
+                      10 ** 5,
                       10 ** 5,
                       10 ** 5]
     sample_num_dict = dict(zip(exec_path_lst, sample_num_lst))
     tag = 'exp_results'
     folder_name = 'varying_eps_for_gt_exp'
     data_set_name_lst = [
-        # 'ca-GrQc',
+        'ca-GrQc',
         'ca-HepTh', 'p2p-Gnutella06', 'wiki-Vote']
     round_idx = 0
 

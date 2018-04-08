@@ -16,10 +16,9 @@ def format_str(float_num):
     return str(decimal.Decimal.from_float(float_num).quantize(decimal.Decimal('0.000')))
 
 
-def get_file_path(eps, algorithm, pair_num=10 ** 6):
+def get_file_path(eps, algorithm, pair_num=10 ** 6, data_set_name='ca-GrQc'):
     root_path = '/home/yche/mnt/wangyue-clu/csproject/biggraph/ywangby/yche/' \
                 'git-repos/SimRank/python_experiments/exp_results/varying_eps_for_gt_exp'
-    data_set_name = 'ca-GrQc'
     if algorithm not in [read_d_tag, reads_rq_tag]:
         suffix_str = '-rand-varying-gt.txt'
     else:
@@ -48,10 +47,12 @@ def get_tag_no_colon_info(file_path, tag, functor):
         return None if len(lst) == 0 else functor(lst)
 
 
-def get_max_err_lst(algorithm, pair_num=10 ** 6):
+def get_max_err_lst(algorithm, data_set_name, pair_num=10 ** 6):
     def get_estimated_single_thread_time(eps):
-        # result = get_tag_info(get_file_path(eps, algorithm, pair_num), 'max err', min)
-        result = get_tag_info(get_file_path(eps, algorithm, pair_num), 'max err', lambda x: x[-1])
+        if algorithm in {bflpmc_tag, flpmc_tag, bprw_tag}:
+            result = get_tag_info(get_file_path(eps, algorithm, pair_num), 'max err', min)
+        else:
+            result = get_tag_info(get_file_path(eps, algorithm, pair_num, data_set_name), 'max err', lambda x: x[-1])
         return result
 
     return dict(zip(map(format_str, eps_lst), map(get_estimated_single_thread_time, eps_lst)))
@@ -72,13 +73,18 @@ if __name__ == '__main__':
     os.system('mkdir -p ' + data_folder)
 
 
-    def get_max_err():
-        max_err_lst = [get_max_err_lst(algorithm, get_pair_num(algorithm)) for algorithm
-                       in algorithm_lst]
+    def get_max_err(data_set_name):
+        max_err_lst = [get_max_err_lst(algorithm, data_set_name=data_set_name, pair_num=get_pair_num(algorithm)) for
+                       algorithm in algorithm_lst]
         for eps_str in map(format_str, [0.001 * i for i in xrange(1, 8)]):
             max_err_lst[-1][eps_str] = None
-        with open(os.sep.join([data_folder, 'varying_eps_max_err.json']), 'w') as ofs:
-            ofs.write(json.dumps(dict(zip(algorithm_lst, max_err_lst)), indent=4))
+        return dict(zip(algorithm_lst, max_err_lst))
 
 
-    get_max_err()
+    data_set_lst = ['ca-GrQc', 'ca-HepTh', 'p2p-Gnutella06', 'wiki-Vote']
+    eps_gt_dict = {}
+    for data_set in data_set_lst:
+        eps_gt_dict[data_set] = get_max_err(data_set)
+
+    with open(os.sep.join([data_folder, 'varying_eps_max_err.json']), 'w') as ofs:
+        ofs.write(json.dumps(eps_gt_dict, indent=4))
