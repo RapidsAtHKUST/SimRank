@@ -191,7 +191,7 @@ target_compile_definitions(bflpmc-rand-bench PRIVATE -DSFMT=1)
 
 add_executable(bflpmc-rand-bench-gt ${BFLPMC_SOURCE_FILES_RAND})
 InitBFLPMC(bflpmc-rand-bench-gt)
-target_compile_definitions(bflpmc-rand-bench-gt PRIVATE -DSFMT=1 -DGROUND_TRUTH=1)
+target_compile_definitions(bflpmc-rand-bench-gt PRIVATE -DSFMT=1 -DGROUND_TRUTH=1 -DGROUND_TRUTH_STATISTICS=1)
 
 #### bflpmc(random pairs, varying r_max)
 set(BFLPMC_RMAX_SOURCE_FILES_RAND ${LPMC_FILES} ${BPRW_FILES} ${UTIL_FILES} ${GROUND_TRUTH_FILES}
