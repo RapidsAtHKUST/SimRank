@@ -37,6 +37,7 @@ def draw_max_err():
             max_err_lst = map(lambda eps: eps_max_err_dict[data_set_name][algorithm][format_str(eps)], eps_lst)
 
             max_err_lst = map(lambda err: 0.015 if err > 0.015 else err, max_err_lst)
+
             lst_lst.append(max_err_lst)
 
             def get_marker_size(idx):

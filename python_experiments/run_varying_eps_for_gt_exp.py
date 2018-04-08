@@ -33,23 +33,24 @@ def signal_handler(signal, frame):
 
 def run_varying_eps_exp():
     exec_path_lst = [
-        '/homes/ywangby/workspace/yche/git-repos/SimRank/LPMC-Profile/build/bprw-rand-varying-gt',
-        '/homes/ywangby/workspace/yche/git-repos/SimRank/LPMC-Profile/build/flpmc-rand-varying-gt',
-        '/homes/ywangby/workspace/yche/git-repos/SimRank/LPMC-Profile/build/bflpmc-rand-varying-gt',
-        '/homes/ywangby/workspace/yche/git-repos/SimRank/SPS-Variants/sling/build/sling-rand-varying-gt',
-        '/homes/ywangby/workspace/yche/git-repos/SimRank/SPS-Variants/isp-yche/build/isp-rand-varying-gt',
+        # '/homes/ywangby/workspace/yche/git-repos/SimRank/LPMC-Profile/build/bprw-rand-varying-gt',
+        # '/homes/ywangby/workspace/yche/git-repos/SimRank/LPMC-Profile/build/flpmc-rand-varying-gt',
+        # '/homes/ywangby/workspace/yche/git-repos/SimRank/LPMC-Profile/build/bflpmc-rand-varying-gt',
+        # '/homes/ywangby/workspace/yche/git-repos/SimRank/SPS-Variants/sling/build/sling-rand-varying-gt',
+        # '/homes/ywangby/workspace/yche/git-repos/SimRank/SPS-Variants/isp-yche/build/isp-rand-varying-gt',
         '/homes/ywangby/workspace/yche/git-repos/SimRank/SPS-Variants/tsf/build/tsf-rand-varying-gt',
-        '/homes/ywangby/workspace/yche/git-repos/SimRank/SPS-Variants/READS/build/reads-d-rand-bench',
-        '/homes/ywangby/workspace/yche/git-repos/SimRank/SPS-Variants/READS/build/reads-rq-rand-bench',
+        # '/homes/ywangby/workspace/yche/git-repos/SimRank/SPS-Variants/READS/build/reads-d-rand-bench',
+        # '/homes/ywangby/workspace/yche/git-repos/SimRank/SPS-Variants/READS/build/reads-rq-rand-bench',
     ]
-    sample_num_lst = [10 ** 5,
-                      10 ** 5,
-                      10 ** 5,
-                      10 ** 5,
-                      10 ** 5,
-                      10 ** 5,
-                      10 ** 5,
-                      10 ** 5]
+    # sample_num_lst = [10 ** 5,
+    #                   10 ** 5,
+    #                   10 ** 5,
+    #                   10 ** 5,
+    #                   10 ** 5,
+    #                   10 ** 4,
+    #                   10 ** 5,
+    #                   10 ** 5]
+    sample_num_lst = [10 ** 4]
     sample_num_dict = dict(zip(exec_path_lst, sample_num_lst))
     tag = 'exp_results'
     folder_name = 'varying_eps_for_gt_exp'
@@ -65,14 +66,14 @@ def run_varying_eps_exp():
     eps_lst = list(([0.001 * (i + 1) for i in xrange(1, 30)]))
 
     exec_path_lst = [
-        '/homes/ywangby/workspace/yche/git-repos/SimRank/LPMC-Profile/build/bprw-rand-varying-gt',
-        '/homes/ywangby/workspace/yche/git-repos/SimRank/LPMC-Profile/build/flpmc-rand-varying-gt',
-        '/homes/ywangby/workspace/yche/git-repos/SimRank/LPMC-Profile/build/bflpmc-rand-varying-gt',
-        '/homes/ywangby/workspace/yche/git-repos/SimRank/SPS-Variants/sling/build/sling-rand-varying-gt',
-        '/homes/ywangby/workspace/yche/git-repos/SimRank/SPS-Variants/isp-yche/build/isp-rand-varying-gt',
+        # '/homes/ywangby/workspace/yche/git-repos/SimRank/LPMC-Profile/build/bprw-rand-varying-gt',
+        # '/homes/ywangby/workspace/yche/git-repos/SimRank/LPMC-Profile/build/flpmc-rand-varying-gt',
+        # '/homes/ywangby/workspace/yche/git-repos/SimRank/LPMC-Profile/build/bflpmc-rand-varying-gt',
+        # '/homes/ywangby/workspace/yche/git-repos/SimRank/SPS-Variants/sling/build/sling-rand-varying-gt',
+        # '/homes/ywangby/workspace/yche/git-repos/SimRank/SPS-Variants/isp-yche/build/isp-rand-varying-gt',
         '/homes/ywangby/workspace/yche/git-repos/SimRank/SPS-Variants/tsf/build/tsf-rand-varying-gt',
-        '/homes/ywangby/workspace/yche/git-repos/SimRank/SPS-Variants/READS/build/reads-d-rand-bench',
-        '/homes/ywangby/workspace/yche/git-repos/SimRank/SPS-Variants/READS/build/reads-rq-rand-bench'
+        # '/homes/ywangby/workspace/yche/git-repos/SimRank/SPS-Variants/READS/build/reads-d-rand-bench',
+        # '/homes/ywangby/workspace/yche/git-repos/SimRank/SPS-Variants/READS/build/reads-rq-rand-bench'
     ]
 
     def one_round():
@@ -111,7 +112,8 @@ def run_varying_eps_exp():
                         print 'too much time, not able to finish', cmd
                         break
 
-    one_round()
+    for _ in xrange(9):
+        one_round()
 
 
 if __name__ == '__main__':

@@ -50,7 +50,9 @@ def get_tag_no_colon_info(file_path, tag, functor):
 def get_max_err_lst(algorithm, data_set_name, pair_num=10 ** 6):
     def get_estimated_single_thread_time(eps):
         if algorithm in {bflpmc_tag, flpmc_tag, bprw_tag}:
-            result = get_tag_info(get_file_path(eps, algorithm, pair_num), 'max err', min)
+            result = get_tag_info(get_file_path(eps, algorithm, pair_num, data_set_name), 'max err', min)
+        elif algorithm == tsf_tag:
+            result = get_tag_info(get_file_path(eps, algorithm, pair_num, data_set_name), 'max err', max)
         else:
             result = get_tag_info(get_file_path(eps, algorithm, pair_num, data_set_name), 'max err', lambda x: x[-1])
         return result
