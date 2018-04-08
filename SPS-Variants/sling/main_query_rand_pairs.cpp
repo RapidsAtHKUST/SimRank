@@ -13,6 +13,10 @@
 using namespace std;
 using namespace std::chrono;
 
+#ifdef GROUND_TRUTH
+int k = 200;
+#endif
+
 int main(int argc, char *argv[]) {
     double eps_d = 0.002;
     double theta = 0.00029;
@@ -23,6 +27,9 @@ int main(int argc, char *argv[]) {
     string file_name = argv[1];
     int pair_num = atoi(argv[2]);
     int round_i = atoi(argv[3]);
+#ifdef GROUND_TRUTH
+    if (argc >= 5 && string(argv[4]) != string(">>") && string(argv[4]) != string(">")) { k = atoi(argv[4]); }
+#endif
     string file_path = "/homes/ywangby/workspace/LinsysSimRank/datasets/edge_list/" + file_name + ".txt";
     g.inputGraph(file_path);
 
@@ -32,13 +39,26 @@ int main(int argc, char *argv[]) {
     auto tmp_end = std::chrono::high_resolution_clock::now();
     cout << "finish input graph and construct indexing: " << duration_cast<milliseconds>(tmp_end - tmp_start).count()
          << " ms\n";
+    auto sample_pairs = read_sample_pairs(file_name, pair_num, round_i);
 
 #ifdef GROUND_TRUTH
     GraphYche g_gt(file_path);
     TruthSim ts(file_name, g_gt, c, 0.01);
     auto max_err = 0.0;
+
+    vector<float> sim_val_arr(pair_num);
+
+    for (auto pair_i = 0; pair_i < pair_num; pair_i++) {
+        int i, j;
+        std::tie(i, j) = sample_pairs[pair_i];
+        sim_val_arr[pair_i] = ts.sim(i, j);
+    }
+    vector<int> idx_arr(sim_val_arr.size());
+    for (auto i = 0; i < idx_arr.size(); i++) { idx_arr[i] = i; }
+    std::sort(std::begin(idx_arr), std::end(idx_arr),
+              [&sim_val_arr](int l, int r) { return sim_val_arr[l] > sim_val_arr[r]; });
+    vector<float> sim_val_computed(sim_val_arr.size());
 #endif
-    auto sample_pairs = read_sample_pairs(file_name, pair_num, round_i);
     auto start = std::chrono::high_resolution_clock::now();
     auto clock_start = clock();
 
@@ -53,6 +73,8 @@ int main(int argc, char *argv[]) {
         auto v = sample_pairs[pair_i].second;
 #ifdef GROUND_TRUTH
         auto res = sling_algo.simrank(u, v);
+        sim_val_computed[pair_i] = static_cast<float>(res);
+
         max_err = max(max_err, abs(ts.sim(u, v) - res));
         if (abs(ts.sim(u, v) - res) > 0.01) {
 #pragma omp critical
@@ -68,6 +90,17 @@ int main(int argc, char *argv[]) {
     std::chrono::duration<double> elapsed = end - start;
 #ifdef GROUND_TRUTH
     cout << "max err:" << max_err << endl;
+    vector<int> idx_arr_our_sol(sim_val_arr.size());
+    for (auto i = 0; i < idx_arr_our_sol.size(); i++) { idx_arr_our_sol[i] = i; }
+    std::sort(std::begin(idx_arr_our_sol), std::end(idx_arr_our_sol),
+              [&sim_val_computed](int l, int r) { return sim_val_computed[l] > sim_val_computed[r]; });
+    std::sort(std::begin(idx_arr), std::begin(idx_arr) + k);
+    std::sort(std::begin(idx_arr_our_sol), std::begin(idx_arr_our_sol) + k);
+
+    vector<int> intersection_arr;
+    std::set_intersection(std::begin(idx_arr), std::begin(idx_arr) + k, std::begin(idx_arr_our_sol),
+                          std::begin(idx_arr_our_sol) + k, back_inserter(intersection_arr));
+    cout << "precision #:" << intersection_arr.size() << "/" << k << endl;
 #endif
     cout << format("total query cost: %s s") % elapsed.count() << endl; // record the pre-processing time
 }
