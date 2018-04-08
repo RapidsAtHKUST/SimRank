@@ -19,12 +19,13 @@ using namespace std;
 using namespace std::chrono;
 
 int k = 200;
+double eps = 0.01;
 
 // usage and example:
 // g++ reads*.h reads*.cpp timer.h -O3 -w -std=c++11 test.cpp -I . && ./a.out hp.data 3133
 int main(int argc, char **argv) {
     // 1st: eps, delta and c for computing sample number
-    double eps = 0.01;
+//    double eps = 0.008;
     double delta = 0.01;
     double c = 0.6;
     int r = 100;
@@ -40,8 +41,6 @@ int main(int argc, char **argv) {
         cout << boost::format("c:%s, eps:%s, delta:%s") % c % eps % delta << endl;
         is_varying_param = true;
     }
-    int rq = compute_reads_rq_num(eps, delta, c, r);
-    cout << "sample num:" << r << ", on-line rand-walk:" << rq << endl;
 
     // 2nd: t(max length), n
     int t = 10;
@@ -49,8 +48,14 @@ int main(int argc, char **argv) {
     int pair_num = atoi(argv[2]);
     int round_i = atoi(argv[3]);
     if (!is_varying_param) {
-        if (argc >= 5 && string(argv[4]) != string(">>") && string(argv[4]) != string(">")) { k = atoi(argv[4]); }
+        if (argc >= 5 && string(argv[4]) != string(">>") && string(argv[4]) != string(">")) {
+            k = atoi(argv[4]);
+            eps = atof(argv[5]);
+        }
     }
+
+    int rq = compute_reads_rq_num(eps, delta, c, r);
+    cout << "sample num:" << r << ", on-line rand-walk:" << rq << endl;
     auto full_path = "/homes/ywangby/workspace/LinsysSimRank/datasets/edge_list/" + data_name + ".txt";
     GraphYche g_gt(full_path);
     int n = g_gt.n;

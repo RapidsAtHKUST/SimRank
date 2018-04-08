@@ -14,6 +14,8 @@
 int k = 200;
 #endif
 
+double eps = 0.01;
+
 void test_FLPMC(string data_name, double c, double epsilon, double delta, int pair_num, int round) {
     string path = get_edge_list_path(data_name);
     GraphYche g(path);
@@ -94,14 +96,17 @@ void test_FLPMC(string data_name, double c, double epsilon, double delta, int pa
 int main(int argc, char *argv[]) {
     string data_name(argv[1]);
     double c = 0.6;
-    double epsilon = 0.01;
     double delta = 0.01;
 
     int pair_num = atoi(argv[2]);
     int round_i = atoi(argv[3]);
 #ifdef GROUND_TRUTH
-    if (argc >= 5 && string(argv[4]) != string(">>") && string(argv[4]) != string(">")) { k = atoi(argv[4]); }
+    if (argc >= 5 && string(argv[4]) != string(">>") && string(argv[4]) != string(">")) {
+        k = atoi(argv[4]);
+        eps = atof(argv[5]);
+    }
 #endif
+    double epsilon = eps;
 
     test_FLPMC(data_name, c, epsilon, delta, pair_num, round_i);
 }

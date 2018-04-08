@@ -18,11 +18,13 @@ using namespace std::chrono;
 int k = 200;
 #endif
 
+double eps = 0.01;
+
 int main(int argc, char *argv[]) {
     auto decayFactor = 0.6;
     auto stepNum = 11;
     auto sampleNum = 100;
-    auto sampleQueryNum = 43;
+//    auto sampleQueryNum = 43;
 
     // 1st: load graph
     string file_path = "/homes/ywangby/workspace/LinsysSimRank/datasets/edge_list/" + string(argv[1]) + ".txt";
@@ -30,11 +32,16 @@ int main(int argc, char *argv[]) {
     int pair_num = atoi(argv[2]);
     int round_i = atoi(argv[3]);
 #ifdef GROUND_TRUTH
-    if (argc >= 5 && string(argv[4]) != string(">>") && string(argv[4]) != string(">")) { k = atoi(argv[4]); }
+    if (argc >= 5 && string(argv[4]) != string(">>") && string(argv[4]) != string(">")) {
+        k = atoi(argv[4]);
+        eps = atof(argv[5]);
+    }
 #endif
-    double c = 0.6;
-    int max_iter = 9;
-    double filter_threshold = 0.0001;
+    double c = decayFactor;
+    double delta = 0.01;
+    double b = min(1.0, c / (1 - c));
+    auto sampleQueryNum = static_cast<int>(ceil(log(delta / 2) / (-2) / (pow(eps, 2)) * (pow(b - c, 2)) / sampleNum));
+
     auto sample_pairs = read_sample_pairs(file_name, pair_num, round_i);
 
     auto tmp_start = std::chrono::high_resolution_clock::now();

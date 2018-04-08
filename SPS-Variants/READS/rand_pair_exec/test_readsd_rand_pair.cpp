@@ -19,12 +19,13 @@ using namespace std;
 using namespace std::chrono;
 
 int k = 200;
+double eps = 0.01;
 
 // usage and example:
 // g++ reads*.h reads*.cpp timer.h -O3 -w -std=c++11 test.cpp -I . && ./a.out hp.data 3133
 int main(int argc, char **argv) {
     // 1st: eps, delta and c for computing sample number
-    double eps = 0.01;
+    double eps = 0.001;
     double delta = 0.01;
     double c = 0.6;
     random_device rd;
@@ -40,8 +41,7 @@ int main(int argc, char **argv) {
         cout << boost::format("c:%s, eps:%s, delta:%s") % c % eps % delta << endl;
         is_varying_param = true;
     }
-    int r = compute_reads_sample_num(eps, delta, c);
-    cout << "sample num:" << r << endl;
+
 
     // 2nd: t(max length), n
     int t = 10;
@@ -53,8 +53,15 @@ int main(int argc, char **argv) {
     int n = g_gt.n;
     cout << "vertex num:" << n << endl;
     if (!is_varying_param) {
-        if (argc >= 5 && string(argv[4]) != string(">>") && string(argv[4]) != string(">")) { k = atoi(argv[4]); }
+        if (argc >= 5 && string(argv[4]) != string(">>") && string(argv[4]) != string(">")) {
+            k = atoi(argv[4]);
+            eps = atof(argv[5]);
+        }
     }
+
+    int r = compute_reads_sample_num(eps, delta, c);
+    cout << "sample num:" << r << endl;
+
     // 3rd: construct index
     auto start = high_resolution_clock::now();
     readsd i2(data_name, n, r, c, t);

@@ -17,9 +17,11 @@ using namespace std::chrono;
 int k = 200;
 #endif
 
+double eps = 0.01;
+
 int main(int argc, char *argv[]) {
-    double eps_d = 0.002;
-    double theta = 0.00029;
+//    double eps_d = 0.002;
+//    double theta = 0.00029;
     double c = 0.6;
 
     // 1st: load graph
@@ -27,9 +29,20 @@ int main(int argc, char *argv[]) {
     string file_name = argv[1];
     int pair_num = atoi(argv[2]);
     int round_i = atoi(argv[3]);
+
 #ifdef GROUND_TRUTH
-    if (argc >= 5 && string(argv[4]) != string(">>") && string(argv[4]) != string(">")) { k = atoi(argv[4]); }
+    if (argc >= 5 && string(argv[4]) != string(">>") && string(argv[4]) != string(">")) {
+        k = atoi(argv[4]);
+        eps = atof(argv[5]);
+    }
 #endif
+    // compute theta and eps_d
+    double half_eps = eps / 2;
+    double eps_d = (1 - c) * half_eps;
+    double denominator = (2 * sqrt(c)) / (1 - sqrt(c)) / (1 - c);
+    double theta = half_eps / (denominator);
+    cout << "eps_d:" << eps_d << ", theta:" << theta << endl;
+
     string file_path = "/homes/ywangby/workspace/LinsysSimRank/datasets/edge_list/" + file_name + ".txt";
     g.inputGraph(file_path);
 

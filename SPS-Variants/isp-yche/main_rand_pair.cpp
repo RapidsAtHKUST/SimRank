@@ -19,6 +19,8 @@ using namespace std::chrono;
 int k = 200;
 #endif
 
+double eps = 0.01;
+
 int main(int argc, char *argv[]) {
     // 1st: load graph
     string file_path = "/homes/ywangby/workspace/LinsysSimRank/datasets/edge_list/" + string(argv[1]) + ".txt";
@@ -26,12 +28,15 @@ int main(int argc, char *argv[]) {
     int pair_num = atoi(argv[2]);
     int round_i = atoi(argv[3]);
 #ifdef GROUND_TRUTH
-    if (argc >= 5 && string(argv[4]) != string(">>") && string(argv[4]) != string(">")) { k = atoi(argv[4]); }
+    if (argc >= 5 && string(argv[4]) != string(">>") && string(argv[4]) != string(">")) {
+        k = atoi(argv[4]);
+        eps = atof(argv[5]);
+    }
 #endif
     double c = 0.6;
 
-    int max_iter = 9;
-
+    auto max_iter = static_cast<int>(log(eps) / log(c));
+    cout << "iter#:" << max_iter << endl;
     double filter_threshold = 0.0001;
 
     auto tmp_start = std::chrono::high_resolution_clock::now();
