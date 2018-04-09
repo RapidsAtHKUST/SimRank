@@ -120,6 +120,18 @@ int main(int argc, char **argv) {
         for (auto i = 0; i < idx_arr_our_sol.size(); i++) { idx_arr_our_sol[i] = i; }
         std::sort(std::begin(idx_arr_our_sol), std::end(idx_arr_our_sol),
                   [&sim_val_computed](int l, int r) { return sim_val_computed[l] > sim_val_computed[r]; });
+
+        // 1st: NDCG
+        double sum_ground_truth = 0;
+        double sum_sol_res = 0;
+        for (auto i = 0; i < k; i++) {
+            sum_ground_truth += (pow(2, sim_val_arr[idx_arr[i]]) - 1) / log((double) (i + 2));
+            sum_sol_res += (pow(2, sim_val_arr[idx_arr_our_sol[i]]) - 1) / log((double) (i + 2));
+        }
+        cout << sum_sol_res << "/" << sum_ground_truth << endl;
+        cout << "NDCG:" << (sum_sol_res / sum_ground_truth) << endl;
+
+        // 2nd: precision
         std::sort(std::begin(idx_arr), std::begin(idx_arr) + k);
         std::sort(std::begin(idx_arr_our_sol), std::begin(idx_arr_our_sol) + k);
 
