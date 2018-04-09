@@ -139,6 +139,14 @@ int main(int argc, char **argv) {
         std::set_intersection(std::begin(idx_arr), std::begin(idx_arr) + k, std::begin(idx_arr_our_sol),
                               std::begin(idx_arr_our_sol) + k, back_inserter(intersection_arr));
         cout << "precision #:" << intersection_arr.size() << "/" << k << endl;
+
+        // 3rd: avg difference
+        double difference_accumulation = 0;
+        for (auto idx: intersection_arr) {
+            difference_accumulation += abs(sim_val_computed[idx] - sim_val_arr[idx]);
+        }
+        cout << "avg difference:" << (difference_accumulation / intersection_arr.size()) << endl;
+
     } else {
         auto tmp_start = high_resolution_clock::now();
         auto clock_start = clock();

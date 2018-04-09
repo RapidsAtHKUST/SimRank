@@ -101,6 +101,14 @@ void test_FLPMC(string data_name, double c, double epsilon, double delta, int pa
     std::set_intersection(std::begin(idx_arr), std::begin(idx_arr) + k, std::begin(idx_arr_our_sol),
                           std::begin(idx_arr_our_sol) + k, back_inserter(intersection_arr));
     cout << "precision #:" << intersection_arr.size() << "/" << k << endl;
+
+    // 3rd: avg difference
+    double difference_accumulation = 0;
+    for (auto idx: intersection_arr) {
+        difference_accumulation += abs(sim_val_computed[idx] - sim_val_arr[idx]);
+    }
+    cout << "avg difference:" << (difference_accumulation / intersection_arr.size()) << endl;
+
 #endif
     cout << format("total query cost: %s s") % elapsed.count() << endl; // record the pre-processing time
 }
