@@ -49,17 +49,21 @@ def draw_precision():
     for ax_idx, ax in enumerate(ax_tuple):
         lst_lst = []
         data_set_name = data_set_lst[ax_idx]
+        y_lim_lst = [(0.58, 1.05), (0.48, 1.05), (0.48, 1.05), (0.72, 1.03)]
         for idx, algorithm in enumerate(algorithm_tag_lst):
             max_err_lst = map(lambda eps: eps_max_err_dict[data_set_name][algorithm][format_str(eps)], eps_lst)
+            for i in xrange(len(max_err_lst) - 2, -1, -1):
+                if max_err_lst[i] is None:
+                    max_err_lst[i] = max_err_lst[i + 1]
 
             lst_lst.append(max_err_lst)
 
             ax.plot(eps_lst, max_err_lst, shape_lst[idx], color=color_lst[idx], markersize=get_marker_size(idx),
                     markerfacecolor='none')
-
+        ax.set_ylim(y_lim_lst[ax_idx])
+        ax.set_xscale('log')
         ax.set_xticks(eps_lst)
         ax.set_xticklabels(eps_lst)
-        ax.set_xscale('log')
         for tick in ax.yaxis.get_major_ticks():
             tick.label.set_fontsize(TICK_SIZE)
         for tick in ax.xaxis.get_major_ticks():
@@ -67,7 +71,7 @@ def draw_precision():
         ax.set_xlabel('$\\epsilon$\n' + caption_lst[ax_idx] + data_names[data_set_name], fontsize=LABEL_SIZE + 4)
     ax = ax_tuple[0]
     # setup labels and grid, legend
-    ax.set_ylabel('Maximum Error', fontsize=LABEL_SIZE + 6)
+    ax.set_ylabel('Precision', fontsize=LABEL_SIZE + 6)
 
     plt.tight_layout()
     plt.legend(legend_lst, ncol=len(legend_lst), fontsize=LEGEND_SIZE, prop={'size': LEGEND_SIZE + 3, "weight": "bold"},
@@ -87,15 +91,18 @@ def draw_avg_diff():
         data_set_name = data_set_lst[ax_idx]
         for idx, algorithm in enumerate(algorithm_tag_lst):
             max_err_lst = map(lambda eps: eps_max_err_dict[data_set_name][algorithm][format_str(eps)], eps_lst)
-
+            for i in xrange(len(max_err_lst) - 2, -1, -1):
+                if max_err_lst[i] is None:
+                    max_err_lst[i] = max_err_lst[i + 1]
             lst_lst.append(max_err_lst)
 
             ax.plot(eps_lst, max_err_lst, shape_lst[idx], color=color_lst[idx], markersize=get_marker_size(idx),
                     markerfacecolor='none')
-
-        ax.set_xticks(eps_lst)
+        ax.set_ylim(10 ** (-6), 2 * 10 ** (-3))
         ax.set_xscale('log')
         ax.set_yscale('log')
+        ax.set_xticks(eps_lst)
+        ax.set_xticklabels(eps_lst)
 
         for tick in ax.yaxis.get_major_ticks():
             tick.label.set_fontsize(TICK_SIZE)

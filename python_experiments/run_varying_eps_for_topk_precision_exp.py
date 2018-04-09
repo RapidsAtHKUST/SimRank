@@ -39,7 +39,7 @@ def run_varying_eps_exp():
         # '/homes/ywangby/workspace/yche/git-repos/SimRank/SPS-Variants/sling/build/sling-rand-bench-gt',
         # '/homes/ywangby/workspace/yche/git-repos/SimRank/SPS-Variants/isp-yche/build/isp-rand-bench-gt',
         # '/homes/ywangby/workspace/yche/git-repos/SimRank/SPS-Variants/tsf/build/tsf-rand-bench-gt',
-        '/homes/ywangby/workspace/yche/git-repos/SimRank/SPS-Variants/READS/build/reads-d-rand-bench',
+        # '/homes/ywangby/workspace/yche/git-repos/SimRank/SPS-Variants/READS/build/reads-d-rand-bench',
         '/homes/ywangby/workspace/yche/git-repos/SimRank/SPS-Variants/READS/build/reads-rq-rand-bench',
         # '/homes/ywangby/workspace/yche/git-repos/SimRank/SPS-Variants/LinearD/build/lind-rand-ben-gt',
         # '/homes/ywangby/workspace/yche/git-repos/SimRank/SPS-Variants/LinearD/build/cw-rand-gen-gt',
@@ -50,10 +50,10 @@ def run_varying_eps_exp():
     sample_num = str(10 ** 4)
     k = str(800)
     data_set_name_lst = [
-        # 'ca-GrQc',
-        # 'ca-HepTh',
-        'p2p-Gnutella06',
-        'wiki-Vote'
+        'ca-GrQc',
+        'ca-HepTh',
+        # 'p2p-Gnutella06',
+        # 'wiki-Vote'
     ]
     round_idx = 0
 

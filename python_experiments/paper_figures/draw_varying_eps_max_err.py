@@ -68,7 +68,7 @@ def draw_max_err():
     # setup labels and grid, legend
     ax.set_ylabel('Maximum Error', fontsize=LABEL_SIZE + 6)
 
-    ax.grid(True, alpha=0.4)
+    # ax.grid(True, alpha=0.4)
 
     plt.tight_layout()
     plt.legend(legend_lst, ncol=len(legend_lst), fontsize=LEGEND_SIZE, prop={'size': LEGEND_SIZE + 3, "weight": "bold"},
