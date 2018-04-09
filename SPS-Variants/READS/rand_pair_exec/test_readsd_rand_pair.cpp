@@ -33,7 +33,9 @@ int main(int argc, char **argv) {
     cout << "argc:" << argc << endl;
     bool is_varying_param = false;
 
-    if (argc >= 7 && string(argv[5]) != string(">") && string(argv[5]) != string(">>")) {
+    if (argc >= 7 && string(argv[5]) != string(">") && string(argv[5]) != string(">>")
+        && string(argv[6]) != string(">") && string(argv[6]) != string(">>")
+        && string(argv[7]) != string(">") && string(argv[7]) != string(">>")) {
         cout << "varying parameters" << endl;
         c = atof(argv[4]);
         eps = atof(argv[5]);

@@ -33,16 +33,16 @@ def signal_handler(signal, frame):
 
 def run_varying_eps_exp():
     exec_path_lst = [
-        '/homes/ywangby/workspace/yche/git-repos/SimRank/LPMC-Profile/build/bprw-rand-bench-gt',
-        '/homes/ywangby/workspace/yche/git-repos/SimRank/LPMC-Profile/build/flpmc-rand-bench-gt',
-        '/homes/ywangby/workspace/yche/git-repos/SimRank/LPMC-Profile/build/bflpmc-rand-bench-gt',
-        '/homes/ywangby/workspace/yche/git-repos/SimRank/SPS-Variants/sling/build/sling-rand-bench-gt',
-        '/homes/ywangby/workspace/yche/git-repos/SimRank/SPS-Variants/isp-yche/build/isp-rand-bench-gt',
-        '/homes/ywangby/workspace/yche/git-repos/SimRank/SPS-Variants/tsf/build/tsf-rand-bench-gt',
+        # '/homes/ywangby/workspace/yche/git-repos/SimRank/LPMC-Profile/build/bprw-rand-bench-gt',
+        # '/homes/ywangby/workspace/yche/git-repos/SimRank/LPMC-Profile/build/flpmc-rand-bench-gt',
+        # '/homes/ywangby/workspace/yche/git-repos/SimRank/LPMC-Profile/build/bflpmc-rand-bench-gt',
+        # '/homes/ywangby/workspace/yche/git-repos/SimRank/SPS-Variants/sling/build/sling-rand-bench-gt',
+        # '/homes/ywangby/workspace/yche/git-repos/SimRank/SPS-Variants/isp-yche/build/isp-rand-bench-gt',
+        # '/homes/ywangby/workspace/yche/git-repos/SimRank/SPS-Variants/tsf/build/tsf-rand-bench-gt',
         '/homes/ywangby/workspace/yche/git-repos/SimRank/SPS-Variants/READS/build/reads-d-rand-bench',
         '/homes/ywangby/workspace/yche/git-repos/SimRank/SPS-Variants/READS/build/reads-rq-rand-bench',
-        '/homes/ywangby/workspace/yche/git-repos/SimRank/SPS-Variants/LinearD/build/lind-rand-ben-gt',
-        '/homes/ywangby/workspace/yche/git-repos/SimRank/SPS-Variants/LinearD/build/cw-rand-gen-gt',
+        # '/homes/ywangby/workspace/yche/git-repos/SimRank/SPS-Variants/LinearD/build/lind-rand-ben-gt',
+        # '/homes/ywangby/workspace/yche/git-repos/SimRank/SPS-Variants/LinearD/build/cw-rand-gen-gt',
     ]
 
     tag = 'exp_results'
@@ -50,8 +50,8 @@ def run_varying_eps_exp():
     sample_num = str(10 ** 4)
     k = str(800)
     data_set_name_lst = [
-        'ca-GrQc',
-        'ca-HepTh',
+        # 'ca-GrQc',
+        # 'ca-HepTh',
         'p2p-Gnutella06',
         'wiki-Vote'
     ]
@@ -63,9 +63,10 @@ def run_varying_eps_exp():
         for algorithm_path in exec_path_lst:
             for data_set_name in data_set_name_lst:
                 eps_lst = list(reversed([0.0001, 0.0004, 0.0016, 0.0064, 0.0256]))
-                if algorithm_path in algorithm_path[3]:
-                    # sling: others out-of-time
+                if 'sling' in algorithm_path or 'reads-d' in algorithm_path:
                     eps_lst = list(reversed([0.0016, 0.0064, 0.0256]))
+                elif 'tsf' in algorithm_path:
+                    eps_lst = list(reversed([0.0064, 0.0256]))
 
                 for eps in eps_lst:
                     algorithm = algorithm_path.split('/')[-1]
@@ -75,15 +76,16 @@ def run_varying_eps_exp():
 
                     # 1st: write header
                     os.system(' '.join(['echo', my_splitter + time.ctime() + my_splitter, '>>', statistics_file_path]))
-                    if algorithm_path == exec_path_lst[-3]:
+                    if algorithm_path.endswith('reads-rq-rand-bench'):
                         eps = max(0.008, eps)
                     params_lst = map(str, [algorithm_path, data_set_name, sample_num, round_idx, k, eps, '>>',
                                            statistics_file_path])
-                    if algorithm_path in [exec_path_lst[-2], exec_path_lst[-1]]:
+                    if algorithm_path.split('/')[-1] in ['lind-rand-ben-gt', 'cw-rand-gen-g']:
                         params_lst = map(str, [algorithm_path, data_set_name, sample_num, round_idx, k, '>>',
                                                statistics_file_path])
 
                     cmd = ' '.join(params_lst)
+                    print cmd
                     time_out = 900
 
                     # 2nd: run cmd
@@ -97,7 +99,7 @@ def run_varying_eps_exp():
                     print 'finish:', cmd
 
                     # if lind or cw, break
-                    if algorithm_path in [exec_path_lst[-2], exec_path_lst[-1]]:
+                    if algorithm_path.split('/')[-1] in ['lind-rand-ben-gt', 'cw-rand-gen-g']:
                         break
                     # 3rd: if tle, break
                     if tle_flag:

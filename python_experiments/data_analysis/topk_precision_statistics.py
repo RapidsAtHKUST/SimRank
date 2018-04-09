@@ -62,8 +62,9 @@ if __name__ == '__main__':
     for data_set in data_set_name_lst:
         my_dict = {}
         my_dict2 = {}
-        for name in algo_name_lst[0:5]:
-            my_dict[name], my_dict2[name] = get_precision_lst_per_algorithm(name, data_set)
+        for name in algo_name_lst:
+            key_name = name.split('-')[0] if 'reads' not in name else '-'.join(name.split('-')[0:2])
+            my_dict[key_name], my_dict2[key_name] = get_precision_lst_per_algorithm(name, data_set)
         precision_figure_dict[data_set] = my_dict
         avg_diff_dict[data_set] = my_dict2
 
