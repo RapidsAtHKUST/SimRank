@@ -65,6 +65,11 @@ if __name__ == '__main__':
         for name in algo_name_lst:
             key_name = name.split('-')[0] if 'reads' not in name else '-'.join(name.split('-')[0:2])
             my_dict[key_name], my_dict2[key_name] = get_precision_lst_per_algorithm(name, data_set)
+            if 'reads-rq' in key_name:
+                for eps in [0.0001, 0.0004, 0.0016]:
+                    my_dict[key_name][eps] = None
+                    my_dict2[key_name][eps] = None
+
         precision_figure_dict[data_set] = my_dict
         avg_diff_dict[data_set] = my_dict2
 
