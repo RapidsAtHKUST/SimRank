@@ -1,0 +1,150 @@
+{
+    "wiki-Vote": {
+        "bprw-rand-bench-gt": {
+            "0.0064": null, 
+            "0.0001": null, 
+            "0.0016": null, 
+            "0.0256": null, 
+            "0.0004": null
+        }, 
+        "sling-rand-bench-gt": {
+            "0.0064": null, 
+            "0.0001": null, 
+            "0.0016": null, 
+            "0.0256": null, 
+            "0.0004": null
+        }, 
+        "isp-rand-bench-gt": {
+            "0.0064": null, 
+            "0.0001": null, 
+            "0.0016": null, 
+            "0.0256": null, 
+            "0.0004": null
+        }, 
+        "flpmc-rand-bench-gt": {
+            "0.0064": null, 
+            "0.0001": null, 
+            "0.0016": null, 
+            "0.0256": null, 
+            "0.0004": null
+        }, 
+        "bflpmc-rand-bench-gt": {
+            "0.0064": null, 
+            "0.0001": null, 
+            "0.0016": null, 
+            "0.0256": null, 
+            "0.0004": null
+        }
+    }, 
+    "ca-GrQc": {
+        "bprw-rand-bench-gt": {
+            "0.0064": 0.855, 
+            "0.0001": 0.9975, 
+            "0.0016": 0.95625, 
+            "0.0256": 0.645, 
+            "0.0004": 0.9875
+        }, 
+        "sling-rand-bench-gt": {
+            "0.0064": 0.9625, 
+            "0.0001": null, 
+            "0.0016": 0.99375, 
+            "0.0256": 0.93125, 
+            "0.0004": null
+        }, 
+        "isp-rand-bench-gt": {
+            "0.0064": 0.76625, 
+            "0.0001": 0.76625, 
+            "0.0016": 0.76625, 
+            "0.0256": 0.76625, 
+            "0.0004": 0.76625
+        }, 
+        "flpmc-rand-bench-gt": {
+            "0.0064": 0.825, 
+            "0.0001": 0.98875, 
+            "0.0016": 0.925, 
+            "0.0256": 0.75125, 
+            "0.0004": 0.975
+        }, 
+        "bflpmc-rand-bench-gt": {
+            "0.0064": 0.80625, 
+            "0.0001": 0.9875, 
+            "0.0016": 0.9075, 
+            "0.0256": 0.71625, 
+            "0.0004": 0.95875
+        }
+    }, 
+    "ca-HepTh": {
+        "bprw-rand-bench-gt": {
+            "0.0064": null, 
+            "0.0001": null, 
+            "0.0016": null, 
+            "0.0256": null, 
+            "0.0004": null
+        }, 
+        "sling-rand-bench-gt": {
+            "0.0064": null, 
+            "0.0001": null, 
+            "0.0016": null, 
+            "0.0256": null, 
+            "0.0004": null
+        }, 
+        "isp-rand-bench-gt": {
+            "0.0064": null, 
+            "0.0001": null, 
+            "0.0016": null, 
+            "0.0256": null, 
+            "0.0004": null
+        }, 
+        "flpmc-rand-bench-gt": {
+            "0.0064": null, 
+            "0.0001": null, 
+            "0.0016": null, 
+            "0.0256": null, 
+            "0.0004": null
+        }, 
+        "bflpmc-rand-bench-gt": {
+            "0.0064": null, 
+            "0.0001": null, 
+            "0.0016": null, 
+            "0.0256": null, 
+            "0.0004": null
+        }
+    }, 
+    "p2p-Gnutella06": {
+        "bprw-rand-bench-gt": {
+            "0.0064": null, 
+            "0.0001": null, 
+            "0.0016": null, 
+            "0.0256": null, 
+            "0.0004": null
+        }, 
+        "sling-rand-bench-gt": {
+            "0.0064": null, 
+            "0.0001": null, 
+            "0.0016": null, 
+            "0.0256": null, 
+            "0.0004": null
+        }, 
+        "isp-rand-bench-gt": {
+            "0.0064": null, 
+            "0.0001": null, 
+            "0.0016": null, 
+            "0.0256": null, 
+            "0.0004": null
+        }, 
+        "flpmc-rand-bench-gt": {
+            "0.0064": null, 
+            "0.0001": null, 
+            "0.0016": null, 
+            "0.0256": null, 
+            "0.0004": null
+        }, 
+        "bflpmc-rand-bench-gt": {
+            "0.0064": null, 
+            "0.0001": null, 
+            "0.0016": null, 
+            "0.0256": null, 
+            "0.0004": null
+        }
+    }
+}
