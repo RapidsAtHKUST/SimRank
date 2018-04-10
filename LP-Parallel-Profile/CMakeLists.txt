@@ -64,3 +64,5 @@ target_compile_definitions(pflp PRIVATE -DFLP=1)
 
 add_executable(prlp playground/main_exec_parallel_lp.cpp ${LPMC_FILES} ${UTIL_FILES} ${GROUND_TRUTH_FILES} ${PLP_FILES})
 InitFLPMC(prlp)
+target_compile_definitions(prlp PRIVATE -DDEBUG=1)
+
