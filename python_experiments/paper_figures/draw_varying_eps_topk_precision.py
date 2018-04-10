@@ -22,7 +22,9 @@ def format_str(float_num):
 eps_lst = [0.0001, 0.0004, 0.0016, 0.0064, 0.0256]
 
 algorithm_tag_lst = [bflpmc_tag, flpmc_tag, bprw_tag, sling_tag,
-                     reads_d_tag, reads_rq_tag, isp_tag, tsf_tag, lind_tag, cw_tag]
+                     reads_d_tag, reads_rq_tag, isp_tag, tsf_tag,
+                     # lind_tag, cw_tag
+                     ]
 legend_lst = ['FBLPMC', 'FLPMC', 'BLPMC', 'SLING',
               'READS-D', 'READS-Rq', 'ISP', 'TSF', 'LIN', 'MCSP']
 data_set_lst = ['ca-GrQc', 'ca-HepTh', 'p2p-Gnutella06', 'wiki-Vote']
@@ -75,7 +77,7 @@ def draw_precision():
 
     plt.tight_layout()
     plt.legend(legend_lst, ncol=len(legend_lst), fontsize=LEGEND_SIZE, prop={'size': LEGEND_SIZE + 3, "weight": "bold"},
-               bbox_to_anchor=(0.85, 1.15))
+               bbox_to_anchor=(0.55, 1.15))
     exp_figure.subplots_adjust(wspace=0)
     plt.tight_layout()
 
@@ -115,7 +117,7 @@ def draw_avg_diff():
 
     plt.tight_layout()
     plt.legend(legend_lst, ncol=len(legend_lst), fontsize=LEGEND_SIZE, prop={'size': LEGEND_SIZE + 3, "weight": "bold"},
-               bbox_to_anchor=(0.85, 1.15))
+               bbox_to_anchor=(0.55, 1.15))
     exp_figure.subplots_adjust(wspace=0)
     plt.tight_layout()
 
