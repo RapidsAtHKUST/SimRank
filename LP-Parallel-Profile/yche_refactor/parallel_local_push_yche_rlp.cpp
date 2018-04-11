@@ -49,6 +49,7 @@ void PRLP::local_push(GraphYche &g) {
     auto g_start_time = std::chrono::high_resolution_clock::now();
     auto g_end_time = std::chrono::high_resolution_clock::now();
     auto total_ms = 0;
+    vector<int> prefix_sum(num_threads + 1, 0);
 #pragma omp parallel
     {
 #ifdef HAS_OPENMP
@@ -73,17 +74,18 @@ void PRLP::local_push(GraphYche &g) {
 
 #pragma omp single
             {
-                // aggregation of v_a for expansion
+                // aggregation of v_a for expansion, value in thread_local_expansion_set_lst are distinct
                 g_start_time = std::chrono::high_resolution_clock::now();
                 std::unordered_set<int> my_set;
-                for (auto &expansion_set: thread_local_expansion_set_lst) {
-                    for (auto u:expansion_set) {
-                        my_set.emplace(u);
-                    }
+                for (auto i = 0; i < thread_local_expansion_set_lst.size(); i++) {
+                    prefix_sum[i + 1] = prefix_sum[i] + thread_local_expansion_set_lst[i].size();
                 }
-                expansion_set_g.clear();
-                std::copy(std::begin(my_set), std::end(my_set), back_inserter(expansion_set_g));
+                expansion_set_g.resize(static_cast<unsigned long>(prefix_sum.back()));
             }
+            std::copy(std::begin(thread_local_expansion_set_lst[thread_id]),
+                      std::end(thread_local_expansion_set_lst[thread_id]),
+                      std::begin(expansion_set_g) + prefix_sum[thread_id]);
+#pragma omp barrier
             if (thread_id == 0) { cout << "size:" << expansion_set_g.size() << endl; }
             // 1st: generate tasks
 #pragma omp for

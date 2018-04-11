@@ -23,6 +23,8 @@ set(UTIL_FILES util/stat.cpp util/stat.h util/graph_yche.cpp util/file_serializa
 set(GROUND_TRUTH_FILES yche_refactor/simrank.cpp yche_refactor/simrank.h)
 set(LPMC_FILES util/sparse_matrix_utils.h)
 set(PLP_FILES yche_refactor/parallel_local_push_yche.cpp yche_refactor/parallel_local_push_yche.h yche_refactor/parallel_local_push_yche_rlp.cpp)
+set(PPLP_FILES yche_refactor/thread_pool/parallel_local_push_yche_pthread.cpp yche_refactor/thread_pool/parallel_local_push_yche_pthread.h
+        yche_refactor/thread_pool/parallel_local_push_yche_rlp_pthread.cpp)
 set(LP_FILES yche_refactor/local_push_yche.cpp yche_refactor/local_push_yche_rlp.cpp yche_refactor/local_push_yche.h
         ${PLP_FILES})
 
@@ -57,7 +59,7 @@ InitFLPMC(flp)
 target_compile_definitions(flp PRIVATE -DFLP=1)
 
 
-#########3
+######### PLP
 add_executable(pflp playground/main_exec_parallel_lp.cpp ${LPMC_FILES} ${UTIL_FILES} ${GROUND_TRUTH_FILES} ${PLP_FILES})
 InitFLPMC(pflp)
 target_compile_definitions(pflp PRIVATE -DFLP=1)
@@ -66,3 +68,11 @@ add_executable(prlp playground/main_exec_parallel_lp.cpp ${LPMC_FILES} ${UTIL_FI
 InitFLPMC(prlp)
 target_compile_definitions(prlp PRIVATE -DDEBUG=1)
 
+######### PPLP
+add_executable(ppflp playground/main_exec_parallel_lp_pthread.cpp ${LPMC_FILES} ${UTIL_FILES} ${GROUND_TRUTH_FILES} ${PPLP_FILES})
+InitFLPMC(ppflp)
+target_compile_definitions(ppflp PRIVATE -DFLP=1 -DPTHREAD=1)
+
+add_executable(pprlp playground/main_exec_parallel_lp_pthread.cpp ${LPMC_FILES} ${UTIL_FILES} ${GROUND_TRUTH_FILES} ${PPLP_FILES})
+InitFLPMC(pprlp)
+target_compile_definitions(pprlp PRIVATE -DDEBUG=1 -DPTHREAD=1)
