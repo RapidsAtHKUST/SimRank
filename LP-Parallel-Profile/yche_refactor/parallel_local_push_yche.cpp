@@ -80,7 +80,7 @@ PFLP::PFLP(GraphYche &g, string name, double c_, double epsilon, size_t n_) : LP
 void PFLP::local_push(GraphYche &g) {
     int counter = 0;
     bool is_go_on;
-    vector<int> prefix_sum(num_threads + 1, 0);
+    vector<long> prefix_sum(num_threads + 1, 0);
 
 #pragma omp parallel
     {
@@ -109,7 +109,6 @@ void PFLP::local_push(GraphYche &g) {
 #pragma omp single
             {
                 // aggregation of v_a for expansion, value in thread_local_expansion_set_lst are distinct
-                std::unordered_set<int> my_set;
                 for (auto i = 0; i < thread_local_expansion_set_lst.size(); i++) {
                     prefix_sum[i + 1] = prefix_sum[i] + thread_local_expansion_set_lst[i].size();
                 }

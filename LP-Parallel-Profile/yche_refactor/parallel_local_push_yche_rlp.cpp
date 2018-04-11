@@ -49,7 +49,10 @@ void PRLP::local_push(GraphYche &g) {
     auto g_start_time = std::chrono::high_resolution_clock::now();
     auto g_end_time = std::chrono::high_resolution_clock::now();
     auto total_ms = 0;
-    vector<int> prefix_sum(num_threads + 1, 0);
+    long g_expansion_pair_num = 0;
+    long g_expansion_a_prime_num = 0;
+    long pair_size = 0;
+    vector<long> prefix_sum(num_threads + 1, 0);
 #pragma omp parallel
     {
 #ifdef HAS_OPENMP
@@ -76,7 +79,7 @@ void PRLP::local_push(GraphYche &g) {
             {
                 // aggregation of v_a for expansion, value in thread_local_expansion_set_lst are distinct
                 g_start_time = std::chrono::high_resolution_clock::now();
-                std::unordered_set<int> my_set;
+                g_expansion_pair_num = 0;
                 for (auto i = 0; i < thread_local_expansion_set_lst.size(); i++) {
                     prefix_sum[i + 1] = prefix_sum[i] + thread_local_expansion_set_lst[i].size();
                 }
@@ -85,8 +88,16 @@ void PRLP::local_push(GraphYche &g) {
             std::copy(std::begin(thread_local_expansion_set_lst[thread_id]),
                       std::end(thread_local_expansion_set_lst[thread_id]),
                       std::begin(expansion_set_g) + prefix_sum[thread_id]);
+
 #pragma omp barrier
-            if (thread_id == 0) { cout << "size:" << expansion_set_g.size() << endl; }
+#pragma omp for
+            for (auto i = 0; i < expansion_set_g.size(); i++) {
+                g_expansion_pair_num += expansion_pair_lst[expansion_set_g[i]].size();
+            }
+            if (thread_id == 0) {
+                cout << "size:" << expansion_set_g.size() << endl;
+                cout << "(a, b) to expand:" << g_expansion_pair_num << endl;
+            }
             // 1st: generate tasks
 #pragma omp for
             for (auto i = 0; i < task_hash_table.size(); i++) {
@@ -129,11 +140,24 @@ void PRLP::local_push(GraphYche &g) {
             }
 #pragma omp single
             {
+                pair_size = 0;
+                g_expansion_a_prime_num = 0;
+            };
+#pragma omp for reduction(+:pair_size, g_expansion_a_prime_num)
+            for (auto i = 0; i < task_hash_table.size(); i++) {
+                pair_size += task_hash_table[i].size();
+                g_expansion_a_prime_num += task_hash_table[i].empty() ? 0 : 1;
+            }
+
+#pragma omp single
+            {
                 counter++;
                 g_end_time = std::chrono::high_resolution_clock::now();
                 auto tmp_elapsed = std::chrono::duration_cast<std::chrono::milliseconds>(
                         (g_end_time - g_start_time)).count();
                 total_ms += tmp_elapsed;
+                cout << "(a', b) pair size: " << pair_size << endl;
+                cout << "(a', *) size: " << g_expansion_a_prime_num << endl;
                 cout << "gen using " << tmp_elapsed << " ms" << endl;
             }
 
