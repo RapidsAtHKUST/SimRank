@@ -82,7 +82,7 @@ struct PRLP : LP {
 #ifdef HAS_OPENMP
     vector<omp_lock_t> hash_table_lock;
 #endif
-    size_t num_threads;
+    size_t num_threads_;
 public:
     PRLP(GraphYche &g, string name, double c_, double epsilon, size_t n_);
 
