@@ -80,7 +80,7 @@ struct PRLP : LP {
 
     bool* is_in_expansion_set;
 
-    vector<sparse_hash_map<int, vector<RLPTask>>> thread_local_task_hash_table_lst;
+    vector<vector<vector<RLPTask>>> thread_local_task_hash_table_lst;
 
     vector<vector<RLPTask>> g_task_hash_table;
 

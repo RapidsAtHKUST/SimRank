@@ -39,7 +39,10 @@ PRLP::PRLP(GraphYche &g, string name, double c_, double epsilon, size_t n_) : LP
         is_in_expansion_set[i] = false;
     }
 
-    thread_local_task_hash_table_lst = vector<sparse_hash_map<int, vector<RLPTask>>>(num_threads_);
+    thread_local_task_hash_table_lst = vector<vector<vector<RLPTask>>>(num_threads_);
+    for (auto &local_hash_table: thread_local_task_hash_table_lst) {
+        local_hash_table.resize(n);
+    }
 }
 
 void PRLP::local_push(GraphYche &g) {
@@ -50,7 +53,8 @@ void PRLP::local_push(GraphYche &g) {
     auto total_ms = 0;
     vector<long> prefix_sum(num_threads_ + 1, 0);
     long prev_expansion_set_g_size;
-#pragma omp parallel num_threads(num_threads_)
+
+#pragma omp parallel
     {
 #ifdef HAS_OPENMP
         auto thread_id = omp_get_thread_num();
@@ -92,8 +96,8 @@ void PRLP::local_push(GraphYche &g) {
 //                cout << "(a, *) to expand:" << expansion_set_g.size() << endl;
 //            }
             // 1st: generate tasks
-            local_task_hash_table.clear();
-            long max_expansion_num = 100000;
+            for (auto &my_vec: local_task_hash_table) { my_vec.clear(); }
+            long max_expansion_num = 1000000;
             long min_idx =
                     expansion_set_g.size() > max_expansion_num ? expansion_set_g.size() - max_expansion_num : 0;
 
@@ -143,18 +147,17 @@ void PRLP::local_push(GraphYche &g) {
             }
 #pragma omp barrier
 
+#if !defined(REDUNDANT_EMPLACE)
 #pragma omp for
             for (auto i = 0; i < g_task_hash_table.size(); i++) {
                 g_task_hash_table[i].clear();
-//                for (auto &thread_local_hash_table:thread_local_task_hash_table_lst) {
-//                    if (thread_local_hash_table.contains(i)) {
-//                        for (auto &task: thread_local_hash_table[i]) {
-//                            g_task_hash_table[i].emplace_back(task);
-//                        }
-//                    }
-//                }
+                for (auto &thread_local_hash_table:thread_local_task_hash_table_lst) {
+                    for (auto &task: thread_local_hash_table[i]) {
+                        g_task_hash_table[i].emplace_back(task);
+                    }
+                }
             }
-
+#else
             for (auto &thread_local_hash_table:thread_local_task_hash_table_lst) {
                 for (auto &my_pair:thread_local_hash_table) {
                     if (my_pair.first % num_threads_ == thread_id) {
@@ -164,6 +167,7 @@ void PRLP::local_push(GraphYche &g) {
                     }
                 }
             }
+#endif
 
 #pragma omp single
             {
