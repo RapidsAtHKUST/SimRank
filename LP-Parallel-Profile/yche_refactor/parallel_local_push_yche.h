@@ -78,6 +78,8 @@ struct PRLP : LP {
 
     vector<int> expansion_set_g;
 
+    bool* is_in_expansion_set;
+
     vector<sparse_hash_map<int, vector<RLPTask>>> thread_local_task_hash_table_lst;
 
     vector<vector<RLPTask>> g_task_hash_table;
@@ -87,6 +89,10 @@ public:
     PRLP(GraphYche &g, string name, double c_, double epsilon, size_t n_);
 
     double query_P(int a, int b) override;
+
+    ~PRLP() {
+        delete[] is_in_expansion_set;
+    }
 
 public:
     string get_file_path_base() override;

@@ -24,7 +24,7 @@ PRLP::PRLP(GraphYche &g, string name, double c_, double epsilon, size_t n_) : LP
     thread_local_expansion_set_lst = vector<vector<int>>(num_threads_);
     thread_local_expansion_set_lst[0].reserve(n);
     expansion_pair_lst.resize(n);
-    expansion_set_g.resize(n);
+    expansion_set_g.resize(0);
     g_task_hash_table.resize(n);
 
     for (int i = 0; i < n; i++) {
@@ -33,6 +33,10 @@ PRLP::PRLP(GraphYche &g, string name, double c_, double epsilon, size_t n_) : LP
         marker[np] = true;
         thread_local_expansion_set_lst[0].emplace_back(i);
         expansion_pair_lst[i].emplace_back(i);
+    }
+    is_in_expansion_set = new bool[n];
+    for (auto i = 0; i < n; i++) {
+        is_in_expansion_set[i] = false;
     }
 
     thread_local_task_hash_table_lst = vector<sparse_hash_map<int, vector<RLPTask>>>(num_threads_);
@@ -45,6 +49,7 @@ void PRLP::local_push(GraphYche &g) {
     auto g_end_time = std::chrono::high_resolution_clock::now();
     auto total_ms = 0;
     vector<long> prefix_sum(num_threads_ + 1, 0);
+    long prev_expansion_set_g_size;
 #pragma omp parallel num_threads(num_threads_)
     {
 #ifdef HAS_OPENMP
@@ -60,9 +65,9 @@ void PRLP::local_push(GraphYche &g) {
 #pragma omp single
             {
                 is_go_on = false;
-#ifdef DEBUG
-                cout << "gen beg..." << counter << endl;
-#endif
+//#ifdef DEBUG
+//                cout << "gen beg..." << counter << endl;
+//#endif
             }
             if (!local_expansion_set.empty()) { is_go_on = true; }
 #pragma omp barrier
@@ -75,21 +80,25 @@ void PRLP::local_push(GraphYche &g) {
                 for (auto i = 0; i < thread_local_expansion_set_lst.size(); i++) {
                     prefix_sum[i + 1] = prefix_sum[i] + thread_local_expansion_set_lst[i].size();
                 }
-//                cout << prefix_sum << endl;
-                expansion_set_g.resize(static_cast<unsigned long>(prefix_sum.back()));
+                prev_expansion_set_g_size = expansion_set_g.size();
+                expansion_set_g.resize(prev_expansion_set_g_size + static_cast<unsigned long>(prefix_sum.back()));
             }
-            std::copy(std::begin(thread_local_expansion_set_lst[thread_id]),
-                      std::end(thread_local_expansion_set_lst[thread_id]),
-                      std::begin(expansion_set_g) + prefix_sum[thread_id]);
+            std::copy(std::begin(local_expansion_set), std::end(local_expansion_set),
+                      std::begin(expansion_set_g) + prev_expansion_set_g_size + prefix_sum[thread_id]);
+            for (auto expansion_v: local_expansion_set) { is_in_expansion_set[expansion_v] = true; }
 
 #pragma omp barrier
-            if (thread_id == 0) {
-                cout << "(a, *) to expand:" << expansion_set_g.size() << endl;
-            }
+//            if (thread_id == 0) {
+//                cout << "(a, *) to expand:" << expansion_set_g.size() << endl;
+//            }
             // 1st: generate tasks
             local_task_hash_table.clear();
+            long max_expansion_num = 100000;
+            long min_idx =
+                    expansion_set_g.size() > max_expansion_num ? expansion_set_g.size() - max_expansion_num : 0;
+
 #pragma omp for schedule(dynamic, 50)
-            for (auto i = 0; i < expansion_set_g.size(); i++) {
+            for (long i = expansion_set_g.size() - 1; i >= min_idx; i--) {
                 auto a = expansion_set_g[i];
                 for (auto b:expansion_pair_lst[a]) {
 
@@ -119,17 +128,31 @@ void PRLP::local_push(GraphYche &g) {
                         }
                     }
                 }
+                is_in_expansion_set[a] = false;
             }
 
             // 2nd: task preparation
 #pragma omp for nowait
-            for (auto i = 0; i < expansion_set_g.size(); i++) { expansion_pair_lst[expansion_set_g[i]].clear(); }
+            for (long i = expansion_set_g.size() - 1; i >= min_idx; i--) {
+                expansion_pair_lst[expansion_set_g[i]].clear();
+            }
             local_expansion_set.clear();
+#pragma omp single
+            {
+                expansion_set_g.resize(static_cast<unsigned long>(min_idx));
+            }
 #pragma omp barrier
 
 #pragma omp for
             for (auto i = 0; i < g_task_hash_table.size(); i++) {
                 g_task_hash_table[i].clear();
+//                for (auto &thread_local_hash_table:thread_local_task_hash_table_lst) {
+//                    if (thread_local_hash_table.contains(i)) {
+//                        for (auto &task: thread_local_hash_table[i]) {
+//                            g_task_hash_table[i].emplace_back(task);
+//                        }
+//                    }
+//                }
             }
 
             for (auto &thread_local_hash_table:thread_local_task_hash_table_lst) {
@@ -150,7 +173,7 @@ void PRLP::local_push(GraphYche &g) {
                         (g_end_time - g_start_time)).count();
                 total_ms += tmp_elapsed;
 
-                cout << "gen using " << tmp_elapsed << " ms\n" << endl;
+//                cout << "gen using " << tmp_elapsed << " ms\n" << endl;
             }
 
             // 3rd: computation
@@ -212,7 +235,7 @@ void PRLP::local_push(GraphYche &g) {
                         }
                     }
                 }
-                if (is_enqueue) { local_expansion_set.emplace_back(out_nei_a); }
+                if (is_enqueue && !is_in_expansion_set[out_nei_a]) { local_expansion_set.emplace_back(out_nei_a); }
             }
         }
     } // end of thread pool
