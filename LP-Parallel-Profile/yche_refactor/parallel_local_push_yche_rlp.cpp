@@ -13,6 +13,7 @@
 //#include "../util/pretty_print.h"
 
 using boost::format;
+using namespace std::chrono;
 
 PRLP::PRLP(GraphYche &g, string name, double c_, double epsilon, size_t n_) : LP(g, name, c_, epsilon, n_) {
     P.add(n);
@@ -53,6 +54,7 @@ void PRLP::local_push(GraphYche &g) {
     auto total_ms = 0;
     vector<long> prefix_sum(num_threads_ + 1, 0);
     long prev_expansion_set_g_size;
+    long min_idx;
 
 #pragma omp parallel
     {
@@ -69,11 +71,11 @@ void PRLP::local_push(GraphYche &g) {
 #pragma omp single
             {
                 is_go_on = false;
-//#ifdef DEBUG
-//                cout << "gen beg..." << counter << endl;
-//#endif
+#ifdef DEBUG
+                cout << "gen beg..." << counter << endl;
+#endif
             }
-            if (!local_expansion_set.empty()) { is_go_on = true; }
+            if (!expansion_set_g.empty() || !local_expansion_set.empty()) { is_go_on = true; }
 #pragma omp barrier
             if (!is_go_on) { break; }
 
@@ -92,14 +94,28 @@ void PRLP::local_push(GraphYche &g) {
             for (auto expansion_v: local_expansion_set) { is_in_expansion_set[expansion_v] = true; }
 
 #pragma omp barrier
-//            if (thread_id == 0) {
-//                cout << "(a, *) to expand:" << expansion_set_g.size() << endl;
-//            }
+#ifdef DEBUG
+            if (thread_id == 0) {
+                cout << "total (a, *) to expand:" << expansion_set_g.size() << endl;
+            }
+#endif
             // 1st: generate tasks
-            for (auto &my_vec: local_task_hash_table) { my_vec.clear(); }
-            long max_expansion_num = 1000000;
-            long min_idx =
-                    expansion_set_g.size() > max_expansion_num ? expansion_set_g.size() - max_expansion_num : 0;
+#pragma omp single
+            {
+                auto tmp_time = std::chrono::high_resolution_clock::now();
+
+                long max_expansion_num = 1 << 20;
+//                long max_expansion_num = 1000;
+                long accumulation = 0;
+                for (min_idx = expansion_set_g.size() - 1;
+                     min_idx != 0 && accumulation < max_expansion_num; min_idx--) {
+                    accumulation += expansion_pair_lst[expansion_set_g[min_idx]].size();
+                }
+                auto tmp_time_end = std::chrono::high_resolution_clock::now();
+                cout << "find min_idx cost:"
+                     << std::chrono::duration_cast<std::chrono::microseconds>((tmp_time_end - tmp_time)).count()
+                     << "us\n";
+            }
 
 #pragma omp for schedule(dynamic, 50)
             for (long i = expansion_set_g.size() - 1; i >= min_idx; i--) {
@@ -126,7 +142,6 @@ void PRLP::local_push(GraphYche &g) {
                     if (a != b) {
                         for (auto off_b = g.off_out[b]; off_b < g.off_out[b + 1]; off_b++) {
                             auto out_nei_b = g.neighbors_out[off_b];
-
                             local_task_hash_table[out_nei_b].emplace_back(a, static_cast<float>(residual_to_push),
                                                                           false);
                         }
@@ -135,7 +150,7 @@ void PRLP::local_push(GraphYche &g) {
                 is_in_expansion_set[a] = false;
             }
 
-            // 2nd: task preparation
+            // 2nd: clear expansion Q related structures for the next computation stage
 #pragma omp for nowait
             for (long i = expansion_set_g.size() - 1; i >= min_idx; i--) {
                 expansion_pair_lst[expansion_set_g[i]].clear();
@@ -147,7 +162,6 @@ void PRLP::local_push(GraphYche &g) {
             }
 #pragma omp barrier
 
-#if !defined(REDUNDANT_EMPLACE)
 #pragma omp for
             for (auto i = 0; i < g_task_hash_table.size(); i++) {
                 g_task_hash_table[i].clear();
@@ -155,19 +169,10 @@ void PRLP::local_push(GraphYche &g) {
                     for (auto &task: thread_local_hash_table[i]) {
                         g_task_hash_table[i].emplace_back(task);
                     }
+                    thread_local_hash_table[i].clear();
                 }
             }
-#else
-            for (auto &thread_local_hash_table:thread_local_task_hash_table_lst) {
-                for (auto &my_pair:thread_local_hash_table) {
-                    if (my_pair.first % num_threads_ == thread_id) {
-                        for (auto &task: my_pair.second) {
-                            g_task_hash_table[my_pair.first].emplace_back(task);
-                        }
-                    }
-                }
-            }
-#endif
+
 
 #pragma omp single
             {
@@ -176,8 +181,9 @@ void PRLP::local_push(GraphYche &g) {
                 auto tmp_elapsed = std::chrono::duration_cast<std::chrono::milliseconds>(
                         (g_end_time - g_start_time)).count();
                 total_ms += tmp_elapsed;
-
-//                cout << "gen using " << tmp_elapsed << " ms\n" << endl;
+#ifdef DEBUG
+                cout << "gen using " << tmp_elapsed << " ms\n" << endl;
+#endif
             }
 
             // 3rd: computation
@@ -191,12 +197,12 @@ void PRLP::local_push(GraphYche &g) {
                     auto local_b = task.b_;
                     if (task.is_singleton_) {
                         // assume neighbors are sorted
+                        // only push to partial pairs for a < local_b
                         auto it = std::lower_bound(std::begin(g.neighbors_out) + g.off_out[local_b],
                                                    std::begin(g.neighbors_out) + g.off_out[local_b + 1], out_nei_a);
                         for (auto off_b = it - std::begin(g.neighbors_out) + (*it == out_nei_a ? 1 : 0);
                              off_b < g.off_out[local_b + 1]; off_b++) {
                             auto out_nei_b = g.neighbors_out[off_b];
-//                            if (out_nei_a < out_nei_b) { // only push to partial pairs for a < local_b
                             NodePair pab(out_nei_a, out_nei_b);
 
                             // push
@@ -212,15 +218,14 @@ void PRLP::local_push(GraphYche &g) {
                                     is_in_q_ref = true;
                                 }
                             }
-//                            }
                         }
                     } else {
+                        // only push to partial pairs for a < local_b
                         auto it = std::lower_bound(std::begin(g.neighbors_out) + g.off_out[local_b],
                                                    std::begin(g.neighbors_out) + g.off_out[local_b + 1], out_nei_a);
                         for (auto off_b = it - std::begin(g.neighbors_out) + (*it == out_nei_a ? 1 : 0);
                              off_b < g.off_out[local_b + 1]; off_b++) {
                             auto out_nei_b = g.neighbors_out[off_b];
-//                            if (out_nei_a < out_nei_b) {
                             NodePair pab(out_nei_a, out_nei_b);
 
                             // push
@@ -235,7 +240,6 @@ void PRLP::local_push(GraphYche &g) {
                                     is_in_q_ref = true;
                                 }
                             }
-//                            }
                         }
                     }
                 }
@@ -243,7 +247,7 @@ void PRLP::local_push(GraphYche &g) {
             }
         }
     } // end of thread pool
-
+    cout << "mem usage:" << getValue() << " KB" << endl;
     cout << "rounds:" << counter << "\n gen accumulation:" << total_ms << " ms" << endl;
 }
 
