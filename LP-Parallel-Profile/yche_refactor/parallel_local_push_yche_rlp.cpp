@@ -23,6 +23,7 @@ PRLP::PRLP(GraphYche &g, string name, double c_, double epsilon, size_t n_) : LP
     num_threads_ = 56u;
 
     thread_local_expansion_set_lst = vector<vector<int>>(num_threads_);
+    thread_local_hash_slot_indicator_lst = vector<vector<int>>(num_threads_);
     thread_local_expansion_set_lst[0].reserve(n);
     expansion_pair_lst.resize(n);
     expansion_set_g.resize(0);
@@ -65,7 +66,7 @@ void PRLP::local_push(GraphYche &g) {
 #endif
         auto &local_expansion_set = thread_local_expansion_set_lst[thread_id];
         auto &local_task_hash_table = thread_local_task_hash_table_lst[thread_id];
-
+        auto &local_hash_slot_set = thread_local_hash_slot_indicator_lst[thread_id];
         while (true) {
             // 0th: initialize is_go_on flag
 #pragma omp single
@@ -94,17 +95,15 @@ void PRLP::local_push(GraphYche &g) {
             for (auto expansion_v: local_expansion_set) { is_in_expansion_set[expansion_v] = true; }
 
 #pragma omp barrier
-#ifdef DEBUG
-            if (thread_id == 0) {
-                cout << "total (a, *) to expand:" << expansion_set_g.size() << endl;
-            }
-#endif
+
             // 1st: generate tasks
 #pragma omp single
             {
+                cout << "total (a, *) to expand:" << expansion_set_g.size() << "\n";
                 auto tmp_time = std::chrono::high_resolution_clock::now();
 
-                long max_expansion_num = 1 << 20;
+//                long max_expansion_num = max<long>(n, 100000);
+                long max_expansion_num = 10000000;
 //                long max_expansion_num = 1000;
                 long accumulation = 0;
                 for (min_idx = expansion_set_g.size() - 1;
@@ -112,9 +111,13 @@ void PRLP::local_push(GraphYche &g) {
                     accumulation += expansion_pair_lst[expansion_set_g[min_idx]].size();
                 }
                 auto tmp_time_end = std::chrono::high_resolution_clock::now();
+                cout << "accumulation pair#: " << accumulation << "\n";
+                cout << "accumulation (a, *): " << expansion_set_g.size() - min_idx << "\n";
+                cout << "min_idx: " << min_idx << "\n";
+
                 cout << "find min_idx cost:"
                      << std::chrono::duration_cast<std::chrono::microseconds>((tmp_time_end - tmp_time)).count()
-                     << "us\n";
+                     << "us" << endl;
             }
 
 #pragma omp for schedule(dynamic, 50)
@@ -156,20 +159,27 @@ void PRLP::local_push(GraphYche &g) {
                 expansion_pair_lst[expansion_set_g[i]].clear();
             }
             local_expansion_set.clear();
+            local_hash_slot_set.clear();
 #pragma omp single
             {
                 expansion_set_g.resize(static_cast<unsigned long>(min_idx));
             }
 #pragma omp barrier
 
+
 #pragma omp for
             for (auto i = 0; i < g_task_hash_table.size(); i++) {
+                auto is_slot_occupied = false;
                 g_task_hash_table[i].clear();
                 for (auto &thread_local_hash_table:thread_local_task_hash_table_lst) {
                     for (auto &task: thread_local_hash_table[i]) {
                         g_task_hash_table[i].emplace_back(task);
+                        is_slot_occupied = true;
                     }
                     thread_local_hash_table[i].clear();
+                }
+                if (is_slot_occupied) {
+                    local_hash_slot_set.emplace_back(i);
                 }
             }
 
@@ -187,63 +197,65 @@ void PRLP::local_push(GraphYche &g) {
             }
 
             // 3rd: computation
-#pragma omp for schedule(dynamic, 1)
-            for (auto i = 0; i < g_task_hash_table.size(); i++) {
-                auto out_nei_a = i;
-                bool is_enqueue = false;
+            for (auto &local_slot_set: thread_local_hash_slot_indicator_lst) {
+#pragma omp for schedule(dynamic, 1) nowait 
+                for (auto i = 0; i < local_slot_set.size(); i++) {
+                    auto out_nei_a = local_slot_set[i];
+                    bool is_enqueue = false;
 
-                for (auto &task :g_task_hash_table[i]) {
-                    // push to neighbors
-                    auto local_b = task.b_;
-                    if (task.is_singleton_) {
-                        // assume neighbors are sorted
-                        // only push to partial pairs for a < local_b
-                        auto it = std::lower_bound(std::begin(g.neighbors_out) + g.off_out[local_b],
-                                                   std::begin(g.neighbors_out) + g.off_out[local_b + 1], out_nei_a);
-                        for (auto off_b = it - std::begin(g.neighbors_out) + (*it == out_nei_a ? 1 : 0);
-                             off_b < g.off_out[local_b + 1]; off_b++) {
-                            auto out_nei_b = g.neighbors_out[off_b];
-                            NodePair pab(out_nei_a, out_nei_b);
+                    for (auto &task :g_task_hash_table[out_nei_a]) {
+                        // push to neighbors
+                        auto local_b = task.b_;
+                        if (task.is_singleton_) {
+                            // assume neighbors are sorted
+                            // only push to partial pairs for a < local_b
+                            auto it = std::lower_bound(std::begin(g.neighbors_out) + g.off_out[local_b],
+                                                       std::begin(g.neighbors_out) + g.off_out[local_b + 1], out_nei_a);
+                            for (auto off_b = it - std::begin(g.neighbors_out) + (*it == out_nei_a ? 1 : 0);
+                                 off_b < g.off_out[local_b + 1]; off_b++) {
+                                auto out_nei_b = g.neighbors_out[off_b];
+                                NodePair pab(out_nei_a, out_nei_b);
 
-                            // push
-                            auto &res_ref = R[pab];
-                            res_ref += sqrt(2) * c * task.residual_ /
-                                       (g.in_degree(out_nei_a) * g.in_degree(out_nei_b));
+                                // push
+                                auto &res_ref = R[pab];
+                                res_ref += sqrt(2) * c * task.residual_ /
+                                           (g.in_degree(out_nei_a) * g.in_degree(out_nei_b));
 
-                            if (fabs(res_ref) / sqrt(2) > r_max) { // the criteria for reduced linear system
-                                auto &is_in_q_ref = marker[pab];
-                                if (!is_in_q_ref) {
-                                    expansion_pair_lst[out_nei_a].emplace_back(out_nei_b);
-                                    is_enqueue = true;
-                                    is_in_q_ref = true;
+                                if (fabs(res_ref) / sqrt(2) > r_max) { // the criteria for reduced linear system
+                                    auto &is_in_q_ref = marker[pab];
+                                    if (!is_in_q_ref) {
+                                        expansion_pair_lst[out_nei_a].emplace_back(out_nei_b);
+                                        is_enqueue = true;
+                                        is_in_q_ref = true;
+                                    }
                                 }
                             }
-                        }
-                    } else {
-                        // only push to partial pairs for a < local_b
-                        auto it = std::lower_bound(std::begin(g.neighbors_out) + g.off_out[local_b],
-                                                   std::begin(g.neighbors_out) + g.off_out[local_b + 1], out_nei_a);
-                        for (auto off_b = it - std::begin(g.neighbors_out) + (*it == out_nei_a ? 1 : 0);
-                             off_b < g.off_out[local_b + 1]; off_b++) {
-                            auto out_nei_b = g.neighbors_out[off_b];
-                            NodePair pab(out_nei_a, out_nei_b);
+                        } else {
+                            // only push to partial pairs for a < local_b
+                            auto it = std::lower_bound(std::begin(g.neighbors_out) + g.off_out[local_b],
+                                                       std::begin(g.neighbors_out) + g.off_out[local_b + 1], out_nei_a);
+                            for (auto off_b = it - std::begin(g.neighbors_out) + (*it == out_nei_a ? 1 : 0);
+                                 off_b < g.off_out[local_b + 1]; off_b++) {
+                                auto out_nei_b = g.neighbors_out[off_b];
+                                NodePair pab(out_nei_a, out_nei_b);
 
-                            // push
-                            auto &res_ref = R[pab];
-                            res_ref += c * task.residual_ / (g.in_degree(out_nei_a) * g.in_degree(out_nei_b));
+                                // push
+                                auto &res_ref = R[pab];
+                                res_ref += c * task.residual_ / (g.in_degree(out_nei_a) * g.in_degree(out_nei_b));
 
-                            if (fabs(res_ref) / sqrt(2) > r_max) { // the criteria for reduced linear system
-                                auto &is_in_q_ref = marker[pab];
-                                if (!is_in_q_ref) {
-                                    expansion_pair_lst[out_nei_a].emplace_back(out_nei_b);
-                                    is_enqueue = true;
-                                    is_in_q_ref = true;
+                                if (fabs(res_ref) / sqrt(2) > r_max) { // the criteria for reduced linear system
+                                    auto &is_in_q_ref = marker[pab];
+                                    if (!is_in_q_ref) {
+                                        expansion_pair_lst[out_nei_a].emplace_back(out_nei_b);
+                                        is_enqueue = true;
+                                        is_in_q_ref = true;
+                                    }
                                 }
                             }
                         }
                     }
+                    if (is_enqueue && !is_in_expansion_set[out_nei_a]) { local_expansion_set.emplace_back(out_nei_a); }
                 }
-                if (is_enqueue && !is_in_expansion_set[out_nei_a]) { local_expansion_set.emplace_back(out_nei_a); }
             }
         }
     } // end of thread pool

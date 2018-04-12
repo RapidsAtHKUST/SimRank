@@ -72,17 +72,21 @@ public:
 
 /*local push using reduced system*/
 struct PRLP : LP {
+    // --------- expansion Q
     vector<vector<int>> thread_local_expansion_set_lst;
 
     vector<vector<int>> expansion_pair_lst;
 
     vector<int> expansion_set_g;
 
-    bool* is_in_expansion_set;
+    bool *is_in_expansion_set;
 
+    // -------- hash table
     vector<vector<vector<RLPTask>>> thread_local_task_hash_table_lst;
 
     vector<vector<RLPTask>> g_task_hash_table;
+
+    vector<vector<int>> thread_local_hash_slot_indicator_lst;
 
     size_t num_threads_;
 public:
