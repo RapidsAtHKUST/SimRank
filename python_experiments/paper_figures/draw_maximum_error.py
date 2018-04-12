@@ -55,7 +55,7 @@ def draw_figures_max_err():
             my_ax.set_ylabel('Maximum Error', fontsize=LABEL_SIZE + 6)
         for tick in my_ax.yaxis.get_major_ticks():
             tick.label.set_fontsize(TICK_SIZE)
-        my_ax.set_xlabel('Round Number\n' + sub_titles[idx], fontsize=LABEL_SIZE + 4)
+        my_ax.set_xlabel('Round Number\n' + sub_titles[idx], fontsize=LABEL_SIZE + 6)
         my_ax.set_xlim(-0.5, 9.5)
         my_ax.set_xticks(range(10))
         my_ax.set_xticklabels([i + 1 for i in range(10)], fontsize=TICK_SIZE)

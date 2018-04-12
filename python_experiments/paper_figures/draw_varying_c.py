@@ -23,7 +23,7 @@ c_query_dict = dict(itertools.chain(c_query_dict.iteritems(), c_reads_query_dict
 
 
 def draw_query_index_time():
-    exp_figure, ax_tuple = plt.subplots(1, 2, sharex=True, figsize=(16, 6))
+    exp_figure, ax_tuple = plt.subplots(1, 2, sharex=True, figsize=(16, 7))
     c_lst = [0.4, 0.5, 0.6, 0.7, 0.8]
     # 1st: draw querying time
     algorithm_tag_lst = [bflpmc_tag, flpmc_tag, bprw_tag, sling_tag,

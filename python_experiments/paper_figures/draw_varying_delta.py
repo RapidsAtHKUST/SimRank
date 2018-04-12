@@ -23,7 +23,7 @@ delta_query_dict = dict(itertools.chain(delta_query_dict.iteritems(), delta_read
 
 
 def draw_query_index_time():
-    exp_figure, ax_tuple = plt.subplots(1, 2, sharex=True, figsize=(16, 6))
+    exp_figure, ax_tuple = plt.subplots(1, 2, sharex=True, figsize=(16, 7))
 
     # 1st: draw querying time
     algorithm_tag_lst = [bflpmc_tag, flpmc_tag, bprw_tag, sling_tag, reads_d_tag, reads_rq_tag, tsf_tag]

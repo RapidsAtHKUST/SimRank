@@ -18,7 +18,7 @@ rmax_query_dict = get_dict('../data_analysis/data-json/varying_parameters/varyin
 def draw_query_index_time():
     # rmax_lst = [0.01 * (i + 1) for i in xrange(0, 30, 1)]
     rmax_lst = [0.01 * (i + 1) for i in xrange(4, 10, 1)]
-    exp_figure, ax_tuple = plt.subplots(1, 2, sharex=True, figsize=(16, 6))
+    exp_figure, ax_tuple = plt.subplots(1, 2, sharex=True, figsize=(16, 7))
 
     # 1st: draw querying time
     algorithm_tag_lst = [bflpmc_tag, flpmc_tag]

@@ -38,11 +38,11 @@ caption_lst = ['(a) dataset = ', '(b) dataset = ', '(c) dataset = ', '(d) datase
 
 def get_marker_size(idx):
     if idx == 0:
-        return 12
+        return 16
     elif idx == 5:
-        return 20
+        return 22
     else:
-        return 14
+        return 18
 
 
 def draw_precision():
@@ -70,7 +70,7 @@ def draw_precision():
             tick.label.set_fontsize(TICK_SIZE)
         for tick in ax.xaxis.get_major_ticks():
             tick.label.set_fontsize(TICK_SIZE)
-        ax.set_xlabel('$\\epsilon$\n' + caption_lst[ax_idx] + data_names[data_set_name], fontsize=LABEL_SIZE + 4)
+        ax.set_xlabel('$\\epsilon$\n' + caption_lst[ax_idx] + data_names[data_set_name], fontsize=LABEL_SIZE + 6)
     ax = ax_tuple[0]
     # setup labels and grid, legend
     ax.set_ylabel('Precision', fontsize=LABEL_SIZE + 6)

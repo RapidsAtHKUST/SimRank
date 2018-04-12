@@ -13,7 +13,7 @@ def get_name_dict():
 data_names = get_name_dict()
 
 # figure parameters
-FIG_SIZE_MULTIPLE = (32, 4)
+FIG_SIZE_MULTIPLE = (32, 6)
 LABEL_SIZE = 22
 TICK_SIZE = 22
 LEGEND_SIZE = 22

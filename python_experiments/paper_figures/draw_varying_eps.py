@@ -24,7 +24,7 @@ eps_query_dict = dict(itertools.chain(eps_query_dict.iteritems(), eps_reads_quer
 def draw_query_index_time():
     eps_lst = [0.001 * (i + 1) for i in xrange(1, 20, 1)]
     xtick_lst = [0.002, 0.008, 0.014, 0.02]
-    exp_figure, ax_tuple = plt.subplots(1, 2, sharex=True, figsize=(16, 6))
+    exp_figure, ax_tuple = plt.subplots(1, 2, sharex=True, figsize=(16, 7))
 
     # 1st: draw querying time
     algorithm_tag_lst = [bflpmc_tag, flpmc_tag, bprw_tag, sling_tag,

@@ -16,7 +16,6 @@ data_names = get_name_dict()
 def draw_max_err():
     eps_lst = [0.001 * (i + 1) for i in xrange(1, 15, 1)]
     xtick_lst = [0, 0.005, 0.01, 0.015]
-    # exp_figure, ax_tuple = plt.subplots(1, 1, sharex=True, figsize=(10.5, 5))
     exp_figure, ax_tuple = plt.subplots(1, 4, sharex=True, figsize=(32, 7))
 
     algorithm_tag_lst = [bflpmc_tag, flpmc_tag, bprw_tag, sling_tag,
@@ -63,7 +62,7 @@ def draw_max_err():
             tick.label.set_fontsize(TICK_SIZE)
         for tick in ax.xaxis.get_major_ticks():
             tick.label.set_fontsize(TICK_SIZE)
-        ax.set_xlabel('$\\epsilon$\n' + caption_lst[ax_idx] + data_names[data_set_name], fontsize=LABEL_SIZE + 4)
+        ax.set_xlabel('$\\epsilon$\n' + caption_lst[ax_idx] + data_names[data_set_name], fontsize=LABEL_SIZE + 6)
     ax = ax_tuple[0]
     # setup labels and grid, legend
     ax.set_ylabel('Maximum Error', fontsize=LABEL_SIZE + 6)
