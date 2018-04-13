@@ -35,17 +35,19 @@ def run_exp():
     our_exec_path = '/homes/ywangby/workspace/yche/git-repos/SimRank/LPMC-Parallel-Profile/build-icc'
 
     data_set_lst = [
-                    'ca-GrQc', 'ca-HepTh', 'p2p-Gnutella06', 'wiki-Vote',
-                    'email-Enron', 'email-EuAll', 'web-NotreDame', 'web-Stanford', 'web-BerkStan', 'web-Google',
-                    'cit-Patents', 'soc-LiveJournal1'
-                    ]
-    our_algorithm_lst = ['pflp', 'prlp']
+        'ca-GrQc', 'ca-HepTh', 'p2p-Gnutella06', 'wiki-Vote',
+        'email-Enron', 'email-EuAll', 'web-NotreDame', 'web-Stanford', 'web-BerkStan', 'web-Google',
+        'cit-Patents', 'soc-LiveJournal1'
+    ]
+    our_algorithm_lst = [
+        # 'pflp',
+        'prlp']
     thread_num_lst = [1, 2, 4, 8, 16, 32, 56]
 
     def one_round():
         for data_set_name in data_set_lst:
             for our_algorithm in our_algorithm_lst:
-                statistics_folder_path = os.sep.join(['plp_scalability_results', our_algorithm, data_set_name])
+                statistics_folder_path = os.sep.join(['plp_scalability_results_04_12', our_algorithm, data_set_name])
                 os.system('mkdir -p ' + statistics_folder_path)
 
                 for thread_num in list(reversed(thread_num_lst)):
