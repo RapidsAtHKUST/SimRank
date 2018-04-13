@@ -18,7 +18,7 @@ PRLP::PRLP(GraphYche &g, string name, double c_, double epsilon, size_t n_) : LP
     R.add(n);
     marker.add(n);
 
-    num_threads = 56u;
+    num_threads = 64u;
 
     thread_local_expansion_set_lst = vector<vector<int>>(num_threads);
     thread_local_expansion_set_lst[0].reserve(n);
@@ -98,6 +98,7 @@ void PRLP::local_push(GraphYche &g) {
                 cout << "size:" << expansion_set_g.size() << endl;
                 cout << "(a, b) to expand:" << g_expansion_pair_num << endl;
             }
+
             // 1st: generate tasks
 #pragma omp for
             for (auto i = 0; i < task_hash_table.size(); i++) {
@@ -178,12 +179,12 @@ void PRLP::local_push(GraphYche &g) {
                     auto local_b = task.b_;
                     if (task.is_singleton_) {
                         // assume neighbors are sorted
+                        // only push to partial pairs for a < local_b
                         auto it = std::lower_bound(std::begin(g.neighbors_out) + g.off_out[local_b],
                                                    std::begin(g.neighbors_out) + g.off_out[local_b + 1], out_nei_a);
                         for (auto off_b = it - std::begin(g.neighbors_out) + (*it == out_nei_a ? 1 : 0);
                              off_b < g.off_out[local_b + 1]; off_b++) {
                             auto out_nei_b = g.neighbors_out[off_b];
-//                            if (out_nei_a < out_nei_b) { // only push to partial pairs for a < local_b
                             NodePair pab(out_nei_a, out_nei_b);
 
                             // push
@@ -199,7 +200,6 @@ void PRLP::local_push(GraphYche &g) {
                                     is_in_q_ref = true;
                                 }
                             }
-//                            }
                         }
                     } else {
                         auto it = std::lower_bound(std::begin(g.neighbors_out) + g.off_out[local_b],
@@ -207,7 +207,6 @@ void PRLP::local_push(GraphYche &g) {
                         for (auto off_b = it - std::begin(g.neighbors_out) + (*it == out_nei_a ? 1 : 0);
                              off_b < g.off_out[local_b + 1]; off_b++) {
                             auto out_nei_b = g.neighbors_out[off_b];
-//                            if (out_nei_a < out_nei_b) {
                             NodePair pab(out_nei_a, out_nei_b);
 
                             // push
@@ -222,7 +221,6 @@ void PRLP::local_push(GraphYche &g) {
                                     is_in_q_ref = true;
                                 }
                             }
-//                            }
                         }
                     }
                 }
