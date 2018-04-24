@@ -40,14 +40,16 @@ def run_exp():
         'cit-Patents', 'soc-LiveJournal1'
     ]
     our_algorithm_lst = [
-        # 'pflp',
-        'prlp']
-    thread_num_lst = [1, 2, 4, 8, 16, 32, 56]
+        'prlp-with-lock',
+        'pflp-with-lock',
+        'prlp-lock-free',
+    ]
+    thread_num_lst = [1, 2, 4, 8, 16, 32, 56, 64]
 
     def one_round():
         for data_set_name in data_set_lst:
             for our_algorithm in our_algorithm_lst:
-                statistics_folder_path = os.sep.join(['plp_scalability_results_04_12', our_algorithm, data_set_name])
+                statistics_folder_path = os.sep.join(['plp_scalability_results_04_24', our_algorithm, data_set_name])
                 os.system('mkdir -p ' + statistics_folder_path)
 
                 for thread_num in list(reversed(thread_num_lst)):
@@ -58,7 +60,8 @@ def run_exp():
 
                     params_lst = map(str, [algorithm_path, data_set_name, 0.01, '>>', statistics_file_path])
                     cmd = ' '.join(params_lst)
-                    time_out = 3600 if data_set_name != 'soc-LiveJournal1' else 7200
+                    # time_out = 3600 if data_set_name != 'soc-LiveJournal1' else 7200
+                    time_out = 7200
 
                     my_env = os.environ.copy()
                     my_env["OMP_NUM_THREADS"] = str(thread_num)
@@ -72,6 +75,10 @@ def run_exp():
                         ofs.write('\n\n\n\n')
                     print 'finish:', cmd
 
+    one_round()
+
+    our_algorithm_lst = ['rlp', 'flp']
+    thread_num_lst = [1]
     one_round()
 
 
