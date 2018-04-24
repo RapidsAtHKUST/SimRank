@@ -9,7 +9,7 @@
 
 #include <boost/format.hpp>
 
-#include "parallel_local_push_yche.h"
+#include "parallel_local_push_yche_with_lock.h"
 
 using boost::format;
 

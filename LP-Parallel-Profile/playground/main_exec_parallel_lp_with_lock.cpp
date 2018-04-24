@@ -5,7 +5,7 @@
 #include <boost/program_options.hpp>
 
 #include "../yche_refactor/simrank.h"
-#include "../yche_refactor/parallel_local_push_yche.h"
+#include "../yche_refactor/parallel_local_push_yche_with_lock.h"
 
 using namespace std;
 using namespace boost::program_options;
