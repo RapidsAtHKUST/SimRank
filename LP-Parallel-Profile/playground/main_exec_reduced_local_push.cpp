@@ -32,6 +32,7 @@ int main(int argc, char *argv[]) {
     cout << format("computation time: %s s") % elapsed.count() << endl; // record the pre-processing time
     cout << format("push num: %s") % lp->n_push << endl;
     cout << format("max queue size #: %s") % (lp->n_push / lp->max_q_size) << endl;
+    cout << format("mem size: %s KB") % getValue() << endl;
 
     cout << format("P size: %s") % lp->P.size() << endl;
     cout << format("R size: %s") % lp->R.size() << endl;

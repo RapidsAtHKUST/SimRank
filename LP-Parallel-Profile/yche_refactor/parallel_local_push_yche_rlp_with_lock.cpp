@@ -184,9 +184,9 @@ void PRLP::local_push(GraphYche &g) {
                     if (task.is_singleton_) {
                         // assume neighbors are sorted
                         // only push to partial pairs for a < local_b
-                        auto it = std::lower_bound(std::begin(g.neighbors_out) + g.off_out[local_b],
+                        auto it = std::upper_bound(std::begin(g.neighbors_out) + g.off_out[local_b],
                                                    std::begin(g.neighbors_out) + g.off_out[local_b + 1], out_nei_a);
-                        for (auto off_b = it - std::begin(g.neighbors_out) + (*it == out_nei_a ? 1 : 0);
+                        for (auto off_b = it - std::begin(g.neighbors_out);
                              off_b < g.off_out[local_b + 1]; off_b++) {
                             auto out_nei_b = g.neighbors_out[off_b];
                             NodePair pab(out_nei_a, out_nei_b);
@@ -206,9 +206,9 @@ void PRLP::local_push(GraphYche &g) {
                             }
                         }
                     } else {
-                        auto it = std::lower_bound(std::begin(g.neighbors_out) + g.off_out[local_b],
+                        auto it = std::upper_bound(std::begin(g.neighbors_out) + g.off_out[local_b],
                                                    std::begin(g.neighbors_out) + g.off_out[local_b + 1], out_nei_a);
-                        for (auto off_b = it - std::begin(g.neighbors_out) + (*it == out_nei_a ? 1 : 0);
+                        for (auto off_b = it - std::begin(g.neighbors_out);
                              off_b < g.off_out[local_b + 1]; off_b++) {
                             auto out_nei_b = g.neighbors_out[off_b];
                             NodePair pab(out_nei_a, out_nei_b);

@@ -33,6 +33,7 @@ int main(int argc, char *argv[]) {
 
     std::chrono::duration<double> elapsed = end_time - start_time;
     cout << format("computation time: %s s") % elapsed.count() << endl; // record the pre-processing time
+    cout << format("mem size: %s KB") % getValue() << endl;
     cout << format("P size: %s") % lp->P.size() << endl;
     cout << format("R size: %s") % lp->R.size() << endl;
 
