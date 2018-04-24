@@ -54,7 +54,7 @@ PFLP::PFLP(GraphYche &g, string name, double c_, double epsilon, size_t n_) : LP
     R.add(n);
     marker.add(n);
 
-    num_threads = 56u;
+    num_threads = 64u;
     thread_local_expansion_set_lst = vector<vector<int>>(num_threads);
     thread_local_expansion_set_lst[0].reserve(n);
     expansion_pair_lst.resize(n);
