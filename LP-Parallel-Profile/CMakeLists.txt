@@ -23,6 +23,7 @@ set(UTIL_FILES util/stat.cpp util/stat.h util/graph_yche.cpp util/file_serializa
 set(GROUND_TRUTH_FILES yche_refactor/simrank.cpp yche_refactor/simrank.h)
 set(LPMC_FILES util/sparse_matrix_utils.h)
 set(PLP_FILES yche_refactor/parallel_local_push_yche_with_lock.cpp yche_refactor/parallel_local_push_yche_with_lock.h yche_refactor/parallel_local_push_yche_rlp_with_lock.cpp)
+set(PLP_LOCK_FREE_FILES yche_refactor/parallel_local_push_yche.cpp yche_refactor/parallel_local_push_yche.h yche_refactor/parallel_local_push_yche_rlp_lock_free.cpp)
 set(PPLP_FILES yche_refactor/thread_pool/parallel_local_push_yche_pthread.cpp yche_refactor/thread_pool/parallel_local_push_yche_pthread.h
         yche_refactor/thread_pool/parallel_local_push_yche_rlp_pthread.cpp)
 set(LP_FILES yche_refactor/local_push_yche.cpp yche_refactor/local_push_yche_rlp.cpp yche_refactor/local_push_yche.h
@@ -68,7 +69,16 @@ add_executable(prlp-with-lock playground/main_exec_parallel_lp_with_lock.cpp ${L
 InitFLPMC(prlp-with-lock)
 #target_compile_definitions(prlp-with-lock PRIVATE -DDEBUG=1)
 
-######### PPLP
+######## lock-free FLP(not-supported)/RLP
+add_executable(pflp-lock-free playground/main_exec_parallel_lp.cpp ${LPMC_FILES} ${UTIL_FILES} ${GROUND_TRUTH_FILES} ${PLP_LOCK_FREE_FILES})
+InitFLPMC(pflp-lock-free)
+target_compile_definitions(pflp-lock-free PRIVATE -DFLP=1)
+
+add_executable(prlp-lock-free playground/main_exec_parallel_lp.cpp ${LPMC_FILES} ${UTIL_FILES} ${GROUND_TRUTH_FILES} ${PLP_LOCK_FREE_FILES})
+InitFLPMC(prlp-lock-free)
+#target_compile_definitions(prlp-lock-free PRIVATE -DDEBUG=1)
+
+######### PPLP (not implemented yet)
 add_executable(ppflp playground/main_exec_parallel_lp_pthread.cpp ${LPMC_FILES} ${UTIL_FILES} ${GROUND_TRUTH_FILES} ${PPLP_FILES})
 InitFLPMC(ppflp)
 target_compile_definitions(ppflp PRIVATE -DFLP=1 -DPTHREAD=1)
