@@ -9,7 +9,8 @@
 
 #include <boost/format.hpp>
 
-#include "../parallel_local_push_yche_with_lock.h"
+
+#include "parallel_local_push_yche_pthread.h"
 
 using boost::format;
 
@@ -18,9 +19,9 @@ PRLP::PRLP(GraphYche &g, string name, double c_, double epsilon, size_t n_) : LP
     R.add(n);
     marker.add(n);
 
-    num_threads = 56u;
+    num_threads_ = 56u;
 
-    thread_local_expansion_set_lst = vector<vector<int>>(num_threads);
+    thread_local_expansion_set_lst = vector<vector<int>>(num_threads_);
     thread_local_expansion_set_lst[0].reserve(n);
     expansion_pair_lst.resize(n);
     expansion_set_g.resize(n);

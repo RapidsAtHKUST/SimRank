@@ -94,10 +94,12 @@ void PRLP::local_push(GraphYche &g) {
             for (auto i = 0; i < expansion_set_g.size(); i++) {
                 g_expansion_pair_num += expansion_pair_lst[expansion_set_g[i]].size();
             }
+#ifdef DEBUG
             if (thread_id == 0) {
                 cout << "size:" << expansion_set_g.size() << endl;
                 cout << "(a, b) to expand:" << g_expansion_pair_num << endl;
             }
+#endif
 
             // 1st: generate tasks
 #pragma omp for
@@ -157,9 +159,11 @@ void PRLP::local_push(GraphYche &g) {
                 auto tmp_elapsed = std::chrono::duration_cast<std::chrono::milliseconds>(
                         (g_end_time - g_start_time)).count();
                 total_ms += tmp_elapsed;
+#ifdef DEBUG
                 cout << "(a', b) pair size: " << pair_size << endl;
                 cout << "(a', *) size: " << g_expansion_a_prime_num << endl;
                 cout << "gen using " << tmp_elapsed << " ms" << endl;
+#endif
             }
 
             // 2nd: task preparation

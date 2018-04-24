@@ -22,7 +22,9 @@ if __name__ == '__main__':
         'email-Enron', 'email-EuAll', 'web-NotreDame', 'web-Stanford', 'web-BerkStan', 'web-Google',
         'cit-Patents', 'soc-LiveJournal1'
     ]
-    our_algorithm_lst = ['pflp', 'prlp']
+    our_algorithm_lst = [
+        # 'pflp',
+        'prlp']
     thread_num_lst = [1, 2, 4, 8, 16, 32, 56]
 
     stat_dict = {}
@@ -32,7 +34,7 @@ if __name__ == '__main__':
             def get_file_path(thread_num):
                 statistics_folder_path = os.sep.join(
                     ['/home/yche/mnt/wangyue-clu/csproject/biggraph/ywangby/yche/git-repos/SimRank'
-                     '/python_experiments/plp_scalability_results', our_algorithm, data_set_name])
+                     '/python_experiments/plp_scalability_results_04_12', our_algorithm, data_set_name])
 
                 return os.sep.join([statistics_folder_path, str(thread_num) + ".txt"])
 
@@ -51,5 +53,5 @@ if __name__ == '__main__':
 
     root_dir_path = '../data-json/parallel_exp'
     os.system('mkdir -p ' + root_dir_path)
-    with open(os.sep.join([root_dir_path, 'scalability.json']), 'w') as ofs:
+    with open(os.sep.join([root_dir_path, 'scalability_04_12.json']), 'w') as ofs:
         ofs.write(json.dumps(stat_dict, indent=4))

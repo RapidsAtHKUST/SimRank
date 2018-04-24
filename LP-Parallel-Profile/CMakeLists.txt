@@ -66,7 +66,7 @@ target_compile_definitions(pflp-with-lock PRIVATE -DFLP=1)
 
 add_executable(prlp-with-lock playground/main_exec_parallel_lp_with_lock.cpp ${LPMC_FILES} ${UTIL_FILES} ${GROUND_TRUTH_FILES} ${PLP_FILES})
 InitFLPMC(prlp-with-lock)
-target_compile_definitions(prlp-with-lock PRIVATE -DDEBUG=1)
+#target_compile_definitions(prlp-with-lock PRIVATE -DDEBUG=1)
 
 ######### PPLP
 add_executable(ppflp playground/main_exec_parallel_lp_pthread.cpp ${LPMC_FILES} ${UTIL_FILES} ${GROUND_TRUTH_FILES} ${PPLP_FILES})
