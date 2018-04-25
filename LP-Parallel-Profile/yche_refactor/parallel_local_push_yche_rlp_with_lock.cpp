@@ -157,6 +157,12 @@ void PRLP::local_push(GraphYche &g) {
             }
 #endif
 
+            // 2nd: task preparation
+#pragma omp for nowait
+            for (auto i = 0; i < expansion_set_g.size(); i++) { expansion_pair_lst[expansion_set_g[i]].clear(); }
+            local_expansion_set.clear();
+//#pragma omp barrier
+
 #pragma omp single
             {
                 counter++;
@@ -170,12 +176,6 @@ void PRLP::local_push(GraphYche &g) {
                 cout << "gen using " << tmp_elapsed << " ms" << endl;
 #endif
             }
-
-            // 2nd: task preparation
-#pragma omp for nowait
-            for (auto i = 0; i < expansion_set_g.size(); i++) { expansion_pair_lst[expansion_set_g[i]].clear(); }
-            local_expansion_set.clear();
-#pragma omp barrier
 
             // 3rd: computation
 #pragma omp for schedule(dynamic, 1)
@@ -191,8 +191,7 @@ void PRLP::local_push(GraphYche &g) {
                         // only push to partial pairs for a < local_b
                         auto it = std::upper_bound(std::begin(g.neighbors_out) + g.off_out[local_b],
                                                    std::begin(g.neighbors_out) + g.off_out[local_b + 1], out_nei_a);
-                        for (auto off_b = it - std::begin(g.neighbors_out);
-                             off_b < g.off_out[local_b + 1]; off_b++) {
+                        for (auto off_b = it - std::begin(g.neighbors_out); off_b < g.off_out[local_b + 1]; off_b++) {
                             auto out_nei_b = g.neighbors_out[off_b];
                             NodePair pab(out_nei_a, out_nei_b);
 
@@ -213,8 +212,7 @@ void PRLP::local_push(GraphYche &g) {
                     } else {
                         auto it = std::upper_bound(std::begin(g.neighbors_out) + g.off_out[local_b],
                                                    std::begin(g.neighbors_out) + g.off_out[local_b + 1], out_nei_a);
-                        for (auto off_b = it - std::begin(g.neighbors_out);
-                             off_b < g.off_out[local_b + 1]; off_b++) {
+                        for (auto off_b = it - std::begin(g.neighbors_out); off_b < g.off_out[local_b + 1]; off_b++) {
                             auto out_nei_b = g.neighbors_out[off_b];
                             NodePair pab(out_nei_a, out_nei_b);
 
