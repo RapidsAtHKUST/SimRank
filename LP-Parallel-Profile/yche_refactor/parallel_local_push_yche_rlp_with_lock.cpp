@@ -50,9 +50,12 @@ void PRLP::local_push(GraphYche &g) {
     auto g_end_time = std::chrono::high_resolution_clock::now();
     auto total_ms = 0;
     long g_expansion_pair_num = 0;
+#ifdef DEBUG
     long g_expansion_a_prime_num = 0;
     long pair_size = 0;
+#endif
     vector<long> prefix_sum(num_threads + 1, 0);
+
 #pragma omp parallel
     {
 #ifdef HAS_OPENMP
@@ -141,6 +144,7 @@ void PRLP::local_push(GraphYche &g) {
                     }
                 }
             }
+#ifdef DEBUG
 #pragma omp single
             {
                 pair_size = 0;
@@ -151,6 +155,7 @@ void PRLP::local_push(GraphYche &g) {
                 pair_size += task_hash_table[i].size();
                 g_expansion_a_prime_num += task_hash_table[i].empty() ? 0 : 1;
             }
+#endif
 
 #pragma omp single
             {
