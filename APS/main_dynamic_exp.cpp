@@ -150,7 +150,8 @@ int main(int argc, char *argv[]) {
     string data_name = argv[1];
     int num_updates = atoi(argv[2]);
     double c = 0.6;
-    double eps = 0.116040;
+//    double eps = 0.116040;
+    double eps = 0.01;
 
     string type(argv[3]);
     if (type == string("ins")) {

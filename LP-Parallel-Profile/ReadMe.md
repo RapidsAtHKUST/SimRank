@@ -33,8 +33,9 @@ profiling | [stat.h](util/stat.h), [stat.cpp](util/stat.cpp)
 
 all pair algorithms | files
 --- | ---
-prlp | [parallel_local_push_yche_rlp.cpp](yche_refactor/parallel_local_push_yche_rlp.cpp)
-pflp | [parallel_local_push_yche.cpp](yche_refactor/parallel_local_push_yche.cpp)
+prlp-with-lock | [parallel_local_push_yche_rlp.cpp](yche_refactor/parallel_local_push_yche_rlp_with_lock.cpp)
+prlp-lock-free | [parallel_local_push_yche_rlp_lock_free.cpp](yche_refactor/parallel_local_push_yche_rlp_lock_free.cpp)
+pflp-with-lock | [parallel_local_push_yche.cpp](yche_refactor/parallel_local_push_yche.cpp)
 flp | [local_push_yche.h](yche_refactor/local_push_yche.h), [local_push_yche.cpp](yche_refactor/local_push_yche.cpp)
 rlp | [local_push_yche_rlp.cpp](yche_refactor/local_push_yche_rlp.cpp)
 iterative(ground truth) | [simrank.h](yche_refactor/simrank.h), [simrank.cpp](yche_refactor/simrank.cpp)
