@@ -65,6 +65,7 @@ void LocalPush::init_PR() {
         NodePair np(i, i);
         R[np] = 1;
         Q.push(np);
+//        Q.push_back(np);
         marker[np] = true;
     }
 }
@@ -75,28 +76,28 @@ Full_LocalPush::Full_LocalPush(GraphYche &g, string name, double c_, double epsi
     init_PR();
 }
 
-void LocalPush::local_push(GraphYche &g) { // local push given current P and R
-    auto start = std::chrono::high_resolution_clock::now();
-
-    while (!Q.empty()) {
-        max_q_size = max(max_q_size, Q.size());
-        NodePair np = Q.front();
-        Q.pop();
-        marker[np] = false;
-        double residual_to_push = how_much_residual_to_push(g, np);
-
-        R[np] -= residual_to_push;
-        P[np] += residual_to_push;
-        push_to_neighbors(g, np, residual_to_push); // push residuals to neighbors of np
-    }
-
-    auto finish = std::chrono::high_resolution_clock::now();
-    std::chrono::duration<double> elapsed = finish - start;
-    if (cpu_time == -1) {
-        cpu_time = elapsed.count();
-        mem_size = getValue();
-    }
-}
+//void LocalPush::local_push(GraphYche &g) { // local push given current P and R
+//    auto start = std::chrono::high_resolution_clock::now();
+//
+//    while (!Q.empty()) {
+//        max_q_size = max(max_q_size, Q.size());
+//        NodePair np = Q.front();
+//        Q.pop();
+//        marker[np] = false;
+//        double residual_to_push = how_much_residual_to_push(g, np);
+//
+//        R[np] -= residual_to_push;
+//        P[np] += residual_to_push;
+//        push_to_neighbors(g, np, residual_to_push); // push residuals to neighbors of np
+//    }
+//
+//    auto finish = std::chrono::high_resolution_clock::now();
+//    std::chrono::duration<double> elapsed = finish - start;
+//    if (cpu_time == -1) {
+//        cpu_time = elapsed.count();
+//        mem_size = getValue();
+//    }
+//}
 
 void Full_LocalPush::push(NodePair &pab, double inc) {
     n_push++;
@@ -107,6 +108,7 @@ void Full_LocalPush::push(NodePair &pab, double inc) {
         auto &is_in_q_flag_ref = marker[pab];
         if (!is_in_q_flag_ref) {
             Q.push(pab);
+//            Q.push_back(pab);
             is_in_q_flag_ref = true;
         }
     }
@@ -193,6 +195,66 @@ string Full_LocalPush::get_file_path_base() {
 
 double Full_LocalPush::query_P(int a, int b) {
     return P.query(a, b);
+}
+
+void Full_LocalPush::local_push(GraphYche &g) {
+    auto start = std::chrono::high_resolution_clock::now();
+
+    while (!Q.empty()) {
+        max_q_size = max(max_q_size, Q.size());
+        NodePair np = Q.front();
+        Q.pop();
+
+//        NodePair np = Q.back();
+//        Q.pop_back();
+        marker[np] = false;
+
+        auto &R_np_ref = R[np];
+        double residual_to_push = R_np_ref;
+
+        R_np_ref -= residual_to_push;
+        P[np] += residual_to_push;
+
+        auto a = np.first;
+        auto b = np.second;
+
+        // push to neighbors
+        for (auto off_a = g.off_out[a]; off_a < g.off_out[a + 1]; off_a++) {
+            auto out_nei_a = g.neighbors_out[off_a];
+            for (auto off_b = g.off_out[b]; off_b < g.off_out[b + 1]; off_b++) {
+                auto out_nei_b = g.neighbors_out[off_b];
+                if (out_nei_a == out_nei_b) {
+                    continue;
+                }
+                auto in_degree_a = g.in_degree(out_nei_a);
+                auto in_degree_b = g.in_degree(out_nei_b);
+                auto total_in = in_degree_a * in_degree_b;
+                NodePair pab(out_nei_a, out_nei_b);
+                double inc = c * residual_to_push / total_in;
+
+                // push(pab, inc);
+                n_push++;
+                // only probing once
+                auto &res_ref = R[pab];
+                res_ref += inc;
+                if (fabs(res_ref) > r_max) {
+                    auto &is_in_q_flag_ref = marker[pab];
+                    if (!is_in_q_flag_ref) {
+                        Q.push(pab);
+//                        Q.push_back(pab);
+                        is_in_q_flag_ref = true;
+                    }
+                }
+            }
+        }
+    }
+
+    auto finish = std::chrono::high_resolution_clock::now();
+    std::chrono::duration<double> elapsed = finish - start;
+    if (cpu_time == -1) {
+        cpu_time = elapsed.count();
+        mem_size = getValue();
+    }
 }
 
 double LocalPush::query_R(int a, int b) {

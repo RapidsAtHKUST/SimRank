@@ -36,6 +36,7 @@ public:
     DensePairMap<float> P;          // the estimates
     DensePairMap<float> R;          // the residuals
     queue<NodePair> Q;              // the queue to hold invalid node pairs
+//    vector<NodePair> Q;              // the queue to hold invalid node pairs
     DensePairMap<bool> marker;
 
     double r_max;
@@ -64,7 +65,7 @@ public:
 
     virtual void push_to_neighbors(GraphYche &g, NodePair &np, double current_residual) {}
 
-    void local_push(GraphYche &g); // empty function for local push
+//    void local_push(GraphYche &g); // empty function for local push
 public:
     void save();
 
@@ -89,6 +90,8 @@ public:
 
     void push_to_neighbors(GraphYche &g, NodePair &np, double current_residual) override;
 
+    void local_push(GraphYche &g);
+
 public:
     double query_P(int a, int b) override;
 };
@@ -107,6 +110,8 @@ public:
     void push(NodePair &pab, double) override;
 
     void push_to_neighbors(GraphYche &g, NodePair &np, double current_residual) override;
+
+    void local_push(GraphYche &g);
 
 public:
     double query_P(int a, int b) override;
