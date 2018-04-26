@@ -57,6 +57,10 @@ void PRLP::local_push(GraphYche &g) {
     long prev_expansion_set_g_size;
     long min_idx;
 
+#ifdef PUSH_NUM_STAT
+    long push_num = 0;
+#endif
+
 #pragma omp parallel
     {
 #ifdef HAS_OPENMP
@@ -202,7 +206,11 @@ void PRLP::local_push(GraphYche &g) {
 
             // 3rd: computation
             for (auto &local_slot_set: thread_local_hash_slot_indicator_lst) {
+#ifdef PUSH_NUM_STAT
+#pragma omp for schedule(dynamic, 1) nowait reduction(+:push_num)
+#else
 #pragma omp for schedule(dynamic, 1) nowait
+#endif
                 for (auto i = 0; i < local_slot_set.size(); i++) {
                     auto out_nei_a = local_slot_set[i];
                     bool is_enqueue = false;
@@ -221,6 +229,9 @@ void PRLP::local_push(GraphYche &g) {
                                 NodePair pab(out_nei_a, out_nei_b);
 
                                 // push
+#ifdef PUSH_NUM_STAT
+                                push_num++;
+#endif
                                 auto &res_ref = R[pab];
                                 res_ref += sqrt(2) * c * task.residual_ /
                                            (g.in_degree(out_nei_a) * g.in_degree(out_nei_b));
@@ -244,6 +255,9 @@ void PRLP::local_push(GraphYche &g) {
                                 NodePair pab(out_nei_a, out_nei_b);
 
                                 // push
+#ifdef PUSH_NUM_STAT
+                                push_num++;
+#endif
                                 auto &res_ref = R[pab];
                                 res_ref += c * task.residual_ / (g.in_degree(out_nei_a) * g.in_degree(out_nei_b));
 
@@ -265,6 +279,9 @@ void PRLP::local_push(GraphYche &g) {
     } // end of thread pool
     cout << "mem usage:" << getValue() << " KB" << endl;
     cout << "rounds:" << counter << "\n gen accumulation:" << total_ms << " ms" << endl;
+#ifdef PUSH_NUM_STAT
+    cout << "push number:" << push_num << endl;
+#endif
 }
 
 void PRLP::push(NodePair &pab, double inc, bool &is_enqueue) {

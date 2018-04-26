@@ -42,7 +42,7 @@ public:
     double r_max;
     double c;
     size_t n;               // we need to define total number of nodes in advance
-    unsigned int n_push;    // record number of push
+    long n_push;    // record number of push
     double cpu_time;        // cpu_time for local push
     double epsilon;         // the error bound
     int mem_size;           // the memory useage
