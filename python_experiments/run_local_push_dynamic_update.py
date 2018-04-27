@@ -1,4 +1,5 @@
 import commands
+import datetime
 import sys
 import time
 
@@ -35,8 +36,8 @@ def run_exp():
     our_exec_path = '/homes/ywangby/workspace/yche/git-repos/SimRank/APS/build'
 
     data_set_lst = [
-        # 'ca-GrQc', 'ca-HepTh', 'p2p-Gnutella06', 'wiki-Vote',
-        # 'email-Enron', 'email-EuAll', 'web-NotreDame', 'web-Stanford', 'web-BerkStan', 'web-Google',
+        'ca-GrQc', 'ca-HepTh', 'p2p-Gnutella06', 'wiki-Vote',
+        'email-Enron', 'email-EuAll', 'web-NotreDame', 'web-Stanford', 'web-BerkStan', 'web-Google',
         'cit-Patents', 'soc-LiveJournal1',
         'wiki-Link'
     ]
@@ -45,11 +46,15 @@ def run_exp():
     # insert_edge_num = 100
 
     def one_round():
+        timestamp_str = str(datetime.datetime.now()).split('.')[0].replace(' ', '-').replace(':', '-')
+        name_str = 'flp_dynamic_update_time_' if 'rlp' in our_algorithm \
+            else 'flp_dynamic_update_time_'
+        statistics_file_path = 'exp_results/' + name_str + str(insert_edge_num) + '_' + timestamp_str + '.txt'
+        print statistics_file_path
+
         for data_set_name in data_set_lst:
             algorithm_path = our_exec_path + os.sep + our_algorithm
-            statistics_file_path = 'exp_results/' + 'rlp_dynamic_update_time_' if 'rlp' in our_algorithm \
-                else 'flp_dynamic_update_time_' + str(insert_edge_num) + '_0407.txt'
-            params_lst = map(str, [algorithm_path, data_set_name, insert_edge_num, 'del', '>>', statistics_file_path])
+            params_lst = map(str, [algorithm_path, data_set_name, insert_edge_num, 'ins', '>>', statistics_file_path])
             cmd = ' '.join(params_lst)
             # time_out = 1000 if data_set_name != 'soc-LiveJournal1' else 3600
             time_out = 72000
@@ -65,7 +70,7 @@ def run_exp():
 
     # one_round()
     insert_edge_num = 1000
-    one_round()
+    # one_round()
 
     our_algorithm = 'dynamic-flp'
     one_round()
