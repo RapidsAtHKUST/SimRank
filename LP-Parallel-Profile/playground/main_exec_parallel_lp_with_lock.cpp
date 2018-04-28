@@ -46,11 +46,13 @@ int main(int argc, char *argv[]) {
         TruthSim ts(g_name, g, c, eps);
         auto max_err = 0.0;
 
+        double err = 0;
 #pragma omp parallel for reduction(max:max_err) schedule(dynamic, 1)
         for (auto i = 0u; i < n; i++) {
             for (auto j = i; j < n; j++) {
                 auto res = lp->query_P(i, j);
                 max_err = max(max_err, abs(ts.sim(i, j) - res));
+                err += abs(ts.sim(i, j) - res);
                 if (abs(ts.sim(i, j) - res) > eps + pow(10, -6)) {
 #pragma omp critical
                     cout << i << ", " << j << "," << ts.sim(i, j) << "," << res << endl;
@@ -58,5 +60,7 @@ int main(int argc, char *argv[]) {
             }
         }
         cout << "max err:" << max_err << endl;
+        cout << "mean err:" << (err / ((n + 1) * n / 2)) << endl;
+
     };
 }
