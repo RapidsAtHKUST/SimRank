@@ -44,12 +44,13 @@ def run_exp():
     our_algorithm_lst = [
         # 'prlp-with-lock',
         'pflp-with-lock',
-        # 'prlp-lock-free',
+        'prlp-lock-free',
         # 'prlp-lock-free-stat',
         # 'prlp-with-lock-stat',
     ]
-    # thread_num_lst = [1, 2, 4, 8, 16, 32, 56, 64]
-    thread_num_lst = [56]
+    thread_num_lst = [8, 16, 32, 56, 64]
+
+    # thread_num_lst = [56]
 
     def one_round():
         for data_set_name in data_set_lst:
@@ -63,8 +64,8 @@ def run_exp():
                     algorithm_path = os.sep.join([our_exec_path, our_algorithm])
                     statistics_file_path = os.sep.join([statistics_folder_path, str(thread_num) + ".txt"])
 
-                    params_lst = map(str, [algorithm_path, data_set_name, 0.01, 'save', '>>', statistics_file_path])
-                    # params_lst = map(str, [algorithm_path, data_set_name, 0.01, '>>', statistics_file_path])
+                    # params_lst = map(str, [algorithm_path, data_set_name, 0.01, 'save', '>>', statistics_file_path])
+                    params_lst = map(str, [algorithm_path, data_set_name, 0.01, '>>', statistics_file_path])
                     cmd = ' '.join(params_lst)
                     # time_out = 3600 if data_set_name != 'soc-LiveJournal1' else 7200
                     time_out = 36000
@@ -81,7 +82,8 @@ def run_exp():
                         ofs.write('\n\n\n\n')
                     print 'finish:', cmd
 
-    one_round()
+    for i in xrange(5):
+        one_round()
 
     # our_algorithm_lst = ['rlp', 'flp']
     # thread_num_lst = [1]

@@ -23,25 +23,29 @@ if __name__ == '__main__':
         'cit-Patents', 'soc-LiveJournal1'
     ]
     our_algorithm_lst = [
-        # 'pflp',
-        'prlp']
+        'prlp-lock-free',
+        'prlp-with-lock',
+        'pflp-with-lock'
+    ]
     thread_num_lst = [1, 2, 4, 8, 16, 32, 56]
 
     stat_dict = {}
+    date_str = '04_24'
     for our_algorithm in our_algorithm_lst:
+        print our_algorithm
         tmp_dict = {}
         for data_set_name in data_set_lst:
             def get_file_path(thread_num):
                 statistics_folder_path = os.sep.join(
                     ['/home/yche/mnt/wangyue-clu/csproject/biggraph/ywangby/yche/git-repos/SimRank'
-                     '/python_experiments/plp_scalability_results_04_12', our_algorithm, data_set_name])
+                     '/python_experiments/plp_scalability_results_' + date_str, our_algorithm, data_set_name])
 
                 return os.sep.join([statistics_folder_path, str(thread_num) + ".txt"])
 
 
             time_lst = map(lambda thread_num:
                            get_tag_info(get_file_path(thread_num), time_tag, min), thread_num_lst)
-            if data_set_name == 'soc-LiveJournal1' and our_algorithm == 'pflp':
+            if data_set_name == 'soc-LiveJournal1' and our_algorithm == 'pflp-with-lock':
                 time_lst[0] = 7280.
 
             tmp_dict[data_set_name] = {
@@ -53,5 +57,5 @@ if __name__ == '__main__':
 
     root_dir_path = '../data-json/parallel_exp'
     os.system('mkdir -p ' + root_dir_path)
-    with open(os.sep.join([root_dir_path, 'scalability_04_12.json']), 'w') as ofs:
+    with open(os.sep.join([root_dir_path, 'scalability_' + date_str + '.json']), 'w') as ofs:
         ofs.write(json.dumps(stat_dict, indent=4))

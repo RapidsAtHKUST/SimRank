@@ -81,7 +81,7 @@ if __name__ == '__main__':
         ofs.writelines([get_index_size_table(data_set_lst[0:6]), '\n\n'])
         ofs.writelines([get_index_size_table(data_set_lst[6:len(data_set_lst)]), '\n\n'])
 
-        # ofs.writelines(['## Max Mem Consumption', '\n\n'])
-        # ofs.writelines([get_mem_size_table(data_set_lst[0:6]), '\n\n'])
-        # ofs.writelines(
+        # ofs.write_md_lines(['## Max Mem Consumption', '\n\n'])
+        # ofs.write_md_lines([get_mem_size_table(data_set_lst[0:6]), '\n\n'])
+        # ofs.write_md_lines(
         #     [get_mem_size_table(data_set_lst[6:len(data_set_lst)]), '\n\n'])

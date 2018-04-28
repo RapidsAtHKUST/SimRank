@@ -2,8 +2,9 @@ import decimal
 
 from parallel_time_speedup import *
 
-prlp_tag = 'prlp'
-pflp_tag = 'pflp'
+prlp_tag = 'prlp-with-lock'
+prlp_lock_free_tag = 'prlp-lock-free'
+pflp_tag = 'pflp-with-lock'
 
 
 def format_str(float_num):
@@ -12,7 +13,7 @@ def format_str(float_num):
 
 
 if __name__ == '__main__':
-    with open('../data-json/parallel_exp/scalability_04_12.json') as ifs:
+    with open('../data-json/parallel_exp/scalability_04_24.json') as ifs:
         speedup_data = json.load(ifs)
 
     parallel_exp_dir = os.sep.join(['..', 'data-markdown', 'parallel'])
@@ -38,11 +39,15 @@ if __name__ == '__main__':
 
     print get_md_table()
 
-    with open(os.sep.join([parallel_exp_dir, 'speedup_04_12.md']), 'w') as ofs:
-        ofs.writelines(['\n', '## prlp ', '\n'])
-        ofs.writelines(['\n', '### speedup ', '\n\n', get_md_table(prlp_tag, speedup_tag), '\n'])
-        ofs.writelines(['\n', '### time ', '\n\n', get_md_table(prlp_tag, time_tag), '\n'])
+    with open(os.sep.join([parallel_exp_dir, 'speedup_04_28.md']), 'w') as ofs:
+        def write_md_lines(tag):
+            ofs.writelines(['\n', '## ' + tag, '\n'])
+            ofs.writelines(['\n', '### speedup ', '\n\n', get_md_table(tag, speedup_tag), '\n'])
+            ofs.writelines(['\n', '### time ', '\n\n', get_md_table(tag, time_tag), '\n'])
 
-        # ofs.writelines(['\n', '## pflp ', '\n'])
-        # ofs.writelines(['\n', '### speedup ', '\n\n', get_md_table(pflp_tag, speedup_tag), '\n'])
-        # ofs.writelines(['\n', '### time ', '\n\n', get_md_table(pflp_tag, time_tag), '\n'])
+
+        for tag in [prlp_tag, prlp_lock_free_tag, pflp_tag]:
+            write_md_lines(tag)
+        # ofs.write_md_lines(['\n', '## pflp ', '\n'])
+        # ofs.write_md_lines(['\n', '### speedup ', '\n\n', get_md_table(pflp_tag, speedup_tag), '\n'])
+        # ofs.write_md_lines(['\n', '### time ', '\n\n', get_md_table(pflp_tag, time_tag), '\n'])
