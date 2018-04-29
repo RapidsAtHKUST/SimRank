@@ -22,40 +22,74 @@ if __name__ == '__main__':
         'email-Enron', 'email-EuAll', 'web-NotreDame', 'web-Stanford', 'web-BerkStan', 'web-Google',
         'cit-Patents', 'soc-LiveJournal1'
     ]
-    our_algorithm_lst = [
-        'prlp-lock-free',
-        'prlp-with-lock',
-        'pflp-with-lock'
-    ]
-    thread_num_lst = [1, 2, 4, 8, 16, 32, 56]
-
-    stat_dict = {}
     date_str = '04_24'
-    for our_algorithm in our_algorithm_lst:
-        print our_algorithm
-        tmp_dict = {}
-        for data_set_name in data_set_lst:
-            def get_file_path(thread_num):
-                statistics_folder_path = os.sep.join(
-                    ['/home/yche/mnt/wangyue-clu/csproject/biggraph/ywangby/yche/git-repos/SimRank'
-                     '/python_experiments/plp_scalability_results_' + date_str, our_algorithm, data_set_name])
-
-                return os.sep.join([statistics_folder_path, str(thread_num) + ".txt"])
 
 
-            time_lst = map(lambda thread_num:
-                           get_tag_info(get_file_path(thread_num), time_tag, min), thread_num_lst)
-            if data_set_name == 'soc-LiveJournal1' and our_algorithm == 'pflp-with-lock':
-                time_lst[0] = 7280.
+    def get_parallel_algorithm_statistics():
+        our_algorithm_lst = [
+            'prlp-lock-free',
+            'prlp-with-lock',
+            'pflp-with-lock'
+        ]
 
-            tmp_dict[data_set_name] = {
-                thread_lst_tag: thread_num_lst,
-                time_tag: time_lst,
-                speedup_tag: map(lambda time_val: time_lst[0] / time_val, time_lst)
-            }
-        stat_dict[our_algorithm] = tmp_dict
+        thread_num_lst = [1, 2, 4, 8, 16, 32, 56]
+        folder_prefix_str = '/home/yche/mnt/wangyue-clu/csproject/biggraph/ywangby/yche/git-repos/SimRank' \
+                            '/python_experiments/plp_scalability_results_'
+        stat_dict = {}
+        for our_algorithm in our_algorithm_lst:
+            print our_algorithm
+            tmp_dict = {}
+            for data_set_name in data_set_lst:
+                def get_file_path(thread_num):
+                    statistics_folder_path = os.sep.join(
+                        [folder_prefix_str + date_str, our_algorithm, data_set_name])
 
-    root_dir_path = '../data-json/parallel_exp'
-    os.system('mkdir -p ' + root_dir_path)
-    with open(os.sep.join([root_dir_path, 'scalability_' + date_str + '.json']), 'w') as ofs:
-        ofs.write(json.dumps(stat_dict, indent=4))
+                    return os.sep.join([statistics_folder_path, str(thread_num) + ".txt"])
+
+                time_lst = map(lambda thread_num:
+                               get_tag_info(get_file_path(thread_num), time_tag, min), thread_num_lst)
+                if data_set_name == 'soc-LiveJournal1' and our_algorithm == 'pflp-with-lock':
+                    time_lst[0] = 7280.
+
+                tmp_dict[data_set_name] = {
+                    thread_lst_tag: thread_num_lst,
+                    time_tag: time_lst,
+                    speedup_tag: map(lambda time_val: time_lst[0] / time_val, time_lst)
+                }
+            stat_dict[our_algorithm] = tmp_dict
+
+        root_dir_path = '../data-json/parallel_exp'
+        os.system('mkdir -p ' + root_dir_path)
+        with open(os.sep.join([root_dir_path, 'scalability_' + date_str + '.json']), 'w') as ofs:
+            ofs.write(json.dumps(stat_dict, indent=4))
+
+
+    def get_seq_algorithm_statistics():
+        our_algorithm_lst = [
+            'rlp',
+            'flp'
+        ]
+
+        stat_dict = {}
+        for our_algorithm in our_algorithm_lst:
+            print our_algorithm
+            tmp_dict = {}
+            for data_set_name in data_set_lst:
+                def get_file_path(thread_num):
+                    statistics_folder_path = os.sep.join(
+                        ['/home/yche/mnt/wangyue-clu/csproject/biggraph/ywangby/yche/git-repos/SimRank'
+                         '/python_experiments/plp_scalability_results_' + date_str, our_algorithm, data_set_name])
+
+                    return os.sep.join([statistics_folder_path, str(thread_num) + ".txt"])
+
+                tmp_dict[data_set_name] = get_tag_info(get_file_path(1), time_tag, min)
+            stat_dict[our_algorithm] = tmp_dict
+
+        root_dir_path = '../data-json/parallel_exp'
+        os.system('mkdir -p ' + root_dir_path)
+        with open(os.sep.join([root_dir_path, 'seq_time_' + date_str + '.json']), 'w') as ofs:
+            ofs.write(json.dumps(stat_dict, indent=4))
+
+
+    get_parallel_algorithm_statistics()
+    get_seq_algorithm_statistics()

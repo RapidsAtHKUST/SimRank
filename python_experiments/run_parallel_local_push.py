@@ -36,14 +36,14 @@ def run_exp():
 
     data_set_lst = [
         'ca-GrQc', 'ca-HepTh', 'p2p-Gnutella06', 'wiki-Vote',
-        'email-Enron', 'email-EuAll',
-        'web-NotreDame', 'web-Stanford', 'web-BerkStan', 'web-Google',
-        'cit-Patents',
-        'soc-LiveJournal1'
+        # 'email-Enron', 'email-EuAll',
+        # 'web-NotreDame', 'web-Stanford', 'web-BerkStan', 'web-Google',
+        # 'cit-Patents',
+        # 'soc-LiveJournal1'
     ]
     our_algorithm_lst = [
-        # 'prlp-with-lock',
-        'pflp-with-lock',
+        'prlp-with-lock',
+        # 'pflp-with-lock',
         'prlp-lock-free',
         # 'prlp-lock-free-stat',
         # 'prlp-with-lock-stat',
@@ -82,12 +82,13 @@ def run_exp():
                         ofs.write('\n\n\n\n')
                     print 'finish:', cmd
 
-    for i in xrange(5):
-        one_round()
+        # for i in xrange(5):
 
-    # our_algorithm_lst = ['rlp', 'flp']
-    # thread_num_lst = [1]
-    # one_round()
+    one_round()
+
+    our_algorithm_lst = ['rlp', 'flp']
+    thread_num_lst = [1]
+    one_round()
 
 
 if __name__ == '__main__':

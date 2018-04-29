@@ -5,6 +5,8 @@ from parallel_time_speedup import *
 prlp_tag = 'prlp-with-lock'
 prlp_lock_free_tag = 'prlp-lock-free'
 pflp_tag = 'pflp-with-lock'
+rlp_tag = 'rlp'
+flp_tag = 'flp'
 
 
 def format_str(float_num):
@@ -15,6 +17,8 @@ def format_str(float_num):
 if __name__ == '__main__':
     with open('../data-json/parallel_exp/scalability_04_24.json') as ifs:
         speedup_data = json.load(ifs)
+    with open('../data-json/parallel_exp/seq_time_04_24.json') as ifs:
+        seq_time_data = json.load(ifs)
 
     parallel_exp_dir = os.sep.join(['..', 'data-markdown', 'parallel'])
     os.system('mkdir -p ' + parallel_exp_dir)
@@ -37,7 +41,23 @@ if __name__ == '__main__':
         return '\n'.join(lines)
 
 
+    def get_seq_time_table():
+        lines = []
+        tag_lst = [flp_tag, rlp_tag, prlp_tag, prlp_lock_free_tag]
+        for data_set in data_set_lst:
+            def get_time(tag):
+                return seq_time_data[tag][data_set] if tag in [flp_tag, rlp_tag] else \
+                    min(speedup_data[tag][data_set][time_tag])
+
+            if len(lines) == 0:
+                lines.append(' | '.join(['dataset'] + tag_lst))
+                lines.append(' | '.join(['---' for _ in xrange(len(tag_lst) + 1)]))
+            lines.append(' | '.join([data_set] + map(format_str, map(get_time, tag_lst))))
+        return '\n'.join(lines)
+
+
     print get_md_table()
+    print get_seq_time_table()
 
     with open(os.sep.join([parallel_exp_dir, 'speedup_04_28.md']), 'w') as ofs:
         def write_md_lines(tag):
@@ -48,6 +68,8 @@ if __name__ == '__main__':
 
         for tag in [prlp_tag, prlp_lock_free_tag, pflp_tag]:
             write_md_lines(tag)
+        ofs.writelines(['\n', '## ' + 'comparison of time', '\n'])
+        ofs.writelines(['\n', '### time', '\n\n', get_seq_time_table()])
         # ofs.write_md_lines(['\n', '## pflp ', '\n'])
         # ofs.write_md_lines(['\n', '### speedup ', '\n\n', get_md_table(pflp_tag, speedup_tag), '\n'])
         # ofs.write_md_lines(['\n', '### time ', '\n\n', get_md_table(pflp_tag, time_tag), '\n'])
