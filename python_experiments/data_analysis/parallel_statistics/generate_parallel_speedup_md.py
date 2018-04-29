@@ -7,6 +7,8 @@ prlp_lock_free_tag = 'prlp-lock-free'
 pflp_tag = 'pflp-with-lock'
 rlp_tag = 'rlp'
 flp_tag = 'flp'
+rlp_old_tag = 'rlp-old'
+flp_old_tag = 'flp-old'
 
 
 def format_str(float_num):
@@ -19,6 +21,8 @@ if __name__ == '__main__':
         speedup_data = json.load(ifs)
     with open('../data-json/parallel_exp/seq_time_04_24.json') as ifs:
         seq_time_data = json.load(ifs)
+    with open('../data-json/parallel_exp/seq_time_previous.json') as ifs:
+        previous_time_data = json.load(ifs)
 
     parallel_exp_dir = os.sep.join(['..', 'data-markdown', 'parallel'])
     os.system('mkdir -p ' + parallel_exp_dir)
@@ -43,9 +47,11 @@ if __name__ == '__main__':
 
     def get_seq_time_table():
         lines = []
-        tag_lst = [flp_tag, rlp_tag, prlp_tag, prlp_lock_free_tag]
+        tag_lst = [flp_old_tag, flp_tag, rlp_old_tag, rlp_tag, prlp_tag, prlp_lock_free_tag]
         for data_set in data_set_lst:
             def get_time(tag):
+                if tag in [flp_old_tag, rlp_old_tag]:
+                    return previous_time_data[tag][data_set]
                 return seq_time_data[tag][data_set] if tag in [flp_tag, rlp_tag] else \
                     min(speedup_data[tag][data_set][time_tag])
 
