@@ -30,7 +30,7 @@ if __name__ == '__main__':
         'soc-LiveJournal1']
 
 
-    def get_md_table(algorithm=prlp_tag, tag=speedup_tag):
+    def get_md_table(algorithm=prlp_tag, tag=speedup_tag, speedup_data=speedup_data):
         lines = []
         for data_set in data_set_lst:
             info_dict = speedup_data[algorithm][data_set]
@@ -59,6 +59,7 @@ if __name__ == '__main__':
     print get_md_table()
     print get_seq_time_table()
 
+    # 1st
     with open(os.sep.join([parallel_exp_dir, 'speedup_04_28.md']), 'w') as ofs:
         def write_md_lines(tag):
             ofs.writelines(['\n', '## ' + tag, '\n'])
@@ -73,3 +74,16 @@ if __name__ == '__main__':
         # ofs.write_md_lines(['\n', '## pflp ', '\n'])
         # ofs.write_md_lines(['\n', '### speedup ', '\n\n', get_md_table(pflp_tag, speedup_tag), '\n'])
         # ofs.write_md_lines(['\n', '### time ', '\n\n', get_md_table(pflp_tag, time_tag), '\n'])
+
+    # 2nd
+    with open('../data-json/parallel_exp/scalability_gen_time_04_24.json') as ifs:
+        new_speedup_data = json.load(ifs)
+    with open(os.sep.join([parallel_exp_dir, 'gen_time_speedup_04_28.md']), 'w') as ofs:
+        def write_md_lines(tag):
+            ofs.writelines(['\n', '## ' + tag, '\n'])
+            ofs.writelines(['\n', '### speedup ', '\n\n', get_md_table(tag, speedup_tag, new_speedup_data), '\n'])
+            ofs.writelines(['\n', '### time ', '\n\n', get_md_table(tag, task_gen_tag, new_speedup_data), '\n'])
+
+
+        for tag in [prlp_tag, prlp_lock_free_tag]:
+            write_md_lines(tag)
