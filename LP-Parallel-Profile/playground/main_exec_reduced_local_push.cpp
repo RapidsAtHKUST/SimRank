@@ -44,7 +44,7 @@ int main(int argc, char *argv[]) {
         auto max_err = 0.0;
         double err = 0;
 
-#pragma omp parallel for reduction(max:max_err) schedule(dynamic, 1)
+#pragma omp parallel for reduction(max:max_err), reduction(+:err) schedule(dynamic, 1)
         for (auto i = 0u; i < n; i++) {
             for (auto j = i; j < n; j++) {
                 auto res = lp->query_P(i, j);
