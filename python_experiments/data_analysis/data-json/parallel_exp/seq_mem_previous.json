@@ -1,0 +1,72 @@
+{
+    "flp-old": {
+        "wiki-Vote": 64960.0, 
+        "cit-Patents": 51468080.0, 
+        "email-EuAll": 1203860.0, 
+        "web-Stanford": 6963008.0, 
+        "ca-HepTh": 91232.0, 
+        "web-BerkStan": 13929776.0, 
+        "web-NotreDame": 89870480.0, 
+        "p2p-Gnutella06": 140344.0, 
+        "soc-LiveJournal1": 334798996.0, 
+        "web-Google": 5088512.0, 
+        "ca-GrQc": 30872.0, 
+        "email-Enron": 1418748.0
+    }, 
+    "lind": {
+        "wiki-Vote": 16931.932, 
+        "cit-Patents": 2637583.876, 
+        "email-EuAll": 118223.736, 
+        "web-Stanford": 351043.688, 
+        "ca-HepTh": 11407.724, 
+        "web-BerkStan": 1027347.832, 
+        "web-NotreDame": 251975.888, 
+        "p2p-Gnutella06": 8679.656, 
+        "soc-LiveJournal1": 8935494.748, 
+        "web-Google": 769061.924, 
+        "ca-GrQc": 7687.744, 
+        "email-Enron": 56399.988
+    }, 
+    "mcap": {
+        "wiki-Vote": 18027.988, 
+        "cit-Patents": 8053419.368, 
+        "email-EuAll": 104287.892, 
+        "web-Stanford": 300315.9, 
+        "ca-HepTh": 10495.88, 
+        "web-BerkStan": 925849.188, 
+        "web-NotreDame": 230895.768, 
+        "p2p-Gnutella06": 8211.984, 
+        "soc-LiveJournal1": 119997691.736, 
+        "web-Google": 716370.592, 
+        "ca-GrQc": 37007.988, 
+        "email-Enron": 50211.728
+    }, 
+    "rlp-old": {
+        "wiki-Vote": 40416.0, 
+        "cit-Patents": 27553756.0, 
+        "email-EuAll": 682672.0, 
+        "web-Stanford": 3680064.0, 
+        "ca-HepTh": 51528.0, 
+        "web-BerkStan": 7523072.0, 
+        "web-NotreDame": 44717996.0, 
+        "p2p-Gnutella06": 73596.0, 
+        "soc-LiveJournal1": 171345120.0, 
+        "web-Google": 3006152.0, 
+        "ca-GrQc": 19256.0, 
+        "email-Enron": 727268.0
+    }, 
+    "pcg": {
+        "wiki-Vote": 1397940.0, 
+        "cit-Patents": 0, 
+        "email-EuAll": 0, 
+        "web-Stanford": 0, 
+        "ca-HepTh": 2675850.0, 
+        "web-BerkStan": 0, 
+        "web-NotreDame": 0, 
+        "p2p-Gnutella06": 2084280.0, 
+        "soc-LiveJournal1": 0, 
+        "web-Google": 0, 
+        "ca-GrQc": 756888.0, 
+        "email-Enron": 36857500.0
+    }
+}

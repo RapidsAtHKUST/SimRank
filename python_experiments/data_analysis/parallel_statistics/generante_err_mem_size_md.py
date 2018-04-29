@@ -24,12 +24,11 @@ if __name__ == '__main__':
             if info_tag == mem_size_tag:
                 lines.append(
                     ' | '.join([data_set] + map(lambda tag: format_str(
-                        float(err_mem_size_dict[tag][data_set][info_tag]) / 1024),
-                                                tag_lst)))
+                        float(err_mem_size_dict[tag][data_set][info_tag]) / 1024), tag_lst)))
             else:
                 lines.append(
-                    ' | '.join([data_set] + map(lambda tag: str(
-                        err_mem_size_dict[tag][data_set][info_tag]), tag_lst)))
+                    ' | '.join([data_set] + map(lambda tag: '{:.5e}'.format(float(
+                        err_mem_size_dict[tag][data_set][info_tag])), tag_lst)))
 
         return '\n'.join(lines)
 
