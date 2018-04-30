@@ -39,11 +39,13 @@ def draw_figures():
                          rlp_tag, flp_tag,
                          lin_tag, cw_tag, pcg_tag]
     label_lst = ["PLB-Opt-LP", "PLF-Opt-LP", 'Opt-LP', 'FLP', "LIN", "MCSP", "PCG"]
-    color_lst = ['blue',
-                 # 'orange', 'green',
-                 'red', '#fe01b1', '#ceb301',
-                 # 'm',
-                 'brown', 'k', 'gray']
+    color_lst = [
+        '#fe01b1', '#ceb301',
+        'red',
+        # 'orange', 'green',
+        'blue',
+        # 'm',
+        'brown', 'k', 'green']
     # tick offset
     tick_offset = 3
 
