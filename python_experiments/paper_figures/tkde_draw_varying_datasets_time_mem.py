@@ -89,7 +89,7 @@ def draw_figures():
         plt.xticks(fontsize=TICK_SIZE)
 
         plt.yscale('log')
-        ax.set_ylabel("Elapsed Time (s)", fontsize=LABEL_SIZE)
+        ax.set_ylabel("Elapsed Time(s)", fontsize=LABEL_SIZE)
         # plt.yticks([10 ** (num) for num in [-2, -1, 0, 1, 2, 3, 4, 5, 6, 7, 8]], fontsize=TICK_SIZE)
         plt.yticks(fontsize=TICK_SIZE)
         plt.ylim(10 ** (-2), 10 ** 8)
