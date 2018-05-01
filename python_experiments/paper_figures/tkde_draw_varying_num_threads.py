@@ -68,7 +68,7 @@ def draw_figures():
                 time_lst = get_algorithm_time_lst(algorithm, data_set_lst[ax_idx])
                 # print time_lst, thread_lst
                 time_lst_lst.append(time_lst)
-                ax.plot(thread_idx_lst, time_lst, shape_lst[idx], markersize=16, markerfacecolor='none',
+                ax.plot(thread_idx_lst, time_lst, shape_lst[idx], markersize=20, markerfacecolor='none',
                         color=color_lst[idx])
                 ax.set_yscale('log')
                 ax.set_xlabel('Number of Threads\n' + sub_titles[ax_idx], fontsize=LABEL_SIZE + 6)
@@ -106,7 +106,7 @@ def draw_figures():
                 time_lst = get_gen_time_lst(algorithm, data_set_lst[ax_idx])
                 # print time_lst, thread_lst
                 time_lst_lst.append(time_lst)
-                ax.plot(thread_idx_lst, time_lst, shape_lst[idx], markersize=16, markerfacecolor='none',
+                ax.plot(thread_idx_lst, time_lst, shape_lst[idx], markersize=20, markerfacecolor='none',
                         color=color_lst[idx])
                 ax.set_yscale('log')
                 ax.set_xlabel('Number of Threads\n' + sub_titles[ax_idx], fontsize=LABEL_SIZE + 6)
