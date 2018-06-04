@@ -47,10 +47,10 @@ double BFLPMC::query_one2one(NodePair np){
 
     if(N2 < N){ // using the c-walk meeting model
         // cout << "number of samples N2: " << N2 << endl;
-        double estimate_s_i = blp->MC_random_walk(N2);
+        double estimate_s_i = blp->MC_random_walk(N2).first;
         return blp_p_i + estimate_s_i;
 
-    }else{ // use the termination residual mode
+    }else{ // use the termination residual modstart_time
         cout << "number of samples: " << N << endl;
         
         for(auto it = begin; it !=end; ++ it){

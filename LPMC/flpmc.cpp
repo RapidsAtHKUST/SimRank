@@ -32,7 +32,7 @@ FLPMC::FLPMC(string g_name_, DirectedG &g_, double c_, double epsilon_, double d
 
 double FLPMC::get_rmax(){
     double r = pow(epsilon, 1.0 / 1.5);
-    cout << format("r_max of local push: %s") % r << endl;
+    // cout << format("r_max of local push: %s") % r << endl;
     return r;
 }
 
@@ -50,8 +50,8 @@ double FLPMC::query_one2one(NodePair np){
         np = NodePair({np.second, np.first});
     }
     /* FLP result */
-    double p_i = lp->P[np];
-    double r_i = lp->R[np];
+    double p_i = lp->query_P(np);
+    double r_i = lp->query_R(np);
 
     // set up the random number generator
     std::random_device rd;  //Will be used to obtain a seed for the random number engine
@@ -63,7 +63,7 @@ double FLPMC::query_one2one(NodePair np){
 
     /* MC sampling phase */
     int N = get_N();
-    cout << format("number of samples: %s") % N << endl;
+    // cout << format("number of samples: %s") % N << endl;
     double E_residual = 0;
     for(int i = 0; i< N;i++){
         // cout << "---------" << endl;
@@ -76,6 +76,7 @@ double FLPMC::query_one2one(NodePair np){
         while(( step < length_of_random_walk + 1) && (a != b)){
             a = sample_in_neighbor(a, *g);
             b = sample_in_neighbor(b, *g);
+
             step ++;
             if(a == -1 || b == -1){
                 is_dead_node = true;
@@ -91,9 +92,10 @@ double FLPMC::query_one2one(NodePair np){
         // cout << "---------" << endl;
     }
 
-    cout << format("p_i: %s,r_i:%s, estimate residual: %s ")  % p_i  % r_i %( E_residual / N )<< endl;
-    cout << format("number of samples: %s") % get_N() << endl;
-    return p_i + r_i + (c / (1-c)) * (E_residual / N);
+    // cout << format("p_i: %s,r_i:%s, estimate residual: %s ")  % p_i  % r_i %( E_residual / N )<< endl;
+    // cout << format("number of samples: %s") % get_N() << endl;
+    double result = p_i + r_i + (c / (1-c)) * (E_residual / N);
+    return result;
 }
 
 double FLPMC::get_N(){

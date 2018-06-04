@@ -3,8 +3,9 @@
 #define __BPRW_H__
 
 #include <boost/heap/fibonacci_heap.hpp>
-
+#include "stat.h"
 #include "graph.h"
+#include "rw_hub.h"
 
 using namespace boost::heap;
 
@@ -113,8 +114,50 @@ std::ostream &operator<<(std::ostream &os, const heap_data &obj);
 
 std::ostream &operator<<(std::ostream &os, const data_item &obj);
 
+struct PushFeature {
+    int d;
+    int H;
+    PushFeature(int d_, int H_size_){
+        d = d_;
+        H = H_size_;
+    }
+};
+struct MCFeature {
+    double r; // sum of residuals
+    int H; // the heap size
+    MCFeature(double r_, int H_size_){
+        r = r_;
+        H = H_size_;
+    }
+};
 
-struct BackPush { // Backward Push
+std::ostream &operator<<(std::ostream &os, const PushFeature &obj);
+
+std::ostream &operator<<(std::ostream &os, const MCFeature &obj);
+
+struct BLPMC_Config{
+    bool is_use_linear_regression_cost_estimation ;
+    bool is_use_hub_idx ;
+
+    BLPMC_Config(bool a, bool b){ // normal constructor
+        is_use_linear_regression_cost_estimation = a;
+        is_use_hub_idx = b;
+    }
+    BLPMC_Config(const BLPMC_Config &other){ // copy constructor
+        is_use_linear_regression_cost_estimation = other.is_use_linear_regression_cost_estimation;
+        is_use_hub_idx = other.is_use_hub_idx;
+    }
+
+    BLPMC_Config(){ // default constructor
+        is_use_linear_regression_cost_estimation = false;
+        is_use_hub_idx = false;
+    }
+};
+
+std::ostream &operator<<(std::ostream &os, const BLPMC_Config& config);
+
+
+struct BackPush { // Backward Push and MC sampling method for SimRank estimation
     string g_name;
     DirectedG *g; // pointer to the underlying graph
     double c;
@@ -123,26 +166,68 @@ struct BackPush { // Backward Push
     unique_max_heap heap; // the heap contains residuals
     residual_set set_residual; // the set containing residuals for random push
     // public methods
-    BackPush(string g_name_, DirectedG &graph, double c_, double epsilon_, double delta_);
+    BLPMC_Config config;
 
-    pair<double, int>
+    BackPush(string g_name_, DirectedG &graph, double c_, double epsilon_, double delta_, BLPMC_Config config = BLPMC_Config());
+
+    typedef pair<double, pair<double,double>> triple;
+
+    pair<double, double>
     backward_push(NodePair np, unique_max_heap &); // self-adaptive backward local push, return estimate
+
+    pair<int,int> deg_np(NodePair const & np); // extract the degree of node pairs
+    
 
     // constant for cost estimation
     int push_cost = 1; // the contant for push operation given a current heap and d, which is degree of neighbors pushing to
     int mc_cost = 1; // the constant for MC sampling givn a double, which is the sum of heap residuals
 
     double random_bp(NodePair np, double rsum); // backward local push by random
-    double MC_random_walk(int N); // perform random walks based on current residuals in the heap
+    pair<double, double> MC_random_walk(int N); // perform random walks based on current residuals in the heap
     double query_one2one(NodePair np); // query single-pair SimRank scores
-    double sample_one_pair(NodePair np, std::default_random_engine &generator,
-                        std::uniform_real_distribution<double> &dist, int length_of_random_walk); // sample one pair of random walk
+    int sample_one_pair(NodePair np, int length_of_random_walk); // sample one pair of random walk
     double keep_push_cost(unique_max_heap &heap); // compute the cost is we push one-step further
     double change_to_MC_cost(unique_max_heap &heap); // compute the cost if we turn to random walk  
     size_t number_of_walkers(double sum); // compute the number of random walkers, given current sum
     bool is_keep_on_push(
-            unique_max_heap &heap); // the indicator bool function to decide whether the local push would continue
+            unique_max_heap &heap, int number_of_current_lp_operations); // the indicator bool function to decide whether the local push would continue
+
+    // methods of  similarity search for sets
+    PairHashMap query_set_scores(vector<NodePair> query_set); // estimate simrank scores of a set
+    PairSet top_k_in_set(vector<NodePair> query_set); // extract the top-k elements of a set of node pairs 
+
+    /* linear regression for cost estimation */
+    vector<PushFeature> lp_data_X; // the local push data set
+    vector<double> lp_data_Y; // 
+    vector<MCFeature> mc_data_X; // the MC data set
+    vector<double> mc_data_Y; // 
+    int data_size = 1000;
+    double rsum_threshold = 1;
+    int maximum_lp_operations = 50000; // the maximum number of local push operations
+    bool is_training = false; // indicating whether training the linear model 
+    LinearRegression * lp_linearmodel;
+    LinearRegression * mc_linearmodel;
+    void build_cost_estimation_model(); // build the linear regression model on-line
+
+    void lp_extract_feature(PushFeature &, vector<double>& f); // extract feature 
+    void mc_extract_feature(MCFeature &, vector<double>& f);
+
+    // related for hub index
+    Rw_Hubs * rw_hubs = NULL; // the pointer to the hub index
+    int sample_one_pair_with_hubs(NodePair np, int length_of_random_walk, sparse_hash_map<NodePair, int, hash_duplicate, hash_duplicate_equal> & ); // sample one pair of random walk
+    bool is_use_hub(){ // the criterior to use hub indices, only config is set is not enough, hub index must bt no Null
+        if(is_training){ // do not hub while training the cost model 
+            return false;
+        }else{
+            return config.is_use_hub_idx;
+        }
+    }
+    int hub_hits = 0; // statistical information: #hits of hub
+    int sample_N_random_walks(vector<NodePair> &, vector<int> &); // return the number of meets of N random walks
+    int sample_N_random_walks_with_hubs(vector<NodePair> &, vector<int> &); // return the number of meets of N random walks
+
 
 };
+
 
 #endif
