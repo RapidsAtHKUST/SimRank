@@ -20,7 +20,7 @@
 using boost::format;
 using PairMarker= sparse_hash_map<NodePair, bool>;
 
-const string LOCAL_PUSH_DIR = "/homes/ywangby/workspace/LinsysSimRank/datasets/local_push/";
+const string LOCAL_PUSH_DIR = "/homes/ywangby/workspace/yche/git-repos/SimRank/LPMC-Profile/build/datasets/local_push/";
 
 extern double cal_rmax(GraphYche &g, double c, double epsilon, double delta); //calculate r_,max
 

@@ -1,0 +1,66 @@
+{
+    "reads-d": {
+        "index disk size": {
+            "wiki-Vote": 135.83274841308594, 
+            "cit-Patents": 99447.22123718262, 
+            "email-EuAll": 4172.2009353637695, 
+            "wiki-Link": 324217.99923706055, 
+            "web-Stanford": 11573.174438476562, 
+            "ca-HepTh": 508.26426696777344, 
+            "web-BerkStan": 25973.03229522705, 
+            "web-NotreDame": 8227.149696350098, 
+            "p2p-Gnutella06": 285.26853942871094, 
+            "soc-LiveJournal1": 192995.89453125, 
+            "web-Google": 28442.373901367188, 
+            "ca-GrQc": 284.8116912841797, 
+            "email-Enron": 1301.3343963623047
+        }, 
+        "indexing time": {
+            "wiki-Vote": 0.990355, 
+            "cit-Patents": 1979.91, 
+            "email-EuAll": 19.1573, 
+            "wiki-Link": 9563.51, 
+            "web-Stanford": 226.972, 
+            "ca-HepTh": 10.3503, 
+            "web-BerkStan": 964.855, 
+            "web-NotreDame": 157.269, 
+            "p2p-Gnutella06": 4.35229, 
+            "soc-LiveJournal1": 9332.92, 
+            "web-Google": 586.057, 
+            "ca-GrQc": 5.60486, 
+            "email-Enron": 29.3222
+        }
+    }, 
+    "reads-rq": {
+        "index disk size": {
+            "wiki-Vote": 11.633, 
+            "cit-Patents": 8034.227, 
+            "email-EuAll": 341.25, 
+            "wiki-Link": 27305.288, 
+            "web-Stanford": 834.059, 
+            "ca-HepTh": 35.016, 
+            "web-BerkStan": 1911.173, 
+            "web-NotreDame": 631.341, 
+            "p2p-Gnutella06": 21.141, 
+            "soc-LiveJournal1": 13557.021, 
+            "web-Google": 2132.538, 
+            "ca-GrQc": 19.409, 
+            "email-Enron": 95.649
+        }, 
+        "indexing time": {
+            "wiki-Vote": 0.083002, 
+            "cit-Patents": 161.747, 
+            "email-EuAll": 1.58863, 
+            "wiki-Link": 753.583, 
+            "web-Stanford": 16.2519, 
+            "ca-HepTh": 0.71189, 
+            "web-BerkStan": 69.4419, 
+            "web-NotreDame": 11.5245, 
+            "p2p-Gnutella06": 0.366277, 
+            "soc-LiveJournal1": 671, 
+            "web-Google": 42.6829, 
+            "ca-GrQc": 0.49778, 
+            "email-Enron": 2.05814
+        }
+    }
+}

@@ -29,6 +29,8 @@ using gmap = google::sparse_hash_map<Key, Value, HashFcn>;
 template<typename Key>
 using gset = google::sparse_hash_set<Key>;
 
+const string SLING_INDEX_DIR = "/homes/ywangby/workspace/LinsysSimRank/datasets/sling";
+
 class Sling {
 // two thread functions
     friend void __Sling_t_calcD(Sling *sim, double eps, mutex *lock, int *cursor, int tid);
@@ -36,10 +38,8 @@ class Sling {
     friend void __Sling_t_backward(Sling *sim, double eps, mutex *tasklock, int *cursor, int tid, mutex *plock);
 
 private:
-//    const static int BLOCKSIZE = 1000;
     const static int BLOCKSIZE = 100;
     static int NUMTHREAD;
-//    const static int NUMTHREAD = 2;
 
     double c;
     double sqrtc;
@@ -50,37 +50,50 @@ private:
     bool *second;
 
     Rand gen;
+public:
+    Graph *g;
+    string g_name;
+    double eps_d;
+    double theta;
+
+    vector<tuple<int, int, int, double>> p;
+    vector<long long> pstart;
+    double *d;
+
+    const static double BACKEPS;
+    const static double K;
 private:
     double calcDi(int i, double eps, bool &early, int &RWCNT, int tid);
 
-    double calcDi_0(int i, double eps, bool &early, int &RWCNT, int tid);
-
     double calcDi_1(int i, double eps, bool &early, int &RWCNT, int tid);
 
-    double calcDi_2(int i, double eps, bool &early, int &RWCNT, int tid);
-
     map<pair<int, int>, double, PairCmp> pushback(int u, double eps, int tid);
-
-    vector<double> pushback_q(map<pair<int, int>, double, PairCmp>::iterator start,
-                              map<pair<int, int>, double, PairCmp>::iterator end, double eps, int T);
-
-    bool trial(int u, int v, int tid);
 
     //#################### multi-thread ##############################
     void t_calcD(double eps, mutex *lock, int *cursor, int tid);
 
     void t_backward(double eps, mutex *tasklock, int *cursor, int tid, mutex *plock);
 
-public:
-    Graph *g;
+    //########## serialization ###########################################
+    string get_file_path_base();
 
-    vector<tuple<int, int, int, double>> p;
-    vector<long long> pstart;
-    double *d;
+    void build_or_load_index();
+
+public:
+    double failure_probability = 0.01;
+
+    void init();
 
     Sling(Graph *g, double c) : g(g), c(c), sqrtc(sqrt(c)), d(NULL), gen(NUMTHREAD) { init(); }
 
-    void init();
+    Sling(Graph *g, string graph_name, double c, double eps_d, double theta) :
+            g(g), c(c), sqrtc(sqrt(c)), d(NULL), gen(NUMTHREAD), g_name(graph_name), eps_d(eps_d),
+            theta(theta) {
+        init();
+#ifndef ALWAYS_REBUILD
+        build_or_load_index();
+#endif
+    }
 
     ~Sling() {
         delete[] d;
@@ -88,18 +101,16 @@ public:
         delete[] second;
     }
 
-    void backward(double eps);
-
+    // indexing 1st step
     void calcD(double eps);
 
+    // indexing 2nd step
+    void backward(double eps);
+
+public:
     double simrank(int u, int v);
 
     vector<double> simrank(int u);
-
-    const static double EPS;
-    const static double BACKEPS;
-    const static double DEPS;
-    const static double K;
 };
 
 #endif

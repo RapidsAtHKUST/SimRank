@@ -296,6 +296,7 @@ void LocalPush::save() {
 void LocalPush::load() {
     // load existing local push data
     // load P
+
     string p_path = get_file_path_base() + ".P";
     P.load(p_path);
 

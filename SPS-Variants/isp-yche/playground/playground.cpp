@@ -2,6 +2,8 @@
 // Created by yche on 12/13/17.
 //
 
+#include <cmath>
+
 #include <iostream>
 
 #include <sparsepp/spp.h>
@@ -24,9 +26,7 @@ void PlaySpareHashMap() {
     }
 }
 
-int main() {
-//    PlaySpareHashMap();
-
+void PlayIterAdvance() {
     auto my_vec = vector<int>{0, 1, 2, 5};
     auto iter_beg = begin(my_vec);
     auto iter_end = end(my_vec);
@@ -37,4 +37,11 @@ int main() {
         std::advance(iter, i);
         cout << *iter << endl;
     }
+}
+
+int main() {
+//    PlaySpareHashMap();
+    double eps = 0.01;
+    double c = 0.6;
+    cout << static_cast<int>((log(eps) / log(c))) << endl;
 }

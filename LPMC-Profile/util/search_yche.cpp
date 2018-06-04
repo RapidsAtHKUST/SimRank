@@ -7,6 +7,9 @@
 #include <immintrin.h>  //AVX
 #include <x86intrin.h>
 
+//constexpr int lookup_table[9] = {0x00000000, 0x0000000f, 0x000000ff, 0x00000fff, 0x0000ffff,
+//                                 0x000fffff, 0x00ffffff, 0x0fffffff, (int) 0xffffffff};
+
 // the first element satisfying  array[offset] > val
 uint32_t BinarySearchForGallopingSearch(const double *array, uint32_t offset_beg, uint32_t offset_end, double val) {
     while (offset_end - offset_beg >= 16) {
@@ -91,7 +94,7 @@ uint32_t GallopingSearch(int *array, uint32_t offset_beg, uint32_t offset_end, i
 
 // 2nd: avx2-based galloping search
 uint32_t BinarySearchForGallopingSearchAVX2(const int *array, uint32_t offset_beg, uint32_t offset_end, int val) {
-        while (offset_end - offset_beg >= 16) {
+    while (offset_end - offset_beg >= 16) {
         auto mid = (offset_beg + offset_end) / 2;
         _mm_prefetch((char *) &array[(mid + 1 + offset_end) / 2], _MM_HINT_T0);
         _mm_prefetch((char *) &array[(offset_beg + mid) / 2], _MM_HINT_T0);
@@ -120,6 +123,7 @@ uint32_t BinarySearchForGallopingSearchAVX2(const int *array, uint32_t offset_be
         __m256i cmp_res = _mm256_cmpgt_epi32(pivot_element, elements);
         int mask = _mm256_movemask_epi8(cmp_res);
         int cmp_mask = 0xffffffff >> ((8 - left_size) << 2);
+//        int cmp_mask = lookup_table[left_size];
         mask &= cmp_mask;
         if (mask != cmp_mask) { return offset_beg + (_popcnt32(mask) >> 2); }
     }

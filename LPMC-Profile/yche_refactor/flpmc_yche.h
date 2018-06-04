@@ -16,8 +16,23 @@ struct FLPMC {
 #ifdef SFMT
     SFMTRand rand_gen;
 #endif
+
+#ifdef VARYING_RMAX
+    double r_max;
+#endif
+
+
 public:
+
+#ifdef VARYING_RMAX
+
+    FLPMC(string g_name_, GraphYche &, double c_, double epsilon_, double delta_, size_t Q, double r_max_);
+
+#else
+
     FLPMC(string g_name_, GraphYche &, double c_, double epsilon_, double delta_, size_t Q);
+
+#endif
 
     FLPMC(const FLPMC &other_obj);
 

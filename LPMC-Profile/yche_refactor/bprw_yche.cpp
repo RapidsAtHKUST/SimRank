@@ -89,17 +89,20 @@ size_t BackPush::number_of_walkers(double sum) {
 
 double BackPush::keep_push_cost(unique_max_heap &heap) {
     const heap_data &top_element = heap.top();
+    // please use size_t, otherwise probably overflow
     size_t d;
     d = g->in_deg_arr[top_element.np.first] * g->in_deg_arr[top_element.np.second];
-    return d + number_of_walkers(heap.sum - (1 - c) * top_element.residual) * (1 + 1 / (1 - c));
+    return push_cost * d +
+           mc_cost * number_of_walkers(heap.sum - (1 - c) * top_element.residual) * (1 + 1 / (1 - c));
 }
 
 double BackPush::change_to_MC_cost(unique_max_heap &heap) {
-    return number_of_walkers(heap.sum) * (1.0 + 1.0 / (1 - c));
+    return mc_cost * number_of_walkers(heap.sum) * (1.0 + 1.0 / (1 - c));
 }
 
 bool BackPush::is_keep_on_push(unique_max_heap &hp) {
     const heap_data &top_element = heap.top();
+
     return (top_element.np.first == top_element.np.second) ||
            (keep_push_cost(hp) < change_to_MC_cost(hp)); // when singleton nodes, directly keep on push
 }
@@ -128,9 +131,14 @@ pair<double, int> BackPush::backward_push(NodePair np, unique_max_heap &containe
         } else { // non-singleton nodes
             auto indeg_a = g->in_deg_arr[a];
             auto indeg_b = g->in_deg_arr[b];
-            for (auto off_a = g->off_in[a]; off_a < g->off_in[a + 1]; off_a++) {
+            auto off_a_beg = g->off_in[a];
+            auto off_a_end = g->off_in[a + 1];
+            auto off_b_beg = g->off_in[b];
+            auto off_b_end = g->off_in[b + 1];
+
+            for (auto off_a = off_a_beg; off_a < off_a_end; off_a++) {
                 auto in_nei_a = g->neighbors_in[off_a];
-                for (auto off_b = g->off_in[b]; off_b < g->off_in[b + 1]; off_b++) {
+                for (auto off_b = off_b_beg; off_b < off_b_end; off_b++) {
                     auto in_nei_b = g->neighbors_in[off_b];
 #ifdef DEBUG
                     cout << a << " " << b << " pushing to: " << in_nei_a << " " << in_nei_b << " ," << indeg_a << " ," << indeg_b
@@ -148,13 +156,7 @@ pair<double, int> BackPush::backward_push(NodePair np, unique_max_heap &containe
 }
 
 double BackPush::query_one2one(NodePair np) { // pairwise SimRank estimation
-    if (np.first == np.second) {
-        return 1.0;
-    }
-    double r_sum = 0.6;
-    // cout << "======= random test ======" << endl;
-    // backward_push(np, r_sum, set_residual);
-
+    if (np.first == np.second) { return 1.0; }
 #ifdef DEBUG
     cout << "======= greedy test ======" << endl;
 #endif

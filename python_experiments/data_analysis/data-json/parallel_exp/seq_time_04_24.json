@@ -1,0 +1,30 @@
+{
+    "flp": {
+        "wiki-Vote": 1.7927, 
+        "cit-Patents": 1260.07, 
+        "email-EuAll": 19.0944, 
+        "web-Stanford": 827.675, 
+        "ca-HepTh": 1.82639, 
+        "web-BerkStan": 1971.71, 
+        "web-NotreDame": 2516.66, 
+        "p2p-Gnutella06": 1.77671, 
+        "soc-LiveJournal1": 21673.8, 
+        "web-Google": 133.842, 
+        "ca-GrQc": 0.998661, 
+        "email-Enron": 49.6445
+    }, 
+    "rlp": {
+        "wiki-Vote": 0.952396, 
+        "cit-Patents": 661.039, 
+        "email-EuAll": 9.68679, 
+        "web-Stanford": 461.954, 
+        "ca-HepTh": 0.910041, 
+        "web-BerkStan": 1055.75, 
+        "web-NotreDame": 1060.99, 
+        "p2p-Gnutella06": 0.834402, 
+        "soc-LiveJournal1": 15272.3, 
+        "web-Google": 73.5988, 
+        "ca-GrQc": 0.533069, 
+        "email-Enron": 26.2762
+    }
+}

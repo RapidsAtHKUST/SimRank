@@ -1,5 +1,10 @@
 #include "cloud_walker.h"
 
+#include <boost/archive/binary_iarchive.hpp>
+#include <boost/archive/binary_oarchive.hpp>
+
+#include "../playground/boost_serialization_eigen.h"
+
 string CloudWalker::get_file_path_base() {
     return CLOUD_WALKER_DIR + str(format("%s-%.3f-%s-%s-%s-%s") % g_name % c % T % L % R % R_prime);
 }
@@ -14,46 +19,60 @@ CloudWalker::CloudWalker(DirectedG *graph, string name, double c_, int T_, int L
     g_name = name;
     n = num_vertices(*g);
 
-    D.resize(n);
-    // D.setOnes(); // initially D = I
-    D.setZero();
+#ifdef SINGLE_SOURCE
     F.resize(n);
     F.setZero();
     hat_P.resize(n, n);
+#endif
     vector<int> out_degrees(n, 0);
     for (int i = 0; i < n; i++) {
         out_degrees[i] = out_degree(i, *g);
     }
+#ifdef SINGLE_SOURCE
     hat_P.reserve(out_degrees);
-    preprocess_D();
+#endif
+
+    build_or_load_index();
+
+#ifdef SINGLE_SOURCE
     preprocess_F();
     preprocess_hat_P();
-    cout << "mem size:" << getValue() << endl;
+#endif
+//    cout << "mem size:" << getValue() << endl;
 }
 
-void CloudWalker::Tstep_distribution(int i, MatrixXd &pos_dist) {
-    pos_dist.setZero();
-    /* start run R random walks */
-    int current_pos;
-//    for (int k = 0; k < R; k++) {
-    for (int k = 0; k < R_prime; k++) {
-        int t = 0;
-        current_pos = i;
-        while (t <= T) {
-//            pos_dist(t, current_pos) += (1.0 / R);
-            pos_dist(t, current_pos) += (1.0 / R_prime);
-            auto sampled_in_neighbor = sample_in_neighbor(current_pos, *g);
-            if (sampled_in_neighbor != -1) {
-                current_pos = sampled_in_neighbor;
-            } else {
-                break; // there is no in-neighbor for current_pos
-            }
-            ++t;
-        }
+void CloudWalker::build_or_load_index() {
+    string d_file = get_file_path_base() + ".D";
+    if (file_exists(d_file)) {
+        std::ifstream ifs(d_file, ios::binary | ios::in);
+        boost::archive::binary_iarchive ia(ifs);
+        boost::serialization::load(ia, D, 0);
+        ifs.close();
+    } else {
+        D.resize(n);
+        D.setOnes();
+
+        auto start = std::chrono::high_resolution_clock::now();
+        preprocess_D();
+        auto pre_time = std::chrono::high_resolution_clock::now();
+        cout << "indexing time:"
+             << float(std::chrono::duration_cast<std::chrono::microseconds>(pre_time - start).count()) / (pow(10, 6))
+             << " s\n";
+
+        // serialization
+        std::ofstream ofs(d_file);
+        boost::archive::binary_oarchive oa(ofs);
+        boost::serialization::save(oa, D, 0);
+        ofs.close();
+
+        cout << "mem size:" << getValue() << endl;
     }
 }
 
 void CloudWalker::preprocess_D() {
+    D.resize(n);
+    // D.setOnes(); // initially D = I
+    D.setZero();
     cout << "computing D" << endl;
     // use jacobi method to compute D
 
@@ -122,6 +141,29 @@ void CloudWalker::preprocess_D() {
     // cout << (A * D) << endl;
 }
 
+void CloudWalker::Tstep_distribution(int i, MatrixXd &pos_dist) {
+    pos_dist.setZero();
+    /* start run R random walks */
+    int current_pos;
+//    for (int k = 0; k < R; k++) {
+    for (int k = 0; k < R_prime; k++) {
+        int t = 0;
+        current_pos = i;
+        while (t <= T) {
+//            pos_dist(t, current_pos) += (1.0 / R);
+            pos_dist(t, current_pos) += (1.0 / R_prime);
+            auto sampled_in_neighbor = sample_in_neighbor(current_pos, *g);
+            if (sampled_in_neighbor != -1) {
+                current_pos = sampled_in_neighbor;
+            } else {
+                break; // there is no in-neighbor for current_pos
+            }
+            ++t;
+        }
+    }
+}
+
+#ifdef SINGLE_SOURCE
 void CloudWalker::preprocess_F() {
     cout << "computing F" << endl;
     DirectedG::edge_iterator edge_it, edge_end;
@@ -230,6 +272,7 @@ void CloudWalker::mcss(int i, VectorXd &r) {
     }
     mem_size = getValue();
 }
+#endif
 
 double CloudWalker::mcsp(int u, int v, MatrixXd &pos_dist_u, MatrixXd &pos_dist_v) {
     if (u == v) { return 1; }

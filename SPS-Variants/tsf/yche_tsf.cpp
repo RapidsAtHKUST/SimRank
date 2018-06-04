@@ -25,8 +25,9 @@ void YcheTSF::BuildIndex() {
         }
     }
     auto tmp_end = std::chrono::high_resolution_clock::now();
-    cout << "indexing computation time:"
-         << std::chrono::duration_cast<std::chrono::milliseconds>(tmp_end - tmp_start).count() << " ms\n";
+    cout << "indexing computation time:" << static_cast<float >(
+            std::chrono::duration_cast<std::chrono::microseconds>(tmp_end - tmp_start).count() / (pow(10, 6)))
+         << " s\n";
 }
 
 double YcheTSF::querySinglePair(int u, int v) {

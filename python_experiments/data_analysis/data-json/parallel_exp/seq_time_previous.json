@@ -1,0 +1,72 @@
+{
+    "flp-old": {
+        "wiki-Vote": 3.861, 
+        "cit-Patents": 1707.68, 
+        "email-EuAll": 33.914, 
+        "web-Stanford": 1751.85, 
+        "ca-HepTh": 3.458, 
+        "web-BerkStan": 4403.81, 
+        "web-NotreDame": 4063.06, 
+        "p2p-Gnutella06": 2.858, 
+        "soc-LiveJournal1": 31980.9, 
+        "web-Google": 234.058, 
+        "ca-GrQc": 1.853, 
+        "email-Enron": 88.984
+    }, 
+    "lind": {
+        "wiki-Vote": 27.033, 
+        "cit-Patents": 12274249.224, 
+        "email-EuAll": 20304.825, 
+        "web-Stanford": 50572.941, 
+        "ca-HepTh": 42.028, 
+        "web-BerkStan": 327914.224, 
+        "web-NotreDame": 45336.839, 
+        "p2p-Gnutella06": 29.681, 
+        "soc-LiveJournal1": 39868660.063, 
+        "web-Google": 564967.804, 
+        "ca-GrQc": 12.626, 
+        "email-Enron": 667.975
+    }, 
+    "mcap": {
+        "wiki-Vote": 312.618, 
+        "cit-Patents": 11261417.728, 
+        "email-EuAll": 63617.128, 
+        "web-Stanford": 72311.109, 
+        "ca-HepTh": 548.113, 
+        "web-BerkStan": 383753.029, 
+        "web-NotreDame": 88902.434, 
+        "p2p-Gnutella06": 454.857, 
+        "soc-LiveJournal1": 19675654.326, 
+        "web-Google": 599341.562, 
+        "ca-GrQc": 255.237, 
+        "email-Enron": 3417.558
+    }, 
+    "rlp-old": {
+        "wiki-Vote": 2.194, 
+        "cit-Patents": 919.906, 
+        "email-EuAll": 18.065, 
+        "web-Stanford": 917.322, 
+        "ca-HepTh": 1.746, 
+        "web-BerkStan": 2120.15, 
+        "web-NotreDame": 1797.56, 
+        "p2p-Gnutella06": 1.476, 
+        "soc-LiveJournal1": 20132.5, 
+        "web-Google": 123.402, 
+        "ca-GrQc": 1.077, 
+        "email-Enron": 47.56
+    }, 
+    "pcg": {
+        "wiki-Vote": 10.177, 
+        "cit-Patents": 0.0, 
+        "email-EuAll": 0.0, 
+        "web-Stanford": 0.0, 
+        "ca-HepTh": 25.005, 
+        "web-BerkStan": 0.0, 
+        "web-NotreDame": 0.0, 
+        "p2p-Gnutella06": 20.872, 
+        "soc-LiveJournal1": 0.0, 
+        "web-Google": 0.0, 
+        "ca-GrQc": 6.883, 
+        "email-Enron": 648.495
+    }
+}

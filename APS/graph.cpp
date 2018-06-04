@@ -1,6 +1,6 @@
 #include "graph.h"
 
-string EDGE_LIST_PATH = "./datasets/edge_list/";
+string EDGE_LIST_PATH = "/homes/ywangby/workspace/LinsysSimRank/datasets/edge_list/";
 vector<string> DATA_NAME = {
         "odlis",
         "ca-GrQc",
@@ -23,6 +23,23 @@ void load_graph(string path, DirectedG &g) {
         ifstream edgeFile(path, ios::in);
         while (edgeFile >> a >> b) {
             add_edge(a, b, g);
+        }
+        edgeFile.close();
+        return;
+    } else {
+        cout << "file doesn't exit" << endl;
+        return;
+    }
+}
+
+void load_reversed_graph(string path, DirectedG &g) {
+    // load graph from edge_list file
+    if (file_exists(path)) {
+        int a, b;
+        cout << "loading " << path << endl;;
+        ifstream edgeFile(path, ios::in);
+        while (edgeFile >> a >> b) {
+            add_edge(b, a, g);
         }
         edgeFile.close();
         return;

@@ -1,0 +1,250 @@
+{
+    "flp": {
+        "wiki-Vote": {
+            "max err": 0.00465162, 
+            "mean err": 8.58414e-05, 
+            "mem size": 70724
+        }, 
+        "cit-Patents": {
+            "max err": null, 
+            "mean err": null, 
+            "mem size": 46881744
+        }, 
+        "email-EuAll": {
+            "max err": null, 
+            "mean err": null, 
+            "mem size": 1187420
+        }, 
+        "web-Stanford": {
+            "max err": null, 
+            "mean err": null, 
+            "mem size": 7225744
+        }, 
+        "ca-HepTh": {
+            "max err": 0.00761321, 
+            "mean err": 8.95586e-05, 
+            "mem size": 90600
+        }, 
+        "web-BerkStan": {
+            "max err": null, 
+            "mean err": null, 
+            "mem size": 14656736
+        }, 
+        "web-NotreDame": {
+            "max err": null, 
+            "mean err": null, 
+            "mem size": 98012400
+        }, 
+        "p2p-Gnutella06": {
+            "max err": 0.00560961, 
+            "mean err": 0.000177101, 
+            "mem size": 138200
+        }, 
+        "soc-LiveJournal1": {
+            "max err": null, 
+            "mean err": null, 
+            "mem size": 311717524
+        }, 
+        "web-Google": {
+            "max err": null, 
+            "mean err": null, 
+            "mem size": 4672784
+        }, 
+        "ca-GrQc": {
+            "max err": 0.00799702, 
+            "mean err": 0.000114647, 
+            "mem size": 33836
+        }, 
+        "email-Enron": {
+            "max err": null, 
+            "mean err": null, 
+            "mem size": 1424792
+        }
+    }, 
+    "prlp-with-lock": {
+        "wiki-Vote": {
+            "max err": 0.00999999, 
+            "mean err": 8.95155e-05, 
+            "mem size": 98932
+        }, 
+        "cit-Patents": {
+            "max err": null, 
+            "mean err": null, 
+            "mem size": 36946212
+        }, 
+        "email-EuAll": {
+            "max err": null, 
+            "mean err": null, 
+            "mem size": 2128532
+        }, 
+        "web-Stanford": {
+            "max err": null, 
+            "mean err": null, 
+            "mem size": 15152288
+        }, 
+        "ca-HepTh": {
+            "max err": 0.00999999, 
+            "mean err": 9.56399e-05, 
+            "mem size": 98140
+        }, 
+        "web-BerkStan": {
+            "max err": null, 
+            "mean err": null, 
+            "mem size": 34449168
+        }, 
+        "web-NotreDame": {
+            "max err": null, 
+            "mean err": null, 
+            "mem size": 91935280
+        }, 
+        "p2p-Gnutella06": {
+            "max err": 0.00999999, 
+            "mean err": 0.000183535, 
+            "mem size": 105708
+        }, 
+        "soc-LiveJournal1": {
+            "max err": null, 
+            "mean err": null, 
+            "mem size": 302781476
+        }, 
+        "web-Google": {
+            "max err": null, 
+            "mean err": null, 
+            "mem size": 5628436
+        }, 
+        "ca-GrQc": {
+            "max err": 0.00999999, 
+            "mean err": 0.000126279, 
+            "mem size": 45012
+        }, 
+        "email-Enron": {
+            "max err": null, 
+            "mean err": null, 
+            "mem size": 3440080
+        }
+    }, 
+    "rlp": {
+        "wiki-Vote": {
+            "max err": 0.00999999, 
+            "mean err": 8.93572e-05, 
+            "mem size": 40504
+        }, 
+        "cit-Patents": {
+            "max err": null, 
+            "mean err": null, 
+            "mem size": 24154576
+        }, 
+        "email-EuAll": {
+            "max err": null, 
+            "mean err": null, 
+            "mem size": 660488
+        }, 
+        "web-Stanford": {
+            "max err": null, 
+            "mean err": null, 
+            "mem size": 3689728
+        }, 
+        "ca-HepTh": {
+            "max err": 0.00999999, 
+            "mean err": 9.31593e-05, 
+            "mem size": 51032
+        }, 
+        "web-BerkStan": {
+            "max err": null, 
+            "mean err": null, 
+            "mem size": 7513580
+        }, 
+        "web-NotreDame": {
+            "max err": null, 
+            "mean err": null, 
+            "mem size": 49022916
+        }, 
+        "p2p-Gnutella06": {
+            "max err": 0.00999999, 
+            "mean err": 0.000183174, 
+            "mem size": 74272
+        }, 
+        "soc-LiveJournal1": {
+            "max err": null, 
+            "mean err": null, 
+            "mem size": 155741020
+        }, 
+        "web-Google": {
+            "max err": null, 
+            "mean err": null, 
+            "mem size": 2545360
+        }, 
+        "ca-GrQc": {
+            "max err": 0.00999999, 
+            "mean err": 0.000121508, 
+            "mem size": 22008
+        }, 
+        "email-Enron": {
+            "max err": null, 
+            "mean err": null, 
+            "mem size": 729216
+        }
+    }, 
+    "prlp-lock-free": {
+        "wiki-Vote": {
+            "max err": 0.00999999, 
+            "mean err": 8.942e-05, 
+            "mem size": 159272
+        }, 
+        "cit-Patents": {
+            "max err": null, 
+            "mean err": null, 
+            "mem size": 44953176
+        }, 
+        "email-EuAll": {
+            "max err": null, 
+            "mean err": null, 
+            "mem size": 3744124
+        }, 
+        "web-Stanford": {
+            "max err": null, 
+            "mean err": null, 
+            "mem size": 22705512
+        }, 
+        "ca-HepTh": {
+            "max err": 0.00999999, 
+            "mean err": 9.55777e-05, 
+            "mem size": 178556
+        }, 
+        "web-BerkStan": {
+            "max err": null, 
+            "mean err": null, 
+            "mem size": 48856716
+        }, 
+        "web-NotreDame": {
+            "max err": null, 
+            "mean err": null, 
+            "mem size": 151284800
+        }, 
+        "p2p-Gnutella06": {
+            "max err": 0.00999999, 
+            "mean err": 0.00018348, 
+            "mem size": 160396
+        }, 
+        "soc-LiveJournal1": {
+            "max err": null, 
+            "mean err": null, 
+            "mem size": 306892172
+        }, 
+        "web-Google": {
+            "max err": null, 
+            "mean err": null, 
+            "mem size": 12158860
+        }, 
+        "ca-GrQc": {
+            "max err": 0.00999999, 
+            "mean err": 0.00012608, 
+            "mem size": 90840
+        }, 
+        "email-Enron": {
+            "max err": null, 
+            "mean err": null, 
+            "mem size": 6084552
+        }
+    }
+}
