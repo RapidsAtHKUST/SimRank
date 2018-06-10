@@ -2,12 +2,19 @@
 #define __SIMRANK_H__
 
 #include <boost/format.hpp>
-#include "graph.h"
+#include <boost/multi_array.hpp>
 
+#include <util/graph_yche.h>
+#include <util/sparse_matrix_utils.h>
 
-extern void basic_simrank(DirectedG &g, double c, SimRank_matrix &);
+using SimRank_matrix= boost::multi_array<double, 2>;
 
-const string GROUND_TRUTH_DIR("./datasets/ground_truth/");
+//extern void basic_simrank(GraphYche &g, double c, SimRank_matrix &);
+
+const string GROUND_TRUTH_DIR(
+        "/homes/ywangby/workspace/DynamicSimRank/datasets/ground_truth/");
+
+extern void indegree_mat(const GraphYche &g, SparseMatrix<float> &P);// column normalized adjacency matrix
 
 struct TruthSim {
     size_t n;
@@ -18,9 +25,9 @@ struct TruthSim {
 
     TruthSim() {};
 
-    TruthSim(string name, DirectedG &g, double c_, double epsilon_);
+    TruthSim(string name, GraphYche &g, double c_, double epsilon_);
 
-    void run(DirectedG &g);
+    void run(GraphYche &g);
 
     void save() {
         // save to disk
@@ -33,8 +40,7 @@ struct TruthSim {
     }
 
     string get_file_path() { // file path to save and load
-        return GROUND_TRUTH_DIR + str(format("GROUND_%s-%.3f.bin") %
-                                      g_name % c);
+        return GROUND_TRUTH_DIR + str(format("GROUND_%s-%.3f.bin") % g_name % c);
     }
 };
 

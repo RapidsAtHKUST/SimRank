@@ -14,14 +14,14 @@ const heap_data &unique_max_heap::top() {
     return heap.top();
 }
 
-data_item unique_max_heap::pop() {
+heap_data unique_max_heap::pop() {
     heap_data top_element = top(); // the top element
     double r = top_element.residual;
     R.erase(top_element.np); // remove from hash table 
     heap.pop();
     sum -= r;
     // cout << "pop: " << top_element << " sum: " << sum << endl;
-    return data_item{top_element.np, top_element.residual};
+    return top_element;
 }
 
 void unique_max_heap::push(NodePair node_pair, double value) {
@@ -72,7 +72,7 @@ BackPush::BackPush(string g_name_, DirectedG &graph, double c_, double epsilon_,
             this->build_cost_estimation_model();
         }
         if(config.is_use_hub_idx){ // build the hub index
-            rw_hubs = new Rw_Hubs(graph, 40000,100,c);
+            rw_hubs = new Rw_Hubs(graph, config.number_of_hubs, config.number_of_samples_per_hub,c);
             rw_hubs->build_hubs();
         }
 }
@@ -86,7 +86,7 @@ size_t BackPush::number_of_walkers(double sum) {
 double BackPush::keep_push_cost(unique_max_heap &heap) {
     const heap_data &top_element = heap.top();
     size_t d;
-    d = in_degree(top_element.np.first, *g) * in_degree(top_element.np.second, *g);
+    d = (*g).in_degree(top_element.np.first) * (*g).in_degree(top_element.np.second);
     if(config.is_use_linear_regression_cost_estimation){
         PushFeature lpf(d,heap.size());
         MCFeature mcf(heap.sum - top_element.residual, heap.size()+d);
@@ -118,9 +118,16 @@ bool BackPush::is_keep_on_push(unique_max_heap &hp, int number_of_current_lp_ope
     // decide whether to do local push
     const heap_data &top_element = heap.top();
     if(is_training){ // if is training, stop based on random local push numbers
-        if (number_of_current_lp_operations < this->maximum_lp_operations){
+        // cout << top_element << endl;
+        auto a = top_element.np.first;
+        auto b = top_element.np.second;
+        double residual = top_element.residual;
+        auto indeg_a = g->in_deg_arr[a];
+        auto indeg_b = g->in_deg_arr[b];
+        if ((number_of_current_lp_operations < this->maximum_lp_operations) && (indeg_a * indeg_b < 10000)){
+            // only local push on smaller node pairs, whose in-degree is not very large
             return true;
-        }else{
+        }{
             return false;
         }
     }else{ // doing the actual query
@@ -158,41 +165,59 @@ pair<double, double> BackPush::backward_push(NodePair np, unique_max_heap &conta
     while (!container.empty() && ( is_keep_on_push(container, number_of_local_push_operations))) {
         // check whether to stop
 
-        auto top_element = container.pop(); // pop and fetch the top element
+        heap_data top_element = container.pop(); // pop and fetch the top element
         // cout << top_element << endl;
         auto a = top_element.np.first;
         auto b = top_element.np.second;
         double residual = top_element.residual;
+        auto indeg_a = g->in_deg_arr[a];
+        auto indeg_b = g->in_deg_arr[b];
+        auto off_a_beg = g->off_in[a];
+        auto off_a_end = g->off_in[a + 1];
+        auto off_b_beg = g->off_in[b];
+        auto off_b_end = g->off_in[b + 1];
         // cout << top_element << " sum: " << container.sum << endl;
+        // cout << format("%s is pushed, in-degree:%s, priority:%s") % top_element.np %  (indeg_a * indeg_b) % \
+            top_element.get_priority() << endl;
         if (a == b) { // current_pair is singleton
             p += residual;
             continue;
         } else { // non-singleton nodes
             auto batch_local_push_start = std::chrono::high_resolution_clock::now();
-            auto indeg_a = in_degree(a, *g);
-            auto indeg_b = in_degree(b, *g);
-            DirectedG::in_edge_iterator ina_it, ina_end;
-            DirectedG::in_edge_iterator inb_it, inb_end;
-            tie(ina_it, ina_end) = in_edges(a, *g);
+            // auto indeg_a = (*g).in_degree(a);
+            // auto indeg_b = (*g).in_degree(b);
+            // DirectedG::in_edge_iterator ina_it, ina_end;
+            // DirectedG::in_edge_iterator inb_it, inb_end;
+            // tie(ina_it, ina_end) = in_edges(a, *g);
             // no need to consider a*b==0, since it would not jump into the loops
-            for (; ina_it != ina_end; ++ina_it) {
-                auto ina = source(*ina_it, *g);
-                tie(inb_it, inb_end) = in_edges(b, *g);
-                for (; inb_it != inb_end; ++inb_it) {
-                    auto inb = source(*inb_it, *g);
-#ifdef DEBUG
-                    // cout << a << " " << b << " pushing to: " << ina << " " << inb << " ," << indeg_a << " ," << indeg_b << endl;
+            for (auto off_a = off_a_beg; off_a < off_a_end; off_a++) {
+                auto in_nei_a = g->neighbors_in[off_a];
+                for (auto off_b = off_b_beg; off_b < off_b_end; off_b++) {
+                    auto in_nei_b = g->neighbors_in[off_b];
 
-#endif
+                    // cout << a << " " << b << " pushing to: " << in_nei_a << " " << in_nei_b << " ," << indeg_a << " ," << indeg_b
+                    //      << endl;
 
-                    container.push(NodePair{ina, inb}, c * residual / (indeg_a * indeg_b));
+                    container.push(NodePair{in_nei_a, in_nei_b}, c * residual / (indeg_a * indeg_b));
                     number_of_local_push_operations += 1;
-
-
-
-                    // cost += log(heap.size()); // add the heap insertion cost 
                 }
             }
+            // for (; ina_it != ina_end; ++ina_it) {
+            //     auto ina = source(*ina_it, *g);
+            //     tie(inb_it, inb_end) = in_edges(b, *g);
+            //     for (; inb_it != inb_end; ++inb_it) {
+            //         auto inb = source(*inb_it, *g);
+            //         // cout << a << " " << b << " pushing to: " << ina << " " << inb << " ," << indeg_a << " ," << indeg_b << endl;
+
+
+            //         container.push(NodePair{ina, inb}, c * residual / (indeg_a * indeg_b));
+            //         number_of_local_push_operations += 1;
+
+
+
+            //         // cost += log(heap.size()); // add the heap insertion cost 
+            //     }
+            // }
             auto batch_local_push_end = std::chrono::high_resolution_clock::now();
             if(heap.size() >= 1 && is_training){ // only count for heap size larger than 1, and is building linear model 
                 elapsed = batch_local_push_end - batch_local_push_start;
@@ -269,15 +294,25 @@ pair <double, double> BackPush::MC_random_walk(int N) { // perform random walks 
     std::uniform_real_distribution<double> distribution(0.0, 1.0);
 
 
+    // set up the CDF for weights of node pairs
     vector<double> weights;
     vector<NodePair> node_pairs;
     auto begin = heap.heap.begin();
     auto end = heap.heap.end();
-    for(auto it = begin; it !=end; ++ it){
+    for (auto it = begin; it != end; ++it) {
         weights.push_back((*it).residual / heap.sum);
         node_pairs.push_back((*it).np);
     }
-    std::discrete_distribution<int> residuals_dist (weights.begin(),weights.end());
+    constexpr int YCHE_MAX_INT = 1 << 30;
+    vector<int> cdf(weights.size(), 0);
+    auto prev = 0.0;
+    auto accumulation = prev;
+    for (auto i = 0; i < weights.size(); i++) {
+        accumulation = prev + weights[i];
+        cdf[i] = static_cast<int>(accumulation * YCHE_MAX_INT);
+        prev = accumulation;
+    }
+    cdf.back() = YCHE_MAX_INT;
 
     // set up the geometry distribution
     std::geometric_distribution<int> geo_distribution(1-c);
@@ -290,9 +325,14 @@ pair <double, double> BackPush::MC_random_walk(int N) { // perform random walks 
     vector<NodePair> starting_positions(N); // the starting positions 
     vector<int> length_of_rws(N); //and length of samples
     for(int i = 0; i< N;i++){
-        int index =  residuals_dist(generator) ; // index for node pairs
+        int index = BinarySearchForGallopingSearchAVX2(&cdf.front(), 0, static_cast<uint32_t>(cdf.size()),
+                                                       static_cast<int>(rand_gen.double_rand() * YCHE_MAX_INT)); // index for node pairs
         NodePair sampled_np = node_pairs[index];
-        int length_of_random_walk = geo_distribution(generator) + 1;
+        // int length_of_random_walk = 1 + floor(log(double(rand_gen.double_rand())) / log(c));
+        int length_of_random_walk = 1;
+        while(rand_gen.double_rand()<c){
+            length_of_random_walk++;
+        }
         starting_positions.push_back(sampled_np);
         length_of_rws.push_back(length_of_random_walk);
     }
@@ -320,7 +360,7 @@ int BackPush::sample_N_random_walks_with_hubs(vector<NodePair> & nps, vector<int
     int meeting_count = 0;
     // aggreated query the hubs  
     // the auxiliary hash table for recording hub visits
-    sparse_hash_map<NodePair, int, hash_duplicate, hash_duplicate_equal> Q;
+    sparse_hash_map<NodePair, int> Q;
     for(int i = 0; i< N;i++){
         int length_of_random_walk = lengths[i];
         NodePair sampled_np = nps[i];
@@ -329,11 +369,11 @@ int BackPush::sample_N_random_walks_with_hubs(vector<NodePair> & nps, vector<int
     }
     
     // udpate meeting points using hubs
-    for(auto & item: Q){
-        int a = rw_hubs->query_1s(item.first, item.second);
-        meeting_count += a;
-        this->hub_hits += item.second;
-    }
+    // for(auto & item: Q){
+    //     int a = rw_hubs->query_1s(item.first, item.second);
+    //     meeting_count += a;
+    //     this->hub_hits += item.second;
+    // }
     return meeting_count;
 } 
 
@@ -343,7 +383,7 @@ int BackPush::sample_N_random_walks(vector<NodePair> & nps, vector<int> & length
     int meeting_count = 0;
     // aggreated query the hubs  
     // the auxiliary hash table for recording hub visits
-    sparse_hash_map<NodePair, int, hash_duplicate, hash_duplicate_equal> Q;
+    sparse_hash_map<NodePair, int> Q;
     for(int i = 0; i< N;i++){
         int length_of_random_walk = lengths[i];
         NodePair sampled_np = nps[i];
@@ -353,46 +393,32 @@ int BackPush::sample_N_random_walks(vector<NodePair> & nps, vector<int> & length
     return meeting_count;
 }
 
-int BackPush::sample_one_pair_with_hubs(NodePair sampled_np, int length_of_random_walk, sparse_hash_map<NodePair, int, hash_duplicate, hash_duplicate_equal> &Q){
+int BackPush::sample_one_pair_with_hubs(NodePair sampled_np, int length_of_random_walk, sparse_hash_map<NodePair, int> &Q){
     // sample one pair of random walk sample one pair with hubs
         int a = sampled_np.first;
         int b = sampled_np.second;
         double indicator = 0;
         int step = 0; // 
 
+        NodePair np{minmax(a,b)};
         // test whether the starting node  a,b are in the hub or not
-        NodePair np{a,b};
         if(rw_hubs->contains(np)){
-            if((Q).find(np) != Q.end() ){
-                if((Q)[np] < rw_hubs->l){
-                    (Q)[np] += 1;
-                    return 0;
-                }
-            }else{ // Q now have no entry for np
-                (Q)[np] = 1;
-                return 0;
-            }
+            return rw_hubs->query_single_pair(np);
+            // if( Q.contains(np) ){
+            //     if((Q)[np] < rw_hubs->l){
+            //         (Q)[np] += 1;
+            //         return 0;
+            //     }
+            // }else{ // Q now have no entry for np
+            //     (Q)[np] = 1;
+            //     return 0;
+            // }
         }
 
 
         while( step < length_of_random_walk && a != b){ // walk when > c or the first step
-            a = sample_in_neighbor(a, *g);
-            b = sample_in_neighbor(b, *g);
-
-            // test whether a,b are in the hub
-            NodePair np{a,b};
-            if(rw_hubs->contains(np)){
-                if((Q).find(np) != Q.end()){
-                    if((Q)[np] < rw_hubs->l){
-                        (Q)[np] += 1;
-                        break;
-                    }
-                }else{ // Q now have no entry for np
-                    (Q)[np] = 1;
-                    break;
-                }
-            }
-
+            a = sample_in_neighbor(a, *g, rand_gen);
+            b = sample_in_neighbor(b, *g, rand_gen);
             step ++;
             if(a == -1 || b == -1){
                 break;
@@ -400,6 +426,22 @@ int BackPush::sample_one_pair_with_hubs(NodePair sampled_np, int length_of_rando
                 indicator = 1;
                 break;
             }
+
+            // test whether a,b are in the hub
+            NodePair np{minmax(a,b)};
+            if(rw_hubs->contains(np)){
+                return rw_hubs->query_single_pair(np);
+                // if(Q.contains(np)){
+                //     if((Q)[np] < rw_hubs->l){
+                //         (Q)[np] += 1;
+                //         break;
+                //     }
+                // }else{ // Q now have no entry for np
+                //     (Q)[np] = 1;
+                //     break;
+                // }
+            }
+
         }
         return indicator;
 } 
@@ -414,8 +456,8 @@ int BackPush::sample_one_pair(NodePair np,  int length_of_random_walk) {
     double indicator = 0;
     int step = 0; // 
     while( step < length_of_random_walk && a != b){ // walk when > c or the first step
-        a = sample_in_neighbor(a, *g);
-        b = sample_in_neighbor(b, *g);
+        a = sample_in_neighbor(a, *g, rand_gen);
+        b = sample_in_neighbor(b, *g, rand_gen);
 
 
         step ++;
@@ -429,43 +471,13 @@ int BackPush::sample_one_pair(NodePair np,  int length_of_random_walk) {
     return indicator;
 }
 
-size_t residual_set::size() const {
-    return hash_d.size();
-}
-
-bool residual_set::empty() const {
-    return hash_d.empty();
-}
-
-void residual_set::clear() {
-    sum = 0;
-    hash_d.clear();
-}
-
-void residual_set::push(NodePair np, double residual) {
-    if (hash_d.contains(np)) {
-        hash_d[np].residual += residual;
-    } else {
-        data_item d{np, residual};
-        hash_d[np] = d;
-    }
-    sum += residual;
-}
-
-data_item residual_set::pop() { // pop a random element
-    auto element_iter = select_randomly(hash_d.begin(), hash_d.end());
-    data_item d(element_iter->second); // copy out the data
-    hash_d.erase(element_iter);
-    sum -= d.residual;
-    return d;
-}
 
 pair<int,int> BackPush::deg_np(NodePair const &np){
     // a helper function extracts the degree of a node pair
     int a ,b;
     tie(a,b) = np;
-    auto indeg_a = in_degree(a, *g);
-    auto indeg_b = in_degree(b, *g);
+    auto indeg_a = (*g).in_degree(a);
+    auto indeg_b = (*g).in_degree(b);
     return {indeg_a,indeg_b};
 }
 
@@ -481,7 +493,7 @@ void BackPush::build_cost_estimation_model(){
     int maximum_local_push_operations = 10000;
     
     cout << "collecting the data..." << endl;
-    int number_of_vertices = num_vertices(*g);
+    int number_of_vertices = (*g).n;
     for(int i = 0 ; i< data_size; i++){ // fill in total data: train + test
         double threshold = ceil(random_01() * double(maximum_local_push_operations)); // defined random stop criterior
         this->maximum_lp_operations = threshold;
@@ -562,7 +574,7 @@ void BackPush::build_cost_estimation_model(){
         // cout << format("ground:%s, estimated: %s, error:%s") % ground_truth % estimated %  error << endl;
     }
 
-    cout << "testing the linear model for local push..." << endl;
+    // cout << "testing the linear model for local push..." << endl;
     double lp_test_sum_error = 0;
     for(int i = 0; i< lp_test_X.size();i++){
         double estimated = lp_linearmodel ->predict(lp_test_X[i]);
@@ -571,10 +583,10 @@ void BackPush::build_cost_estimation_model(){
         lp_test_sum_error += abs(error);
         // cout << format("ground:%s, estimated: %s, error:%s") % ground_truth % estimated %  error << endl;
     }
-    cout << "Weight: " << endl;
-    cout << lp_linearmodel->W << endl;
-    cout << format("Average train error of local push: %s") % (lp_train_sum_error/ lp_train_size) << endl;
-    cout << format("Average test error of local push: %s") % (lp_test_sum_error / lp_test_size) << endl;
+    // cout << "Weight: " << endl;
+    // cout << lp_linearmodel->W << endl;
+    // cout << format("Average train error of local push: %s") % (lp_train_sum_error/ lp_train_size) << endl;
+    // cout << format("Average test error of local push: %s") % (lp_test_sum_error / lp_test_size) << endl;
 
     /* compute the accuracy for local push model*/
     double mc_train_sum_error = 0;
@@ -586,7 +598,7 @@ void BackPush::build_cost_estimation_model(){
         // cout << format("ground:%s, estimated: %s, error:%s") % ground_truth % estimated %  error << endl;
     }
 
-    cout << "testing the linear model for local push..." << endl;
+    // cout << "testing the linear model for local push..." << endl;
     double mc_test_sum_error = 0;
     for(int i = 0; i< mc_test_X.size();i++){
         double estimated = mc_linearmodel ->predict(mc_test_X[i]);
@@ -595,10 +607,10 @@ void BackPush::build_cost_estimation_model(){
         mc_test_sum_error += abs(error);
         // cout << format("ground:%s, estimated: %s, error:%s") % ground_truth % estimated %  error << endl;
     }
-    cout << "Weight: " << endl;
-    cout << mc_linearmodel->W << endl;
-    cout << format("Average train error of MC: %s") % (mc_train_sum_error/ mc_train_size) << endl;
-    cout << format("Average test error of MC: %s") % (mc_test_sum_error / mc_test_size) << endl;
+    // cout << "Weight: " << endl;
+    // cout << mc_linearmodel->W << endl;
+    // cout << format("Average train error of MC: %s") % (mc_train_sum_error/ mc_train_size) << endl;
+    // cout << format("Average test error of MC: %s") % (mc_test_sum_error / mc_test_size) << endl;
     
 
     // restore the state for query 
@@ -620,8 +632,6 @@ void BackPush::mc_extract_feature(MCFeature & item, vector<double> &f){
     f.push_back(pow(item.r,2.0));
     f.push_back(item.H);
 }
-
-
 
 
 

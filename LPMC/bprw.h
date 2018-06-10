@@ -4,10 +4,15 @@
 
 #include <boost/heap/fibonacci_heap.hpp>
 #include "stat.h"
-#include "graph.h"
 #include "rw_hub.h"
+#include <util/sfmt_based_rand.h>
+#include <util/sparse_matrix_utils.h>
+#include <util/search_yche.h>
+
 
 using namespace boost::heap;
+
+typedef GraphYche DirectedG;
 
 struct heap_data {
     // the data the heap maintains
@@ -19,6 +24,11 @@ struct heap_data {
         residual = residual_;
         g_ptr = &g;
     }
+    heap_data(const heap_data & other){ // copy constructor
+        np = other.np;
+        residual = other.residual;
+        g_ptr = other.g_ptr;
+    }
 
     bool operator<(heap_data const &rhs) const { // doesn't change the memebr
         // return residual < rhs.residual;
@@ -26,8 +36,8 @@ struct heap_data {
     }
 
     double get_priority() const {
-        auto indeg_a = in_degree(np.first, *g_ptr);
-        auto indeg_b = in_degree(np.second, *g_ptr);
+        auto indeg_a = (*g_ptr).in_degree(np.first);
+        auto indeg_b = (*g_ptr).in_degree(np.second);
         auto total_indeg = indeg_a * indeg_b;
         if (total_indeg == 0 || np.first == np.second) {
             // no in-neighbor or singleton nodes 
@@ -52,26 +62,13 @@ struct data_item {
     data_item(NodePair np_, double r_) : np(np_), residual(r_) {}
 };
 
-class Residual_Container { // an abstract container that holds residuals
-public:
-    double sum;
-
-    virtual data_item pop() = 0;
-
-    virtual void clear() = 0;
-
-    virtual bool empty() const = 0;
-
-    virtual void push(NodePair, double) = 0; // push value to the node pair
-    virtual size_t size() const = 0;
-};
 
 
-class unique_max_heap : public Residual_Container { // the heap structure used in BPRW
-public:
+struct unique_max_heap { // the heap structure used in BPRW
     typedef sparse_hash_map<NodePair, fibonacci_heap<heap_data>::handle_type> RMap; // hash table for residuals
     typedef fibonacci_heap<heap_data>::handle_type handle_t;
     RMap R;
+    double sum;
     fibonacci_heap<heap_data> heap;
     DirectedG *g_ptr;
 
@@ -81,7 +78,7 @@ public:
 
     const heap_data &top();
 
-    data_item pop();
+    heap_data pop();
 
     void clear();
 
@@ -92,23 +89,6 @@ public:
 };
 
 
-struct residual_set : public Residual_Container { // the set structure which holds the residual data
-public:
-    // public members
-    sparse_hash_map<NodePair, data_item> hash_d; // store the actually data
-    // public methods
-    residual_set() {
-        sum = 0;
-    }
-
-    data_item pop(); // random pop an element
-    void clear();
-
-    bool empty() const;
-
-    void push(NodePair, double); // push value to the node pair
-    size_t size() const;
-};
 
 std::ostream &operator<<(std::ostream &os, const heap_data &obj);
 
@@ -138,6 +118,8 @@ std::ostream &operator<<(std::ostream &os, const MCFeature &obj);
 struct BLPMC_Config{
     bool is_use_linear_regression_cost_estimation ;
     bool is_use_hub_idx ;
+    int number_of_hubs = 0 ;
+    int number_of_samples_per_hub = 0;
 
     BLPMC_Config(bool a, bool b){ // normal constructor
         is_use_linear_regression_cost_estimation = a;
@@ -146,11 +128,15 @@ struct BLPMC_Config{
     BLPMC_Config(const BLPMC_Config &other){ // copy constructor
         is_use_linear_regression_cost_estimation = other.is_use_linear_regression_cost_estimation;
         is_use_hub_idx = other.is_use_hub_idx;
+        number_of_hubs = other.number_of_hubs;
+        number_of_samples_per_hub = other.number_of_samples_per_hub;
     }
 
     BLPMC_Config(){ // default constructor
         is_use_linear_regression_cost_estimation = false;
         is_use_hub_idx = false;
+        number_of_hubs = 0 ;
+        number_of_samples_per_hub = 0;
     }
 };
 
@@ -164,8 +150,8 @@ struct BackPush { // Backward Push and MC sampling method for SimRank estimation
     double epsilon; // error bound
     double fail_prob; // delta
     unique_max_heap heap; // the heap contains residuals
-    residual_set set_residual; // the set containing residuals for random push
     // public methods
+    SFMTRand rand_gen;
     BLPMC_Config config;
 
     BackPush(string g_name_, DirectedG &graph, double c_, double epsilon_, double delta_, BLPMC_Config config = BLPMC_Config());
@@ -193,8 +179,8 @@ struct BackPush { // Backward Push and MC sampling method for SimRank estimation
             unique_max_heap &heap, int number_of_current_lp_operations); // the indicator bool function to decide whether the local push would continue
 
     // methods of  similarity search for sets
-    PairHashMap query_set_scores(vector<NodePair> query_set); // estimate simrank scores of a set
-    PairSet top_k_in_set(vector<NodePair> query_set); // extract the top-k elements of a set of node pairs 
+    // PairHashMap query_set_scores(vector<NodePair> query_set); // estimate simrank scores of a set
+    // PairSet top_k_in_set(vector<NodePair> query_set); // extract the top-k elements of a set of node pairs 
 
     /* linear regression for cost estimation */
     vector<PushFeature> lp_data_X; // the local push data set
@@ -214,7 +200,7 @@ struct BackPush { // Backward Push and MC sampling method for SimRank estimation
 
     // related for hub index
     Rw_Hubs * rw_hubs = NULL; // the pointer to the hub index
-    int sample_one_pair_with_hubs(NodePair np, int length_of_random_walk, sparse_hash_map<NodePair, int, hash_duplicate, hash_duplicate_equal> & ); // sample one pair of random walk
+    int sample_one_pair_with_hubs(NodePair np, int length_of_random_walk, sparse_hash_map<NodePair, int> & ); // sample one pair of random walk
     bool is_use_hub(){ // the criterior to use hub indices, only config is set is not enough, hub index must bt no Null
         if(is_training){ // do not hub while training the cost model 
             return false;

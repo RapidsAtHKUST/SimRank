@@ -8,9 +8,11 @@ find_package(Boost REQUIRED program_options)
 
 ##################### Release #################################################################
 
-aux_source_directory(. DIR_SRCS) 
+# set(BPRW_SOURCES bprw.cpp simrank.cpp rw_hub.cpp  stat.cpp main.cpp file_serialization.h bflpmc.cpp flpmc.cpp)
+set(BPRW_SOURCES stat.cpp rw_hub.cpp bprw.cpp main.cpp simrank.cpp)
 
-add_executable(bflpmc ${DIR_SRCS})
+
+add_executable(bflpmc ${BPRW_SOURCES})
 
 if (Boost_FOUND)
     message(${Boost_INCLUDE_DIRS})
@@ -28,12 +30,21 @@ target_include_directories(bflpmc PRIVATE ./)
 target_include_directories(bflpmc PRIVATE ../include)
 target_include_directories(bflpmc PRIVATE ../sparsehash-yche/include)
 target_include_directories(bflpmc PRIVATE ../sparsepp)
+target_include_directories(bflpmc PRIVATE ../LPMC-Profile/)
+target_include_directories(bflpmc PRIVATE ../SFMT/)
 target_include_directories(bflpmc PRIVATE /homes/ywangby/workspace/DynamicSimRank/include/localsim)
 
 # Cmake also process the cmakefile in the dir
 add_subdirectory(/homes/ywangby/workspace/DynamicSimRank/include/localsim ./localsim)
 
+set(SFMT_COMPILE_FLAGS -DSFMT_MEXP=607 -msse2 -DHAVE_SSE2)
+
 add_subdirectory(../LPMC-Profile/util/ ./utils)
+
+add_library(libphf SHARED IMPORTED)
+set_property(TARGET libphf PROPERTY IMPORTED_LOCATION "/homes/ywangby/workspace/lib/libphf.so")
+
+target_link_libraries(bflpmc PRIVATE libphf)
 
 target_link_libraries(bflpmc PRIVATE LocalPushSimRank)
 
@@ -41,11 +52,13 @@ target_link_libraries(bflpmc PRIVATE Utils)
 
 # target_link_libraries(bflpmc PRIVATE mlpack armadillo) # for mlpack: a C++ machine learning library 
 
-target_compile_options(bflpmc PRIVATE -O3 -g)
+target_compile_definitions(bflpmc PRIVATE -DHAS_OPENMP=1 -DSFMT=1)
+target_compile_options(bflpmc PRIVATE -O3 -g ${SFMT_COMPILE_FLAGS})
 target_link_libraries(bflpmc PRIVATE ${Boost_LIBRARIES})
 
-
 set( CMAKE_EXPORT_COMPILE_COMMANDS ON) # add compile files for You Complete Me
+set(CMAKE_BUILD_TYPE RelWithDebInfo) # optimized code with debug symbols
+
 
 ##################### Ground-Truth ################################################################
 

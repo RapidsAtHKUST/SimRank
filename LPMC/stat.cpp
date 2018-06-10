@@ -71,7 +71,7 @@ int random_int(int lower, int upper){
     return lower + int((upper - lower) * random_01());
 }
 
-int sample_an_1c_walk(NodePair np, DirectedG &g, int length_of_random_walk){
+int sample_an_1c_walk(NodePair np, DirectedG &g, int length_of_random_walk, SFMTRand & rand_gen){
     int a = np.first;
     int b = np.second;
     double prob;
@@ -80,8 +80,8 @@ int sample_an_1c_walk(NodePair np, DirectedG &g, int length_of_random_walk){
 
 
     while( step < length_of_random_walk && a != b){ // walk when > c or the first step
-        a = sample_in_neighbor(a, g);
-        b = sample_in_neighbor(b, g);
+        a = sample_in_neighbor(a, g, rand_gen);
+        b = sample_in_neighbor(b, g, rand_gen);
         step ++;
         if(a == -1 || b == -1){
             break;
@@ -92,3 +92,4 @@ int sample_an_1c_walk(NodePair np, DirectedG &g, int length_of_random_walk){
     }
     return indicator;
 }
+
