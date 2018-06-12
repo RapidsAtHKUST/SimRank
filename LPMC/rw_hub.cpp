@@ -2,7 +2,7 @@
 #include <climits>
 
 
-bool Rw_Hubs::contains(NodePair &np){
+bool Rw_Hubs::contains(NodePair & np){
     return (this->utility_array[np.first] * this->utility_array[np.second]) > lower_bound;
 }
 
@@ -76,8 +76,8 @@ void Rw_Hubs::select_hubs(){
 
 
         // init the hub bits
-        this->hub_bits[hub_pair.first][hub_pair.second].first = new boost::dynamic_bitset<>(l);
-        this->hub_bits[hub_pair.first][hub_pair.second].second = 0;
+        // this->hub_bits[hub_pair.first][hub_pair.second].first = new boost::dynamic_bitset<>(l);
+        // this->hub_bits[hub_pair.first][hub_pair.second].second = 0;
 
         lower_bound = hub_utility; // update the lower bound
 
@@ -152,6 +152,7 @@ void Rw_Hubs::sample_random_walks_for_hubs(){
         if(size_of_second_index > 0){
             // hub_perfect_bits[j].first.resize(size_of_second_index);
             for(auto & k: hubs[j]){ // k: the second level cursor
+                vector<size_t> position_of_1s;
                 NodePair np{j,k};
                 // int perfect_key = hub_perfect_bits[j].second->GetHash(k);
                 // hub_perfect_bits[j].first[perfect_key].first = new boost::dynamic_bitset<>(l);
@@ -166,12 +167,13 @@ void Rw_Hubs::sample_random_walks_for_hubs(){
                         // pre_sum[np][i] = number_of_meets;
                         //
                         // (*hub_perfect_bits[j].first[perfect_key].first)[i] = 1;
-                        (*hub_bits[j][k].first)[i] = 1;
-                        
+                        // (*hub_bits[j][k].first)[i] = 1;
+                        position_of_1s.push_back(i); // fill in the position matrix
                         
                     }
                     // cout << (*bitset_ptr)[i];
                 }
+                hub_bits[j][k] = new Distanct_1s(position_of_1s, this->l);
             }
         }
         // cout << endl;
@@ -193,7 +195,7 @@ int Rw_Hubs::query_1s( const NodePair &np, int k){
     return pre_sum[np][k-1]; // return the sum of 1s of first k positions
 }
 
-bool Rw_Hubs::query_single_pair(const NodePair & np){
+bool Rw_Hubs::query_single_pair(const NodePair& np){
     // perfect hash
     // int k = hub_perfect_bits[np.first].second->GetHash(np.second);
     // auto & ref_2nd = hub_perfect_bits[np.first].first[k];
@@ -202,14 +204,15 @@ bool Rw_Hubs::query_single_pair(const NodePair & np){
     // return result;
     //
     // 2D+sparsepp
-    auto & current_bit_map = this->hub_bits[np.first][np.second]; 
-    bool result = (*current_bit_map.first)[current_bit_map.second];
-    current_bit_map.second = (current_bit_map.second + 1) % this->l;
-    return result;
+    // auto & current_bit_map = this->hub_bits[np.first][np.second]; 
+    // bool result = (*current_bit_map.first)[current_bit_map.second];
+    // current_bit_map.second = (current_bit_map.second + 1) % this->l;
+    // return result;
     // size_t & cursor = this->hub_bits[np.first][np.second].second;
     // // cout << format("cursor: is %s, number of samples per hub: %s") % cursor % this->l << endl;
     // cursor = (cursor+1) % this->l;
     // // cout << format("cursor: is %s, number of samples per hub: %s") % cursor % this->l << endl;
+    return hub_bits[np.first][np.second]->get();
 }
 
 

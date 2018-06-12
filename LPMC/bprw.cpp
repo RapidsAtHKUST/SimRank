@@ -404,7 +404,10 @@ int BackPush::sample_one_pair_with_hubs(NodePair sampled_np, int length_of_rando
 
         // test whether the starting node  a,b are in the hub or not
         if(is_long_path){
-            NodePair np{minmax(a,b)};
+            if(a > b){
+                std::swap(a,b);
+            }
+            NodePair np{a,b};
             if(rw_hubs->contains(np)){
                 this->hub_hits ++;
                 return rw_hubs->query_single_pair(np);
@@ -424,8 +427,10 @@ int BackPush::sample_one_pair_with_hubs(NodePair sampled_np, int length_of_rando
             }
 
             if(is_long_path){
-                // test whether a,b are in the hub
-                NodePair np{minmax(a,b)};
+                if(a > b){
+                    std::swap(a,b);
+                }
+                NodePair np{a,b};
                 if(rw_hubs->contains(np)){
                     this-> hub_hits ++;
                     return rw_hubs->query_single_pair(np);

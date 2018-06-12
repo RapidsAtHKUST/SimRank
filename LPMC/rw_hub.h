@@ -60,13 +60,57 @@ inline Hub_Item utility_hub_converter(int a, int b, vector<pair<size_t, double>>
     return Hub_Item(np, u, position);
 }
 
+struct Distanct_1s{ // for querying samples
+    vector<size_t> next; // store the distance between 1: next[i]
+    size_t i = 0; // current cursor
+    int energy = 0; // -1 if there no 1s in this hub
+    Distanct_1s(vector<size_t> &  positions, size_t length_original_bitmap){
+        // positions: the position array of 1s
+        // construct the next array
+        int n = positions.size();
+        if(n > 0){ // the position matrix is not empty 
+            next.resize(n);
+            for(int k = 0; k < n - 1; k++){
+                next[k] = positions[k+1] - positions[k];
+            }
+            next[n-1] = length_original_bitmap - (positions[n-1] - positions[0]);
+
+            // initial position  
+            energy = positions[0];
+            i = 0;
+        }else{
+            energy = -1; // indicates there is no 1s in this hub
+        }
+
+
+    }
+    int get(){
+        //return 0/1 based on current energy and cursor
+        if(energy >= 0){
+            bool result = 0;
+            if(energy == 0){ // we are at the position  of 1
+                energy = next[i];
+                i = (i + 1) % next.size();
+                result = 1;
+            }
+            energy --;
+            return result;
+        }else{ // there no one 
+            return 0;
+        }
+    }
+};
+
 struct Rw_Hubs{ 
     // the container for hubs
 	typedef boomphf::SingleHashFunctor<u_int64_t>  hasher_t; // for BBHash
 	typedef boomphf::mphf<u_int64_t, hasher_t> boophf_t; // for BBHash
     typedef sparse_hash_map<NodePair, vector<int>> Prefix_Sum; // the prefix sum of 1s of of this node pair, size: N * K
     typedef sparse_hash_set<size_t> Single_Set; // just a set of integers for the right part of a hub
-    typedef sparse_hash_map<size_t, pair<boost::dynamic_bitset<> *, size_t>> Hub_Bit_Map; // key: the right part of a hub, value: bitmap, current iterator
+
+    // typedef sparse_hash_map<size_t, pair<boost::dynamic_bitset<> *, size_t>> Hub_Bit_Map; // key: the right part of a hub, value: bitmap, current iterator
+    typedef sparse_hash_map<size_t, Distanct_1s *> Hub_Bit_Map; // key: the right part of a hub, value: bitmap, current iterator
+
     typedef vector<pair<boost::dynamic_bitset<> *, size_t >> Second_Hub_Perfect_Bit; // the second leve of the index
     typedef vector<pair<Second_Hub_Perfect_Bit, minimal_perfect_hash::MinimalPerfectHash<unsigned int> *>> First_Hub_Perfect_Bit; // the first level of the index
     // hub index for random walks
@@ -89,8 +133,8 @@ struct Rw_Hubs{
         cout << "exited Rw_Hubs" << endl;
     }
     int query_1s(const NodePair &np, int k); // query number 1s in the range of [0,k] of np
-    bool query_single_pair(const NodePair &np); // query a termination node for a single node pair
-    bool contains(NodePair &np);
+    bool query_single_pair(const NodePair & np); // query a termination node for a single node pair
+    bool contains(NodePair& np);
     void select_hubs(); // select N hubs for random walks
     void sample_random_walks_for_hubs(); // samples random walks
 
@@ -103,6 +147,7 @@ struct Rw_Hubs{
 
     // some statistic auxiliary variable
     int number_of_contains_queries=0;
+    int number_of_1s = 0;
 
 
     // index data
@@ -136,43 +181,6 @@ inline unsigned int elegant_pair_f(unsigned int & a, unsigned int & b){
     }
 }
 
-struct Distanct_1s{ // for querying samples
-    vector<size_t> next; // store the distance between 1: next[i]
-    size_t i = 0; // current cursor
-    size_t energy = 0;
-    int reset(){
-        i = 0;
-        energy = 0; // actually curssor is in the first 1
-    }
-    Distanct_1s(vector<size_t> &  positions, size_t length_original_bitmap){
-        // positions: the position array of 1s
-        // construct the next array
-        int n = positions.size();
-        if(n > 0){ // the position matrix is not empty 
-            next.resize(n);
-            for(int k = 0; k < n - 1; k++){
-                next[k] = positions[k+1] - positions[k];
-            }
-            next[n-1] = length_original_bitmap - (positions[n-1] - positions[0]);
-            reset(); // init the cursor
-        }
-    }
-    int get(){
-        //return 0/1 based on current energy and cursor
-        if(next.size() > 0){
-            bool result = 0;
-            if(energy == 0){ // we are at the position  of 1
-                energy = next[i];
-                i = (i + 1) % next.size();
-                result = 1;
-            }
-            energy --;
-            return result;
-        }else{ // there no one 
-            return 0;
-        }
-    }
-};
 
 
 #endif
