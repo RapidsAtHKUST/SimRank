@@ -12,6 +12,8 @@
 #include <util/sparse_matrix_utils.h> // the sparse hash map definition
 
 #include "phf.h"
+#include "BooPHF.h"
+#include "minimal_perfect_hash.h"
 
 
 
@@ -60,9 +62,13 @@ inline Hub_Item utility_hub_converter(int a, int b, vector<pair<size_t, double>>
 
 struct Rw_Hubs{ 
     // the container for hubs
+	typedef boomphf::SingleHashFunctor<u_int64_t>  hasher_t; // for BBHash
+	typedef boomphf::mphf<u_int64_t, hasher_t> boophf_t; // for BBHash
     typedef sparse_hash_map<NodePair, vector<int>> Prefix_Sum; // the prefix sum of 1s of of this node pair, size: N * K
     typedef sparse_hash_set<size_t> Single_Set; // just a set of integers for the right part of a hub
-    typedef sparse_hash_map<size_t, pair<vector<bool>, size_t>> Hub_Bit_Map; // key: the right part of a hub, value: bitmap, current iterator
+    typedef sparse_hash_map<size_t, pair<boost::dynamic_bitset<> *, size_t>> Hub_Bit_Map; // key: the right part of a hub, value: bitmap, current iterator
+    typedef vector<pair<boost::dynamic_bitset<> *, size_t >> Second_Hub_Perfect_Bit; // the second leve of the index
+    typedef vector<pair<Second_Hub_Perfect_Bit, minimal_perfect_hash::MinimalPerfectHash<unsigned int> *>> First_Hub_Perfect_Bit; // the first level of the index
     // hub index for random walks
     int N; // #hubs
     int l; // #samples for each hub 
@@ -76,6 +82,7 @@ struct Rw_Hubs{
         hubs.resize(g.n); // there are n slots in hubs
         this->utility_array.resize(g.n);
         this->hub_bits.resize(g.n);
+        this->hub_perfect_bits.resize(g.n);
     }
     ~Rw_Hubs(){
         cout << "destrying perfect hash..." << endl;
@@ -89,6 +96,7 @@ struct Rw_Hubs{
 
     void build_hubs(){// the composition function for building index
         select_hubs();
+        // build_perfect_hash();
         sample_random_walks_for_hubs();
     }
 
@@ -101,6 +109,9 @@ struct Rw_Hubs{
     Prefix_Sum pre_sum;
     vector<Single_Set> hubs;
     vector<Hub_Bit_Map> hub_bits; // the bit map for hubs 
+    First_Hub_Perfect_Bit hub_perfect_bits; // the second level of the index is by perfect  hashing
+
+    void build_perfect_hash(); // build perfect hash for each second level index
 
 };
 
@@ -124,6 +135,44 @@ inline unsigned int elegant_pair_f(unsigned int & a, unsigned int & b){
         return b * b + a;
     }
 }
+
+struct Distanct_1s{ // for querying samples
+    vector<size_t> next; // store the distance between 1: next[i]
+    size_t i = 0; // current cursor
+    size_t energy = 0;
+    int reset(){
+        i = 0;
+        energy = 0; // actually curssor is in the first 1
+    }
+    Distanct_1s(vector<size_t> &  positions, size_t length_original_bitmap){
+        // positions: the position array of 1s
+        // construct the next array
+        int n = positions.size();
+        if(n > 0){ // the position matrix is not empty 
+            next.resize(n);
+            for(int k = 0; k < n - 1; k++){
+                next[k] = positions[k+1] - positions[k];
+            }
+            next[n-1] = length_original_bitmap - (positions[n-1] - positions[0]);
+            reset(); // init the cursor
+        }
+    }
+    int get(){
+        //return 0/1 based on current energy and cursor
+        if(next.size() > 0){
+            bool result = 0;
+            if(energy == 0){ // we are at the position  of 1
+                energy = next[i];
+                i = (i + 1) % next.size();
+                result = 1;
+            }
+            energy --;
+            return result;
+        }else{ // there no one 
+            return 0;
+        }
+    }
+};
 
 
 #endif

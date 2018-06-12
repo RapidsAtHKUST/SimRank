@@ -333,8 +333,9 @@ pair <double, double> BackPush::MC_random_walk(int N) { // perform random walks 
         while(rand_gen.double_rand()<c){
             length_of_random_walk++;
         }
-        starting_positions.push_back(sampled_np);
-        length_of_rws.push_back(length_of_random_walk);
+        // cout << format("length of random walk: %s ") % length_of_random_walk << endl;
+        starting_positions[i] = sampled_np;
+        length_of_rws[i] = length_of_random_walk;
     }
 
     if(this->is_use_hub()){ // MC sampling with hubs, focus on updating the meeting_count value
@@ -399,20 +400,15 @@ int BackPush::sample_one_pair_with_hubs(NodePair sampled_np, int length_of_rando
         int b = sampled_np.second;
         double indicator = 0;
         int step = 0; // 
+        bool is_long_path = length_of_random_walk > (1.0 / (1.0-c)); // long path is those longer than expected 
 
-        NodePair np{minmax(a,b)};
         // test whether the starting node  a,b are in the hub or not
-        if(rw_hubs->contains(np)){
-            return rw_hubs->query_single_pair(np);
-            // if( Q.contains(np) ){
-            //     if((Q)[np] < rw_hubs->l){
-            //         (Q)[np] += 1;
-            //         return 0;
-            //     }
-            // }else{ // Q now have no entry for np
-            //     (Q)[np] = 1;
-            //     return 0;
-            // }
+        if(is_long_path){
+            NodePair np{minmax(a,b)};
+            if(rw_hubs->contains(np)){
+                this->hub_hits ++;
+                return rw_hubs->query_single_pair(np);
+            }
         }
 
 
@@ -427,19 +423,13 @@ int BackPush::sample_one_pair_with_hubs(NodePair sampled_np, int length_of_rando
                 break;
             }
 
-            // test whether a,b are in the hub
-            NodePair np{minmax(a,b)};
-            if(rw_hubs->contains(np)){
-                return rw_hubs->query_single_pair(np);
-                // if(Q.contains(np)){
-                //     if((Q)[np] < rw_hubs->l){
-                //         (Q)[np] += 1;
-                //         break;
-                //     }
-                // }else{ // Q now have no entry for np
-                //     (Q)[np] = 1;
-                //     break;
-                // }
+            if(is_long_path){
+                // test whether a,b are in the hub
+                NodePair np{minmax(a,b)};
+                if(rw_hubs->contains(np)){
+                    this-> hub_hits ++;
+                    return rw_hubs->query_single_pair(np);
+                }
             }
 
         }

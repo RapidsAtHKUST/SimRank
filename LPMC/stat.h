@@ -57,7 +57,9 @@ void  sort_indexes(const vector<T> &v, vector<size_t>& idx) {
 }
 
 // help function of sample a (1-c) walk return the indicator 0/1
-int sample_an_1c_walk(NodePair np, DirectedG &g, int length, SFMTRand & rand_gen);
+extern int sample_an_1c_walk(NodePair np, DirectedG &g, int length, SFMTRand & rand_gen);
+
+extern void display_seperate_line();
 
 #endif
 

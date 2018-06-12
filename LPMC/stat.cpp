@@ -1,5 +1,9 @@
 #include "stat.h"
 
+void display_seperate_line(){
+    cout << "---------------------------" << endl;
+}
+
 void LinearRegression::fit(vector<vector<double>> & _X, vector<double> &_Y){
     MatrixXd X(N, P);
     VectorXd Y(N);

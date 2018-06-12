@@ -76,7 +76,7 @@ void Rw_Hubs::select_hubs(){
 
 
         // init the hub bits
-        this->hub_bits[hub_pair.first][hub_pair.second].first.resize(this->l);
+        this->hub_bits[hub_pair.first][hub_pair.second].first = new boost::dynamic_bitset<>(l);
         this->hub_bits[hub_pair.first][hub_pair.second].second = 0;
 
         lower_bound = hub_utility; // update the lower bound
@@ -113,6 +113,31 @@ void Rw_Hubs::select_hubs(){
 
 }
 
+void Rw_Hubs::build_perfect_hash(){
+    // build perfect hashing for the second level index
+    for(int j =0 ; j < g_ptr ->n; j++){
+        if(hubs[j].size() > 0){
+            // build the perfect hashing function
+            size_t number_of_keys = hubs[j].size();
+            vector< unsigned int> input_keys;
+            for(auto & key: hubs[j]){
+                input_keys.push_back(key);
+            }
+            hub_perfect_bits[j].second = new minimal_perfect_hash::MinimalPerfectHash<unsigned int>();
+            hub_perfect_bits[j].second ->Build(input_keys);
+
+            // for debug
+            // for(auto & key: hubs[j]){
+            //     int hashed_value = hub_perfect_bits[j].second->GetHash(key);
+            //     cout << format("first: %s, second: %s, hashed key:%s, number of keys: %s") % j % key % hashed_value \
+            //         % number_of_keys << endl;
+            // }
+            // display_seperate_line();
+        }
+    }
+    cout << format("hash function building complete!") << endl;
+}
+
 
 void Rw_Hubs::sample_random_walks_for_hubs(){
     // sample random walks for hubs
@@ -123,20 +148,30 @@ void Rw_Hubs::sample_random_walks_for_hubs(){
     std::geometric_distribution<int> geo_distribution(1-c);
 
     for(int j = 0; j < g_ptr->n; j++){
-        for(auto & second: hubs[j]){
-            NodePair np{j,second};
-            // cout << format("%s: ") % np << endl;
-            int number_of_meets = 0;
-            for(int i = 0;i<l;i++){
-                int length = 1 + geo_distribution(generator);
-                int indicator = sample_an_1c_walk(np, (*g_ptr), length, rand_gen);
-                if(indicator == 1){
-                    number_of_meets++;
-                    // pre_sum[np][i] = number_of_meets;
-                    this->hub_bits[np.first][np.second].first[i] = true;
-                    // cout << format("sample a meet ...in indexing at %s") % i << endl;
+        int size_of_second_index = hubs[j].size();
+        if(size_of_second_index > 0){
+            // hub_perfect_bits[j].first.resize(size_of_second_index);
+            for(auto & k: hubs[j]){ // k: the second level cursor
+                NodePair np{j,k};
+                // int perfect_key = hub_perfect_bits[j].second->GetHash(k);
+                // hub_perfect_bits[j].first[perfect_key].first = new boost::dynamic_bitset<>(l);
+                // hub_perfect_bits[j].first[perfect_key].second = 0;
+                // cout << format("%s: ") % np << endl;
+                // int number_of_meets = 0;
+                for(int i = 0;i<l;i++){
+                    int length = 1 + geo_distribution(generator);
+                    int indicator = sample_an_1c_walk(np, (*g_ptr), length, rand_gen);
+                    if(indicator == 1){
+                        // number_of_meets++;
+                        // pre_sum[np][i] = number_of_meets;
+                        //
+                        // (*hub_perfect_bits[j].first[perfect_key].first)[i] = 1;
+                        (*hub_bits[j][k].first)[i] = 1;
+                        
+                        
+                    }
+                    // cout << (*bitset_ptr)[i];
                 }
-                // cout << (*bitset_ptr)[i];
             }
         }
         // cout << endl;
@@ -159,8 +194,16 @@ int Rw_Hubs::query_1s( const NodePair &np, int k){
 }
 
 bool Rw_Hubs::query_single_pair(const NodePair & np){
-    pair<vector<bool>, size_t> & current_bit_map = this->hub_bits[np.first][np.second]; 
-    bool result = current_bit_map.first[current_bit_map.second];
+    // perfect hash
+    // int k = hub_perfect_bits[np.first].second->GetHash(np.second);
+    // auto & ref_2nd = hub_perfect_bits[np.first].first[k];
+    // bool result = (*ref_2nd.first)[ref_2nd.second];
+    // ref_2nd.second = (ref_2nd.second + 1) % l;
+    // return result;
+    //
+    // 2D+sparsepp
+    auto & current_bit_map = this->hub_bits[np.first][np.second]; 
+    bool result = (*current_bit_map.first)[current_bit_map.second];
     current_bit_map.second = (current_bit_map.second + 1) % this->l;
     return result;
     // size_t & cursor = this->hub_bits[np.first][np.second].second;
