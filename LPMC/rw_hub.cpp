@@ -2,14 +2,14 @@
 #include <climits>
 
 
-bool Rw_Hubs::contains(NodePair & np){
-    return (this->utility_array[np.first] * this->utility_array[np.second]) > lower_bound;
+
+int Rw_Hubs::comput_K(int N){
+    // compute the length of the edge of upper triangular
+    int k =  ceil((sqrt(1.0 + 8 * N) - 1) / 2.0);
+    return k;
 }
 
-void Rw_Hubs::select_hubs(){ 
-    // the top k method for hub seleciton O(nlogn+klogk)
-    // select N random walks hubs for Graph g
-    
+vector<pair<size_t, double>> Rw_Hubs::fill_and_rank_utility(){
     int n  = g_ptr->n;
     cout << n << endl;
 
@@ -29,19 +29,72 @@ void Rw_Hubs::select_hubs(){
             }
         }
     }
-    cout << "fill utility finished..." << endl;
-    // sort the index
-    // for(auto & item: utility){
-    //     cout << format("%s: %s") % item.first % item.second << endl;
-    // }
     cout << "sorting the index" << endl;
     sort(utility.begin(), utility.end(), sort_hub_pred());
-    cout << "sorting finished.." << endl;
 
-    // for(auto & item: utility){
-    //     cout << format("node: %s, utility: %s") % item.first % item.second << endl;
-    // }
+    // fill in the rank
+    cout << "filling in the rank array" << endl;
+    for(int i = 0; i< n;i++){
+        this->rank[utility[i].first] = i;
+    }
 
+    // rank of each node
+    for(int i = 0; i< n;i++){
+        if(i != rank[i]){
+            cout << format("node: %s, rank: %s, %s %s") % i % this->rank[i] \
+                % utility_array[i] % utility[rank[i]].second << endl;
+        }
+    }
+    return  utility;
+}
+
+void Rw_Hubs::select_top_K_hub_by_upper_triangular(){
+    // assume the node ids are already sorted by their utility
+    cout << "filling in the hub vector" << endl;
+    int number_hubs = 0;
+    for(int i = 0; i< K; i++){
+        for(int j = i+1; j <= K; j++){
+            NodePair np{i,j};
+            this->hub_vector_np.push_back(np);
+            number_hubs ++;
+
+        }
+    }
+    // reset number of hubs;
+    this->N = number_hubs;
+
+	// if your bitmaps have long runs, you can compress them by calling
+	// run_optimize
+	uint32_t size = roaring_bitmap.getSizeInBytes();
+	roaring_bitmap.runOptimize();
+
+	// you can enable "copy-on-write" for fast and shallow copies
+	roaring_bitmap.setCopyOnWrite(true);
+
+
+	uint32_t compact_size = roaring_bitmap.getSizeInBytes();
+	std::cout << "size before run optimize " << size << " bytes, and after "
+				<<  compact_size << " bytes." << std::endl;
+}
+
+size_t Rw_Hubs::get_index_of_hub_array(const NodePair &np){
+    //np: any node pair
+    //assumption: node id is its rank
+    int i = np.first;
+    int j = np.second;
+    if(i > j){
+        std::swap(i,j);
+    }
+    size_t idx = i + j * (j-1) / 2;
+    return idx;
+}
+
+
+void Rw_Hubs::select_top_N_hubs(){ 
+    // the top k method for hub seleciton O(nlogn+klogk)
+    // select N random walks hubs for Graph g
+    
+    auto utility = this->fill_and_rank_utility();
 
     // select hubs
     int k = 0; // select top k pairs with maximum utilities
@@ -72,16 +125,12 @@ void Rw_Hubs::select_hubs(){
         h.pop();
 
         // pre_sum[hub_pair] = vector<int>(l);
-        hubs[hub_pair.first].insert(hub_pair.second);
+        // hubs[hub_pair.first].insert(hub_pair.second);
+        this->hub_vector_np.push_back(hub_pair); // vector of hub pairs
 
-
-        // init the hub bits
-        // this->hub_bits[hub_pair.first][hub_pair.second].first = new boost::dynamic_bitset<>(l);
-        // this->hub_bits[hub_pair.first][hub_pair.second].second = 0;
 
         lower_bound = hub_utility; // update the lower bound
 
-        // cout << format("k is: %s, utility: %s, hub: %s") % k % hub_utility % hub_pair << endl;
 
 
 
@@ -113,106 +162,53 @@ void Rw_Hubs::select_hubs(){
 
 }
 
-void Rw_Hubs::build_perfect_hash(){
-    // build perfect hashing for the second level index
-    for(int j =0 ; j < g_ptr ->n; j++){
-        if(hubs[j].size() > 0){
-            // build the perfect hashing function
-            size_t number_of_keys = hubs[j].size();
-            vector< unsigned int> input_keys;
-            for(auto & key: hubs[j]){
-                input_keys.push_back(key);
-            }
-            hub_perfect_bits[j].second = new minimal_perfect_hash::MinimalPerfectHash<unsigned int>();
-            hub_perfect_bits[j].second ->Build(input_keys);
-
-            // for debug
-            // for(auto & key: hubs[j]){
-            //     int hashed_value = hub_perfect_bits[j].second->GetHash(key);
-            //     cout << format("first: %s, second: %s, hashed key:%s, number of keys: %s") % j % key % hashed_value \
-            //         % number_of_keys << endl;
-            // }
-            // display_seperate_line();
-        }
-    }
-    cout << format("hash function building complete!") << endl;
-}
-
 
 void Rw_Hubs::sample_random_walks_for_hubs(){
     // sample random walks for hubs
     // set up the uniform discret distribution 
-    unsigned seed = std::chrono::system_clock::now().time_since_epoch().count();
-    std::default_random_engine generator(seed);
-    std::uniform_real_distribution<double> distribution(0.0, 1.0);
-    std::geometric_distribution<int> geo_distribution(1-c);
+    cout << "sampling random walks for hubs " << endl;
+    for(auto& np : this->hub_vector_np){
+        // size_t x = Custome_HASH_NP{}(np);
+        // auto hashed_key = bphf->lookup(x);
+        // // cout << format("sampling for np: %s, paired key: %s,  the hased key: %s") % np % x % hashed_key << endl;
 
-    for(int j = 0; j < g_ptr->n; j++){
-        int size_of_second_index = hubs[j].size();
-        if(size_of_second_index > 0){
-            // hub_perfect_bits[j].first.resize(size_of_second_index);
-            for(auto & k: hubs[j]){ // k: the second level cursor
-                vector<size_t> position_of_1s;
-                NodePair np{j,k};
-                // int perfect_key = hub_perfect_bits[j].second->GetHash(k);
-                // hub_perfect_bits[j].first[perfect_key].first = new boost::dynamic_bitset<>(l);
-                // hub_perfect_bits[j].first[perfect_key].second = 0;
-                // cout << format("%s: ") % np << endl;
-                // int number_of_meets = 0;
-                for(int i = 0;i<l;i++){
-                    int length = 1 + geo_distribution(generator);
-                    int indicator = sample_an_1c_walk(np, (*g_ptr), length, rand_gen);
-                    if(indicator == 1){
-                        // number_of_meets++;
-                        // pre_sum[np][i] = number_of_meets;
-                        //
-                        // (*hub_perfect_bits[j].first[perfect_key].first)[i] = 1;
-                        // (*hub_bits[j][k].first)[i] = 1;
-                        position_of_1s.push_back(i); // fill in the position matrix
-                        
-                    }
-                    // cout << (*bitset_ptr)[i];
-                }
-                hub_bits[j][k] = new Distanct_1s(position_of_1s, this->l);
+        vector<size_t> position_of_1s;
+        int num_pos = 0;
+        // cout << format("sampling for %s: ") % np << endl;
+        for(int i = 0;i<l;i++){
+            int length = 1;
+            while(rand_gen.double_rand()<c){
+                length++;
+            }
+            int indicator = sample_an_1c_walk(np, (*g_ptr), length, rand_gen);
+            if(indicator == 1){
+                this->number_of_1s ++;
+                num_pos ++;
+                position_of_1s.push_back(i); // fill in the position matrix
+                
             }
         }
-        // cout << endl;
-        // cout << format("number of meets: %s") % number_of_meets << endl;
-        // cout << format("size: %s, maximum size: %s") % (*bitset_ptr).size() % (*bitset_ptr).max_size() << endl;
-        // cout << "=========================" << endl;
+        // cout << format("np: %s, position size: %s") % np % position_of_1s.size() << endl;
+        // hub_vector_1s[get_index_of_hub_array(np)].init(position_of_1s, this->l);
+        hub_vector_1s[get_index_of_hub_array(np)].init(this->l, num_pos);
+
+        // (*hht)[np] = new Distanct_1s(position_of_1s, this->l);
+
     }
+
     cout << "finished building random walks for hubs" << endl;
 }
 
 
 int Rw_Hubs::query_1s( const NodePair &np, int k){
-    // assumption: np.first < np.second
-    // assumption: np is already in the hub
-    // boost::dynamic_bitset<> A(*hub_idx[np]);
-    // A = A >> (l-k); // clear out the un-needed ones
-    // return A.count();
-    // cout << format("np: %s, k: %s, l:%s, size of this hub index: %s") % np % k  % this->l  % pre_sum[np].size() << endl;
     return pre_sum[np][k-1]; // return the sum of 1s of first k positions
 }
 
 bool Rw_Hubs::query_single_pair(const NodePair& np){
-    // perfect hash
-    // int k = hub_perfect_bits[np.first].second->GetHash(np.second);
-    // auto & ref_2nd = hub_perfect_bits[np.first].first[k];
-    // bool result = (*ref_2nd.first)[ref_2nd.second];
-    // ref_2nd.second = (ref_2nd.second + 1) % l;
-    // return result;
-    //
-    // 2D+sparsepp
-    // auto & current_bit_map = this->hub_bits[np.first][np.second]; 
-    // bool result = (*current_bit_map.first)[current_bit_map.second];
-    // current_bit_map.second = (current_bit_map.second + 1) % this->l;
-    // return result;
-    // size_t & cursor = this->hub_bits[np.first][np.second].second;
-    // // cout << format("cursor: is %s, number of samples per hub: %s") % cursor % this->l << endl;
-    // cursor = (cursor+1) % this->l;
-    // // cout << format("cursor: is %s, number of samples per hub: %s") % cursor % this->l << endl;
-    return hub_bits[np.first][np.second]->get();
+    // cout << format("np: %s, index: %s, N: %s, k: %s") % np  \
+    //     % get_index_of_hub_array(np) % this->N % this->K << endl;
+    return hub_vector_1s[get_index_of_hub_array(np)].get(rand_gen);
+    // return (*hht)[np]->get();
 }
 
 

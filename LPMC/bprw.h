@@ -200,7 +200,7 @@ struct BackPush { // Backward Push and MC sampling method for SimRank estimation
 
     // related for hub index
     Rw_Hubs * rw_hubs = NULL; // the pointer to the hub index
-    int sample_one_pair_with_hubs(NodePair np, int length_of_random_walk, sparse_hash_map<NodePair, int> & ); // sample one pair of random walk
+    int sample_one_pair_with_hubs(NodePair np, int length_of_random_walk); // sample one pair of random walk
     bool is_use_hub(){ // the criterior to use hub indices, only config is set is not enough, hub index must bt no Null
         if(is_training){ // do not hub while training the cost model 
             return false;
@@ -211,6 +211,11 @@ struct BackPush { // Backward Push and MC sampling method for SimRank estimation
     int hub_hits = 0; // statistical information: #hits of hub
     int sample_N_random_walks(vector<NodePair> &, vector<int> &); // return the number of meets of N random walks
     int sample_N_random_walks_with_hubs(vector<NodePair> &, vector<int> &); // return the number of meets of N random walks
+
+
+    
+    // the Top-K interface
+    void top_k(vector<NodePair>& Q); // return the top-k
 
 
 };
