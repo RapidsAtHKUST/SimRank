@@ -9,7 +9,7 @@ find_package(Boost REQUIRED program_options)
 ##################### Release #################################################################
 
 # set(BPRW_SOURCES bprw.cpp simrank.cpp rw_hub.cpp  stat.cpp main.cpp file_serialization.h bflpmc.cpp flpmc.cpp)
-set(BPRW_SOURCES stat.cpp rw_hub.cpp bprw.cpp main.cpp simrank.cpp)
+set(BPRW_SOURCES stat.cpp rw_hub.cpp bprw.cpp main.cpp simrank.cpp fgi.cpp)
 
 
 add_executable(bflpmc ${BPRW_SOURCES})
@@ -33,6 +33,7 @@ target_include_directories(bflpmc PRIVATE ../sparsepp)
 target_include_directories(bflpmc PRIVATE ../LPMC-Profile/)
 target_include_directories(bflpmc PRIVATE ../SFMT/)
 target_include_directories(bflpmc PRIVATE /homes/ywangby/workspace/DynamicSimRank/include/localsim)
+target_include_directories(bflpmc PRIVATE /homes/ywangby/workspace/include)
 
 # Cmake also process the cmakefile in the dir
 add_subdirectory(/homes/ywangby/workspace/DynamicSimRank/include/localsim ./localsim)
@@ -44,7 +45,17 @@ add_subdirectory(../LPMC-Profile/util/ ./utils)
 add_library(libphf SHARED IMPORTED)
 set_property(TARGET libphf PROPERTY IMPORTED_LOCATION "/homes/ywangby/workspace/lib/libphf.so")
 
+add_library(libbf SHARED IMPORTED)
+set_property(TARGET libbf PROPERTY IMPORTED_LOCATION "/homes/ywangby/workspace/lib/libbf.so")
+
+add_library(libroaring SHARED IMPORTED)
+set_property(TARGET libroaring PROPERTY IMPORTED_LOCATION "/homes/ywangby/workspace/lib/libroaring.so")
+
+target_link_libraries(bflpmc PRIVATE libbf)
+
 target_link_libraries(bflpmc PRIVATE libphf)
+
+target_link_libraries(bflpmc PRIVATE libroaring)
 
 target_link_libraries(bflpmc PRIVATE LocalPushSimRank)
 

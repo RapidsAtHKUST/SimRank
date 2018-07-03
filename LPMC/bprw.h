@@ -117,9 +117,11 @@ std::ostream &operator<<(std::ostream &os, const MCFeature &obj);
 
 struct BLPMC_Config{
     bool is_use_linear_regression_cost_estimation ;
-    bool is_use_hub_idx ;
+    bool is_use_hub_idx;
+    bool is_use_fg;
     int number_of_hubs = 0 ;
     int number_of_samples_per_hub = 0;
+    int number_of_trees = 0;
 
     BLPMC_Config(bool a, bool b){ // normal constructor
         is_use_linear_regression_cost_estimation = a;
