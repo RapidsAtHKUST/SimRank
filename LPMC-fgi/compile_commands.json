@@ -1,0 +1,87 @@
+[
+{
+  "directory": "/csproject/biggraph/ywangby/yche/git-repos/SimRank/LPMC/build",
+  "command": "/bin/g++  -DHAS_OPENMP=1 -DSFMT=1 -I/usr/local/include -I/csproject/biggraph/ywangby/yche/git-repos/SimRank/LPMC/. -I/csproject/biggraph/ywangby/yche/git-repos/SimRank/LPMC/../include -I/csproject/biggraph/ywangby/yche/git-repos/SimRank/LPMC/../sparsehash-yche/include -I/csproject/biggraph/ywangby/yche/git-repos/SimRank/LPMC/../sparsepp -I/csproject/biggraph/ywangby/yche/git-repos/SimRank/LPMC/../LPMC-Profile -I/csproject/biggraph/ywangby/yche/git-repos/SimRank/LPMC/../SFMT -I/homes/ywangby/workspace/DynamicSimRank/include/localsim -I/homes/ywangby/workspace/include   -fopenmp -O2 -g -DNDEBUG   -O3 -g -DSFMT_MEXP=607 -msse2 -DHAVE_SSE2 -std=gnu++11 -o CMakeFiles/bflpmc.dir/stat.cpp.o -c /csproject/biggraph/ywangby/yche/git-repos/SimRank/LPMC/stat.cpp",
+  "file": "/csproject/biggraph/ywangby/yche/git-repos/SimRank/LPMC/stat.cpp"
+},
+{
+  "directory": "/csproject/biggraph/ywangby/yche/git-repos/SimRank/LPMC/build",
+  "command": "/bin/g++  -DHAS_OPENMP=1 -DSFMT=1 -I/usr/local/include -I/csproject/biggraph/ywangby/yche/git-repos/SimRank/LPMC/. -I/csproject/biggraph/ywangby/yche/git-repos/SimRank/LPMC/../include -I/csproject/biggraph/ywangby/yche/git-repos/SimRank/LPMC/../sparsehash-yche/include -I/csproject/biggraph/ywangby/yche/git-repos/SimRank/LPMC/../sparsepp -I/csproject/biggraph/ywangby/yche/git-repos/SimRank/LPMC/../LPMC-Profile -I/csproject/biggraph/ywangby/yche/git-repos/SimRank/LPMC/../SFMT -I/homes/ywangby/workspace/DynamicSimRank/include/localsim -I/homes/ywangby/workspace/include   -fopenmp -O2 -g -DNDEBUG   -O3 -g -DSFMT_MEXP=607 -msse2 -DHAVE_SSE2 -std=gnu++11 -o CMakeFiles/bflpmc.dir/rw_hub.cpp.o -c /csproject/biggraph/ywangby/yche/git-repos/SimRank/LPMC/rw_hub.cpp",
+  "file": "/csproject/biggraph/ywangby/yche/git-repos/SimRank/LPMC/rw_hub.cpp"
+},
+{
+  "directory": "/csproject/biggraph/ywangby/yche/git-repos/SimRank/LPMC/build",
+  "command": "/bin/g++  -DHAS_OPENMP=1 -DSFMT=1 -I/usr/local/include -I/csproject/biggraph/ywangby/yche/git-repos/SimRank/LPMC/. -I/csproject/biggraph/ywangby/yche/git-repos/SimRank/LPMC/../include -I/csproject/biggraph/ywangby/yche/git-repos/SimRank/LPMC/../sparsehash-yche/include -I/csproject/biggraph/ywangby/yche/git-repos/SimRank/LPMC/../sparsepp -I/csproject/biggraph/ywangby/yche/git-repos/SimRank/LPMC/../LPMC-Profile -I/csproject/biggraph/ywangby/yche/git-repos/SimRank/LPMC/../SFMT -I/homes/ywangby/workspace/DynamicSimRank/include/localsim -I/homes/ywangby/workspace/include   -fopenmp -O2 -g -DNDEBUG   -O3 -g -DSFMT_MEXP=607 -msse2 -DHAVE_SSE2 -std=gnu++11 -o CMakeFiles/bflpmc.dir/bprw.cpp.o -c /csproject/biggraph/ywangby/yche/git-repos/SimRank/LPMC/bprw.cpp",
+  "file": "/csproject/biggraph/ywangby/yche/git-repos/SimRank/LPMC/bprw.cpp"
+},
+{
+  "directory": "/csproject/biggraph/ywangby/yche/git-repos/SimRank/LPMC/build",
+  "command": "/bin/g++  -DHAS_OPENMP=1 -DSFMT=1 -I/usr/local/include -I/csproject/biggraph/ywangby/yche/git-repos/SimRank/LPMC/. -I/csproject/biggraph/ywangby/yche/git-repos/SimRank/LPMC/../include -I/csproject/biggraph/ywangby/yche/git-repos/SimRank/LPMC/../sparsehash-yche/include -I/csproject/biggraph/ywangby/yche/git-repos/SimRank/LPMC/../sparsepp -I/csproject/biggraph/ywangby/yche/git-repos/SimRank/LPMC/../LPMC-Profile -I/csproject/biggraph/ywangby/yche/git-repos/SimRank/LPMC/../SFMT -I/homes/ywangby/workspace/DynamicSimRank/include/localsim -I/homes/ywangby/workspace/include   -fopenmp -O2 -g -DNDEBUG   -O3 -g -DSFMT_MEXP=607 -msse2 -DHAVE_SSE2 -std=gnu++11 -o CMakeFiles/bflpmc.dir/main.cpp.o -c /csproject/biggraph/ywangby/yche/git-repos/SimRank/LPMC/main.cpp",
+  "file": "/csproject/biggraph/ywangby/yche/git-repos/SimRank/LPMC/main.cpp"
+},
+{
+  "directory": "/csproject/biggraph/ywangby/yche/git-repos/SimRank/LPMC/build",
+  "command": "/bin/g++  -DHAS_OPENMP=1 -DSFMT=1 -I/usr/local/include -I/csproject/biggraph/ywangby/yche/git-repos/SimRank/LPMC/. -I/csproject/biggraph/ywangby/yche/git-repos/SimRank/LPMC/../include -I/csproject/biggraph/ywangby/yche/git-repos/SimRank/LPMC/../sparsehash-yche/include -I/csproject/biggraph/ywangby/yche/git-repos/SimRank/LPMC/../sparsepp -I/csproject/biggraph/ywangby/yche/git-repos/SimRank/LPMC/../LPMC-Profile -I/csproject/biggraph/ywangby/yche/git-repos/SimRank/LPMC/../SFMT -I/homes/ywangby/workspace/DynamicSimRank/include/localsim -I/homes/ywangby/workspace/include   -fopenmp -O2 -g -DNDEBUG   -O3 -g -DSFMT_MEXP=607 -msse2 -DHAVE_SSE2 -std=gnu++11 -o CMakeFiles/bflpmc.dir/simrank.cpp.o -c /csproject/biggraph/ywangby/yche/git-repos/SimRank/LPMC/simrank.cpp",
+  "file": "/csproject/biggraph/ywangby/yche/git-repos/SimRank/LPMC/simrank.cpp"
+},
+{
+  "directory": "/csproject/biggraph/ywangby/yche/git-repos/SimRank/LPMC/build",
+  "command": "/bin/g++  -DHAS_OPENMP=1 -DSFMT=1 -I/usr/local/include -I/csproject/biggraph/ywangby/yche/git-repos/SimRank/LPMC/. -I/csproject/biggraph/ywangby/yche/git-repos/SimRank/LPMC/../include -I/csproject/biggraph/ywangby/yche/git-repos/SimRank/LPMC/../sparsehash-yche/include -I/csproject/biggraph/ywangby/yche/git-repos/SimRank/LPMC/../sparsepp -I/csproject/biggraph/ywangby/yche/git-repos/SimRank/LPMC/../LPMC-Profile -I/csproject/biggraph/ywangby/yche/git-repos/SimRank/LPMC/../SFMT -I/homes/ywangby/workspace/DynamicSimRank/include/localsim -I/homes/ywangby/workspace/include   -fopenmp -O2 -g -DNDEBUG   -O3 -g -DSFMT_MEXP=607 -msse2 -DHAVE_SSE2 -std=gnu++11 -o CMakeFiles/bflpmc.dir/fgi.cpp.o -c /csproject/biggraph/ywangby/yche/git-repos/SimRank/LPMC/fgi.cpp",
+  "file": "/csproject/biggraph/ywangby/yche/git-repos/SimRank/LPMC/fgi.cpp"
+},
+{
+  "directory": "/csproject/biggraph/ywangby/yche/git-repos/SimRank/LPMC/build/localsim",
+  "command": "/bin/g++   -I/homes/ywangby/workspace/DynamicSimRank/include/localsim/..   -fopenmp   -std=gnu++11 -o CMakeFiles/LocalPushSimRank.dir/graph.cpp.o -c /homes/ywangby/workspace/DynamicSimRank/include/localsim/graph.cpp",
+  "file": "/homes/ywangby/workspace/DynamicSimRank/include/localsim/graph.cpp"
+},
+{
+  "directory": "/csproject/biggraph/ywangby/yche/git-repos/SimRank/LPMC/build/localsim",
+  "command": "/bin/g++   -I/homes/ywangby/workspace/DynamicSimRank/include/localsim/..   -fopenmp   -std=gnu++11 -o CMakeFiles/LocalPushSimRank.dir/local_push.cpp.o -c /homes/ywangby/workspace/DynamicSimRank/include/localsim/local_push.cpp",
+  "file": "/homes/ywangby/workspace/DynamicSimRank/include/localsim/local_push.cpp"
+},
+{
+  "directory": "/csproject/biggraph/ywangby/yche/git-repos/SimRank/LPMC/build/localsim",
+  "command": "/bin/g++   -I/homes/ywangby/workspace/DynamicSimRank/include/localsim/..   -fopenmp   -std=gnu++11 -o CMakeFiles/LocalPushSimRank.dir/stat.cpp.o -c /homes/ywangby/workspace/DynamicSimRank/include/localsim/stat.cpp",
+  "file": "/homes/ywangby/workspace/DynamicSimRank/include/localsim/stat.cpp"
+},
+{
+  "directory": "/csproject/biggraph/ywangby/yche/git-repos/SimRank/LPMC/build/utils",
+  "command": "/bin/g++  -DHAS_OPENMP=1 -DSFMT=1 -I/csproject/biggraph/ywangby/yche/git-repos/SimRank/LPMC-Profile/util/.. -I/usr/local/include -I/csproject/biggraph/ywangby/yche/git-repos/SimRank/LPMC-Profile/util/../../sparsehash-yche/include -I/csproject/biggraph/ywangby/yche/git-repos/SimRank/LPMC-Profile/util/../../sparsepp -I/csproject/biggraph/ywangby/yche/git-repos/SimRank/LPMC-Profile/util/../../SFMT -I/csproject/biggraph/ywangby/yche/git-repos/SimRank/LPMC-Profile/util/../../include   -fopenmp   -O3 -g -DSFMT_MEXP=607 -msse2 -DHAVE_SSE2 -march=native -std=gnu++11 -o CMakeFiles/Utils.dir/edge_lst_to_bin_converter.cpp.o -c /csproject/biggraph/ywangby/yche/git-repos/SimRank/LPMC-Profile/util/edge_lst_to_bin_converter.cpp",
+  "file": "/csproject/biggraph/ywangby/yche/git-repos/SimRank/LPMC-Profile/util/edge_lst_to_bin_converter.cpp"
+},
+{
+  "directory": "/csproject/biggraph/ywangby/yche/git-repos/SimRank/LPMC/build/utils",
+  "command": "/bin/g++  -DHAS_OPENMP=1 -DSFMT=1 -I/csproject/biggraph/ywangby/yche/git-repos/SimRank/LPMC-Profile/util/.. -I/usr/local/include -I/csproject/biggraph/ywangby/yche/git-repos/SimRank/LPMC-Profile/util/../../sparsehash-yche/include -I/csproject/biggraph/ywangby/yche/git-repos/SimRank/LPMC-Profile/util/../../sparsepp -I/csproject/biggraph/ywangby/yche/git-repos/SimRank/LPMC-Profile/util/../../SFMT -I/csproject/biggraph/ywangby/yche/git-repos/SimRank/LPMC-Profile/util/../../include   -fopenmp   -O3 -g -DSFMT_MEXP=607 -msse2 -DHAVE_SSE2 -march=native -std=gnu++11 -o CMakeFiles/Utils.dir/graph_yche.cpp.o -c /csproject/biggraph/ywangby/yche/git-repos/SimRank/LPMC-Profile/util/graph_yche.cpp",
+  "file": "/csproject/biggraph/ywangby/yche/git-repos/SimRank/LPMC-Profile/util/graph_yche.cpp"
+},
+{
+  "directory": "/csproject/biggraph/ywangby/yche/git-repos/SimRank/LPMC/build/utils",
+  "command": "/bin/g++  -DHAS_OPENMP=1 -DSFMT=1 -I/csproject/biggraph/ywangby/yche/git-repos/SimRank/LPMC-Profile/util/.. -I/usr/local/include -I/csproject/biggraph/ywangby/yche/git-repos/SimRank/LPMC-Profile/util/../../sparsehash-yche/include -I/csproject/biggraph/ywangby/yche/git-repos/SimRank/LPMC-Profile/util/../../sparsepp -I/csproject/biggraph/ywangby/yche/git-repos/SimRank/LPMC-Profile/util/../../SFMT -I/csproject/biggraph/ywangby/yche/git-repos/SimRank/LPMC-Profile/util/../../include   -fopenmp   -O3 -g -DSFMT_MEXP=607 -msse2 -DHAVE_SSE2 -march=native -std=gnu++11 -o CMakeFiles/Utils.dir/random_pair_generator.cpp.o -c /csproject/biggraph/ywangby/yche/git-repos/SimRank/LPMC-Profile/util/random_pair_generator.cpp",
+  "file": "/csproject/biggraph/ywangby/yche/git-repos/SimRank/LPMC-Profile/util/random_pair_generator.cpp"
+},
+{
+  "directory": "/csproject/biggraph/ywangby/yche/git-repos/SimRank/LPMC/build/utils",
+  "command": "/bin/g++  -DHAS_OPENMP=1 -DSFMT=1 -I/csproject/biggraph/ywangby/yche/git-repos/SimRank/LPMC-Profile/util/.. -I/usr/local/include -I/csproject/biggraph/ywangby/yche/git-repos/SimRank/LPMC-Profile/util/../../sparsehash-yche/include -I/csproject/biggraph/ywangby/yche/git-repos/SimRank/LPMC-Profile/util/../../sparsepp -I/csproject/biggraph/ywangby/yche/git-repos/SimRank/LPMC-Profile/util/../../SFMT -I/csproject/biggraph/ywangby/yche/git-repos/SimRank/LPMC-Profile/util/../../include   -fopenmp   -O3 -g -DSFMT_MEXP=607 -msse2 -DHAVE_SSE2 -march=native -std=gnu++11 -o CMakeFiles/Utils.dir/search_yche.cpp.o -c /csproject/biggraph/ywangby/yche/git-repos/SimRank/LPMC-Profile/util/search_yche.cpp",
+  "file": "/csproject/biggraph/ywangby/yche/git-repos/SimRank/LPMC-Profile/util/search_yche.cpp"
+},
+{
+  "directory": "/csproject/biggraph/ywangby/yche/git-repos/SimRank/LPMC/build/utils",
+  "command": "/bin/g++  -DHAS_OPENMP=1 -DSFMT=1 -I/csproject/biggraph/ywangby/yche/git-repos/SimRank/LPMC-Profile/util/.. -I/usr/local/include -I/csproject/biggraph/ywangby/yche/git-repos/SimRank/LPMC-Profile/util/../../sparsehash-yche/include -I/csproject/biggraph/ywangby/yche/git-repos/SimRank/LPMC-Profile/util/../../sparsepp -I/csproject/biggraph/ywangby/yche/git-repos/SimRank/LPMC-Profile/util/../../SFMT -I/csproject/biggraph/ywangby/yche/git-repos/SimRank/LPMC-Profile/util/../../include   -fopenmp   -O3 -g -DSFMT_MEXP=607 -msse2 -DHAVE_SSE2 -march=native -std=gnu++11 -o CMakeFiles/Utils.dir/stat.cpp.o -c /csproject/biggraph/ywangby/yche/git-repos/SimRank/LPMC-Profile/util/stat.cpp",
+  "file": "/csproject/biggraph/ywangby/yche/git-repos/SimRank/LPMC-Profile/util/stat.cpp"
+},
+{
+  "directory": "/csproject/biggraph/ywangby/yche/git-repos/SimRank/LPMC/build/utils",
+  "command": "/bin/gcc -DHAS_OPENMP=1 -DSFMT=1 -I/csproject/biggraph/ywangby/yche/git-repos/SimRank/LPMC-Profile/util/.. -I/usr/local/include -I/csproject/biggraph/ywangby/yche/git-repos/SimRank/LPMC-Profile/util/../../sparsehash-yche/include -I/csproject/biggraph/ywangby/yche/git-repos/SimRank/LPMC-Profile/util/../../sparsepp -I/csproject/biggraph/ywangby/yche/git-repos/SimRank/LPMC-Profile/util/../../SFMT -I/csproject/biggraph/ywangby/yche/git-repos/SimRank/LPMC-Profile/util/../../include   -fopenmp   -O3 -g -DSFMT_MEXP=607 -msse2 -DHAVE_SSE2 -march=native -o CMakeFiles/Utils.dir/csproject/biggraph/ywangby/yche/git-repos/SimRank/SFMT/SFMT.c.o   -c /csproject/biggraph/ywangby/yche/git-repos/SimRank/SFMT/SFMT.c",
+  "file": "/csproject/biggraph/ywangby/yche/git-repos/SimRank/SFMT/SFMT.c"
+},
+{
+  "directory": "/csproject/biggraph/ywangby/yche/git-repos/SimRank/LPMC/build/utils",
+  "command": "/bin/g++     -fopenmp   -O3 -g -std=gnu++11 -o CMakeFiles/bin_converter.dir/edge_lst_to_bin_converter.cpp.o -c /csproject/biggraph/ywangby/yche/git-repos/SimRank/LPMC-Profile/util/edge_lst_to_bin_converter.cpp",
+  "file": "/csproject/biggraph/ywangby/yche/git-repos/SimRank/LPMC-Profile/util/edge_lst_to_bin_converter.cpp"
+},
+{
+  "directory": "/csproject/biggraph/ywangby/yche/git-repos/SimRank/LPMC/build/utils",
+  "command": "/bin/g++     -fopenmp   -O3 -g -std=gnu++11 -o CMakeFiles/bin_converter.dir/graph_yche.cpp.o -c /csproject/biggraph/ywangby/yche/git-repos/SimRank/LPMC-Profile/util/graph_yche.cpp",
+  "file": "/csproject/biggraph/ywangby/yche/git-repos/SimRank/LPMC-Profile/util/graph_yche.cpp"
+}
+]
