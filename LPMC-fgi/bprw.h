@@ -5,6 +5,7 @@
 #include <boost/heap/fibonacci_heap.hpp>
 #include "stat.h"
 #include "rw_hub.h"
+#include "fgi.h"
 #include <util/sfmt_based_rand.h>
 #include <util/sparse_matrix_utils.h>
 #include <util/search_yche.h>
@@ -116,29 +117,34 @@ std::ostream &operator<<(std::ostream &os, const PushFeature &obj);
 std::ostream &operator<<(std::ostream &os, const MCFeature &obj);
 
 struct BLPMC_Config{
-    bool is_use_linear_regression_cost_estimation ;
-    bool is_use_hub_idx;
-    bool is_use_fg;
+    bool is_use_linear_regression_cost_estimation = false;
+    bool is_use_hub_idx = false;
+    bool is_use_fg_idx = false;
     int number_of_hubs = 0 ;
     int number_of_samples_per_hub = 0;
     int number_of_trees = 0;
 
-    BLPMC_Config(bool a, bool b){ // normal constructor
+    BLPMC_Config(bool a, bool b, bool c){ // normal constructor
         is_use_linear_regression_cost_estimation = a;
         is_use_hub_idx = b;
+        is_use_fg_idx = c;
     }
     BLPMC_Config(const BLPMC_Config &other){ // copy constructor
         is_use_linear_regression_cost_estimation = other.is_use_linear_regression_cost_estimation;
         is_use_hub_idx = other.is_use_hub_idx;
+        is_use_fg_idx = other.is_use_fg_idx;
         number_of_hubs = other.number_of_hubs;
         number_of_samples_per_hub = other.number_of_samples_per_hub;
+        number_of_trees = other.number_of_trees;
     }
 
     BLPMC_Config(){ // default constructor
         is_use_linear_regression_cost_estimation = false;
         is_use_hub_idx = false;
+        is_use_fg_idx = false;
         number_of_hubs = 0 ;
         number_of_samples_per_hub = 0;
+        number_of_trees = 0;
     }
 };
 
@@ -203,6 +209,7 @@ struct BackPush { // Backward Push and MC sampling method for SimRank estimation
     // related for hub index
     Rw_Hubs * rw_hubs = NULL; // the pointer to the hub index
     int sample_one_pair_with_hubs(NodePair np, int length_of_random_walk); // sample one pair of random walk
+    int sample_one_pair_with_fg(NodePair np, int length_of_random_walk);
     bool is_use_hub(){ // the criterior to use hub indices, only config is set is not enough, hub index must bt no Null
         if(is_training){ // do not hub while training the cost model 
             return false;
@@ -210,11 +217,19 @@ struct BackPush { // Backward Push and MC sampling method for SimRank estimation
             return config.is_use_hub_idx;
         }
     }
+    bool is_use_fg() {
+        if (is_training) {
+            return false;
+        } else {
+            return config.is_use_fg_idx;
+        }
+    }
     int hub_hits = 0; // statistical information: #hits of hub
     int sample_N_random_walks(vector<NodePair> &, vector<int> &); // return the number of meets of N random walks
     int sample_N_random_walks_with_hubs(vector<NodePair> &, vector<int> &); // return the number of meets of N random walks
+    int sample_N_random_walks_with_fg(vector<NodePair> &, vector<int> &);
 
-
+    FG_Index *fg_idx = NULL;
     
     // the Top-K interface
     void top_k(vector<NodePair>& Q); // return the top-k

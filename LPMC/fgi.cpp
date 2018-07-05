@@ -8,6 +8,7 @@ void FG_Index::build_index() {
         while (rand_gen.double_rand() < c) {
             ++len[i];
         }
+
         // sample in neighbor
         int selfloop = -1;
         for (int j = 0; j < gn; ++j) {
@@ -18,6 +19,7 @@ void FG_Index::build_index() {
             }
             t_pos[i][j] = gn;
         }
+
         // fill in the t_pos vector
         for (int j = 0; j < gn; ++j) {
             if (t_pos[i][j] != gn) continue;
@@ -32,6 +34,15 @@ void FG_Index::build_index() {
                 p1 = (p1 < 0) ? (p1 - 1) : f[i][p1];
             }
         }
+    }
+
+    for (int i = 0; i < N; ++i) {
+        cout << "tree #" << i << endl;        
+        cout << "random walk length " << len[i] << endl;
+        for (int j = 0; j < gn; ++j) {
+            cout << format("%s,%s: f %s, t_pos %s") % i % j % f[i][j] % t_pos[i][j] << endl;
+        }
+        cout << endl;
     }
 }
 

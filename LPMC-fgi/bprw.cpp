@@ -45,7 +45,7 @@ size_t unique_max_heap::size() const {
 }
 
 std::ostream &operator<<(std::ostream &os, const BLPMC_Config& config) {
-    os << format("Configuration, linear regression: %s, hub index: %s") % config.is_use_linear_regression_cost_estimation % config.is_use_hub_idx << endl;
+    os << format("Configuration, linear regression: %s, hub index: %s, fg index: %s") % config.is_use_linear_regression_cost_estimation % config.is_use_hub_idx % config.is_use_fg_idx << endl;
     return os;
 }
 
@@ -74,6 +74,9 @@ BackPush::BackPush(string g_name_, DirectedG &graph, double c_, double epsilon_,
         if(config.is_use_hub_idx){ // build the hub index
             rw_hubs = new Rw_Hubs(graph, config.number_of_hubs, config.number_of_samples_per_hub,c);
             rw_hubs->build_hubs();
+        } else if(config.is_use_fg_idx) {
+            fg_idx = new FG_Index(graph, config.number_of_trees, c);
+            fg_idx->build_index();
         }
 }
 
@@ -284,6 +287,8 @@ double BackPush::query_one2one(NodePair np) { // pairwise SimRank estimation
 pair <double, double> BackPush::MC_random_walk(int N) { // perform random walks based on current residuals in the heap
     // assume that there is no singleton nodes in current residuals
     // N: number of samples
+
+    // cout << N << endl;
     
     if(heap.empty()){ // corner case: heap is empty
         return {0,0};
@@ -334,6 +339,26 @@ pair <double, double> BackPush::MC_random_walk(int N) { // perform random walks 
 
     vector<NodePair> starting_positions(N); // the starting positions 
     vector<int> length_of_rws(N); //and length of samples
+    // for (int i = 0; i < N; ++i) {
+    //     int index = BinarySearchForGallopingSearchAVX2(&cdf.front(), 0, static_cast<uint32_t>(cdf.size()),
+    //                                                 static_cast<int>(rand_gen.double_rand() * YCHE_MAX_INT)); // index for node pairs
+    //     NodePair sampled_np = node_pairs[index];
+    //     starting_pairs.insert(sampled_np);
+    //     starting_positions[i] = sampled_np;
+    // }
+    // int NN = N;
+    // if (this->is_use_fg()) {
+    //     NN = max(0, N - fg_idx->N);
+    // }
+    // for(int i = 0; i< NN;i++){
+    //     // int length_of_random_walk = 1 + floor(log(double(rand_gen.double_rand())) / log(c));
+    //     int length_of_random_walk = 1;
+    //     while(rand_gen.double_rand()<c){
+    //         length_of_random_walk++;
+    //     }
+    //     length_of_rws[i] = length_of_random_walk;
+    // }
+    
     for(int i = 0; i< N;i++){
         int index = BinarySearchForGallopingSearchAVX2(&cdf.front(), 0, static_cast<uint32_t>(cdf.size()),
                                                        static_cast<int>(rand_gen.double_rand() * YCHE_MAX_INT)); // index for node pairs
@@ -354,6 +379,8 @@ pair <double, double> BackPush::MC_random_walk(int N) { // perform random walks 
 
     if(this->is_use_hub()){ // MC sampling with hubs, focus on updating the meeting_count value
         meeting_count = this->sample_N_random_walks_with_hubs(starting_positions, length_of_rws);
+    } else if (this->is_use_fg()) {
+        meeting_count = this->sample_N_random_walks_with_fg(starting_positions, length_of_rws);
     }else{ // normal sampling, forcus on updating meeting point value
         meeting_count = this->sample_N_random_walks(starting_positions, length_of_rws);
     }
@@ -383,6 +410,22 @@ int BackPush::sample_N_random_walks_with_hubs(vector<NodePair> & nps, vector<int
     }
     return meeting_count;
 } 
+
+int BackPush::sample_N_random_walks_with_fg(vector<NodePair> &nps, vector<int> &lengths) {
+    int N = nps.size(), NN = max(0, N - fg_idx->N);
+    int meeting_count = 0;
+    for (int i = 0; i < NN; ++i) {
+        int length_of_random_walk = lengths[i];
+        NodePair sampled_np = nps[i];
+        int sample_result = this->sample_one_pair(sampled_np, length_of_random_walk);
+        meeting_count += sample_result;
+    }
+    for (int i = NN; i < N; ++i) {
+        NodePair sampled_np = nps[i];
+        meeting_count += this->sample_one_pair_with_fg(sampled_np, i - NN);
+    }
+    return meeting_count;
+}
 
 int BackPush::sample_N_random_walks(vector<NodePair> & nps, vector<int> & lengths){
     // normal sampling without index
@@ -440,6 +483,10 @@ int BackPush::sample_one_pair_with_hubs(NodePair sampled_np, int length_of_rando
         }
         return indicator;
 } 
+
+int BackPush::sample_one_pair_with_fg(NodePair sampled_np, int tree_id) {
+    return fg_idx->query(sampled_np, tree_id);
+}
 
 int BackPush::sample_one_pair(NodePair np,  int length_of_random_walk) {
     // sample for one pair of random walk, with expected (1 + 1 / (1-c))

@@ -289,6 +289,156 @@ void test_blpmc(string data_name, int h=1000000, int l=50, int q = 50000){
     cout << "close the problem" << endl;
 }
 
+void test_blpmc_fgi(string data_name, int h=1000000, int l=1000, int q = 50000, int nt=3000){
+    string path = get_new_graph_path(data_name);
+    // string path = TOY_GRAPH;
+    GraphYche g(path);
+    int max_small_graph_size = 10000; // don't load ground truth
+
+    // GraphYche * g_ptr;
+    // g_ptr = &g;
+    // for(int i = 0; i < g_ptr->n; i++){
+    //     int out_start = g_ptr->off_out[i]; 
+    //     int out_end = g_ptr->off_out[i+1];
+    //     for(int j = out_start; j < out_end; j++){ // j is not out-neighbor
+    //         auto out_neighbor = g_ptr->neighbors_out[j];
+    //         cout << format("edge: (%s, %s)") % i % out_neighbor << endl;
+    //     }
+    // }
+
+    int x=2308,y=2129;
+
+
+    double c = 0.6;
+    double epsilon = 0.01;
+    double delta = 0.01;
+    BLPMC_Config config;
+    config.is_use_linear_regression_cost_estimation = true;
+    config.is_use_hub_idx = false;
+    config.is_use_fg_idx = false;
+    BackPush bprw(data_name, g, c, epsilon, delta, config);
+    size_t n = g.n;
+
+    // fill in queries
+    vector<NodePair> queries;
+    for(int i = 0; i <q; i++){
+        int a = random_int(0,n);
+        int b = random_int(0,n);
+        queries.push_back(NodePair(a,b));
+    }
+
+    display_seperate_line();
+
+    TruthSim *ts;
+    if(n < max_small_graph_size){
+        ts = new TruthSim(data_name, g, c, epsilon);
+    }
+    double max_error = 0;
+
+    auto start = std::chrono::high_resolution_clock::now();
+    cout << bprw.config << endl;
+    int i = 0;
+    for(auto& q: queries){
+        // cout << format("querying %s-th node pair.") % i << endl;
+        // double result = bprw.query_one2one(q);
+        double result = bprw.query_one2one({x,y});
+        if(n < max_small_graph_size){
+            // double truth = ts->sim(q.first,q.second);
+            double truth = ts->sim(x,y);
+            double abs_error = abs(truth - result);
+            if(abs_error > max_error){
+                max_error = abs_error;
+            }
+        }
+        i ++;
+    }
+
+    auto end = std::chrono::high_resolution_clock::now();
+    std::chrono::duration<double> elapsed = end - start;
+    cout << format("Total cost: %s, Maximum error: %s") % elapsed.count() % max_error << endl;
+    display_seperate_line();
+
+    /* test the method for cost estimation */
+    // int nbh = h;
+    // // for(int nbh = 1000000; nbh < 10000000; nbh = nbh + 1000000){ // varying number of hubs
+    // display_seperate_line();
+    // config.is_use_linear_regression_cost_estimation = true;
+    // config.is_use_hub_idx = true;
+    // config.number_of_hubs = nbh;
+    // config.number_of_samples_per_hub = l;
+    // BackPush bprw2(data_name, g, c, epsilon, delta, config);
+    // cout << bprw2.config << endl;
+    // max_error = 0;
+
+
+    // start = std::chrono::high_resolution_clock::now();
+    // i = 0 ; 
+    // for(auto& q: queries){
+    //     // cout << format("working on %s") % q << endl;
+    //     // cout << format("querying %s-th node pair") % i << endl;
+    //     double result = bprw2.query_one2one(q);
+    //     i ++;
+    //     if(n < max_small_graph_size){
+    //         double truth = ts->sim(q.first,q.second);
+    //         double abs_error = abs(truth - result);
+    //         // cout << format("pair:%s, sim: %s, truth: %s, error:%s") % q % result % truth % abs_error << endl;
+    //         if(abs_error > max_error){
+    //             max_error = abs_error;
+    //         }
+    //     }
+    // }
+    // end = std::chrono::high_resolution_clock::now();
+    // elapsed = end - start;
+    // cout << format("Total cost: %s, Maximum error: %s, #hubs: %s, #rw/hub: %s, #hits of hub: %s, #contain queries:%s, #1s: %s in average") \
+    //     % elapsed.count() % max_error % bprw2.rw_hubs->N % config.number_of_samples_per_hub % bprw2.hub_hits % \
+    //     bprw2.rw_hubs->number_of_contains_queries % (bprw2.rw_hubs->number_of_1s/double(nbh)) << endl;
+    // display_seperate_line();
+    // }
+
+    // for(int nbh = 1000000; nbh < 10000000; nbh = nbh + 1000000){ // varying number of hubs
+    display_seperate_line();
+    config.is_use_linear_regression_cost_estimation = true;
+    config.is_use_hub_idx = false;
+    config.is_use_fg_idx = true;
+    config.number_of_trees = 3000;
+    BackPush bprw3(data_name, g, c, epsilon, delta, config);
+    cout << bprw3.config << endl;
+    max_error = 0;
+    int exceederr = 0;
+
+
+    start = std::chrono::high_resolution_clock::now();
+    i = 0 ; 
+    for(auto& q: queries){
+        // cout << format("working on %s") % q << endl;
+        // cout << format("querying %s-th node pair") % i << endl;{2308,2129}
+        // double result = bprw3.query_one2one(q);
+        double result = bprw3.query_one2one({x,y});
+        i ++;
+        if(n < max_small_graph_size){
+            // double truth = ts->sim(q.first,q.second);
+            double truth = ts->sim(x,y);
+            double abs_error = abs(truth - result);
+            // cout << format("pair:%s, sim: %s, truth: %s, error:%s") % q % result % truth % abs_error << endl;
+            if(abs_error > max_error){
+                max_error = abs_error;
+            }
+            if(abs_error>epsilon) {
+            	exceederr++;
+            	// cout << q << " " << abs_error << endl;
+            }
+        }
+    }
+    end = std::chrono::high_resolution_clock::now();
+    elapsed = end - start;
+    cout << format("Total cost: %s, Maximum error: %s, #trees: %s") \
+        % elapsed.count() % max_error % bprw3.fg_idx->N << endl;
+    cout << exceederr << endl;
+    display_seperate_line();
+
+    cout << "close the problem" << endl;
+}
+
 void test_lr(){
     // test linear regression module
     string path = get_edge_list_path("ca-GrQc");
@@ -342,19 +492,14 @@ void test_fgi() {
     GraphYche g(path);
 
     double c = 0.6;
+    double epsilon = 0.01;
+    double delta = 0.01;
 
-    FG_Index fgi(g, 1, c);
-    fgi.build_index();
-    
-    for (int i = 0; i < 10; ++i)
-        for (int j = i + 1; j <= 10; ++j) {
-            NodePair np{i, j};
-            if (fgi.query(np, 0)) {
-                cout << "True" << endl;
-            } else {
-                cout << "False" << endl;
-            }
-        }
+    BLPMC_Config config;
+    config.is_use_fg_idx = true;
+    BackPush bprw("ca-GrQc", g, c, epsilon, delta, config);
+
+    NodePair np{15,433};
 }
 
 int test_bf(){
@@ -545,6 +690,58 @@ void test_new_graph(string data_name){
     }
 }
 
+void test_toy() {
+    // some example data
+    string path = TOY_GRAPH;
+    GraphYche g(path);
+    // cout << format("number of nodes: %s, query pair: %s") % g.n % NodePair{x,y} << endl;
+    cout << format("number of nodes: %s") % g.n << endl;
+
+
+    double c = 0.6;
+    double epsilon = 0.01;
+    double delta = 0.01;
+
+    // compute ground truth
+    TruthSim * truth = new TruthSim("toy_graph", g,c,epsilon);
+    truth->run(g);
+    for(int i = 0; i < g.n;i++){
+    	for(int j = 0; j < g.n;j++){
+    		cout << format("%s: %s") % NodePair{i,j} % truth->sim(i,j) << endl;
+    	}
+    }
+
+
+    BLPMC_Config config;
+    config.is_use_linear_regression_cost_estimation = false;
+    config.is_use_hub_idx = false;
+    config.is_use_fg_idx = true;
+    config.number_of_trees = 3434;
+    BackPush bprw("cloud_walker", g, c, epsilon, delta, config);
+    size_t n = g.n;
+    double maxerr = 0;
+    int exceederr=0;
+
+    for(int ii=0;ii<2000;++ii)
+    for (int i = 0; i < g.n; ++i){
+    	for (int j = 0; j < g.n; ++j) {
+		    NodePair q{i, j};
+		    double r = bprw.query_one2one(q);
+		    // cout << format("query_one2one(%s, %s)=%s") % i % j % r << endl;
+		    if(abs(r-truth->sim(i,j))>maxerr){
+		    	maxerr=abs(r-truth->sim(i,j));
+		    }
+		    if(abs(r-truth->sim(i,j))>epsilon){
+		    	++exceederr;
+		    	cout<<i<<" "<<j<<endl;
+		    }
+    	}
+    }
+    cout <<maxerr<<endl;
+    cout <<exceederr<<endl;
+    return;
+}
+
 void demo_for_paper(int x, int y){
     // some example data
     string path = TOY_GRAPH;
@@ -627,7 +824,7 @@ int main(int args, char*argv[]){
             // test_Distance_1s();
             // test_minimal_perfect_hash();
             // test_bf();
-            // test_blpmc("ca-GrQc");
+//            test_blpmc("ca-GrQc");
             // sparse_hash_map<NodePair, int, hash_duplicate, hash_duplicate_equal> test;
             // test[NodePair{1,2}] = 1;
             // test[NodePair{2,1}] = 100;
@@ -642,7 +839,9 @@ int main(int args, char*argv[]){
             // test_lr();
             // string d("ca-GrQc");
             // test_bflp_all_pair(d);
-            test_fgi();
+            // test_fgi();
+            test_blpmc_fgi("ca-GrQc");
+            // test_toy();
         }
 
     }

@@ -13,7 +13,7 @@ struct FG_Index {
     int N; // number of trees
     int gn; // number of nodes
     double c;
-    vector<vector<int>> t_pos;  // the terminate positions for different nodes as index
+    vector<vector<int>> t_pos; // the terminate positions for different nodes as index
     vector<vector<int>> f; // in neighbor
     vector<int> len; // walk length
     SFMTRand rand_gen;
