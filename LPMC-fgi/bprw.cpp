@@ -263,11 +263,13 @@ double BackPush::query_one2one(NodePair np) { // pairwise SimRank estimation
 
     // cout << "======= greedy test ======" << endl;
     double p = backward_push(np, heap).first;
-    // if(!is_training){
-    //     cout << "push estimate: " << p << ", final residuals: " << heap.sum << endl;
-    // }
+
 
     auto mc_start = std::chrono::high_resolution_clock::now();
+    if(!is_training){
+         cout << "push estimate: " << p << ", final residuals: " << heap.sum << " number of walks:" \
+         << number_of_walkers(heap.sum) << endl;
+    }
     double mc_estimate = MC_random_walk(number_of_walkers(heap.sum)).first;
     auto mc_end = std::chrono::high_resolution_clock::now();
 
@@ -419,11 +421,15 @@ int BackPush::sample_N_random_walks_with_fg(vector<NodePair> &nps, vector<int> &
         NodePair sampled_np = nps[i];
         int sample_result = this->sample_one_pair(sampled_np, length_of_random_walk);
         meeting_count += sample_result;
+        // cout << "meeting count " << i << ": " << meeting_count << endl;
     }
+    cout << "meeting count before tree: " << meeting_count << endl;
     for (int i = NN; i < N; ++i) {
         NodePair sampled_np = nps[i];
         meeting_count += this->sample_one_pair_with_fg(sampled_np, i - NN);
+        // cout << "meeting count " << i << ": " << meeting_count << endl;
     }
+    cout << "meeting count after tree: " << meeting_count << endl;
     return meeting_count;
 }
 
@@ -541,8 +547,8 @@ void BackPush::build_cost_estimation_model(){
         this->maximum_lp_operations = threshold;
 
         // generate random pair
-        int a = random_int(0,number_of_vertices);
-        int b = random_int(0,number_of_vertices); // the two nodes are not very far away from each other
+        int a = random_int(1,number_of_vertices);
+        int b = random_int(1,number_of_vertices); // the two nodes are not very far away from each other
         // cout << format("random pair: (%s,%s)") % a % b << endl;
         this->query_one2one(NodePair{a,b});
     }

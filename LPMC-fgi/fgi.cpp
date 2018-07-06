@@ -13,6 +13,7 @@ void FG_Index::build_index() {
         int selfloop = -1;
         for (int j = 0; j < gn; ++j) {
             f[i][j] = sample_in_neighbor(j, (*g_ptr), rand_gen);
+            uf[i].U(j, f[i][j]);
             if (f[i][j] < 0) {
                 f[i][j] = selfloop;
                 selfloop -= len[i]; // avoid conflict between WCCs
@@ -46,7 +47,12 @@ void FG_Index::build_index() {
     // }
 }
 
-bool FG_Index::query(const NodePair& np, int i) {
+int FG_Index::query(const NodePair& np, int i) {
     // cout << t_pos[i][np.first] << " " << t_pos[i][np.second] << " ";
-    return t_pos[i][np.first] == t_pos[i][np.second];
+    if (uf[i].F(np.first) != uf[i].F(np.second))
+        return 0;
+    return -1;
+    //if (t_pos[i][np.first] == t_pos[i][np.second])
+    //    return 1;
+    //return 0;
 }

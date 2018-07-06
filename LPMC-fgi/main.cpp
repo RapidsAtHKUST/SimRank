@@ -24,7 +24,7 @@ using namespace boost::program_options;
 using namespace bf;
 
 string TOY_GRAPH = "/homes/ywangby/workspace/LinsysSimRank/datasets/edge_list/cloud_walker2.txt";
-
+string TOY_P = "/homes/ywangby/workspace/LinsysSimRank/datasets/edge_list/";
 
 string get_new_graph_path(string data_name){
     return string("/csproject/biggraph/ywangby/yche/git-repos/SimRank/LPMC/build/edge_list/") + data_name + string(".txt");
@@ -289,29 +289,15 @@ void test_blpmc(string data_name, int h=1000000, int l=50, int q = 50000){
     cout << "close the problem" << endl;
 }
 
-void test_blpmc_fgi(string data_name, int h=1000000, int l=1000, int q = 50000, int nt=3000){
+void test_blpmc_fgi(string data_name, int nt = 3443, int q = 50000) {
     string path = get_new_graph_path(data_name);
-    // string path = TOY_GRAPH;
     GraphYche g(path);
     int max_small_graph_size = 10000; // don't load ground truth
 
-    // GraphYche * g_ptr;
-    // g_ptr = &g;
-    // for(int i = 0; i < g_ptr->n; i++){
-    //     int out_start = g_ptr->off_out[i]; 
-    //     int out_end = g_ptr->off_out[i+1];
-    //     for(int j = out_start; j < out_end; j++){ // j is not out-neighbor
-    //         auto out_neighbor = g_ptr->neighbors_out[j];
-    //         cout << format("edge: (%s, %s)") % i % out_neighbor << endl;
-    //     }
-    // }
-
-    int x=2308,y=2129;
-
-
     double c = 0.6;
-    double epsilon = 0.01;
+    double epsilon = 0.001;
     double delta = 0.01;
+
     BLPMC_Config config;
     config.is_use_linear_regression_cost_estimation = true;
     config.is_use_hub_idx = false;
@@ -334,20 +320,26 @@ void test_blpmc_fgi(string data_name, int h=1000000, int l=1000, int q = 50000, 
         ts = new TruthSim(data_name, g, c, epsilon);
     }
     double max_error = 0;
+    int exceederr = 0;
+    int nonzero = 0;
 
     auto start = std::chrono::high_resolution_clock::now();
     cout << bprw.config << endl;
     int i = 0;
     for(auto& q: queries){
         // cout << format("querying %s-th node pair.") % i << endl;
-        // double result = bprw.query_one2one(q);
-        double result = bprw.query_one2one({x,y});
+        double result = bprw.query_one2one(q);
         if(n < max_small_graph_size){
-            // double truth = ts->sim(q.first,q.second);
-            double truth = ts->sim(x,y);
+            double truth = ts->sim(q.first,q.second);
             double abs_error = abs(truth - result);
+            // cout << format("pair:%s, sim: %s, truth: %s, error:%s") % q % result % truth % abs_error << endl;
             if(abs_error > max_error){
                 max_error = abs_error;
+            }
+            if (abs_error > 0) ++nonzero;
+            if (abs_error > epsilon) {
+            	exceederr++;
+            	// cout << q << " " << abs_error << endl;
             }
         }
         i ++;
@@ -356,6 +348,7 @@ void test_blpmc_fgi(string data_name, int h=1000000, int l=1000, int q = 50000, 
     auto end = std::chrono::high_resolution_clock::now();
     std::chrono::duration<double> elapsed = end - start;
     cout << format("Total cost: %s, Maximum error: %s") % elapsed.count() % max_error << endl;
+    cout << "Exceed epsilon: " << exceederr << ", Nonzero " << nonzero << endl;
     display_seperate_line();
 
     /* test the method for cost estimation */
@@ -393,39 +386,35 @@ void test_blpmc_fgi(string data_name, int h=1000000, int l=1000, int q = 50000, 
     //     % elapsed.count() % max_error % bprw2.rw_hubs->N % config.number_of_samples_per_hub % bprw2.hub_hits % \
     //     bprw2.rw_hubs->number_of_contains_queries % (bprw2.rw_hubs->number_of_1s/double(nbh)) << endl;
     // display_seperate_line();
-    // }
 
     // for(int nbh = 1000000; nbh < 10000000; nbh = nbh + 1000000){ // varying number of hubs
     display_seperate_line();
     config.is_use_linear_regression_cost_estimation = true;
     config.is_use_hub_idx = false;
     config.is_use_fg_idx = true;
-    config.number_of_trees = 3000;
+    config.number_of_trees = nt;
     BackPush bprw3(data_name, g, c, epsilon, delta, config);
     cout << bprw3.config << endl;
-    max_error = 0;
-    int exceederr = 0;
-
+    max_error = 0, nonzero = 0, exceederr = 0;
 
     start = std::chrono::high_resolution_clock::now();
     i = 0 ; 
     for(auto& q: queries){
         // cout << format("working on %s") % q << endl;
         // cout << format("querying %s-th node pair") % i << endl;{2308,2129}
-        // double result = bprw3.query_one2one(q);
-        double result = bprw3.query_one2one({x,y});
+        double result = bprw3.query_one2one(q);
         i ++;
         if(n < max_small_graph_size){
-            // double truth = ts->sim(q.first,q.second);
-            double truth = ts->sim(x,y);
+            double truth = ts->sim(q.first,q.second);
             double abs_error = abs(truth - result);
             // cout << format("pair:%s, sim: %s, truth: %s, error:%s") % q % result % truth % abs_error << endl;
-            if(abs_error > max_error){
+            if (abs_error > max_error) {
                 max_error = abs_error;
             }
-            if(abs_error>epsilon) {
+            if (abs_error > 0) ++nonzero;
+            if (abs_error > epsilon) {
             	exceederr++;
-            	// cout << q << " " << abs_error << endl;
+            	// cout << q << " " << abs_error << " " << g.in_deg_arr[q.first] << " " << g.in_deg_arr[q.second] << endl;
             }
         }
     }
@@ -433,7 +422,144 @@ void test_blpmc_fgi(string data_name, int h=1000000, int l=1000, int q = 50000, 
     elapsed = end - start;
     cout << format("Total cost: %s, Maximum error: %s, #trees: %s") \
         % elapsed.count() % max_error % bprw3.fg_idx->N << endl;
-    cout << exceederr << endl;
+    cout << "Exceed epsilon: " << exceederr << ", Nonzero " << nonzero << endl;
+    display_seperate_line();
+
+    cout << "close the problem" << endl;
+}
+
+void test_blpmc_sp(string data_name, int h=1000000, int l=50, int nt = 3443, int q = 50000, int x = 2308, int y = 2129){
+    string path = get_new_graph_path(data_name);
+    GraphYche g(path);
+    int max_small_graph_size = 10000; // don't load ground truth
+
+    cout << endl << endl << format("Pair (%s, %s)") % x % y << endl;
+    cout << "in deg: " << g.in_deg_arr[x] << " " << g.in_deg_arr[y] << endl;
+    cout << "out deg: " << g.out_deg_arr[x] << " " << g.out_deg_arr[y] << endl;
+
+    double c = 0.6;
+    double epsilon = 0.01;
+    double delta = 0.01;
+    BLPMC_Config config;
+    config.is_use_linear_regression_cost_estimation = true;
+    config.is_use_hub_idx = false;
+    config.is_use_fg_idx = false;
+    BackPush bprw(data_name, g, c, epsilon, delta, config);
+    size_t n = g.n;
+
+    display_seperate_line();
+
+    TruthSim *ts;
+    if(n < max_small_graph_size){
+        ts = new TruthSim(data_name, g, c, epsilon);
+    }
+    double max_error = 0;
+    int exceederr = 0;
+    int nonzero = 0;
+
+    auto start = std::chrono::high_resolution_clock::now();
+    cout << bprw.config << endl;
+    int i = 0;
+    for(int iter = 0; iter < q; ++iter) {
+        // cout << format("querying %s-th node pair.") % i << endl;
+        double result = bprw.query_one2one({x,y});
+        if(n < max_small_graph_size){
+            double truth = ts->sim(x,y);
+            double abs_error = abs(truth - result);
+            cout << format("pair:%s, sim: %s, truth: %s, error:%s") % q % result % truth % abs_error << endl;
+            if(abs_error > max_error){
+                max_error = abs_error;
+            }
+            if (abs_error > 0) ++nonzero;
+            if (abs_error > epsilon) {
+            	exceederr++;
+            	// cout << q << " " << abs_error << endl;
+            }
+        }
+        i ++;
+    }
+
+    auto end = std::chrono::high_resolution_clock::now();
+    std::chrono::duration<double> elapsed = end - start;
+    cout << format("> Total cost: %s, Maximum error: %s") % elapsed.count() % max_error << endl;
+    cout << "> Exceed epsilon: " << exceederr << ", Nonzero " << nonzero << endl;
+    display_seperate_line();
+
+    int nbh = h;
+    // for(int nbh = 1000000; nbh < 10000000; nbh = nbh + 1000000){ // varying number of hubs
+    display_seperate_line();
+    config.is_use_linear_regression_cost_estimation = true;
+    config.is_use_hub_idx = true;
+    config.number_of_hubs = nbh;
+    config.number_of_samples_per_hub = l;
+    BackPush bprw2(data_name, g, c, epsilon, delta, config);
+    cout << bprw2.config << endl;
+    max_error = 0, nonzero = 0, exceederr = 0;
+
+    start = std::chrono::high_resolution_clock::now();
+    i = 0 ; 
+    for(int iter = 0; iter < q; ++iter) {
+        // cout << format("working on %s") % q << endl;
+        // cout << format("querying %s-th node pair") % i << endl;
+        double result = bprw2.query_one2one({x, y});
+        i ++;
+        if(n < max_small_graph_size){
+            double truth = ts->sim(x, y);
+            double abs_error = abs(truth - result);
+            cout << format("pair:%s, sim: %s, truth: %s, error:%s") % q % result % truth % abs_error << endl;
+            if(abs_error > max_error){
+                max_error = abs_error;
+            }
+            if (abs_error > 0) ++nonzero;
+            if (abs_error > epsilon) {
+            	exceederr++;
+            	// cout << q << " " << abs_error << endl;
+            }
+        }
+    }
+    end = std::chrono::high_resolution_clock::now();
+    elapsed = end - start;
+    cout << format(">> Total cost: %s, Maximum error: %s, #hubs: %s, #rw/hub: %s, #hits of hub: %s, #contain queries:%s, #1s: %s in average") \
+        % elapsed.count() % max_error % bprw2.rw_hubs->N % config.number_of_samples_per_hub % bprw2.hub_hits % \
+        bprw2.rw_hubs->number_of_contains_queries % (bprw2.rw_hubs->number_of_1s/double(nbh)) << endl;
+    cout << ">> Exceed epsilon: " << exceederr << ", Nonzero " << nonzero << endl;
+    display_seperate_line();
+
+    display_seperate_line();
+    config.is_use_linear_regression_cost_estimation = true;
+    config.is_use_hub_idx = false;
+    config.is_use_fg_idx = true;
+    config.number_of_trees = nt;
+    BackPush bprw3(data_name, g, c, epsilon, delta, config);
+    cout << bprw3.config << endl;
+    max_error = 0, exceederr = 0, nonzero = 0;
+
+    start = std::chrono::high_resolution_clock::now();
+    i = 0 ; 
+    for(int iter = 0; iter < q; ++iter){
+        // cout << format("working on %s") % q << endl;
+        // cout << format("querying %s-th node pair") % i << endl;{2308,2129}
+        double result = bprw3.query_one2one({x,y});
+        i ++;
+        if(n < max_small_graph_size){
+            double truth = ts->sim(x,y);
+            double abs_error = abs(truth - result);
+            cout << format("pair:%s, sim: %s, truth: %s, error:%s") % q % result % truth % abs_error << endl;
+            if(abs_error > max_error){
+                max_error = abs_error;
+            }
+            if (abs_error > 0) ++nonzero;
+            if (abs_error > epsilon) {
+            	exceederr++;
+            	// cout << q << " " << abs_error << endl;
+            }
+        }
+    }
+    end = std::chrono::high_resolution_clock::now();
+    elapsed = end - start;
+    cout << format(">>> Total cost: %s, Maximum error: %s, #trees: %s") \
+        % elapsed.count() % max_error % bprw3.fg_idx->N << endl;
+    cout << ">>> Exceed epsilon: " << exceederr << ", Nonzero " << nonzero << endl;
     display_seperate_line();
 
     cout << "close the problem" << endl;
@@ -690,13 +816,27 @@ void test_new_graph(string data_name){
     }
 }
 
-void test_toy() {
+double compute_sim_using_pure_MC(DirectedG & g, int x, int y, double c, int N){
+    SFMTRand rand_gen;
+    double meeting_count = 0;
+    for(int i = 0 ; i< N;i++){
+        int length = 1;
+        while(rand_gen.double_rand() < c){
+            length ++;
+        }
+        int result = sample_an_1c_walk(NodePair{x,y}, g, length, rand_gen);
+        meeting_count += result;
+    }
+    return c * meeting_count / N;
+    
+}
+void test_toy(string data_name) {
     // some example data
-    string path = TOY_GRAPH;
+    // string path = TOY_GRAPH;
+    string path = TOY_P + data_name;
     GraphYche g(path);
     // cout << format("number of nodes: %s, query pair: %s") % g.n % NodePair{x,y} << endl;
     cout << format("number of nodes: %s") % g.n << endl;
-
 
     double c = 0.6;
     double epsilon = 0.01;
@@ -705,42 +845,49 @@ void test_toy() {
     // compute ground truth
     TruthSim * truth = new TruthSim("toy_graph", g,c,epsilon);
     truth->run(g);
-    for(int i = 0; i < g.n;i++){
-    	for(int j = 0; j < g.n;j++){
-    		cout << format("%s: %s") % NodePair{i,j} % truth->sim(i,j) << endl;
-    	}
-    }
-
+    // for(int i = 0; i < g.n;i++){
+    // 	for(int j = 0; j < g.n;j++){
+    // 		cout << format("%s: %s") % NodePair{i,j} % truth->sim(i,j) << endl;
+    // 	}
+    // }
 
     BLPMC_Config config;
-    config.is_use_linear_regression_cost_estimation = false;
+    config.is_use_linear_regression_cost_estimation = true;
     config.is_use_hub_idx = false;
     config.is_use_fg_idx = true;
-    config.number_of_trees = 3434;
+    config.number_of_trees = 3443;
     BackPush bprw("cloud_walker", g, c, epsilon, delta, config);
     size_t n = g.n;
     double maxerr = 0;
     int exceederr=0;
 
-    for(int ii=0;ii<2000;++ii)
+    // for (int ii = 0; ii < 2000; ++ii)
     for (int i = 0; i < g.n; ++i){
     	for (int j = 0; j < g.n; ++j) {
 		    NodePair q{i, j};
+            display_seperate_line();
 		    double r = bprw.query_one2one(q);
-		    // cout << format("query_one2one(%s, %s)=%s") % i % j % r << endl;
-		    if(abs(r-truth->sim(i,j))>maxerr){
-		    	maxerr=abs(r-truth->sim(i,j));
+		    // cout << format("query_one2one(%s, %s) = %s") % i % j % r << endl;
+		    if (abs(r - truth->sim(i, j)) > maxerr) {
+		    	maxerr = abs(r - truth->sim(i, j));
 		    }
-		    if(abs(r-truth->sim(i,j))>epsilon){
+            cout << format("(%s,%s), truth: %s, result: %s, error: %s")
+            % i % j % truth->sim(i,j) % r % abs(r - truth->sim(i, j))
+            << endl;
+            double mc_result = compute_sim_using_pure_MC(g,i,j,c,9537) ;
+            double mc_error = abs(truth->sim(i,j) - mc_result) ;
+            cout << format("pure MC sampling result: %s, error: %s") % mc_result % mc_error << endl;
+		    if (abs(r - truth->sim(i, j)) > epsilon) {
 		    	++exceederr;
-		    	cout<<i<<" "<<j<<endl;
 		    }
     	}
     }
-    cout <<maxerr<<endl;
-    cout <<exceederr<<endl;
+    cout << maxerr << " " << exceederr << endl;
+
+
     return;
 }
+
 
 void demo_for_paper(int x, int y){
     // some example data
@@ -773,7 +920,7 @@ int main(int args, char*argv[]){
         int q = 50000; 
         string data_name;
         string method;
-        int x, y,h,l;
+        int x, y,h,l,t;
         desc.add_options()
             ("help,h", "Help Screen")
             ("DataName,d", value<string>(&data_name), "Graph Name")
@@ -785,6 +932,7 @@ int main(int args, char*argv[]){
             ("delta,f", value<double>(&delta), "Failure probability")
             ("n,n", value<int>(&h), "Number of hubs")
             ("l,l", value<int>(&l), "Number of random walks per hub")
+            ("t,t", value<int>(&t), "Number of trees")
             ("epsilon,e", value<double>(&epsilon), "Error bound");
 
         variables_map vm;
@@ -804,11 +952,15 @@ int main(int args, char*argv[]){
                 // test_bflp_all_pair(data_name);
             }else if (method == "carmo"){
                 test_blpmc(data_name, h,l,q);
+            }else if (method == "fgi") {
+                test_blpmc_fgi(data_name, t, q);
+            }else if (method == "sp") {
+                test_blpmc_sp(data_name, h, l, t, q, x, y);
             }
         }else{
             // SFMTRand srand;
-            // for(int i = 0; i< 100;i++){
-            //     cout << srand.uint_rand() % 3 << endl;
+            // for(int i = 0; i< 10;i++){
+            //     cout << srand.double_rand() << endl;
             // }
 
             // demo_for_paper(x,y);
@@ -840,8 +992,8 @@ int main(int args, char*argv[]){
             // string d("ca-GrQc");
             // test_bflp_all_pair(d);
             // test_fgi();
-            test_blpmc_fgi("ca-GrQc");
-            // test_toy();
+            // test_blpmc_fgi("ca-GrQc");
+            test_toy(data_name);
         }
 
     }
