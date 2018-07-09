@@ -8,7 +8,7 @@
 #include <util/sfmt_based_rand.h>
 typedef GraphYche DirectedG;
 
-typedef struct Union_Find {
+typedef struct {
     int n; // number of disjoint sets
     vector<int> p, s; // parent, size
 
@@ -40,7 +40,7 @@ typedef struct Union_Find {
             s[y] = 0;
         }
     }
-};
+} Union_Find;
 
 struct FG_Index {
     DirectedG * g_ptr;
@@ -52,7 +52,9 @@ struct FG_Index {
     vector<int> len; // walk length
     SFMTRand rand_gen;
     vector<Union_Find> uf;
-    
+    int fgi_hit;
+    int fgi_miss;
+
     FG_Index(DirectedG &g, int N_, double c_): g_ptr(&g), c(c_) {
         N = N_;
         gn = g_ptr->n;
@@ -66,6 +68,7 @@ struct FG_Index {
             uf[i].init(g_ptr->n);
         }
         len.resize(N);
+        fgi_hit = fgi_miss = 0;
     }
 
     void build_index();

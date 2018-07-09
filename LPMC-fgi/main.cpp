@@ -289,13 +289,28 @@ void test_blpmc(string data_name, int h=1000000, int l=50, int q = 50000){
     cout << "close the problem" << endl;
 }
 
-void test_blpmc_fgi(string data_name, int nt = 3443, int q = 50000) {
+
+double compute_sim_using_pure_MC(DirectedG & g, int x, int y, double c, int N){
+    SFMTRand rand_gen;
+    double meeting_count = 0;
+    for(int i = 0 ; i< N;i++){
+        int length = 1;
+        while(rand_gen.double_rand() < c){
+            length ++;
+        }
+        int result = sample_an_1c_walk(NodePair{x,y}, g, length, rand_gen);
+        meeting_count += result;
+    }
+    return c * meeting_count / N;
+}
+
+void test_blpmc_fgi(string data_name, int h=1000000, int l=1000, int nt = 3443, int q = 50000) {
     string path = get_new_graph_path(data_name);
     GraphYche g(path);
     int max_small_graph_size = 10000; // don't load ground truth
 
     double c = 0.6;
-    double epsilon = 0.001;
+    double epsilon = 0.01;
     double delta = 0.01;
 
     BLPMC_Config config;
@@ -352,40 +367,46 @@ void test_blpmc_fgi(string data_name, int nt = 3443, int q = 50000) {
     display_seperate_line();
 
     /* test the method for cost estimation */
-    // int nbh = h;
+    int nbh = h;
     // // for(int nbh = 1000000; nbh < 10000000; nbh = nbh + 1000000){ // varying number of hubs
-    // display_seperate_line();
-    // config.is_use_linear_regression_cost_estimation = true;
-    // config.is_use_hub_idx = true;
-    // config.number_of_hubs = nbh;
-    // config.number_of_samples_per_hub = l;
-    // BackPush bprw2(data_name, g, c, epsilon, delta, config);
-    // cout << bprw2.config << endl;
-    // max_error = 0;
+    display_seperate_line();
+    config.is_use_linear_regression_cost_estimation = true;
+    config.is_use_hub_idx = true;
+    config.number_of_hubs = nbh;
+    config.number_of_samples_per_hub = l;
+    BackPush bprw2(data_name, g, c, epsilon, delta, config);
+    cout << bprw2.config << endl;
+    max_error = 0, nonzero = 0, exceederr = 0;
 
 
-    // start = std::chrono::high_resolution_clock::now();
-    // i = 0 ; 
-    // for(auto& q: queries){
-    //     // cout << format("working on %s") % q << endl;
-    //     // cout << format("querying %s-th node pair") % i << endl;
-    //     double result = bprw2.query_one2one(q);
-    //     i ++;
-    //     if(n < max_small_graph_size){
-    //         double truth = ts->sim(q.first,q.second);
-    //         double abs_error = abs(truth - result);
-    //         // cout << format("pair:%s, sim: %s, truth: %s, error:%s") % q % result % truth % abs_error << endl;
-    //         if(abs_error > max_error){
-    //             max_error = abs_error;
-    //         }
-    //     }
-    // }
-    // end = std::chrono::high_resolution_clock::now();
-    // elapsed = end - start;
-    // cout << format("Total cost: %s, Maximum error: %s, #hubs: %s, #rw/hub: %s, #hits of hub: %s, #contain queries:%s, #1s: %s in average") \
-    //     % elapsed.count() % max_error % bprw2.rw_hubs->N % config.number_of_samples_per_hub % bprw2.hub_hits % \
-    //     bprw2.rw_hubs->number_of_contains_queries % (bprw2.rw_hubs->number_of_1s/double(nbh)) << endl;
-    // display_seperate_line();
+    start = std::chrono::high_resolution_clock::now();
+    i = 0 ; 
+    for(auto& q: queries){
+        // cout << format("working on %s") % q << endl;
+        // cout << format("querying %s-th node pair") % i << endl;
+        double result = bprw2.query_one2one(q);
+        i ++;
+        if(n < max_small_graph_size){
+            double truth = ts->sim(q.first,q.second);
+            double abs_error = abs(truth - result);
+            // cout << format("pair:%s, sim: %s, truth: %s, error:%s") % q % result % truth % abs_error << endl;
+            if(abs_error > max_error){
+                max_error = abs_error;
+            }
+            if (abs_error > 0) ++nonzero;
+            if (abs_error > epsilon) {
+                exceederr++;
+            }
+
+        }
+    }
+    end = std::chrono::high_resolution_clock::now();
+    elapsed = end - start;
+    cout << format("Total cost: %s, Maximum error: %s, #hubs: %s, #rw/hub: %s, #hits of hub: %s, #contain queries:%s, #1s: %s in average") \
+        % elapsed.count() % max_error % bprw2.rw_hubs->N % config.number_of_samples_per_hub % bprw2.hub_hits % \
+        bprw2.rw_hubs->number_of_contains_queries % (bprw2.rw_hubs->number_of_1s/double(nbh)) << endl;
+    cout << "Exceed epsilon: " << exceederr << ", Nonzero " << nonzero << endl;
+    display_seperate_line();
 
     // for(int nbh = 1000000; nbh < 10000000; nbh = nbh + 1000000){ // varying number of hubs
     display_seperate_line();
@@ -414,7 +435,7 @@ void test_blpmc_fgi(string data_name, int nt = 3443, int q = 50000) {
             if (abs_error > 0) ++nonzero;
             if (abs_error > epsilon) {
             	exceederr++;
-            	// cout << q << " " << abs_error << " " << g.in_deg_arr[q.first] << " " << g.in_deg_arr[q.second] << endl;
+            	cout << q << " " << abs_error << " " << g.in_deg_arr[q.first] << " " << g.in_deg_arr[q.second] << endl;
             }
         }
     }
@@ -423,6 +444,7 @@ void test_blpmc_fgi(string data_name, int nt = 3443, int q = 50000) {
     cout << format("Total cost: %s, Maximum error: %s, #trees: %s") \
         % elapsed.count() % max_error % bprw3.fg_idx->N << endl;
     cout << "Exceed epsilon: " << exceederr << ", Nonzero " << nonzero << endl;
+    cout << "FGI hits: " << bprw3.fg_idx->fgi_hit << ", FGI misses: " << bprw3.fg_idx->fgi_miss << endl;
     display_seperate_line();
 
     cout << "close the problem" << endl;
@@ -434,8 +456,8 @@ void test_blpmc_sp(string data_name, int h=1000000, int l=50, int nt = 3443, int
     int max_small_graph_size = 10000; // don't load ground truth
 
     cout << endl << endl << format("Pair (%s, %s)") % x % y << endl;
-    cout << "in deg: " << g.in_deg_arr[x] << " " << g.in_deg_arr[y] << endl;
-    cout << "out deg: " << g.out_deg_arr[x] << " " << g.out_deg_arr[y] << endl;
+    //cout << "in deg: " << g.in_deg_arr[x] << " " << g.in_deg_arr[y] << endl;
+    //cout << "out deg: " << g.out_deg_arr[x] << " " << g.out_deg_arr[y] << endl;
 
     double c = 0.6;
     double epsilon = 0.01;
@@ -466,7 +488,7 @@ void test_blpmc_sp(string data_name, int h=1000000, int l=50, int nt = 3443, int
         if(n < max_small_graph_size){
             double truth = ts->sim(x,y);
             double abs_error = abs(truth - result);
-            cout << format("pair:%s, sim: %s, truth: %s, error:%s") % q % result % truth % abs_error << endl;
+            // cout << format("pair:%s, sim: %s, truth: %s, error:%s") % q % result % truth % abs_error << endl;
             if(abs_error > max_error){
                 max_error = abs_error;
             }
@@ -506,7 +528,7 @@ void test_blpmc_sp(string data_name, int h=1000000, int l=50, int nt = 3443, int
         if(n < max_small_graph_size){
             double truth = ts->sim(x, y);
             double abs_error = abs(truth - result);
-            cout << format("pair:%s, sim: %s, truth: %s, error:%s") % q % result % truth % abs_error << endl;
+            // cout << format("pair:%s, sim: %s, truth: %s, error:%s") % q % result % truth % abs_error << endl;
             if(abs_error > max_error){
                 max_error = abs_error;
             }
@@ -539,12 +561,19 @@ void test_blpmc_sp(string data_name, int h=1000000, int l=50, int nt = 3443, int
     for(int iter = 0; iter < q; ++iter){
         // cout << format("working on %s") % q << endl;
         // cout << format("querying %s-th node pair") % i << endl;{2308,2129}
+        display_seperate_line();
         double result = bprw3.query_one2one({x,y});
         i ++;
         if(n < max_small_graph_size){
             double truth = ts->sim(x,y);
             double abs_error = abs(truth - result);
             cout << format("pair:%s, sim: %s, truth: %s, error:%s") % q % result % truth % abs_error << endl;
+            // cout << format("(%s,%s), truth: %s, result: %s, error: %s")
+            //                % i % j % truth->sim(i,j) % r % abs(r - truth->sim(i, j))
+            //                << endl;
+            double mc_result = compute_sim_using_pure_MC(g,x,y,c,9537) ;
+            double mc_error = abs(truth - mc_result) ;
+            cout << format("pure MC sampling result: %s, error: %s") % mc_result % mc_error << endl;
             if(abs_error > max_error){
                 max_error = abs_error;
             }
@@ -560,6 +589,7 @@ void test_blpmc_sp(string data_name, int h=1000000, int l=50, int nt = 3443, int
     cout << format(">>> Total cost: %s, Maximum error: %s, #trees: %s") \
         % elapsed.count() % max_error % bprw3.fg_idx->N << endl;
     cout << ">>> Exceed epsilon: " << exceederr << ", Nonzero " << nonzero << endl;
+    cout << "FGI hits: " << bprw3.fg_idx->fgi_hit << ", FGI misses: " << bprw3.fg_idx->fgi_miss << endl;
     display_seperate_line();
 
     cout << "close the problem" << endl;
@@ -816,20 +846,6 @@ void test_new_graph(string data_name){
     }
 }
 
-double compute_sim_using_pure_MC(DirectedG & g, int x, int y, double c, int N){
-    SFMTRand rand_gen;
-    double meeting_count = 0;
-    for(int i = 0 ; i< N;i++){
-        int length = 1;
-        while(rand_gen.double_rand() < c){
-            length ++;
-        }
-        int result = sample_an_1c_walk(NodePair{x,y}, g, length, rand_gen);
-        meeting_count += result;
-    }
-    return c * meeting_count / N;
-    
-}
 void test_toy(string data_name) {
     // some example data
     // string path = TOY_GRAPH;
@@ -861,22 +877,22 @@ void test_toy(string data_name) {
     double maxerr = 0;
     int exceederr=0;
 
-    // for (int ii = 0; ii < 2000; ++ii)
+    for (int ii = 0; ii < 2000; ++ii)
     for (int i = 0; i < g.n; ++i){
     	for (int j = 0; j < g.n; ++j) {
 		    NodePair q{i, j};
-            display_seperate_line();
+            //display_seperate_line();
 		    double r = bprw.query_one2one(q);
 		    // cout << format("query_one2one(%s, %s) = %s") % i % j % r << endl;
 		    if (abs(r - truth->sim(i, j)) > maxerr) {
 		    	maxerr = abs(r - truth->sim(i, j));
 		    }
-            cout << format("(%s,%s), truth: %s, result: %s, error: %s")
-            % i % j % truth->sim(i,j) % r % abs(r - truth->sim(i, j))
-            << endl;
+            // cout << format("(%s,%s), truth: %s, result: %s, error: %s")
+            // % i % j % truth->sim(i,j) % r % abs(r - truth->sim(i, j))
+            // << endl;
             double mc_result = compute_sim_using_pure_MC(g,i,j,c,9537) ;
             double mc_error = abs(truth->sim(i,j) - mc_result) ;
-            cout << format("pure MC sampling result: %s, error: %s") % mc_result % mc_error << endl;
+            // cout << format("pure MC sampling result: %s, error: %s") % mc_result % mc_error << endl;
 		    if (abs(r - truth->sim(i, j)) > epsilon) {
 		    	++exceederr;
 		    }
@@ -953,7 +969,7 @@ int main(int args, char*argv[]){
             }else if (method == "carmo"){
                 test_blpmc(data_name, h,l,q);
             }else if (method == "fgi") {
-                test_blpmc_fgi(data_name, t, q);
+                test_blpmc_fgi(data_name, h, l, t, q);
             }else if (method == "sp") {
                 test_blpmc_sp(data_name, h, l, t, q, x, y);
             }

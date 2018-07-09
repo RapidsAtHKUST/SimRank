@@ -22,6 +22,7 @@ void FG_Index::build_index() {
         }
 
         // fill in the t_pos vector
+        // TODO: start from leaf node
         for (int j = 0; j < gn; ++j) {
             if (t_pos[i][j] != gn) continue;
             int p0 = j, p1 = j;
@@ -49,10 +50,18 @@ void FG_Index::build_index() {
 
 int FG_Index::query(const NodePair& np, int i) {
     // cout << t_pos[i][np.first] << " " << t_pos[i][np.second] << " ";
-    if (uf[i].F(np.first) != uf[i].F(np.second))
+    if (uf[i].F(np.first) != uf[i].F(np.second)) {
+        ++fgi_hit;
         return 0;
+    }
+    ++fgi_miss;
     return -1;
-    //if (t_pos[i][np.first] == t_pos[i][np.second])
-    //    return 1;
-    //return 0;
+    /*
+    if (t_pos[i][np.first] == t_pos[i][np.second]) {
+        ++fgi_hit;
+        return 1;
+    }
+    ++fgi_miss;
+    return -1;
+    */
 }

@@ -267,8 +267,8 @@ double BackPush::query_one2one(NodePair np) { // pairwise SimRank estimation
 
     auto mc_start = std::chrono::high_resolution_clock::now();
     if(!is_training){
-         cout << "push estimate: " << p << ", final residuals: " << heap.sum << " number of walks:" \
-         << number_of_walkers(heap.sum) << endl;
+         // cout << "push estimate: " << p << ", final residuals: " << heap.sum << " number of walks:" \
+         // << number_of_walkers(heap.sum) << endl;
     }
     double mc_estimate = MC_random_walk(number_of_walkers(heap.sum)).first;
     auto mc_end = std::chrono::high_resolution_clock::now();
@@ -416,20 +416,40 @@ int BackPush::sample_N_random_walks_with_hubs(vector<NodePair> & nps, vector<int
 int BackPush::sample_N_random_walks_with_fg(vector<NodePair> &nps, vector<int> &lengths) {
     int N = nps.size(), NN = max(0, N - fg_idx->N);
     int meeting_count = 0;
-    for (int i = 0; i < NN; ++i) {
-        int length_of_random_walk = lengths[i];
-        NodePair sampled_np = nps[i];
-        int sample_result = this->sample_one_pair(sampled_np, length_of_random_walk);
-        meeting_count += sample_result;
+    // for (int i = 0; i < NN; ++i) {
+    //    int length_of_random_walk = lengths[i];
+    //    NodePair sampled_np = nps[i];
+    //    int sample_result = this->sample_one_pair(sampled_np, length_of_random_walk);
+    //    meeting_count += sample_result;
         // cout << "meeting count " << i << ": " << meeting_count << endl;
-    }
-    cout << "meeting count before tree: " << meeting_count << endl;
-    for (int i = NN; i < N; ++i) {
-        NodePair sampled_np = nps[i];
-        meeting_count += this->sample_one_pair_with_fg(sampled_np, i - NN);
+    // }
+    // cout << "meeting count before tree: " << meeting_count << endl;
+    // for (int i = NN; i < N; ++i) {
+    //    NodePair sampled_np = nps[i];
+    //    meeting_count += this->sample_one_pair_with_fg(sampled_np, i - NN);
         // cout << "meeting count " << i << ": " << meeting_count << endl;
+    //}
+    // cout << "meeting count after tree: " << meeting_count << endl;
+    
+    for (int i = 0; i < fg_idx->N; ++i) {
+        NodePair sampled_np = nps[i];
+        // int r = this->sample_one_pair_with_fg(sampled_np, i);
+        int r;
+        // if (r == -1) {
+            // r = this->sample_one_pair(sampled_np, lengths[i]);
+            int x = sampled_np.first, y = sampled_np.second;
+            // random 0/1
+            if ((int)round(random_01())) swap(x, y);
+            r = this->sample_one_pair_with_rwfg(x, y, i);
+        // }
+        meeting_count += r;
     }
-    cout << "meeting count after tree: " << meeting_count << endl;
+    //cout << "meeting count after tree: " << meeting_count << endl;
+    for (int i = fg_idx->N; i < N; ++i) {
+        NodePair sampled_np = nps[i];
+        meeting_count += this->sample_one_pair(sampled_np, lengths[i]);
+    }
+    //cout << "meeting count after random walk: " << meeting_count << endl;
     return meeting_count;
 }
 
@@ -492,6 +512,19 @@ int BackPush::sample_one_pair_with_hubs(NodePair sampled_np, int length_of_rando
 
 int BackPush::sample_one_pair_with_fg(NodePair sampled_np, int tree_id) {
     return fg_idx->query(sampled_np, tree_id);
+}
+
+int BackPush::sample_one_pair_with_rwfg(int x, int y, int tree_id) {
+    int step = 0, res = 0;
+    int len = fg_idx->len[tree_id];
+    while (step < len && x != y) {
+        x = sample_in_neighbor(x, *g, rand_gen);
+        y = fg_idx->f[tree_id][y];
+        ++step;
+        if (x == -1 || y < 0) break;
+        if (x == y) {res = 1; break;}
+    }
+    return res;
 }
 
 int BackPush::sample_one_pair(NodePair np,  int length_of_random_walk) {
