@@ -435,7 +435,7 @@ void test_blpmc_fgi(string data_name, int h=1000000, int l=1000, int nt = 3443, 
             if (abs_error > 0) ++nonzero;
             if (abs_error > epsilon) {
             	exceederr++;
-            	cout << q << " " << abs_error << " " << g.in_deg_arr[q.first] << " " << g.in_deg_arr[q.second] << endl;
+            	// cout << q << " " << abs_error << " " << g.in_deg_arr[q.first] << " " << g.in_deg_arr[q.second] << endl;
             }
         }
     }
@@ -506,7 +506,7 @@ void test_blpmc_sp(string data_name, int h=1000000, int l=50, int nt = 3443, int
     cout << format("> Total cost: %s, Maximum error: %s") % elapsed.count() % max_error << endl;
     cout << "> Exceed epsilon: " << exceederr << ", Nonzero " << nonzero << endl;
     display_seperate_line();
-
+/*
     int nbh = h;
     // for(int nbh = 1000000; nbh < 10000000; nbh = nbh + 1000000){ // varying number of hubs
     display_seperate_line();
@@ -546,7 +546,7 @@ void test_blpmc_sp(string data_name, int h=1000000, int l=50, int nt = 3443, int
         bprw2.rw_hubs->number_of_contains_queries % (bprw2.rw_hubs->number_of_1s/double(nbh)) << endl;
     cout << ">> Exceed epsilon: " << exceederr << ", Nonzero " << nonzero << endl;
     display_seperate_line();
-
+*/
     display_seperate_line();
     config.is_use_linear_regression_cost_estimation = true;
     config.is_use_hub_idx = false;
@@ -557,23 +557,23 @@ void test_blpmc_sp(string data_name, int h=1000000, int l=50, int nt = 3443, int
     max_error = 0, exceederr = 0, nonzero = 0;
 
     start = std::chrono::high_resolution_clock::now();
-    i = 0 ; 
+    i = 0 ;
     for(int iter = 0; iter < q; ++iter){
         // cout << format("working on %s") % q << endl;
         // cout << format("querying %s-th node pair") % i << endl;{2308,2129}
-        display_seperate_line();
+        // display_seperate_line();
         double result = bprw3.query_one2one({x,y});
         i ++;
         if(n < max_small_graph_size){
             double truth = ts->sim(x,y);
             double abs_error = abs(truth - result);
-            cout << format("pair:%s, sim: %s, truth: %s, error:%s") % q % result % truth % abs_error << endl;
+            // cout << format("pair:%s, sim: %s, truth: %s, error:%s") % q % result % truth % abs_error << endl;
             // cout << format("(%s,%s), truth: %s, result: %s, error: %s")
             //                % i % j % truth->sim(i,j) % r % abs(r - truth->sim(i, j))
             //                << endl;
-            double mc_result = compute_sim_using_pure_MC(g,x,y,c,9537) ;
-            double mc_error = abs(truth - mc_result) ;
-            cout << format("pure MC sampling result: %s, error: %s") % mc_result % mc_error << endl;
+            // double mc_result = compute_sim_using_pure_MC(g,x,y,c,9537) ;
+            // double mc_error = abs(truth - mc_result) ;
+            // cout << format("pure MC sampling result: %s, error: %s") % mc_result % mc_error << endl;
             if(abs_error > max_error){
                 max_error = abs_error;
             }
@@ -846,7 +846,7 @@ void test_new_graph(string data_name){
     }
 }
 
-void test_toy(string data_name) {
+void test_toy(string data_name, int q=1) {
     // some example data
     // string path = TOY_GRAPH;
     string path = TOY_P + data_name;
@@ -867,6 +867,40 @@ void test_toy(string data_name) {
     // 	}
     // }
 
+    BLPMC_Config config1;
+    config1.is_use_linear_regression_cost_estimation = true;
+    config1.is_use_hub_idx = false;
+    config1.is_use_fg_idx = false;
+    BackPush bprw1("cloud_walker", g, c, epsilon, delta, config1);
+    // size_t n = g.n;
+    double maxerr1 = 0;
+    int exceederr1 = 0;
+
+    for (int iter = 0; iter < q; ++iter)
+    for (int i = 0; i < g.n; ++i){
+        for (int j = 0; j < g.n; ++j) {
+                    NodePair q{i, j};
+            // display_seperate_line();
+                    double r = bprw1.query_one2one(q);
+                    // cout << format("query_one2one(%s, %s) = %s") % i % j % r << endl;
+                    if (abs(r - truth->sim(i, j)) > maxerr1) {
+                        maxerr1 = abs(r - truth->sim(i, j));
+                    }
+            // cout << format("(%s,%s), truth: %s, result: %s, error: %s") % i % j % truth->sim(i,j) % r % abs(r - truth->sim(i, j)) << endl;
+            // double mc_result = compute_sim_using_pure_MC(g,i,j,c,9537) ;
+            // double mc_error = abs(truth->sim(i,j) - mc_result) ;
+            // cout << format("pure MC sampling result: %s, error: %s") % mc_result % mc_error << endl;
+                    if (abs(r - truth->sim(i, j)) > epsilon) {
+                        ++exceederr1;
+                    }
+            // if (mc_error > epsilon) ++exceederr1;
+            // if (mc_error > maxerr1) maxerr1 = mc_error;
+        }
+    }
+    cout << maxerr1 << " " << exceederr1 << endl;
+
+    display_seperate_line();
+
     BLPMC_Config config;
     config.is_use_linear_regression_cost_estimation = true;
     config.is_use_hub_idx = false;
@@ -877,30 +911,30 @@ void test_toy(string data_name) {
     double maxerr = 0;
     int exceederr=0;
 
-    for (int ii = 0; ii < 2000; ++ii)
+    for (int iter = 0; iter < q; ++iter)
     for (int i = 0; i < g.n; ++i){
     	for (int j = 0; j < g.n; ++j) {
-		    NodePair q{i, j};
-            //display_seperate_line();
+		    // if (i != 0 || j != 2) continue;
+            NodePair q{i, j};
+            // display_seperate_line();
 		    double r = bprw.query_one2one(q);
 		    // cout << format("query_one2one(%s, %s) = %s") % i % j % r << endl;
 		    if (abs(r - truth->sim(i, j)) > maxerr) {
 		    	maxerr = abs(r - truth->sim(i, j));
 		    }
-            // cout << format("(%s,%s), truth: %s, result: %s, error: %s")
-            // % i % j % truth->sim(i,j) % r % abs(r - truth->sim(i, j))
-            // << endl;
-            double mc_result = compute_sim_using_pure_MC(g,i,j,c,9537) ;
-            double mc_error = abs(truth->sim(i,j) - mc_result) ;
+            // cout << format("(%s,%s), truth: %s, result: %s, error: %s") % i % j % truth->sim(i,j) % r % abs(r - truth->sim(i, j)) << endl;
+            // double mc_result = compute_sim_using_pure_MC(g,i,j,c,9537) ;
+            // double mc_error = abs(truth->sim(i,j) - mc_result) ;
             // cout << format("pure MC sampling result: %s, error: %s") % mc_result % mc_error << endl;
 		    if (abs(r - truth->sim(i, j)) > epsilon) {
 		    	++exceederr;
+            cout << format("(%s,%s), truth: %s, result: %s, error: %s") % i % j % truth->sim(i,j) % r % abs(r - truth->sim(i, j)) << endl;
 		    }
+            // if (mc_error > epsilon) ++exceederr1;
+            // if (mc_error > maxerr1) maxerr1 = mc_error;
     	}
     }
     cout << maxerr << " " << exceederr << endl;
-
-
     return;
 }
 
@@ -1009,7 +1043,7 @@ int main(int args, char*argv[]){
             // test_bflp_all_pair(d);
             // test_fgi();
             // test_blpmc_fgi("ca-GrQc");
-            test_toy(data_name);
+            test_toy(data_name, q);
         }
 
     }

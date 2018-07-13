@@ -23,7 +23,12 @@ typedef struct {
     }
 
     int F(int x) {
-        return x == p[x] ? x : (p[x] = F(p[x]));
+        // return x == p[x] ? x : (p[x] = F(p[x]));
+        while (p[x] != x) {
+            p[x] = p[p[x]];
+            x = p[x];
+        }
+        return x;
     }
 
     void U(int x, int y) {
@@ -72,7 +77,9 @@ struct FG_Index {
     }
 
     void build_index();
-    int query(const NodePair& np, int i); // query whether walks of np meet in tree i
+    int WCC(const NodePair& np, int i);
+    int query(int x, int y, int i);
+    int LCA(int x, int y, int i);
 };
 
 

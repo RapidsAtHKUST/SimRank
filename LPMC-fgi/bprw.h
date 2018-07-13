@@ -6,6 +6,7 @@
 #include "stat.h"
 #include "rw_hub.h"
 #include "fgi.h"
+#include <set>
 #include <util/sfmt_based_rand.h>
 #include <util/sparse_matrix_utils.h>
 #include <util/search_yche.h>
@@ -209,8 +210,7 @@ struct BackPush { // Backward Push and MC sampling method for SimRank estimation
     // related for hub index
     Rw_Hubs * rw_hubs = NULL; // the pointer to the hub index
     int sample_one_pair_with_hubs(NodePair np, int length_of_random_walk); // sample one pair of random walk
-    int sample_one_pair_with_fg(NodePair np, int tree_id);
-    int sample_one_pair_with_rwfg(int x, int y, int tree_id);
+    int sample_one_pair_with_fg(int x, int y, int tree_id);
     bool is_use_hub(){ // the criterior to use hub indices, only config is set is not enough, hub index must bt no Null
         if(is_training){ // do not hub while training the cost model 
             return false;

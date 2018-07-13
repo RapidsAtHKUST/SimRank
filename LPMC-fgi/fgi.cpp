@@ -13,8 +13,10 @@ void FG_Index::build_index() {
         int selfloop = -1;
         for (int j = 0; j < gn; ++j) {
             f[i][j] = sample_in_neighbor(j, (*g_ptr), rand_gen);
-            uf[i].U(j, f[i][j]);
-            if (f[i][j] < 0) {
+            // leaf[i][f[i][j]] = 0;
+            if (f[i][j] >= 0) {
+                uf[i].U(j, f[i][j]);
+            } else {
                 f[i][j] = selfloop;
                 selfloop -= len[i]; // avoid conflict between WCCs
             }
@@ -24,6 +26,7 @@ void FG_Index::build_index() {
         // fill in the t_pos vector
         // TODO: start from leaf node
         for (int j = 0; j < gn; ++j) {
+            // if (leaf[i][j] == 0) continue; // what about nodes on cycle?
             if (t_pos[i][j] != gn) continue;
             int p0 = j, p1 = j;
             // len-step ancestor
@@ -48,20 +51,41 @@ void FG_Index::build_index() {
     // }
 }
 
-int FG_Index::query(const NodePair& np, int i) {
+int FG_Index::WCC(const NodePair& np, int i) {
     // cout << t_pos[i][np.first] << " " << t_pos[i][np.second] << " ";
-    if (uf[i].F(np.first) != uf[i].F(np.second)) {
+    int x = uf[i].F(np.first);
+    int y = uf[i].F(np.second);
+    if (x != y) {
         ++fgi_hit;
         return 0;
     }
-    ++fgi_miss;
-    return -1;
-    /*
-    if (t_pos[i][np.first] == t_pos[i][np.second]) {
-        ++fgi_hit;
+    // ++fgi_miss;
+    return 1;
+}
+
+int FG_Index::query(int x, int y, int i) {
+    if (t_pos[i][x] == t_pos[i][y]) {
         return 1;
     }
-    ++fgi_miss;
-    return -1;
-    */
+    return 0;
 }
+
+int FG_Index::LCA(int x, int y, int i) {
+    // if (query(x, y, i)) return -1;
+    if (t_pos[i][x] == t_pos[i][y]) {++fgi_hit; return -1;}
+    ++fgi_miss;
+    for (int p = 0; p < len[i] && y >= 0; ++p) {
+        int xx = x;
+        for (int q = 0; q < len[i] && xx >= 0; ++q) {
+            if (xx == y) {
+                return xx;
+            }
+            xx = f[i][xx];
+        };
+        y = f[i][y];
+    }
+    // TODO: skip first/last/non overlap paths
+    return gn; 
+}
+
+

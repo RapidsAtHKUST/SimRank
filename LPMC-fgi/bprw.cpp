@@ -341,27 +341,26 @@ pair <double, double> BackPush::MC_random_walk(int N) { // perform random walks 
 
     vector<NodePair> starting_positions(N); // the starting positions 
     vector<int> length_of_rws(N); //and length of samples
-    // for (int i = 0; i < N; ++i) {
-    //     int index = BinarySearchForGallopingSearchAVX2(&cdf.front(), 0, static_cast<uint32_t>(cdf.size()),
-    //                                                 static_cast<int>(rand_gen.double_rand() * YCHE_MAX_INT)); // index for node pairs
-    //     NodePair sampled_np = node_pairs[index];
-    //     starting_pairs.insert(sampled_np);
-    //     starting_positions[i] = sampled_np;
-    // }
-    // int NN = N;
-    // if (this->is_use_fg()) {
-    //     NN = max(0, N - fg_idx->N);
-    // }
-    // for(int i = 0; i< NN;i++){
-    //     // int length_of_random_walk = 1 + floor(log(double(rand_gen.double_rand())) / log(c));
-    //     int length_of_random_walk = 1;
-    //     while(rand_gen.double_rand()<c){
-    //         length_of_random_walk++;
-    //     }
-    //     length_of_rws[i] = length_of_random_walk;
-    // }
+    for (int i = 0; i < N; ++i) {
+        int index = BinarySearchForGallopingSearchAVX2(&cdf.front(), 0, static_cast<uint32_t>(cdf.size()),
+                                                    static_cast<int>(rand_gen.double_rand() * YCHE_MAX_INT)); // index for node pairs
+        NodePair sampled_np = node_pairs[index];
+        starting_pairs.insert(sampled_np);
+        starting_positions[i] = sampled_np;
+    }
+    int NN = N;
+    if (this->is_use_fg()) {
+        NN = max(0, N - fg_idx->N);
+    }
+    for(int i = 0; i< NN;i++){
+        int length_of_random_walk = 1;
+        while(rand_gen.double_rand()<c){
+            length_of_random_walk++;
+        }
+        length_of_rws[i] = length_of_random_walk;
+    }
     
-    for(int i = 0; i< N;i++){
+    /*for(int i = 0; i< N;i++){
         int index = BinarySearchForGallopingSearchAVX2(&cdf.front(), 0, static_cast<uint32_t>(cdf.size()),
                                                        static_cast<int>(rand_gen.double_rand() * YCHE_MAX_INT)); // index for node pairs
         NodePair sampled_np = node_pairs[index];
@@ -373,7 +372,7 @@ pair <double, double> BackPush::MC_random_walk(int N) { // perform random walks 
         starting_pairs.insert(sampled_np);
         starting_positions[i] = sampled_np;
         length_of_rws[i] = length_of_random_walk;
-    }
+    }*/
 
     // for(auto& item: starting_pairs){
     //     cout << format("random walk from node pair: %s") % item << endl;
@@ -414,42 +413,38 @@ int BackPush::sample_N_random_walks_with_hubs(vector<NodePair> & nps, vector<int
 } 
 
 int BackPush::sample_N_random_walks_with_fg(vector<NodePair> &nps, vector<int> &lengths) {
-    int N = nps.size(), NN = max(0, N - fg_idx->N);
+    int N = nps.size();
+    int NN = max(0, N - fg_idx->N);
     int meeting_count = 0;
     // for (int i = 0; i < NN; ++i) {
     //    int length_of_random_walk = lengths[i];
     //    NodePair sampled_np = nps[i];
     //    int sample_result = this->sample_one_pair(sampled_np, length_of_random_walk);
     //    meeting_count += sample_result;
-        // cout << "meeting count " << i << ": " << meeting_count << endl;
     // }
-    // cout << "meeting count before tree: " << meeting_count << endl;
     // for (int i = NN; i < N; ++i) {
     //    NodePair sampled_np = nps[i];
     //    meeting_count += this->sample_one_pair_with_fg(sampled_np, i - NN);
-        // cout << "meeting count " << i << ": " << meeting_count << endl;
     //}
-    // cout << "meeting count after tree: " << meeting_count << endl;
     
-    for (int i = 0; i < fg_idx->N; ++i) {
+    for (int i = 0; i < min(N, fg_idx->N); ++i) {
         NodePair sampled_np = nps[i];
-        // int r = this->sample_one_pair_with_fg(sampled_np, i);
-        int r;
-        // if (r == -1) {
+        int r = fg_idx->WCC(sampled_np, i);
+        // cout << i << " " << r << ",";
+        if (r) {
             // r = this->sample_one_pair(sampled_np, lengths[i]);
             int x = sampled_np.first, y = sampled_np.second;
-            // random 0/1
-            if ((int)round(random_01())) swap(x, y);
-            r = this->sample_one_pair_with_rwfg(x, y, i);
-        // }
+            // if ((int)round(random_01())) swap(x, y);
+            r = this->sample_one_pair_with_fg(x, y, i);
+        }
         meeting_count += r;
     }
-    //cout << "meeting count after tree: " << meeting_count << endl;
-    for (int i = fg_idx->N; i < N; ++i) {
+    // cout << "meeting count after tree: " << meeting_count << endl;
+    for (int i = fg_idx->N, j = 0; i < N; ++i, ++j) {
         NodePair sampled_np = nps[i];
-        meeting_count += this->sample_one_pair(sampled_np, lengths[i]);
+        meeting_count += this->sample_one_pair(sampled_np, lengths[j]);
     }
-    //cout << "meeting count after random walk: " << meeting_count << endl;
+    // cout << "meeting count after random walk: " << meeting_count << endl;
     return meeting_count;
 }
 
@@ -510,21 +505,44 @@ int BackPush::sample_one_pair_with_hubs(NodePair sampled_np, int length_of_rando
         return indicator;
 } 
 
-int BackPush::sample_one_pair_with_fg(NodePair sampled_np, int tree_id) {
-    return fg_idx->query(sampled_np, tree_id);
-}
-
-int BackPush::sample_one_pair_with_rwfg(int x, int y, int tree_id) {
-    int step = 0, res = 0;
+int BackPush::sample_one_pair_with_fg(int x, int y, int tree_id) {
+    int step = 0;
     int len = fg_idx->len[tree_id];
+    int lca = fg_idx->LCA(x, y, tree_id);
+    if (lca == -1) return 1;
+    else if (lca == g->n) return 0;
+    int rx = 0, ry = (y == lca) ? 1: 0;
+    set<int> sx, sy;
+    sx.clear(); sy.clear();
+    // x: walk on tree, y: walk on tree until LCA
     while (step < len && x != y) {
-        x = sample_in_neighbor(x, *g, rand_gen);
-        y = fg_idx->f[tree_id][y];
+        if (rx) {
+            x = sample_in_neighbor(x, *g, rand_gen);
+        } else {
+            x = fg_idx->f[tree_id][x];
+            if (sx.find(x) == sx.end()) {
+                sx.insert(x);
+            } else {
+                rx = 1;
+            }
+        }
+        if (ry) {
+            y = sample_in_neighbor(y, *g, rand_gen);
+        } else {
+            y = fg_idx->f[tree_id][y];
+            if (y == lca) ry = 1;
+            if (sy.find(y) == sy.end()) {
+                sy.insert(y);
+            } else {
+                ry = 1;
+            }
+        }
+        if (x < 0 || y < 0) return 0;
+        if (x == y) return 1;
         ++step;
-        if (x == -1 || y < 0) break;
-        if (x == y) {res = 1; break;}
     }
-    return res;
+    // cout << "len:" << len << ", lca: " << lca << ", " << res << endl;
+    return 0;
 }
 
 int BackPush::sample_one_pair(NodePair np,  int length_of_random_walk) {
