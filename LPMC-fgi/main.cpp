@@ -450,7 +450,7 @@ void test_blpmc_fgi(string data_name, int h=1000000, int l=1000, int nt = 3443, 
     cout << "close the problem" << endl;
 }
 
-void test_topk(string data_name, int q=50000, int k=500, int debug=0) {
+void test_topk(string data_name, int h=1000000, int l=1000, int nt=3443, int q=50000, int k=500, int debug=0) {
     string path = get_new_graph_path(data_name);
     // string path = TOY_P + data_name;
     GraphYche g(path);
@@ -495,12 +495,19 @@ void test_topk(string data_name, int q=50000, int k=500, int debug=0) {
             }
         }
     }
-
+    auto start = std::chrono::high_resolution_clock::now();
+    auto end = std::chrono::high_resolution_clock::now();
+    std::chrono::duration<double> elapsed = end - start;
+    vector<QPair> topk;
+/*
+    // Naive Top-K
     display_seperate_line();
 
-    auto start = std::chrono::high_resolution_clock::now();
-    vector<QPair> topk;
-    topk = bprw.top_k_naive(queries, k);
+    start = std::chrono::high_resolution_clock::now();
+    topk = bprw.top_k_sort(queries, k);
+    end = std::chrono::high_resolution_clock::now();
+    elapsed = end - start;
+    
     for (int i = 0; i < k; ++i) {
         if (debug) cout << queries[topk[i].first] << " " << topk[i].second << endl;
         if (n < max_small_graph_size) {
@@ -514,17 +521,18 @@ void test_topk(string data_name, int q=50000, int k=500, int debug=0) {
             }
         }
     }
-    auto end = std::chrono::high_resolution_clock::now();
-    std::chrono::duration<double> elapsed = end - start;
     cout << format("Total cost: %s, Maximum error: %s") % elapsed.count() % max_error << endl;
     cout << "Exceed epsilon: " << exceederr << endl;
-    
+*/    
+    // Index-free Top-K
     display_seperate_line();
 
-    start = std::chrono::high_resolution_clock::now();
     max_error = 0;
     exceederr = 0;
+    start = std::chrono::high_resolution_clock::now();
     topk = bprw.top_k(queries, k);
+    end = std::chrono::high_resolution_clock::now();
+    elapsed = end - start;
     for (int i = 0; i < k; ++i) {
         if (debug) cout << queries[topk[i].first] << " " << topk[i].second << endl;
         if (n < max_small_graph_size) {
@@ -534,10 +542,62 @@ void test_topk(string data_name, int q=50000, int k=500, int debug=0) {
             if (abs_error > epsilon) exceederr++;
         }
     }
-    end = std::chrono::high_resolution_clock::now();
-    elapsed = end - start;
     cout << format("Total cost: %s, Maximum error: %s") % elapsed.count() % max_error << endl;
     cout << "Exceed epsilon: " << exceederr << endl;
+/*
+    // Hub Top-K
+    display_seperate_line();
+
+    config.is_use_linear_regression_cost_estimation = true;
+    config.is_use_hub_idx = true;
+    config.number_of_hubs = h;
+    config.number_of_samples_per_hub = l;
+    BackPush bprw2(data_name, g, c, epsilon, delta, config);
+    cout << bprw2.config << endl;
+    max_error = exceederr = 0;
+
+    start = std::chrono::high_resolution_clock::now();
+    topk = bprw2.top_k(queries, k);
+    end = std::chrono::high_resolution_clock::now();
+    elapsed = end - start;
+    for (int i = 0; i < k; ++i) {
+        if (debug) cout << queries[topk[i].first] << " " << topk[i].second << endl;
+        if (n < max_small_graph_size) {
+            double abs_error = abs(ts->sim(queries[topk[i].first].first, queries[topk[i].first].second) - ts_topk[i].second);
+            if (abs_error > max_error) max_error = abs_error;
+            if (abs_error > epsilon) exceederr++;
+        }
+    }
+    cout << format("Total cost: %s, Maximum error: %s, #hubs: %s, #rw/hub: %s") % elapsed.count() % max_error % bprw2.rw_hubs->N % config.number_of_samples_per_hub << endl;
+    cout << "Exceed epsilon: " << exceederr << endl;
+
+    // Tree Top-K
+    display_seperate_line();
+
+    config.is_use_linear_regression_cost_estimation = true;
+    config.is_use_hub_idx = false;
+    config.is_use_fg_idx = true;
+    config.number_of_trees = nt;
+    BackPush bprw3(data_name, g, c, epsilon, delta, config);
+    cout << bprw3.config << endl;
+    max_error = exceederr = 0;
+
+    start = std::chrono::high_resolution_clock::now();
+    topk = bprw3.top_k(queries, k);
+    end  = std::chrono::high_resolution_clock::now();
+    elapsed = end - start;
+    for (int i = 0; i < k; ++i) {
+        if (debug) cout << queries[topk[i].first] << " " << topk[i].second << endl;
+        if (n < max_small_graph_size) {
+            double abs_error = abs(ts->sim(queries[topk[i].first].first, queries[topk[i].first].second) - ts_topk[i].second);
+            if (abs_error > max_error) max_error = abs_error;
+            if (abs_error > epsilon) exceederr++;
+        }
+    }
+    cout << format("Total cost: %s, Maximum error: %s, #trees: %s") % elapsed.count() % max_error % config.number_of_trees << endl;
+    cout << "Exceed epsilon: " << exceederr << endl;
+*/
+    display_seperate_line();
 }
 
 void test_blpmc_sp(string data_name, int h=1000000, int l=50, int nt = 3443, int q = 50000, int x = 2308, int y = 2129){
@@ -1099,7 +1159,7 @@ int main(int args, char*argv[]){
             }else if (method == "sp") {
                 test_blpmc_sp(data_name, h, l, t, q, x, y);
             }else if (method == "topk") {
-                test_topk(data_name, q, k, b);
+                test_topk(data_name, h, l, t, q, k, b);
             }
         }else{
             // SFMTRand srand;

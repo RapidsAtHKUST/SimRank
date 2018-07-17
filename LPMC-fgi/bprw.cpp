@@ -457,13 +457,15 @@ int BackPush::sample_N_random_walks(vector<NodePair> & nps, vector<int> & length
     int meeting_count = 0;
     // aggreated query the hubs  
     // the auxiliary hash table for recording hub visits
-    sparse_hash_map<NodePair, int> Q;
+    // sparse_hash_map<NodePair, int> Q;
     for(int i = 0; i< N;i++){
         // auto start_time = std::chrono::high_resolution_clock::now();
 
         int length_of_random_walk = lengths[i];
         NodePair sampled_np = nps[i];
+        // cout << sampled_np << " " << length_of_random_walk << endl;
         int sample_result = this->sample_one_pair(sampled_np,length_of_random_walk);
+        // cout << "> " << sample_result << endl;
         meeting_count += sample_result;
 
         // auto end_time = std::chrono::high_resolution_clock::now();
@@ -477,7 +479,7 @@ int BackPush::sample_one_pair_with_hubs(NodePair sampled_np, int length_of_rando
     // sample one pair of random walk sample one pair with hubs
         int a = sampled_np.first;
         int b = sampled_np.second;
-        double indicator = 0;
+        int indicator = 0;
         int step = 0; // 
         // bool is_long_path = length_of_random_walk >  (1.0 / (1.0-c)); // long path is those longer than expected 
 
@@ -554,8 +556,8 @@ int BackPush::sample_one_pair(NodePair np,  int length_of_random_walk) {
     // if Q is not null, then update it for final hub aggregation
     int a = np.first;
     int b = np.second;
-    double prob;
-    double indicator = 0;
+    // double prob;
+    int indicator = 0;
     int step = 0; // 
     while( step < length_of_random_walk && a != b){ // walk when > c or the first step
         a = sample_in_neighbor(a, *g, rand_gen);
@@ -745,49 +747,20 @@ void BackPush::mc_extract_feature(MCFeature & item, vector<double> &f){
     }
 }
 
-pair<int, int> BackPush::sample_N_random_walks_topk(vector<NodePair> &nps, vector<int> &lengths) {
-    int N = nps.size();
-    int sum = 0, sum2 = 0;
-    sparse_hash_map<NodePair, int> Q;
-    for (int i = 0; i < N; ++i) {
-        int length_of_random_walk = lengths[i];
-        NodePair sampled_np = nps[i];
-        int sample_result = this->sample_one_pair(sampled_np, length_of_random_walk);
-        sum += sample_result;
-        sum2 += sample_result * sample_result;
-    }
-    return {sum, sum2};
-}
-
-pair<int, int> BackPush::sample_N_random_walks_with_hubs_topk(vector<NodePair> &nps, vector<int> &lengths) {
-    int N = nps.size();
-    int sum = 0, sum2 = 0;
-    for (int i = 0; i < N; ++i) {
-        int length_of_random_walk = lengths[i];
-        NodePair sampled_np = nps[i];
-        int sample_result = this->sample_one_pair_with_hubs(sampled_np, length_of_random_walk);
-        sum += sample_result;
-        sum2 += sample_result * sample_result;
-    }
-    returm {sum, sum2};
-}
-
-pair<int, int> BackPush::sample_N_random_walks_with_fg_topk(vector<NodePair> &nps, vector<int> &lengths) {
-    int sum = 0, sum2 = 0;
-    return {sum, sum2};
-}
-
 void BackPush::rw_init(unique_max_heap &bheap, vector<NodePair> &node_pairs, vector<int> &cdf) {
     if (bheap.empty()) {
         return;
     }
-
+    // cout << bheap.heap.size() << endl;
     auto begin = bheap.heap.begin();
     auto end = bheap.heap.end();
-    vector<double> weights;
+    vector<double> weights(bheap.size());
+    node_pairs.reserve(bheap.size());
+    int idx = 0;
     for (auto it = begin; it != end; ++it) {
-        weights.push_back((*it).residual / bheap.sum);
-        node_pairs.push_back((*it).np);
+        weights[idx] = (*it).residual / bheap.sum;
+        node_pairs[idx] = (*it).np;
+        ++idx;
     }
     // cout << "weight size:" << weights.size() << endl;
     
@@ -803,32 +776,72 @@ void BackPush::rw_init(unique_max_heap &bheap, vector<NodePair> &node_pairs, vec
     cdf.back() = YCHE_MAX_INT;
 }
 
-pair<int, int> BackPush::MC_random_walk_topk(int N, unique_max_heap &bheap, vector<NodePair> &node_pairs, vector<int> &cdf) {
-    if (bheap.empty() || N == 0) {
-        return {0, 0};
-    }
+int BackPush::MC_random_walk_topk(int N, vector<NodePair> &node_pairs, vector<int> &cdf, int nt) {
+    // if (bheap.empty() || N == 0) {
+    //     return 0;
+    // }
     constexpr int YCHE_MAX_INT = 1 << 30;
     vector<NodePair> starting_positions(N);
-    vector<int> length_of_rws(N);
     for (int i = 0; i < N; ++i) {
-        int index  = BinarySearchForGallopingSearchAVX2(&cdf.front(), 0, static_cast<uint32_t>(cdf.size()), static_cast<int>(rand_gen.double_rand() * YCHE_MAX_INT));
+        int index = BinarySearchForGallopingSearchAVX2(&cdf.front(), 0, static_cast<uint32_t>(cdf.size()), static_cast<int>(rand_gen.double_rand() * YCHE_MAX_INT));
         starting_positions[i] = node_pairs[index];
+        // cout << starting_positions[i] << endl;
     }
-    for (int i = 0; i < N; ++i) {
+    int NN = N;
+    if (this->is_use_fg()) {
+        NN = max(0, N - nt);
+    }
+    // cout << NN << endl;
+    vector<int> length_of_rws(NN);
+    for (int i = 0; i < NN; ++i) {
         int length_of_random_walk = 1;
         while (rand_gen.double_rand() < c) {
             length_of_random_walk++;
         }
         length_of_rws[i] = length_of_random_walk;
     }
-    if (this->is_use_hub())
-        return this->sample_N_random_walks_with_hubs_topk(starting_positions, length_of_rws);
-    if (this->is_use_fg())
-        return this->sample_N_random_walks_with_fg_topk(starting_positions, length_of_rws);
-    return this->sample_N_random_walks_topk(starting_positions, length_of_rws);
+    if (this->is_use_hub()) {
+        return this->sample_N_random_walks_with_hubs(starting_positions, length_of_rws);
+    }
+    if (this->is_use_fg()) {
+        return this->sample_N_random_walks_with_fg_topk(starting_positions, length_of_rws, nt);
+    }
+    // cout << starting_positions.size() << " " << length_of_rws.size() << endl;
+    return this->sample_N_random_walks(starting_positions, length_of_rws);
 }
 
-vector<QPair> BackPush::top_k_naive(vector<NodePair> &Q, int k) {
+int BackPush::sample_N_random_walks_with_fg_topk(vector<NodePair> &nps, vector<int> &lengths, int nt) {
+    int N = nps.size();
+    int NN = max(0, N - nt);
+    int sum = 0;
+    for (int i = 0; i < min(N, nt); ++i) {
+        NodePair sampled_np = nps[i];
+        int r = fg_idx->WCC(sampled_np, nt - i - 1);
+        if (r) {
+            r = this->sample_one_pair_with_fg(sampled_np.first, sampled_np.second, nt - i - 1);
+        }
+        sum += r;
+    }
+    for (int i = nt, j = 0; i < N; ++i, ++j) {
+        NodePair sampled_np = nps[i];
+        sum += this->sample_one_pair(sampled_np, lengths[j]);
+    }
+    return sum;
+}
+
+vector<QPair> BackPush::top_k_sort(vector<NodePair> &Q, int k) {
+    auto cmp = [](QPair x, QPair y){return x.second > y.second;};
+    vector<QPair> topk;
+    for (int i = 0; i < Q.size(); ++i) {
+        double r = query_one2one(Q[i]);
+        topk.push_back({i, r});
+    }
+    sort(topk.begin(), topk.end(), cmp);
+    topk.resize(k);
+    return topk;
+}
+
+vector<QPair> BackPush::top_k_heap(vector<NodePair> &Q, int k) {
     auto cmp = [](QPair x, QPair y){return x.second > y.second;};
     // min-heap with fixed size k
     priority_queue<QPair, vector<QPair>, decltype(cmp)> kheap(cmp);
@@ -853,8 +866,8 @@ vector<QPair> BackPush::top_k_naive(vector<NodePair> &Q, int k) {
 vector<QPair> BackPush::top_k(vector<NodePair> &Q, int k) {
     int q = Q.size();
     set<int> T, C, D;
-    vector<int> N(q), n(q, 0), sum(q, 0), sum2(q, 0);
-    vector<double> lb(q), ub(q), x(q), zg(q);
+    vector<int> N(q), n(q, 0), sum(q, 0), nt(q);
+    vector<double> lb(q), ub(q), x(q), zg(q), ch(q);
     vector<unique_max_heap*> bheap(q);
     vector<QPair> topk;
     
@@ -901,38 +914,47 @@ vector<QPair> BackPush::top_k(vector<NodePair> &Q, int k) {
         ub[i] = c;
         if (n[i] < N[i]) {
             D.insert(i);
+            if (this->is_use_fg()) nt[i] = fg_idx->N;
         }
     }
-    cout << T.size() << " " << C.size() << " " << D.size() << endl;
     
     for (int i: D) {
         rw_init(*bheap[i], node_pairs[i], cdf[i]);
+        ch[i] = c * bheap[i]->sum;
     }
-
+    // cout << T.size() << " " << C.size() << " " << D.size() << endl;
+    double l2f = log(2 / fail_prob), l3f = log(3 / fail_prob);
+    
     while (D.size() > 0) {
         // cout << "> new iteration" << endl;
         for (int i: D) {
             int l = min(max(1, n[i]), N[i] - n[i]);
             // cout << l << " " << n[i] << " " << N[i] << endl;
             n[i] = n[i] + l;
+            
             // walk l times
-            // pair<int, int> rw = {0,0};
-            pair<int, int> rw = MC_random_walk_topk(l, *bheap[i], node_pairs[i], cdf[i]);
-            sum[i] += rw.first;
-            sum2[i] += rw.second;
-            // cout << "sum: " << sum[i] << " " << sum2[i] << endl;
-            x[i] = zg[i] + c * bheap[i]->sum * sum[i] / n[i];
-            double var = sum2[i] / n[i] - sum[i] * sum[i] / n[i] / n[i];
+            if (l > 0 && !bheap[i]->empty()) {
+                sum[i] += MC_random_walk_topk(l, node_pairs[i], cdf[i], nt[i]);
+            }
+            // cout << "sum: " << sum[i] << endl;
+            
+            nt[i] = max(0, nt[i] - l);
+            x[i] = zg[i] + ch[i] * sum[i] / n[i];
+            
+            double var = sum[i] / n[i] - sum[i] * sum[i] / n[i] / n[i];
             // cout << "var: " << var << endl;
-            double alpha = c * bheap[i]->sum * sqrt(log(2 / fail_prob) / n[i] / 2);
+            
+            double alpha = ch[i] * sqrt(l2f / n[i] / 2);
             // cout << "alpha: " << alpha << endl;
-            double beta = c * bheap[i]->sum *
-                          (sqrt(2 * var * log(3 / fail_prob) / n[i]) + 
-                          3 * log(3 / fail_prob) / n[i]);
+            
+            double beta = ch[i] * (sqrt(2 * var * l3f / n[i]) + 3 * l3f / n[i]);
             // cout << "beta: " << beta << endl;
+            // if (alpha >= beta) cout << "alpha " << alpha << " beta " << beta << endl;
+            
             lb[i] = max(0.0, max(zg[i], x[i] - min(alpha, beta))); //
             ub[i] = min(c, x[i] + min(alpha, beta)); //
             // cout << Q[i] << " " << lb[i] << " " << ub[i] << endl;
+            
             if (n[i] == N[i]) {
                 D.erase(i);
             }

@@ -238,13 +238,14 @@ struct BackPush { // Backward Push and MC sampling method for SimRank estimation
     FG_Index *fg_idx = NULL;
     
     // the Top-K interface
-    vector<QPair> top_k_naive(vector<NodePair>& Q, int k); // use priority queue
+    vector<QPair> top_k_sort(vector<NodePair>& Q, int k);
+    vector<QPair> top_k_heap(vector<NodePair>& Q, int k); // use priority queue
     vector<QPair> top_k(vector<NodePair>& Q, int k); // return the top-k
 
-    pair<int, int> sample_N_random_walks_topk(vector<NodePair> &nps, vector<int> &lengths);
+    //pair<int, int> sample_N_random_walks_topk(vector<NodePair> &nps, vector<int> &lengths);
     void rw_init(unique_max_heap &bheap, vector<NodePair> &node_pairs, vector<int> &cdf);
-    pair<int, int> MC_random_walk_topk(int N, unique_max_heap &bheap, vector<NodePair> &node_pairs, vector<int> &cdf);
-
+    int MC_random_walk_topk(int N, vector<NodePair> &node_pairs, vector<int> &cdf, int nt);
+    int sample_N_random_walks_with_fg_topk(vector<NodePair> &nps, vector<int> &lengths, int nt);
 };
 
 
