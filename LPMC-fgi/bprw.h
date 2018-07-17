@@ -7,6 +7,10 @@
 #include "rw_hub.h"
 #include "fgi.h"
 #include <set>
+#include <queue>
+#include <algorithm>
+#include <functional>
+#include <exception>
 #include <util/sfmt_based_rand.h>
 #include <util/sparse_matrix_utils.h>
 #include <util/search_yche.h>
@@ -15,6 +19,7 @@
 using namespace boost::heap;
 
 typedef GraphYche DirectedG;
+typedef pair<int, double> QPair;
 
 struct heap_data {
     // the data the heap maintains
@@ -233,8 +238,12 @@ struct BackPush { // Backward Push and MC sampling method for SimRank estimation
     FG_Index *fg_idx = NULL;
     
     // the Top-K interface
-    void top_k(vector<NodePair>& Q); // return the top-k
+    vector<QPair> top_k_naive(vector<NodePair>& Q, int k); // use priority queue
+    vector<QPair> top_k(vector<NodePair>& Q, int k); // return the top-k
 
+    pair<int, int> sample_N_random_walks_topk(vector<NodePair> &nps, vector<int> &lengths);
+    void rw_init(unique_max_heap &bheap, vector<NodePair> &node_pairs, vector<int> &cdf);
+    pair<int, int> MC_random_walk_topk(int N, unique_max_heap &bheap, vector<NodePair> &node_pairs, vector<int> &cdf);
 
 };
 

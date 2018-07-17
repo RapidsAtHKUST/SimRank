@@ -71,7 +71,6 @@ int FG_Index::query(int x, int y, int i) {
 }
 
 int FG_Index::LCA(int x, int y, int i) {
-    // if (query(x, y, i)) return -1;
     if (t_pos[i][x] == t_pos[i][y]) {++fgi_hit; return -1;}
     ++fgi_miss;
     for (int p = 0; p < len[i] && y >= 0; ++p) {
@@ -84,7 +83,6 @@ int FG_Index::LCA(int x, int y, int i) {
         };
         y = f[i][y];
     }
-    // TODO: skip first/last/non overlap paths
     return gn; 
 }
 

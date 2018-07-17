@@ -86,13 +86,13 @@ size_t BackPush::number_of_walkers(double sum) {
     return ceil(r);
 }
 
-double BackPush::keep_push_cost(unique_max_heap &heap) {
-    const heap_data &top_element = heap.top();
+double BackPush::keep_push_cost(unique_max_heap &hp) {
+    const heap_data &top_element = hp.top();
     size_t d;
     d = (*g).in_degree(top_element.np.first) * (*g).in_degree(top_element.np.second);
     if(config.is_use_linear_regression_cost_estimation){
-        PushFeature lpf(d,heap.size());
-        MCFeature mcf(heap.sum - top_element.residual, heap.size()+d);
+        PushFeature lpf(d,hp.size());
+        MCFeature mcf(hp.sum - top_element.residual, hp.size()+d);
 
         vector<double> extracted_lp_feature; 
         lp_extract_feature(lpf, extracted_lp_feature);
@@ -101,25 +101,25 @@ double BackPush::keep_push_cost(unique_max_heap &heap) {
         mc_extract_feature(mcf,extracted_mc_feature);
         return lp_linearmodel->predict(extracted_lp_feature) + mc_linearmodel->predict(extracted_mc_feature);
     }else{
-        return push_cost * log(heap.size()) * d + heap.size()  +  mc_cost * number_of_walkers(heap.sum - (1 - c) * top_element.residual) * ( 1+ 1 / (1 - c));
+        return push_cost * log(hp.size()) * d + hp.size()  +  mc_cost * number_of_walkers(hp.sum - (1 - c) * top_element.residual) * ( 1+ 1 / (1 - c));
     }
 }
 
-double BackPush::change_to_MC_cost(unique_max_heap &heap) {
+double BackPush::change_to_MC_cost(unique_max_heap &hp) {
     if(config.is_use_linear_regression_cost_estimation){
-        MCFeature mcf(heap.sum , heap.size());
+        MCFeature mcf(hp.sum , hp.size());
         // cout << mcf << " ";
         vector<double> extracted_mc_feature; 
         mc_extract_feature(mcf, extracted_mc_feature);
         return mc_linearmodel->predict(extracted_mc_feature);
     }else{
-        return mc_cost * number_of_walkers(heap.sum) * ( 1.0 + 1.0 / (1-c));
+        return mc_cost * number_of_walkers(hp.sum) * ( 1.0 + 1.0 / (1-c));
     }
 }
 
 bool BackPush::is_keep_on_push(unique_max_heap &hp, int number_of_current_lp_operations) {
     // decide whether to do local push
-    const heap_data &top_element = heap.top();
+    const heap_data &top_element = hp.top();
     if(is_training){ // if is training, stop based on random local push numbers
         // cout << top_element << endl;
         auto a = top_element.np.first;
@@ -155,6 +155,7 @@ pair<double, double> BackPush::backward_push(NodePair np, unique_max_heap &conta
     // only in charge of local push
     // np: the starting pair
     // threshold: the threold for r_sum of local push, useless when using self-adaptive strategy
+    
     double p = 0;
     container.clear();
     container.push(np, 1);
@@ -165,6 +166,7 @@ pair<double, double> BackPush::backward_push(NodePair np, unique_max_heap &conta
     auto start = std::chrono::high_resolution_clock::now();
     double cost = 0;
     std::chrono::duration<double> elapsed ;
+    // cout << "BackPush: " << np << endl;
     while (!container.empty() && ( is_keep_on_push(container, number_of_local_push_operations))) {
         // check whether to stop
         // cout << "----------" << endl;
@@ -224,7 +226,7 @@ pair<double, double> BackPush::backward_push(NodePair np, unique_max_heap &conta
             //     }
             // }
             auto batch_local_push_end = std::chrono::high_resolution_clock::now();
-            if(heap.size() >= 1 && is_training){ // only count for heap size larger than 1, and is building linear model 
+            if(container.size() >= 1 && is_training){ // only count for heap size larger than 1, and is building linear model 
                 elapsed = batch_local_push_end - batch_local_push_start;
                 PushFeature fp(indeg_a * indeg_b, container.size());
                 lp_data_X.push_back(fp); 
@@ -248,6 +250,7 @@ pair<double, double> BackPush::backward_push(NodePair np, unique_max_heap &conta
     // if(!is_training){
     //     cout << "total number of lp operations " << number_of_local_push_operations << endl;
     // }
+    // cout << p << " " << cost << endl;
     return {p, cost};
 }
 
@@ -742,9 +745,262 @@ void BackPush::mc_extract_feature(MCFeature & item, vector<double> &f){
     }
 }
 
+pair<int, int> BackPush::sample_N_random_walks_topk(vector<NodePair> &nps, vector<int> &lengths) {
+    int N = nps.size();
+    int sum = 0, sum2 = 0;
+    sparse_hash_map<NodePair, int> Q;
+    for (int i = 0; i < N; ++i) {
+        int length_of_random_walk = lengths[i];
+        NodePair sampled_np = nps[i];
+        int sample_result = this->sample_one_pair(sampled_np, length_of_random_walk);
+        sum += sample_result;
+        sum2 += sample_result * sample_result;
+    }
+    return {sum, sum2};
+}
 
+pair<int, int> BackPush::sample_N_random_walks_with_hubs_topk(vector<NodePair> &nps, vector<int> &lengths) {
+    int N = nps.size();
+    int sum = 0, sum2 = 0;
+    for (int i = 0; i < N; ++i) {
+        int length_of_random_walk = lengths[i];
+        NodePair sampled_np = nps[i];
+        int sample_result = this->sample_one_pair_with_hubs(sampled_np, length_of_random_walk);
+        sum += sample_result;
+        sum2 += sample_result * sample_result;
+    }
+    returm {sum, sum2};
+}
 
+pair<int, int> BackPush::sample_N_random_walks_with_fg_topk(vector<NodePair> &nps, vector<int> &lengths) {
+    int sum = 0, sum2 = 0;
+    return {sum, sum2};
+}
 
+void BackPush::rw_init(unique_max_heap &bheap, vector<NodePair> &node_pairs, vector<int> &cdf) {
+    if (bheap.empty()) {
+        return;
+    }
 
+    auto begin = bheap.heap.begin();
+    auto end = bheap.heap.end();
+    vector<double> weights;
+    for (auto it = begin; it != end; ++it) {
+        weights.push_back((*it).residual / bheap.sum);
+        node_pairs.push_back((*it).np);
+    }
+    // cout << "weight size:" << weights.size() << endl;
+    
+    constexpr int YCHE_MAX_INT = 1 << 30;
+    cdf.resize(weights.size());
+    auto prev = 0.0;
+    auto accumulation = prev;
+    for (auto i = 0; i < weights.size(); ++i) {
+        accumulation = prev + weights[i];
+        cdf[i] = static_cast<int>(accumulation * YCHE_MAX_INT);
+        prev = accumulation;
+    }
+    cdf.back() = YCHE_MAX_INT;
+}
 
+pair<int, int> BackPush::MC_random_walk_topk(int N, unique_max_heap &bheap, vector<NodePair> &node_pairs, vector<int> &cdf) {
+    if (bheap.empty() || N == 0) {
+        return {0, 0};
+    }
+    constexpr int YCHE_MAX_INT = 1 << 30;
+    vector<NodePair> starting_positions(N);
+    vector<int> length_of_rws(N);
+    for (int i = 0; i < N; ++i) {
+        int index  = BinarySearchForGallopingSearchAVX2(&cdf.front(), 0, static_cast<uint32_t>(cdf.size()), static_cast<int>(rand_gen.double_rand() * YCHE_MAX_INT));
+        starting_positions[i] = node_pairs[index];
+    }
+    for (int i = 0; i < N; ++i) {
+        int length_of_random_walk = 1;
+        while (rand_gen.double_rand() < c) {
+            length_of_random_walk++;
+        }
+        length_of_rws[i] = length_of_random_walk;
+    }
+    if (this->is_use_hub())
+        return this->sample_N_random_walks_with_hubs_topk(starting_positions, length_of_rws);
+    if (this->is_use_fg())
+        return this->sample_N_random_walks_with_fg_topk(starting_positions, length_of_rws);
+    return this->sample_N_random_walks_topk(starting_positions, length_of_rws);
+}
+
+vector<QPair> BackPush::top_k_naive(vector<NodePair> &Q, int k) {
+    auto cmp = [](QPair x, QPair y){return x.second > y.second;};
+    // min-heap with fixed size k
+    priority_queue<QPair, vector<QPair>, decltype(cmp)> kheap(cmp);
+    for (int i = 0; i < Q.size(); ++i) {
+        double r = query_one2one(Q[i]);
+        if (kheap.size() < k) {
+            kheap.push({i, r});
+        } else if (kheap.top().second < r) {
+            kheap.pop();
+            kheap.push({i, r});
+        }
+    }
+    vector<QPair> topk;
+    topk.reserve(k);
+    for (int i = k - 1; i >= 0; --i) {
+        topk[i] = kheap.top();
+        kheap.pop();
+    }
+    return topk;
+}
+
+vector<QPair> BackPush::top_k(vector<NodePair> &Q, int k) {
+    int q = Q.size();
+    set<int> T, C, D;
+    vector<int> N(q), n(q, 0), sum(q, 0), sum2(q, 0);
+    vector<double> lb(q), ub(q), x(q), zg(q);
+    vector<unique_max_heap*> bheap(q);
+    vector<QPair> topk;
+    
+    // random walk
+    // cout << "Malloc RW space" << endl;
+    vector<vector<NodePair>> node_pairs(q);
+    // node_pairs.reserve(q);
+
+    vector<vector<int>> cdf(q);
+    // cdf.reserve(q);
+
+    auto cmpl = [](QPair x, QPair y){return x.second > y.second;};
+    auto cmpu = [](QPair x, QPair y){return x.second < y.second;};
+
+    // cout << "Malloc BP space" << endl;
+    // N.reserve(q);
+    // lb.reserve(q);
+    // ub.resize(q);
+    // x.resize(q);
+    // zg.resize(q);
+    // bheap.resize(q);
+    topk.reserve(k);
+
+    // cout << "Initialization" << endl;
+    for (int i = 0; i < q; ++i) {
+        if (Q[i].first == Q[i].second) {
+            // cout << "push" << Q[i] << endl;
+            x[i] = 1;
+            T.insert(i);
+            topk.push_back({i, x[i]});
+        } else {
+            C.insert(i);
+        }
+        if (T.size() == k) {
+            return topk;
+        }
+    }
+    // cout << "BackPush" << endl;
+    for (int i: C) {
+        bheap[i] = new unique_max_heap(*g);
+        zg[i] = backward_push(Q[i], *bheap[i]).first;
+        N[i] = number_of_walkers(bheap[i]->sum);
+        lb[i] = x[i] = zg[i];
+        ub[i] = c;
+        if (n[i] < N[i]) {
+            D.insert(i);
+        }
+    }
+    cout << T.size() << " " << C.size() << " " << D.size() << endl;
+    
+    for (int i: D) {
+        rw_init(*bheap[i], node_pairs[i], cdf[i]);
+    }
+
+    while (D.size() > 0) {
+        // cout << "> new iteration" << endl;
+        for (int i: D) {
+            int l = min(max(1, n[i]), N[i] - n[i]);
+            // cout << l << " " << n[i] << " " << N[i] << endl;
+            n[i] = n[i] + l;
+            // walk l times
+            // pair<int, int> rw = {0,0};
+            pair<int, int> rw = MC_random_walk_topk(l, *bheap[i], node_pairs[i], cdf[i]);
+            sum[i] += rw.first;
+            sum2[i] += rw.second;
+            // cout << "sum: " << sum[i] << " " << sum2[i] << endl;
+            x[i] = zg[i] + c * bheap[i]->sum * sum[i] / n[i];
+            double var = sum2[i] / n[i] - sum[i] * sum[i] / n[i] / n[i];
+            // cout << "var: " << var << endl;
+            double alpha = c * bheap[i]->sum * sqrt(log(2 / fail_prob) / n[i] / 2);
+            // cout << "alpha: " << alpha << endl;
+            double beta = c * bheap[i]->sum *
+                          (sqrt(2 * var * log(3 / fail_prob) / n[i]) + 
+                          3 * log(3 / fail_prob) / n[i]);
+            // cout << "beta: " << beta << endl;
+            lb[i] = max(0.0, max(zg[i], x[i] - min(alpha, beta))); //
+            ub[i] = min(c, x[i] + min(alpha, beta)); //
+            // cout << Q[i] << " " << lb[i] << " " << ub[i] << endl;
+            if (n[i] == N[i]) {
+                D.erase(i);
+            }
+        }
+        // min-heap
+        priority_queue<QPair, vector<QPair>, decltype(cmpl)> pql(cmpl);
+        // max-heap
+        priority_queue<QPair, vector<QPair>, decltype(cmpu)> pqu(cmpu);
+        // TODO: k-largest / k-smallest
+        int lnum = k - T.size(), unum = C.size() + T.size() - k;
+        // cout << "lnum: " << lnum << ", unum: " << unum << endl;
+        for (int i: C) {
+            // cout << Q[i] << " " << x[i] << " " << lb[i] << " " << ub[i] << endl;
+            if (pql.size() < lnum) { 
+                pql.push({i, lb[i]});
+            } else if (pql.top().second < lb[i]) {
+                pql.pop();
+                pql.push({i, lb[i]});
+            }
+            if (pqu.size() < unum) {
+                pqu.push({i, ub[i]});
+            } else if (!pqu.empty() && pqu.top().second > ub[i]) {
+                pqu.pop();
+                pqu.push({i, ub[i]});
+            }
+        }
+        double pqltop = pql.top().second;
+        double pqutop = -1;
+        if (!pqu.empty()) pqutop = pqu.top().second;
+        // cout << pqltop << " " << pqutop << endl;
+        for (int i: C) {
+            if (ub[i] < pqltop) {
+                C.erase(i);
+                D.erase(i);
+            }
+        }
+        if (pqutop >= 0) {
+            for (int i: C) {
+                if (lb[i] > pqutop) {
+                    T.insert(i);
+                    // cout << "push" << Q[i] << " " << x[i] << " " << lb[i] << " " << ub[i] << endl;
+                    topk.push_back({i, x[i]});
+                    if (T.size() == k) {
+                        sort(topk.begin(), topk.end(), cmpl);
+                        return topk;
+                    }
+                    C.erase(i);
+                    D.erase(i);
+                }
+            }
+        }
+    }
+
+    // top k-|T| elements in C
+    priority_queue<QPair, vector<QPair>, decltype(cmpl)> pq(cmpl);
+    for (int i: C) {
+        if (pq.size() < k - T.size()) {
+            pq.push({i, x[i]});
+        } else if (pq.top().second < x[i]) {
+            pq.pop();
+            pq.push({i, x[i]});
+        }
+    }
+    while (!pq.empty()) {
+        topk.push_back(pq.top());
+        pq.pop();
+    }
+    sort(topk.begin(), topk.end(), cmpl);
+    return topk;
+}
 

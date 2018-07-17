@@ -450,6 +450,96 @@ void test_blpmc_fgi(string data_name, int h=1000000, int l=1000, int nt = 3443, 
     cout << "close the problem" << endl;
 }
 
+void test_topk(string data_name, int q=50000, int k=500, int debug=0) {
+    string path = get_new_graph_path(data_name);
+    // string path = TOY_P + data_name;
+    GraphYche g(path);
+    int max_small_graph_size = 10000;
+    
+    double c = 0.6;
+    double epsilon = 0.01;
+    double delta = 0.01;
+    BLPMC_Config config;
+    config.is_use_linear_regression_cost_estimation = true;
+    config.is_use_hub_idx = false;
+    config.is_use_fg_idx = false;
+    BackPush bprw(data_name, g, c, epsilon, delta, config);
+    size_t n = g.n;
+    double max_error = 0;
+    int exceederr = 0;
+
+    vector<NodePair> queries;
+    for (int i = 0; i < q; ++i) {
+        int a = random_int(0, n);
+        int b = random_int(0, n);
+        // while (debug && a == b) b = random_int(0, n);
+        queries.push_back(NodePair(a, b));
+    }
+
+    display_seperate_line();
+
+    TruthSim *ts;
+    vector<QPair> ts_topk;
+    if (n < max_small_graph_size) {
+        ts = new TruthSim(data_name, g, c, epsilon);
+        // ts->run(g);
+        for (int i = 0; i < q; ++i) {
+            ts_topk.push_back({i, ts->sim(queries[i].first, queries[i].second)});
+        }
+        sort(ts_topk.begin(), ts_topk.end(), [](QPair x, QPair y) {
+            return x.second > y.second;
+        });
+        if (debug) {
+            for (int i = 0; i < k; ++i) {
+                cout << queries[ts_topk[i].first] << " " << ts_topk[i].second << endl;    
+            }
+        }
+    }
+
+    display_seperate_line();
+
+    auto start = std::chrono::high_resolution_clock::now();
+    vector<QPair> topk;
+    topk = bprw.top_k_naive(queries, k);
+    for (int i = 0; i < k; ++i) {
+        if (debug) cout << queries[topk[i].first] << " " << topk[i].second << endl;
+        if (n < max_small_graph_size) {
+            // double abs_error = abs(topk[i].second - ts_topk[i].second);
+            double abs_error = abs(ts->sim(queries[topk[i].first].first, queries[topk[i].first].second) - ts_topk[i].second);
+            if (abs_error > max_error) {
+                max_error = abs_error;
+            }
+            if (abs_error > epsilon) {
+                exceederr++;
+            }
+        }
+    }
+    auto end = std::chrono::high_resolution_clock::now();
+    std::chrono::duration<double> elapsed = end - start;
+    cout << format("Total cost: %s, Maximum error: %s") % elapsed.count() % max_error << endl;
+    cout << "Exceed epsilon: " << exceederr << endl;
+    
+    display_seperate_line();
+
+    start = std::chrono::high_resolution_clock::now();
+    max_error = 0;
+    exceederr = 0;
+    topk = bprw.top_k(queries, k);
+    for (int i = 0; i < k; ++i) {
+        if (debug) cout << queries[topk[i].first] << " " << topk[i].second << endl;
+        if (n < max_small_graph_size) {
+            // double abs_error = abs(topk[i].second - ts_topk[i].second);
+            double abs_error = abs(ts->sim(queries[topk[i].first].first, queries[topk[i].first].second) - ts_topk[i].second);
+            if (abs_error > max_error) max_error = abs_error;
+            if (abs_error > epsilon) exceederr++;
+        }
+    }
+    end = std::chrono::high_resolution_clock::now();
+    elapsed = end - start;
+    cout << format("Total cost: %s, Maximum error: %s") % elapsed.count() % max_error << endl;
+    cout << "Exceed epsilon: " << exceederr << endl;
+}
+
 void test_blpmc_sp(string data_name, int h=1000000, int l=50, int nt = 3443, int q = 50000, int x = 2308, int y = 2129){
     string path = get_new_graph_path(data_name);
     GraphYche g(path);
@@ -970,7 +1060,7 @@ int main(int args, char*argv[]){
         int q = 50000; 
         string data_name;
         string method;
-        int x, y,h,l,t;
+        int x, y, h, l, t, k, b;
         desc.add_options()
             ("help,h", "Help Screen")
             ("DataName,d", value<string>(&data_name), "Graph Name")
@@ -983,7 +1073,9 @@ int main(int args, char*argv[]){
             ("n,n", value<int>(&h), "Number of hubs")
             ("l,l", value<int>(&l), "Number of random walks per hub")
             ("t,t", value<int>(&t), "Number of trees")
-            ("epsilon,e", value<double>(&epsilon), "Error bound");
+            ("epsilon,e", value<double>(&epsilon), "Error bound")
+            ("k,k", value<int>(&k), "Top K")
+            ("b,b", value<int>(&b), "debug");
 
         variables_map vm;
         store(parse_command_line(args, argv, desc), vm);
@@ -1006,6 +1098,8 @@ int main(int args, char*argv[]){
                 test_blpmc_fgi(data_name, h, l, t, q);
             }else if (method == "sp") {
                 test_blpmc_sp(data_name, h, l, t, q, x, y);
+            }else if (method == "topk") {
+                test_topk(data_name, q, k, b);
             }
         }else{
             // SFMTRand srand;
