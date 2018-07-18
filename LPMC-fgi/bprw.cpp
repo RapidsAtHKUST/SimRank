@@ -870,7 +870,8 @@ vector<QPair> BackPush::top_k(vector<NodePair> &Q, int k) {
     vector<double> lb(q), ub(q), x(q), zg(q), ch(q);
     vector<unique_max_heap*> bheap(q);
     vector<QPair> topk;
-    
+    double pqltop, pqutop;
+
     // random walk
     // cout << "Malloc RW space" << endl;
     vector<vector<NodePair>> node_pairs(q);
@@ -925,6 +926,8 @@ vector<QPair> BackPush::top_k(vector<NodePair> &Q, int k) {
     // cout << T.size() << " " << C.size() << " " << D.size() << endl;
     double l2f = log(2 / fail_prob), l3f = log(3 / fail_prob);
     
+    int lbub = 0, ublb = 0;
+
     while (D.size() > 0) {
         // cout << "> new iteration" << endl;
         for (int i: D) {
@@ -959,51 +962,75 @@ vector<QPair> BackPush::top_k(vector<NodePair> &Q, int k) {
                 D.erase(i);
             }
         }
-        // min-heap
-        priority_queue<QPair, vector<QPair>, decltype(cmpl)> pql(cmpl);
-        // max-heap
-        priority_queue<QPair, vector<QPair>, decltype(cmpu)> pqu(cmpu);
-        // TODO: k-largest / k-smallest
         int lnum = k - T.size(), unum = C.size() + T.size() - k;
-        // cout << "lnum: " << lnum << ", unum: " << unum << endl;
-        for (int i: C) {
-            // cout << Q[i] << " " << x[i] << " " << lb[i] << " " << ub[i] << endl;
-            if (pql.size() < lnum) { 
-                pql.push({i, lb[i]});
-            } else if (pql.top().second < lb[i]) {
-                pql.pop();
-                pql.push({i, lb[i]});
+        if (unum == 0) {
+            cout << "|T| + |C| = k, " << C.size() << endl;
+            for (int i: C) {
+                topk.push_back({i, x[i]});
             }
-            if (pqu.size() < unum) {
-                pqu.push({i, ub[i]});
-            } else if (!pqu.empty() && pqu.top().second > ub[i]) {
-                pqu.pop();
-                pqu.push({i, ub[i]});
+            // sort(topk.begin(), topk.end(), cmpl);
+            return topk;
+        } else if (lnum < unum) {
+            // min-heap
+            priority_queue<QPair, vector<QPair>, decltype(cmpl)> pql(cmpl);
+            priority_queue<QPair, vector<QPair>, decltype(cmpl)> pqu(cmpl);
+            // cout << "lnum: " << lnum << ", unum: " << unum << endl;
+            for (int i: C) {
+                // cout << Q[i] << " " << x[i] << " " << lb[i] << " " << ub[i] << endl;
+                if (pql.size() < lnum) { 
+                    pql.push({i, lb[i]});
+                } else if (pql.top().second < lb[i]) {
+                    pql.pop();
+                    pql.push({i, lb[i]});
+                }
+                if (pqu.size() < lnum + 1) {
+                    pqu.push({i, ub[i]});
+                } else if (pqu.top().second < ub[i]) {
+                    pqu.pop();
+                    pqu.push({i, ub[i]});
+                }
             }
+            pqltop = pql.top().second;
+            pqutop = pqu.top().second;
+            // cout << pqltop << " " << pqutop << endl;
+       } else {
+            // max-heap
+            priority_queue<QPair, vector<QPair>, decltype(cmpu)> pql(cmpu);
+            priority_queue<QPair, vector<QPair>, decltype(cmpu)> pqu(cmpu);
+            for (int i: C) {
+                if (pql.size() < unum + 1) {
+                    pql.push({i, lb[i]});
+                } else if (pql.top().second > lb[i]) {
+                    pql.pop();
+                    pql.push({i, lb[i]});
+                }
+                if (pqu.size() < unum) {
+                    pqu.push({i, ub[i]});
+                } else if (pqu.top().second > ub[i]) {
+                    pqu.pop();
+                    pqu.push({i, ub[i]});
+                }
+            }
+            pqltop = pql.top().second;
+            pqutop = pqu.top().second;
         }
-        double pqltop = pql.top().second;
-        double pqutop = -1;
-        if (!pqu.empty()) pqutop = pqu.top().second;
-        // cout << pqltop << " " << pqutop << endl;
         for (int i: C) {
-            if (ub[i] < pqltop) {
+            if (lb[i] > pqutop) {
+                ++lbub;
+                T.insert(i);
+                // cout << "push" << Q[i] << " " << x[i] << " " << lb[i] << " " << ub[i] << endl;
+                topk.push_back({i, x[i]});
+                if (T.size() == k) {
+                    // sort(topk.begin(), topk.end(), cmpl);
+                    cout << "LB<UB: " << lbub << ", UB<LB: " << ublb << endl;
+                    return topk;
+                }   
                 C.erase(i);
                 D.erase(i);
-            }
-        }
-        if (pqutop >= 0) {
-            for (int i: C) {
-                if (lb[i] > pqutop) {
-                    T.insert(i);
-                    // cout << "push" << Q[i] << " " << x[i] << " " << lb[i] << " " << ub[i] << endl;
-                    topk.push_back({i, x[i]});
-                    if (T.size() == k) {
-                        sort(topk.begin(), topk.end(), cmpl);
-                        return topk;
-                    }
-                    C.erase(i);
-                    D.erase(i);
-                }
+            } else if (ub[i] < pqltop) {
+                ++ublb;
+                C.erase(i);
+                D.erase(i);
             }
         }
     }
@@ -1022,7 +1049,8 @@ vector<QPair> BackPush::top_k(vector<NodePair> &Q, int k) {
         topk.push_back(pq.top());
         pq.pop();
     }
-    sort(topk.begin(), topk.end(), cmpl);
+    // sort(topk.begin(), topk.end(), cmpl);
+    cout << "LB<UB: " << lbub << ", UB<LB: " << ublb << endl;
     return topk;
 }
 

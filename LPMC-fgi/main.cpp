@@ -534,6 +534,12 @@ void test_topk(string data_name, int h=1000000, int l=1000, int nt=3443, int q=5
     end = std::chrono::high_resolution_clock::now();
     elapsed = end - start;
     for (int i = 0; i < k; ++i) {
+        topk[i].second = ts->sim(queries[topk[i].first].first, queries[topk[i].first].second);
+    }
+    sort(topk.begin(), topk.end(), [](QPair x, QPair y) {
+        return x.second > y.second;
+    });
+    for (int i = 0; i < k; ++i) {
         if (debug) cout << queries[topk[i].first] << " " << topk[i].second << endl;
         if (n < max_small_graph_size) {
             // double abs_error = abs(topk[i].second - ts_topk[i].second);
