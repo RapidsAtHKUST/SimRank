@@ -7,99 +7,76 @@
 
 #include <iostream>
 #include <fstream>
+#include <vector>
+#include <tuple>
+#include <algorithm>
 
 using namespace std;
 
+vector<pair<uint32_t, uint32_t>> GetEdgeList(string &file_path);
+
 class Graph {
 public:
-    int n;    //number of nodes
-    long m;    //number of edges
-    int **inAdjList;
-    int **outAdjList;
-    int *indegree;
-    int *outdegree;
+    int n;                          // # of nodes
+    int m;                          // # of edges
+    std::vector<int> *inAdjList;         // list of edges, original graph
+    std::vector<int> *outAdjList;       // list of in-neighbors, reversed graph
+    bool is_view;
 
-    Graph() {}
+    Graph(string &file_path) {
+        is_view = false;
+        n = m = 0;
+        inAdjList = NULL;
+        outAdjList = NULL;
+        inputGraph(file_path);
 
-    Graph(string file) {
-        m = 0;
-        ifstream infile(file);
-        infile >> n;
-        cout << "# nodes= " << n << endl;
+    }
 
-        indegree = new int[n];
-        outdegree = new int[n];
-        for (int i = 0; i < n; i++) {
-            indegree[i] = 0;
-            outdegree[i] = 0;
-        }
-        //read graph and get degree info
-        int from;
-        int to;
-        while (infile.good()) {
-            infile >> from >> to;
-            outdegree[from]++;
-            indegree[to]++;
-        }
-        cout << "..." << endl;
-        inAdjList = new int *[n];
-        outAdjList = new int *[n];
-        for (int i = 0; i < n; i++) {
-            inAdjList[i] = new int[indegree[i]];
-            outAdjList[i] = new int[outdegree[i]];
-        }
-        int *pointer_in = new int[n];
-        int *pointer_out = new int[n];
-        for (int i = 0; i < n; i++) {
-            pointer_in[i] = 0;
-            pointer_out[i] = 0;
-        }
-        infile.clear();
-        infile.seekg(0);
-
-        clock_t t1 = clock();
-        infile >> n;
-        cout << "# nodes= " << n << endl;
-        while (infile.good()) {
-            infile >> from >> to;
-            outAdjList[from][pointer_out[from]] = to;
-            pointer_out[from]++;
-            inAdjList[to][pointer_in[to]] = from;
-            pointer_in[to]++;
-
-            m++;
-        }
-        infile.close();
-        clock_t t2 = clock();
-        cout << "# edges= " << m << endl;
-        cout << "reading in graph takes " << (t2 - t1) / (double) CLOCKS_PER_SEC << " s" << endl;
-
-        delete[] pointer_in;
-        delete[] pointer_out;
+    Graph(const Graph &graph) {
+        is_view = true;
+        n = graph.n;
+        m = graph.m;
+        inAdjList = graph.inAdjList;
+        outAdjList = graph.outAdjList;
     }
 
     ~Graph() {
-        /*
-        if(indegree != nullptr)
-            delete[] indegree;
-        if(outdegree != nullptr)
-            delete[] outdegree;
-        for(int i=0; i<n; i++)
-        {
-            if(inAdjList[i] != nullptr)
-                delete[] inAdjList[i];
-            if(outAdjList[i] != nullptr)
-                delete[] outAdjList[i];
-        }
-        if(inAdjList != nullptr)
+        if (!is_view) {
             delete[] inAdjList;
-        if(outAdjList != nullptr)
             delete[] outAdjList;
-        */
+        }
+    }
+
+    void inputGraph(string &file_path) {
+        auto edge_lst = GetEdgeList(file_path);
+
+        n = 0;
+        for (auto edge: edge_lst) {
+            n = max<int>(n, edge.first);
+            n = max<int>(n, edge.second);
+        }
+        n += 1;
+        m = static_cast<int>(edge_lst.size());
+        cout << "total vertex#:" << n << endl;
+        cout << "total inAdjList#:" << m << endl;
+
+        inAdjList = new std::vector<int>[n];
+        outAdjList = new std::vector<int>[n];
+        for (int i = 0; i < m; ++i) {
+            int src, dst;
+            std::tie(src, dst) = edge_lst[i];
+            inAdjList[src].push_back(dst);
+            outAdjList[dst].push_back(src);
+        }
+
+        for (int i = 0; i < n; ++i) {
+            sort(inAdjList[i].begin(), inAdjList[i].end());
+            sort(outAdjList[i].begin(), outAdjList[i].end());
+        }
     }
 
     int getInSize(int vert) {
-        return indegree[vert];
+        return inAdjList[vert].size();
     }
 
     int getInVert(int vert, int pos) {
@@ -107,13 +84,12 @@ public:
     }
 
     int getOutSize(int vert) {
-        return outdegree[vert];
+        return outAdjList[vert].size();
     }
 
     int getOutVert(int vert, int pos) {
         return outAdjList[vert][pos];
     }
 };
-
 
 #endif

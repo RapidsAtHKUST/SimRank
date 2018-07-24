@@ -75,10 +75,50 @@ public:
         }
     };
 
-    SimStruct(string fn, double eps) {
-        g = Graph(fn);
-        cout << "graph= " << fn << endl;
+    SimStruct(const SimStruct &sim_struct, double eps) : g(sim_struct.g) {
+        C_value = 0.6;
 
+        nr = (int) (0.5 / (eps * eps) * log(g.n) / log(2));
+        cout << "nr= " << nr << endl;
+
+        H[0] = new double[g.n];
+        H[1] = new double[g.n];
+        U[0] = new int[g.n];
+        U[1] = new int[g.n];
+        C[0] = new int[g.n];
+        UC[0] = new int[g.n];
+        for (int i = 0; i < g.n; i++) {
+            H[0][i] = 0;
+            H[1][i] = 0;
+            U[0][i] = -1;
+            U[1][i] = -1;
+            C[0][i] = 0;
+            UC[0][i] = -1;
+        }
+        //
+        Count[0] = new int[g.n];
+        Count[1] = new int[g.n];
+        for (int i = 0; i < g.n; i++) {
+            Count[0][i] = 0;
+            Count[1][i] = 0;
+        }
+
+        maxStep = 5;    // 5
+        trunStep = maxStep;
+        deterCost = new double[maxStep + 1];
+        randomCost = new double[maxStep + 1];
+        mustRandom = new bool[maxStep + 1];
+        for (int i = 0; i <= maxStep; i++) {
+            deterCost[i] = 0;
+            randomCost[i] = 0;
+            mustRandom[i] = false;
+        }
+        lvl = new vector<int>[maxStep + 1];
+        sampleLvl = new vector<int>[maxStep + 1];
+    }
+
+    SimStruct(string fn, double eps) : g(fn) {
+        cout << "graph= " << fn << endl;
         C_value = 0.6;
 
         nr = (int) (0.5 / (eps * eps) * log(g.n) / log(2));
@@ -140,7 +180,7 @@ public:
 
     // resultList reuse: double *resultList = new double[g.n];
     double batch_for_single_pair(int u, int v, double *resultList) {
-        int *nodeList = new int[maxStep + 1];
+        auto *nodeList = new int[maxStep + 1];
         // clear resultList
         for (int i = 0; i < g.n; i++) {
             resultList[i] = 0;
@@ -164,7 +204,7 @@ public:
         vector<pair<int, double> > sims;
         for (int i = 0; i < g.n; i++) {
             if (i != u && resultList[i] > 0)
-                sims.push_back(pair<int, double>(i, resultList[i] / (double) nr));
+                resultList[i] /= (double) nr;
         }
         delete[] nodeList;
         return resultList[v];
