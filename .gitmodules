@@ -1,12 +1,3 @@
-[submodule "sparsehash"]
-	path = dependencies/sparsehash
-	url = https://github.com/sparsehash/sparsehash.git
-[submodule "sparsepp"]
-	path = dependencies/sparsepp
-	url = https://github.com/greg7mdp/sparsepp.git
-[submodule "SFMT"]
-	path = dependencies/SFMT
-	url = https://github.com/MersenneTwister-Lab/SFMT.git
 [submodule "related_projects/simrank"]
 	path = related_projects/simrank
 	url = https://github.com/roukaour/simrank.git
