@@ -15,7 +15,7 @@ set(SOURCE_FILES
         link_cut.cpp link_cut.h
         tkde17_sim.cpp tkde17_sim.h
         simrank.cpp simrank.h
-        sling.cpp sling.h sling_graph.h ../SFMT/SFMT.c
+        sling.cpp sling.h sling_graph.h ../dependencies/SFMT/SFMT.c
         main.cpp)
 
 set(DYNAMIC_SOURCE_FILES
@@ -26,13 +26,18 @@ set(DYNAMIC_SOURCE_FILES
 
 set(SFMT_COMPILE_FLAGS -DSFMT_MEXP=607 -msse2 -DHAVE_SSE2)
 
+macro(InitBoostHashSFMTEigen exec_name)
+    target_include_directories(${exec_name} PRIVATE ${Boost_INCLUDE_DIRS})
+    target_include_directories(${exec_name} PRIVATE ../dependencies/sparsehash-yche/include)
+    target_include_directories(${exec_name} PRIVATE ../dependencies/sparsepp)
+    target_include_directories(${exec_name} PRIVATE ../dependencies/SFMT)
+    target_include_directories(${exec_name} PRIVATE ../dependencies/include)
+endmacro()
+
+
 ############################### release: APS #####################################################
 add_executable(APS ${SOURCE_FILES})
-target_include_directories(APS PRIVATE ../sparsehash-yche/include/)
-target_include_directories(APS PRIVATE ../sparsepp)
-target_include_directories(APS PRIVATE ../eigen)
-target_include_directories(APS PRIVATE ../SFMT)
-target_include_directories(APS PRIVATE ../include)
+InitBoostHashSFMTEigen(APS)
 
 if (Boost_FOUND)
     message(${Boost_INCLUDE_DIRS})
@@ -43,26 +48,14 @@ target_link_libraries(APS PRIVATE ${Boost_LIBRARIES})
 
 ################### dynamic exp
 add_executable(dynamic-flp ${DYNAMIC_SOURCE_FILES} local_push.cpp local_push.h)
-target_include_directories(dynamic-flp PRIVATE ../sparsehash-yche/include/)
-target_include_directories(dynamic-flp PRIVATE ../sparsepp)
-target_include_directories(dynamic-flp PRIVATE ../eigen)
-target_include_directories(dynamic-flp PRIVATE ../SFMT)
-target_include_directories(dynamic-flp PRIVATE ../include)
-
-target_include_directories(dynamic-flp PRIVATE ${Boost_INCLUDE_DIRS})
+InitBoostHashSFMTEigen(dynamic-flp)
 target_link_libraries(dynamic-flp PRIVATE ${Boost_LIBRARIES})
 target_compile_options(dynamic-flp PRIVATE -O3 -g ${SFMT_COMPILE_FLAGS})
 target_compile_definitions(dynamic-flp PRIVATE -DFLP=1)
 
 ############# dynamic-rlp
 add_executable(dynamic-rlp ${DYNAMIC_SOURCE_FILES} local_push.cpp local_push.h)
-target_include_directories(dynamic-rlp PRIVATE ../sparsehash-yche/include/)
-target_include_directories(dynamic-rlp PRIVATE ../sparsepp)
-target_include_directories(dynamic-rlp PRIVATE ../eigen)
-target_include_directories(dynamic-rlp PRIVATE ../SFMT)
-target_include_directories(dynamic-rlp PRIVATE ../include)
-
-target_include_directories(dynamic-rlp PRIVATE ${Boost_INCLUDE_DIRS})
+InitBoostHashSFMTEigen(dynamic-rlp)
 target_link_libraries(dynamic-rlp PRIVATE ${Boost_LIBRARIES})
 target_compile_options(dynamic-rlp PRIVATE -O3 -g ${SFMT_COMPILE_FLAGS})
 
@@ -70,22 +63,10 @@ target_compile_options(dynamic-rlp PRIVATE -O3 -g ${SFMT_COMPILE_FLAGS})
 add_executable(dynamic-tsf graph.cpp main_dynamic_tsf_exp.cpp)
 target_include_directories(dynamic-tsf PRIVATE ${Boost_INCLUDE_DIRS})
 target_compile_options(dynamic-tsf PRIVATE -O3 -g ${SFMT_COMPILE_FLAGS})
-target_include_directories(dynamic-tsf PRIVATE ../sparsehash-yche/include/)
-target_include_directories(dynamic-tsf PRIVATE ../sparsepp)
-target_include_directories(dynamic-tsf PRIVATE ../eigen)
-target_include_directories(dynamic-tsf PRIVATE ../SFMT)
-target_include_directories(dynamic-tsf PRIVATE ../include)
+InitBoostHashSFMTEigen(dynamic-tsf)
 
 ############################ playground #########################################3
 add_executable(ground_truth main_ground_truth.cpp graph.cpp simrank.cpp)
-target_include_directories(ground_truth PRIVATE ../eigen)
-target_include_directories(ground_truth PRIVATE ../sparsepp)
-target_include_directories(ground_truth PRIVATE ../sparsehash-yche/include/)
-target_include_directories(ground_truth PRIVATE ../include)
-
-if (Boost_FOUND)
-    message(${Boost_INCLUDE_DIRS})
-    target_include_directories(ground_truth PRIVATE ${Boost_INCLUDE_DIRS})
-endif ()
+InitBoostHashSFMTEigen(ground_truth)
 target_compile_options(ground_truth PRIVATE -O3 -g ${SFMT_COMPILE_FLAGS})
 target_link_libraries(ground_truth PRIVATE ${Boost_LIBRARIES})

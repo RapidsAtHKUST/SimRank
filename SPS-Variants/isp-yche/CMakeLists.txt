@@ -18,17 +18,17 @@ set(GROUND_TRUTH_FILES ground_truth/simrank.cpp ground_truth/simrank.h ground_tr
 
 set(SOURCE_FILES ISP.cpp ISP.h pretty_print.h input_output.h input_output.cpp)
 add_executable(isp_yche ${SOURCE_FILES} main.cpp)
-target_include_directories(isp_yche PRIVATE ../../sparsepp)
+target_include_directories(isp_yche PRIVATE ../../dependencies/sparsepp)
 target_include_directories(isp_yche PRIVATE ${Boost_INCLUDE_DIRS})
 target_compile_options(isp_yche PRIVATE -O3 -g)
 #target_compile_definitions(isp_yche PRIVATE DEBUG=1)
 
 #### isp ground truth testing
 macro(InitISP exec_name)
-    target_include_directories(${exec_name} PRIVATE ../../sparsepp)
+    target_include_directories(${exec_name} PRIVATE ../../dependencies/sparsepp)
     target_include_directories(${exec_name} PRIVATE ${Boost_INCLUDE_DIRS})
-    target_include_directories(${exec_name} PRIVATE ../../include)
-    target_include_directories(${exec_name} PRIVATE ../../sparsehash-yche/include)
+    target_include_directories(${exec_name} PRIVATE ../../dependencies/include)
+    target_include_directories(${exec_name} PRIVATE ../../dependencies/sparsehash-yche/include)
 
     target_compile_options(${exec_name} PRIVATE -O3 -g)
     target_link_libraries(${exec_name} tcmalloc)
@@ -61,19 +61,19 @@ InitISP(isp-rand-varying)
 ############### others ######################################################
 set(YCHE_GROUND_TRUTH_FILES yche_ground_truth/main_serial_naive_iter.cpp yche_ground_truth/SerialNaiveSim.cpp yche_ground_truth/SerialNaiveSim.h input_output.cpp)
 add_executable(naive_iter ${YCHE_GROUND_TRUTH_FILES})
-target_include_directories(naive_iter PRIVATE ../../sparsepp)
+target_include_directories(naive_iter PRIVATE ../../dependencies/sparsepp)
 target_compile_options(naive_iter PRIVATE -O3 -g)
 #target_compile_definitions(naive_iter PRIVATE DEBUG=1)
 
 set(REV_DIFFUSION_FILES yche_ground_truth/main_serial_rev_naive_iter.cpp yche_ground_truth/SerialRevNaiveSim.cpp yche_ground_truth/SerialRevNaiveSim.h input_output.cpp)
 add_executable(naive_rev_iter ${REV_DIFFUSION_FILES})
-target_include_directories(naive_rev_iter PRIVATE ../../sparsepp)
+target_include_directories(naive_rev_iter PRIVATE ../../dependencies/sparsepp)
 target_compile_options(naive_rev_iter PRIVATE -O3 -g)
 #target_compile_definitions(naive_rev_iter PRIVATE DEBUG=1)
 
 set(REV_DIFFUSION_FILES yche_ground_truth/main_serial_rev_naive_iter_query.cpp yche_ground_truth/SerialRevNaiveSim.cpp yche_ground_truth/SerialRevNaiveSim.h input_output.cpp)
 add_executable(naive_rev_iter_sp ${REV_DIFFUSION_FILES})
-target_include_directories(naive_rev_iter_sp PRIVATE ../../sparsepp)
+target_include_directories(naive_rev_iter_sp PRIVATE ../../dependencies/sparsepp)
 target_compile_options(naive_rev_iter_sp PRIVATE -O3 -g)
 
 add_subdirectory(playground)

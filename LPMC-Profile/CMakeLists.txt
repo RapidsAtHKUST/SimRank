@@ -19,7 +19,7 @@ endif ()
 
 ################################ 3rd: source file environmental variables ######################################
 set(UTIL_FILES util/file_serialization.h util/stat.cpp util/stat.h
-        util/sfmt_based_rand.h ../SFMT/SFMT.c util/graph_yche.cpp)
+        util/sfmt_based_rand.h ../dependencies/SFMT/SFMT.c util/graph_yche.cpp)
 set(BIN_SEARCH_FIES util/search_yche.h util/search_yche.cpp)
 set(GROUND_TRUTH_FILES yche_refactor/simrank.cpp yche_refactor/simrank.h)
 set(SFMT_COMPILE_FLAGS -DSFMT_MEXP=607 -msse2 -DHAVE_SSE2)
@@ -33,10 +33,10 @@ set(LPMC_FILES yche_refactor/flpmc_yche.h yche_refactor/flpmc_yche.cpp
 ############################## general macros ###################
 macro(InitBoostHashSFMTEigen exec_name)
     target_include_directories(${exec_name} PRIVATE ${Boost_INCLUDE_DIRS})
-    target_include_directories(${exec_name} PRIVATE ../sparsehash-yche/include)
-    target_include_directories(${exec_name} PRIVATE ../sparsepp)
-    target_include_directories(${exec_name} PRIVATE ../SFMT)
-    target_include_directories(${exec_name} PRIVATE ../include)
+    target_include_directories(${exec_name} PRIVATE ../dependencies/sparsehash-yche/include)
+    target_include_directories(${exec_name} PRIVATE ../dependencies/sparsepp)
+    target_include_directories(${exec_name} PRIVATE ../dependencies/SFMT)
+    target_include_directories(${exec_name} PRIVATE ../dependencies/include)
     target_compile_definitions(${exec_name} PRIVATE -DHAS_OPENMP=1)
 endmacro()
 

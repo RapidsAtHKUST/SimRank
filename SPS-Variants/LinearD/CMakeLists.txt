@@ -21,9 +21,9 @@ set(UTIL_FILES util/node_pair.h util/graph.cpp util/graph.h ground_truth/stat.cp
 ############################## general macros ###################
 macro(InitBoostHashSFMTEigen exec_name)
     target_include_directories(${exec_name} PRIVATE ${Boost_INCLUDE_DIRS})
-    target_include_directories(${exec_name} PRIVATE ../../sparsehash-yche/include)
-    target_include_directories(${exec_name} PRIVATE ../../sparsepp)
-    target_include_directories(${exec_name} PRIVATE ../../include)
+    target_include_directories(${exec_name} PRIVATE ../../dependencies/sparsehash-yche/include)
+    target_include_directories(${exec_name} PRIVATE ../../dependencies/sparsepp)
+    target_include_directories(${exec_name} PRIVATE ../../dependencies/include)
 
     target_compile_options(${exec_name} PRIVATE -O3)
     target_link_libraries(${exec_name} PRIVATE ${Boost_LIBRARIES})

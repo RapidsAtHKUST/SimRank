@@ -4,7 +4,7 @@
 
 #include "search_yche.h"
 
-#include <immintrin.h>  //AVX
+//#include <immintrin.h>  //AVX
 #include <x86intrin.h>
 
 //constexpr int lookup_table[9] = {0x00000000, 0x0000000f, 0x000000ff, 0x00000fff, 0x0000ffff,

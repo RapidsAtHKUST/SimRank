@@ -32,9 +32,9 @@ set(LP_FILES yche_refactor/local_push_yche.cpp yche_refactor/local_push_yche_rlp
 ############################## general macros ###################
 macro(InitBoostHashSFMTEigen exec_name)
     target_include_directories(${exec_name} PRIVATE ${Boost_INCLUDE_DIRS})
-    target_include_directories(${exec_name} PRIVATE ../sparsehash-yche/include)
-    target_include_directories(${exec_name} PRIVATE ../sparsepp)
-    target_include_directories(${exec_name} PRIVATE ../include)
+    target_include_directories(${exec_name} PRIVATE ../dependencies/sparsehash-yche/include)
+    target_include_directories(${exec_name} PRIVATE ../dependencies/sparsepp)
+    target_include_directories(${exec_name} PRIVATE ../dependencies/include)
 endmacro()
 
 macro(InitFLPMC exec_name)

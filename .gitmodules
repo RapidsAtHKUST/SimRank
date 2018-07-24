@@ -1,17 +1,11 @@
 [submodule "sparsehash"]
-	path = sparsehash
+	path = dependencies/sparsehash
 	url = https://github.com/sparsehash/sparsehash.git
-[submodule "sparsehash-c11"]
-	path = sparsehash-c11
-	url = https://github.com/sparsehash/sparsehash-c11.git
-[submodule "armadillo-code"]
-	path = armadillo-code
-	url = https://github.com/conradsnicta/armadillo-code.git
 [submodule "sparsepp"]
-	path = sparsepp
-	url = https://github.com/greg7mdp/sparsepp.git	
+	path = dependencies/sparsepp
+	url = https://github.com/greg7mdp/sparsepp.git
 [submodule "SFMT"]
-	path = SFMT
+	path = dependencies/SFMT
 	url = https://github.com/MersenneTwister-Lab/SFMT.git
 [submodule "related_projects/simrank"]
 	path = related_projects/simrank
@@ -34,3 +28,12 @@
 [submodule "related_projects/UniWalk"]
 	path = related_projects/UniWalk
 	url = https://github.com/songjs1993/UniWalk.git
+[submodule "dependencies/sparsehash"]
+	path = dependencies/sparsehash
+	url = https://github.com/sparsehash/sparsehash.git
+[submodule "dependencies/sparsepp"]
+	path = dependencies/sparsepp
+	url = https://github.com/greg7mdp/sparsepp.git
+[submodule "dependencies/SFMT"]
+	path = dependencies/SFMT
+	url = https://github.com/MersenneTwister-Lab/SFMT.git
