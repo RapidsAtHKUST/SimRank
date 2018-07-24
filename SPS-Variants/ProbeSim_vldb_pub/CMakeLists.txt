@@ -6,7 +6,15 @@ set(CMAKE_CXX_STANDARD 11)
 include_directories(.)
 
 # setup pthread environmental variables
+
 find_package(Threads)
+find_package(OpenMP)
+
+if (OPENMP_FOUND)
+    set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} ${OpenMP_C_FLAGS}")
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${OpenMP_CXX_FLAGS}")
+    set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} ${OpenMP_EXE_LINKER_FLAGS}")
+endif ()
 find_package(Boost REQUIRED program_options)
 if (Boost_FOUND)
     message(${Boost_INCLUDE_DIRS})
@@ -26,12 +34,20 @@ macro(InitHashSFMTEigenPthread exec_name)
     target_link_libraries(${exec_name} PRIVATE ${CMAKE_THREAD_LIBS_INIT})
     target_link_libraries(${exec_name} PRIVATE tcmalloc)
 
-    target_compile_options(${exec_name} PRIVATE -O3 -g -DSFMT_MEXP=607 -msse2 -DHAVE_SSE2 -DGROUND_TRUTH=1)
+    target_compile_options(${exec_name} PRIVATE -O3 -g -DSFMT_MEXP=607 -msse2 -DHAVE_SSE2)
 #    target_compile_options(${exec_name} PRIVATE -O3 -g -DSFMT_MEXP=607 -msse2 -DHAVE_SSE2)
 endmacro()
 
+
+# with gt
+add_executable(ProbeSim-gt
+        evaluate.h Graph.h Graph.cpp pooling.h Random.h SimStruct.h util.h main_varying_parameters.cpp
+        ../../SFMT/SFMT.c ${GROUND_TRUTH_FILES})
+target_compile_options(ProbeSim-gt PRIVATE -DGROUND_TRUTH=1)
+InitHashSFMTEigenPthread(ProbeSim-gt)
+
+# without gt
 add_executable(ProbeSim
         evaluate.h Graph.h Graph.cpp pooling.h Random.h SimStruct.h util.h main_varying_parameters.cpp
         ../../SFMT/SFMT.c ${GROUND_TRUTH_FILES})
-#target_compile_options(ProbeSim PRIVATE -DDEBUG=1)
 InitHashSFMTEigenPthread(ProbeSim)

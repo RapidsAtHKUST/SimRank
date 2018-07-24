@@ -180,6 +180,9 @@ public:
 
     // resultList reuse: double *resultList = new double[g.n];
     double batch_for_single_pair(int u, int v, double *resultList) {
+        if (u == v) {
+            return 1;
+        }
         auto *nodeList = new int[maxStep + 1];
         // clear resultList
         for (int i = 0; i < g.n; i++) {
