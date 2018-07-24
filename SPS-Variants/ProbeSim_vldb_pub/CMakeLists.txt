@@ -11,5 +11,6 @@ add_executable(ProbeSim
         evaluate.h Graph.h pooling.h Random.h SimStruct.h util.h main.cpp
         ../../SFMT/SFMT.c)
 target_compile_options(ProbeSim PRIVATE -O3 -march=core2 -DSFMT_MEXP=607)
+#target_compile_options(ProbeSim PRIVATE -DDEBUG=1)
 target_include_directories(ProbeSim PRIVATE ../../SFMT/)
 target_link_libraries(ProbeSim PRIVATE ${CMAKE_THREAD_LIBS_INIT})
