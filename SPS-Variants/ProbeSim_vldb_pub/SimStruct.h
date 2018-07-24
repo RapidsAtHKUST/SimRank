@@ -1,6 +1,9 @@
 #ifndef SIMSTRUCT_H
 #define SIMSTRUCT_H
 
+#include <cstring>
+#include <cmath>
+
 #include <vector>
 #include <algorithm>
 #include <queue>
@@ -11,11 +14,10 @@
 #include <mutex>
 #include <string>
 #include <sstream>
+#include <unordered_map>
+
 #include "Graph.h"
 #include "Random.h"
-#include <unordered_map>
-#include <string.h>
-#include <math.h>
 #include "util.h"
 
 using namespace std;
