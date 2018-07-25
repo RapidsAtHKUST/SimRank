@@ -20,10 +20,10 @@ if (OPENMP_FOUND)
 endif ()
 
 macro(InitREADS exec_name)
-    target_include_directories(${exec_name} PRIVATE ../../sparsepp)
+    target_include_directories(${exec_name} PRIVATE ../../dependencies/sparsepp)
     target_include_directories(${exec_name} PRIVATE ${Boost_INCLUDE_DIRS})
-    target_include_directories(${exec_name} PRIVATE ../../include)
-    target_include_directories(${exec_name} PRIVATE ../../sparsehash-yche/include)
+    target_include_directories(${exec_name} PRIVATE ../../dependencies/include)
+    target_include_directories(${exec_name} PRIVATE ../../dependencies/sparsehash-yche/include)
 
     target_compile_options(${exec_name} PRIVATE -O3 -g)
     target_link_libraries(${exec_name} tcmalloc)
@@ -35,7 +35,7 @@ add_subdirectory(static_solution)
 add_executable(reads-original-release ${COMMON_FILES} ${STATIC_GRAPH_FILES}
         algorithm/readsd.h algorithm/readsd.cpp algorithm/readsrq.h algorithm/readsrq.cpp test.cpp)
 target_compile_options(reads-original-release PRIVATE -O3 -g -w)
-target_include_directories(reads-original-release PRIVATE ../../sparsehash-yche/include/)
+target_include_directories(reads-original-release PRIVATE ../../dependencies/sparsehash-yche/include/)
 
 ############### 1st: reads static single-pair
 add_executable(reads-s ${COMMON_FILES} ${GROUND_TRUTH_FILES} algorithm/reads.cpp test_reads_sp.cpp)

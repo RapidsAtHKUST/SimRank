@@ -6,7 +6,7 @@ set(CMAKE_CXX_STANDARD 11)
 set(GROUND_TRUTH_FILES ground_truth/simrank.cpp ground_truth/simrank.h ground_truth/graph_yche.cpp ground_truth/graph_yche.h
         ground_truth/sparse_matrix_utils.h ground_truth/file_serialization.h ground_truth/stat.h
         ground_truth/yche_serialization.h)
-set(SOURCE_FILES graph.h sling.h sling.cpp ../../SFMT/SFMT.c input_output.cpp input_output.h util.h util.cpp ground_truth/stat.cpp)
+set(SOURCE_FILES graph.h sling.h sling.cpp ../../dependencies/SFMT/SFMT.c input_output.cpp input_output.h util.h util.cpp ground_truth/stat.cpp)
 
 # setup pthread environmental variables
 find_package(Boost REQUIRED program_options)
@@ -23,9 +23,9 @@ if (OPENMP_FOUND)
 endif ()
 
 macro(InitHashSFMTEigenPthread exec_name)
-    target_include_directories(${exec_name} PRIVATE ../../sparsehash-yche/include/)
-    target_include_directories(${exec_name} PRIVATE ../../SFMT)
-    target_include_directories(${exec_name} PRIVATE ../../include)
+    target_include_directories(${exec_name} PRIVATE ../../dependencies/sparsehash-yche/include/)
+    target_include_directories(${exec_name} PRIVATE ../../dependencies/SFMT)
+    target_include_directories(${exec_name} PRIVATE ../../dependencies/include)
 
     target_link_libraries(${exec_name} PRIVATE ${CMAKE_THREAD_LIBS_INIT})
     target_link_libraries(${exec_name} PRIVATE tcmalloc)
@@ -39,7 +39,7 @@ InitHashSFMTEigenPthread(sling)
 
 # 2nd: sling all pair
 macro(InitSlingAP exec_name)
-    target_include_directories(${exec_name} PRIVATE ../../sparsepp)
+    target_include_directories(${exec_name} PRIVATE ../../dependencies/sparsepp)
     InitHashSFMTEigenPthread(${exec_name})
 endmacro()
 

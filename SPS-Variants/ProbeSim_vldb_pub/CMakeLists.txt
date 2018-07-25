@@ -26,10 +26,10 @@ set(GROUND_TRUTH_FILES ground_truth/simrank.cpp ground_truth/simrank.h ground_tr
         ground_truth/yche_serialization.h)
 
 macro(InitHashSFMTEigenPthread exec_name)
-    target_include_directories(${exec_name} PRIVATE ../../sparsehash-yche/include/)
-    target_include_directories(${exec_name} PRIVATE ../../SFMT)
-    target_include_directories(${exec_name} PRIVATE ../../include)
-    target_include_directories(${exec_name} PRIVATE ../../sparsepp)
+    target_include_directories(${exec_name} PRIVATE ../../dependencies/sparsehash-yche/include/)
+    target_include_directories(${exec_name} PRIVATE ../../dependencies/SFMT)
+    target_include_directories(${exec_name} PRIVATE ../../dependencies/include)
+    target_include_directories(${exec_name} PRIVATE ../../dependencies/sparsepp)
 
     target_link_libraries(${exec_name} PRIVATE ${CMAKE_THREAD_LIBS_INIT})
     target_link_libraries(${exec_name} PRIVATE tcmalloc)
@@ -42,12 +42,12 @@ endmacro()
 # with gt
 add_executable(ProbeSim-gt
         evaluate.h Graph.h Graph.cpp pooling.h Random.h SimStruct.h util.h main_varying_parameters.cpp
-        ../../SFMT/SFMT.c ${GROUND_TRUTH_FILES})
+        ../../dependencies/SFMT/SFMT.c ${GROUND_TRUTH_FILES})
 target_compile_options(ProbeSim-gt PRIVATE -DGROUND_TRUTH=1)
 InitHashSFMTEigenPthread(ProbeSim-gt)
 
 # without gt
 add_executable(ProbeSim
         evaluate.h Graph.h Graph.cpp pooling.h Random.h SimStruct.h util.h main_varying_parameters.cpp
-        ../../SFMT/SFMT.c ${GROUND_TRUTH_FILES})
+        ../../dependencies/SFMT/SFMT.c ${GROUND_TRUTH_FILES})
 InitHashSFMTEigenPthread(ProbeSim)
