@@ -23,5 +23,4 @@
 
 big category | work
 --- | ---
-undir | UniWalk(2017)
 top-k | top-k-overview(2017vldb)
