@@ -65,8 +65,8 @@ public:
         for (int i = 0; i < m; ++i) {
             int src, dst;
             std::tie(src, dst) = edge_lst[i];
-            inAdjList[src].push_back(dst);
-            outAdjList[dst].push_back(src);
+            inAdjList[dst].push_back(src);
+            outAdjList[src].push_back(dst);
         }
 
         for (int i = 0; i < n; ++i) {
