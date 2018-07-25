@@ -34,11 +34,11 @@ int main(int argc, char *argv[]) {
     auto start = std::chrono::high_resolution_clock::now();
     auto clock_start = clock();
 
-    SimStruct simStruct = SimStruct(file_path, eps);
+    SimStruct simStruct = SimStruct(file_path, c, eps, delta);
     // 3rd: querying pairs
 #pragma omp parallel
     {
-        SimStruct probe_sim(simStruct, eps);
+        auto probe_sim = SimStruct(simStruct, eps);
         auto *resultList = new double[probe_sim.g.n];
 #ifdef GROUND_TRUTH
 #pragma omp for reduction(max:max_err) schedule(dynamic, 100)
@@ -53,7 +53,7 @@ int main(int argc, char *argv[]) {
             max_err = max(max_err, abs(ts.sim(u, v) - res));
             if (abs(ts.sim(u, v) - res) > eps) {
 #pragma omp critical
-                cout << u << ", " << v << "," << ts.sim(u, v) << "," << res << endl;
+                cout << u << ", " << v << ", (truth, current_val)： " << ts.sim(u, v) << "," << res << endl;
             }
 #else
             probe_sim.batch_for_single_pair(u, v, resultList);

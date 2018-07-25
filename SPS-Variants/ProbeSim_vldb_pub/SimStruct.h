@@ -75,10 +75,8 @@ public:
         }
     };
 
-    SimStruct(const SimStruct &sim_struct, double eps) : g(sim_struct.g) {
-        C_value = 0.6;
-
-        nr = (int) (0.5 / (eps * eps) * log(g.n) / log(2));
+    SimStruct(const SimStruct &sim_struct, double eps) : g(sim_struct.g), C_value(sim_struct.C_value),
+                                                         nr(sim_struct.nr) {
         cout << "nr= " << nr << endl;
 
         H[0] = new double[g.n];
@@ -117,11 +115,10 @@ public:
         sampleLvl = new vector<int>[maxStep + 1];
     }
 
-    SimStruct(string fn, double eps) : g(fn) {
+    SimStruct(string fn, double C_value, double eps, double delta) : g(fn), C_value(C_value) {
         cout << "graph= " << fn << endl;
-        C_value = 0.6;
-
-        nr = (int) (0.5 / (eps * eps) * log(g.n) / log(2));
+        cout << "(c, eps, delta):" << C_value << " , " << eps << " , " << delta << endl;
+        nr = (int) (C_value * 3 / (eps * eps) * log(g.n / delta) / log(2));
         cout << "nr= " << nr << endl;
 
         H[0] = new double[g.n];
