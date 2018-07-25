@@ -230,14 +230,19 @@ double BackPush::MC_random_walk(int N) { // perform random walks based on curren
 #if !defined(SFMT)
         int index = residuals_dist(generator); // index for node pairs
 #else
-//        int index = BinarySearchForGallopingSearch(reinterpret_cast<const double *>(&cdf.front()), 0, cdf.size(),
-//                                                   rand_gen.double_rand());
+
 //        int index = GallopingSearch(&cdf.front(), 0, static_cast<uint32_t>(cdf.size()),
 //                                    static_cast<int>(rand_gen.double_rand() * YCHE_MAX_INT));
 //        int index = GallopingSearchAVX2(&cdf.front(), 0, static_cast<uint32_t>(cdf.size()),
 //                                                       static_cast<int>(rand_gen.double_rand() * YCHE_MAX_INT));
+
+#ifdef __AVX2__
         int index = BinarySearchForGallopingSearchAVX2(&cdf.front(), 0, static_cast<uint32_t>(cdf.size()),
                                                        static_cast<int>(rand_gen.double_rand() * YCHE_MAX_INT));
+#else
+        int index = BinarySearchForGallopingSearch(reinterpret_cast<const double *>(&cdf.front()), 0, cdf.size(),
+                                                   rand_gen.double_rand());
+#endif
 
 #endif
         NodePair sampled_np = node_pairs[index];

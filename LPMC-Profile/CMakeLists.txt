@@ -4,6 +4,7 @@ project(LPMC-Optimizing)
 ################################ 1st: basic environmental variables ######################################
 set(CMAKE_CXX_STANDARD 11)
 set(CMAKE_EXPORT_COMPILE_COMMANDS "ON")
+set(CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/cmake ${CMAKE_MODULE_PATH}) # To allow CMake to locate our Find*.cmake files
 
 ################################ 2nd: libarary environmental variables ######################################
 find_package(Boost REQUIRED program_options)
@@ -39,6 +40,22 @@ macro(InitBoostHashSFMTEigen exec_name)
     target_include_directories(${exec_name} PRIVATE ../dependencies/include)
     target_compile_definitions(${exec_name} PRIVATE -DHAS_OPENMP=1)
 endmacro()
+
+
+include(FindSSE)
+if (AVX2_FOUND)
+    message("found AVX2")
+    add_compile_options(-mavx2)
+elseif (AVX_FOUND)
+    message("found AVX")
+    add_compile_options(-mavx)
+elseif (SSE4_1_FOUND)
+    message("found sse4.1")
+    add_compile_options(-msse4.1)
+elseif (SSE2_FOUND)
+    message("found sse2")
+    add_compile_options(-msse2)
+endif ()
 
 #### sub cmake dir: playground  ######################################
 add_subdirectory(playground)

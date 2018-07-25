@@ -96,8 +96,14 @@ double BFLPMC::query_one2one(NodePair np) {
         for (int i = 0; i < N; i++) {
             double terminate_r = 0;
             int step = 0;
+#ifdef __AVX2__
             int index = BinarySearchForGallopingSearchAVX2(&cdf.front(), 0, static_cast<uint32_t>(cdf.size()),
                                                            static_cast<int>(rand_gen.double_rand() * YCHE_MAX_INT));
+#else
+            int index = BinarySearchForGallopingSearch(&cdf.front(), 0, static_cast<uint32_t>(cdf.size()),
+                    static_cast<int>(rand_gen.double_rand() * YCHE_MAX_INT));
+#endif
+
 
             NodePair sampled_np = node_pairs[index];
             int a, b;

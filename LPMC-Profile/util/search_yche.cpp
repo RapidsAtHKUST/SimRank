@@ -92,6 +92,7 @@ uint32_t GallopingSearch(int *array, uint32_t offset_beg, uint32_t offset_end, i
     }
 }
 
+#ifdef __AVX2__
 // 2nd: avx2-based galloping search
 uint32_t BinarySearchForGallopingSearchAVX2(const int *array, uint32_t offset_beg, uint32_t offset_end, int val) {
     while (offset_end - offset_beg >= 16) {
@@ -167,3 +168,4 @@ uint32_t GallopingSearchAVX2(int *array, uint32_t offset_beg, uint32_t offset_en
         }
     }
 }
+#endif
