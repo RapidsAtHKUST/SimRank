@@ -10,6 +10,7 @@
 #include <vector>
 #include <tuple>
 #include <algorithm>
+#include <chrono>
 
 using namespace std;
 
@@ -48,7 +49,12 @@ public:
     }
 
     void inputGraph(string &file_path) {
+        using namespace std::chrono;
+        auto start_time = high_resolution_clock::now();
         auto edge_lst = GetEdgeList(file_path);
+        auto end_time = high_resolution_clock::now();
+        cout << "load inAdjList list time:" << duration_cast<milliseconds>(end_time - start_time).count()
+             << " ms\n";
 
         n = 0;
         for (auto edge: edge_lst) {
@@ -73,6 +79,9 @@ public:
             sort(inAdjList[i].begin(), inAdjList[i].end());
             sort(outAdjList[i].begin(), outAdjList[i].end());
         }
+        auto final_time = high_resolution_clock::now();
+        cout << "parse inAdjList list to bi-dir csr time:" << duration_cast<milliseconds>(final_time - end_time).count()
+             << " ms\n";
     }
 
     int getInSize(int vert) {

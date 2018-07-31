@@ -77,7 +77,7 @@ public:
 
     SimStruct(const SimStruct &sim_struct, double eps) : g(sim_struct.g), C_value(sim_struct.C_value),
                                                          nr(sim_struct.nr) {
-        cout << "nr= " << nr << endl;
+//        cout << "nr= " << nr << endl;
 
         H[0] = new double[g.n];
         H[1] = new double[g.n];
@@ -118,6 +118,7 @@ public:
     SimStruct(string fn, double C_value, double eps, double delta) : g(fn), C_value(C_value) {
         cout << "graph= " << fn << endl;
         cout << "(c, eps, delta):" << C_value << " , " << eps << " , " << delta << endl;
+//        nr = (int) (0.5 / (eps * eps) * log(g.n) / log(2));
         nr = (int) (C_value * 3 / (eps * eps) * log(g.n / delta) / log(2));
         cout << "nr= " << nr << endl;
 
@@ -201,7 +202,6 @@ public:
         simRank_WalkTree(u, resultList, nodeList);
         clock_t t1 = clock();
 
-        vector<pair<int, double> > sims;
         for (int i = 0; i < g.n; i++) {
             if (i != u && resultList[i] > 0)
                 resultList[i] /= (double) nr;
@@ -256,8 +256,8 @@ public:
         return time;
     }
 
-    void simRank_WalkTree(int u, double resultList[], int *nodeList) {
-        WalkTree *root = new WalkTree();
+    void simRank_WalkTree(int u, double *resultList, int *nodeList) {
+        auto *root = new WalkTree();
         root->node = u;
         root->weight = 0;
         root->children_num = 0;
@@ -313,6 +313,7 @@ public:
         clock_t t3 = clock();
         cout << "calculateResult time: " << (t3 - t2) / (double) CLOCKS_PER_SEC << endl;
 #endif
+        delete root;
     }
 
     void insertTree(WalkTree *root, int *nodeList, int nodeCount,
@@ -421,7 +422,7 @@ public:
         calculate(nodeList, wt, resultList, maxRatio);
     }
 
-    void calculate(vector<int> nodeList, WalkTree *root, double *resultList, int maxRatio) {
+    void calculate(vector<int> &nodeList, WalkTree *root, double *resultList, int maxRatio) {
         if (nodeList.size() >= trunStep + 1)
             return;
         for (int i = 0; i < root->children_num; i++) {
@@ -444,7 +445,7 @@ public:
     }
 
     // randomized probe
-    int randomProbe(vector<int> nodeList, double *resultList) {
+    int randomProbe(vector<int> &nodeList, double *resultList) {
         if (nodeList.size() - 1 > trunStep)
             return 0;
         int num_visit_nodes = 0;
@@ -513,7 +514,7 @@ public:
 
     // randomized probe, if # visit nodes > thres_random_visit, it returns
     // for random cost estimation
-    int randomProbe(vector<int> nodeList, double *resultList, int thres_random_visit) {
+    int randomProbe(vector<int> &nodeList, double *resultList, int thres_random_visit) {
         if (nodeList.size() - 1 > trunStep)
             return 0;
         int num_visit_nodes = 0;
@@ -587,7 +588,7 @@ public:
     }
 
     // deterministic probe
-    int deterProbe(vector<int> nodeList, double weight, double *resultList) {
+    int deterProbe(vector<int> &nodeList, double weight, double *resultList) {
         int target = nodeList.size() - 1;
         int root_node = nodeList[target];
         int ind = 0;
@@ -640,7 +641,7 @@ public:
 
     // deterministic probe, if # visit nodes > thres_deter_visit, it returns
     // for deter cost estimation
-    int deterProbe(vector<int> nodeList, double weight, double *resultList, int thres_deter_visit) {
+    int deterProbe(vector<int> &nodeList, double weight, double *resultList, int thres_deter_visit) {
         int target = nodeList.size() - 1;
         int root_node = nodeList[target];
         int ind = 0;

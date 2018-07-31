@@ -5,7 +5,10 @@
 #include <chrono>
 
 #include <ground_truth/random_pair_generator.h>
+
+#ifdef GROUND_TRUTH
 #include <ground_truth/simrank.h>
+#endif
 
 #include "Graph.h"
 #include "SimStruct.h"
