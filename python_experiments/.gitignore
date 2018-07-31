@@ -1,3 +1,4 @@
+*.txt
 plp*
 venv
 exp_results
