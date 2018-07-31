@@ -85,12 +85,3 @@ InitFLPMC(prlp-lock-free)
 add_executable(prlp-lock-free-stat playground/main_exec_parallel_lp.cpp ${LPMC_FILES} ${UTIL_FILES} ${GROUND_TRUTH_FILES} ${PLP_LOCK_FREE_FILES})
 InitFLPMC(prlp-lock-free-stat)
 target_compile_definitions(prlp-lock-free-stat PRIVATE -DPUSH_NUM_STAT=1)
-
-######### PPLP (not implemented yet)
-add_executable(ppflp playground/main_exec_parallel_lp_pthread.cpp ${LPMC_FILES} ${UTIL_FILES} ${GROUND_TRUTH_FILES} ${PPLP_FILES})
-InitFLPMC(ppflp)
-target_compile_definitions(ppflp PRIVATE -DFLP=1 -DPTHREAD=1)
-
-add_executable(pprlp playground/main_exec_parallel_lp_pthread.cpp ${LPMC_FILES} ${UTIL_FILES} ${GROUND_TRUTH_FILES} ${PPLP_FILES})
-InitFLPMC(pprlp)
-target_compile_definitions(pprlp PRIVATE -DDEBUG=1 -DPTHREAD=1)
