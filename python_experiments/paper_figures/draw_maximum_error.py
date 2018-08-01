@@ -1,6 +1,7 @@
 import matplotlib.pyplot as plt
 
 from data_analysis.generate_accuracy_markdown import *
+from data_analysis.probesim_querying_time_statistics import probesim_gt_tag
 from draw_indexing_time_size import get_name_dict, LABEL_SIZE, TICK_SIZE, LEGEND_SIZE
 
 data_names = get_name_dict()
@@ -17,9 +18,9 @@ def draw_figures_max_err():
     exp_figure, ax_tuple = plt.subplots(1, 4, sharex=True, figsize=(32, 7))
     algorithm_tag_lst = [bflpmc_tag, flpmc_tag, bprw_tag, sling_tag,
                          reads_d_tag, reads_rq_tag,
-                         isp_tag, tsf_tag, lind_tag, cw_tag]
+                         isp_tag, tsf_tag, lind_tag, cw_tag, probesim_gt_tag]
     legend_lst = ['FBLPMC', 'FLPMC', 'BLPMC', 'SLING',
-                  'READS-D', 'READS-Rq', 'ISP', 'TSF', 'LIN', 'MCSP', '$\\epsilon$-Bound']
+                  'READS-D', 'READS-Rq', 'ISP', 'TSF', 'LIN', 'MCSP', 'ProbeSim', '$\\epsilon$-Bound']
 
     for ax_idx, ax in enumerate(ax_tuple):
         max_err_lst_lst = []
@@ -27,13 +28,13 @@ def draw_figures_max_err():
             time_lst = get_algorithm_max_err_lst(algorithm, data_set_lst[ax_idx])
             max_err_lst_lst.append(time_lst)
             color_lst = ['blue', 'orange', 'green', 'red',
-                         '#fe01b1', '#ceb301', 'm', 'brown', 'k', 'gray']
+                         '#fe01b1', '#ceb301', 'm', 'brown', 'k', 'gray', 'purple']
             # shape_lst = ['D-.', 's--', 'o:', 'x-',
             #              'P-', '*-',
             #              'v-', '^-', '<-', '>-']
             shape_lst = ['D', 's', 'o', 'x',
                          'P', '*',
-                         'v', '^', '<', '>']
+                         'v', '^', '<', '>', '+']
             cur_mark_size = 16 if idx != 5 else 20
             ax.plot(round_lst, time_lst, shape_lst[idx], markersize=cur_mark_size if idx != 0 else cur_mark_size - 4,
                     markerfacecolor='none',
@@ -61,10 +62,11 @@ def draw_figures_max_err():
         my_ax.set_xticklabels([i + 1 for i in range(10)], fontsize=TICK_SIZE)
         # my_ax.grid(True, alpha=0.2)
 
-    exp_figure.subplots_adjust(wspace=0)
+    exp_figure.subplots_adjust(wspace=0, hspace=0.2)
     plt.tight_layout()
-    plt.legend(legend_lst, ncol=len(legend_lst), fontsize=LEGEND_SIZE, prop={'size': LEGEND_SIZE + 3, "weight": "bold"},
-               bbox_to_anchor=(1.15, 1.15))
+    plt.legend(legend_lst, ncol=len(legend_lst) / 2, fontsize=LEGEND_SIZE,
+               prop={'size': LEGEND_SIZE + 3, "weight": "bold"},
+               bbox_to_anchor=(0.3, 1.3), handletextpad=2.5)
     plt.savefig('figures/' + 'max_err' + '.pdf', bbox_inches='tight', dpi=300)
     # exp_figure.show()
     plt.close()

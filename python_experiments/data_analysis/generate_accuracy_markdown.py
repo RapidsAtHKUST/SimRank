@@ -10,10 +10,12 @@ def get_accuracy_dict(root_dir='.', file_name='accuracy_result'):
 
 def get_accuracy_dict_with_reads(root_dir='.', file_name='accuracy_result'):
     accuracy_dict = get_accuracy_dict(root_dir)
-    read_dict = get_accuracy_dict(root_dir, file_name='accuracy_result_reads')
-    assert isinstance(read_dict, dict)
-    for key, val in read_dict.iteritems():
-        accuracy_dict[key] = val
+
+    for file in ['accuracy_result_reads', 'accuracy_result_probesim']:
+        read_dict = get_accuracy_dict(root_dir, file_name=file)
+        assert isinstance(read_dict, dict)
+        for key, val in read_dict.iteritems():
+            accuracy_dict[key] = val
     return accuracy_dict
 
 
