@@ -1,4 +1,6 @@
 import matplotlib.pyplot as plt
+
+from data_analysis.probesim_querying_time_statistics import probesim_gt_tag
 from data_analysis.varying_eps_statistics import *
 from draw_indexing_time_size import TICK_SIZE, LEGEND_SIZE, LABEL_SIZE, reads_d_tag, reads_rq_tag, get_name_dict
 import json
@@ -10,6 +12,16 @@ def get_dict(file_path):
 
 
 eps_max_err_dict = get_dict('../data_analysis/data-json/varying_parameters/varying_eps_max_err.json')
+tmp = get_dict(
+    '../data_analysis/data-json/varying_parameters/varying_eps_max_err_probesim.json')
+for data_set in eps_max_err_dict:
+    eps_max_err_dict[data_set][probesim_gt_tag] = tmp[data_set][probesim_gt_tag]
+    tmp_dct = eps_max_err_dict[data_set][probesim_gt_tag]
+    for i in xrange(3, 1, -1):
+        tmp_str = '0.00' + str(i)
+        tmp_str2 = '0.00' + str(i + 1)
+        if tmp_dct[tmp_str] is None:
+            tmp_dct[tmp_str] = tmp_dct[tmp_str2]
 data_names = get_name_dict()
 
 
@@ -19,15 +31,15 @@ def draw_max_err():
     exp_figure, ax_tuple = plt.subplots(1, 4, sharex=True, figsize=(32, 7))
 
     algorithm_tag_lst = [bflpmc_tag, flpmc_tag, bprw_tag, sling_tag,
-                         reads_d_tag, reads_rq_tag, isp_tag, tsf_tag]
+                         reads_d_tag, reads_rq_tag, isp_tag, tsf_tag, probesim_gt_tag]
     legend_lst = ['FBLPMC', 'FLPMC', 'BLPMC', 'SLING',
-                  'READS-D', 'READS-Rq', 'ISP', 'TSF', '$\\epsilon$-Bound']
+                  'READS-D', 'READS-Rq', 'ISP', 'TSF', 'ProbeSim', '$\\epsilon$-Bound']
     data_set_lst = ['ca-GrQc', 'ca-HepTh', 'p2p-Gnutella06', 'wiki-Vote']
     color_lst = ['blue', 'orange', 'green', 'red',
-                 '#fe01b1', '#ceb301', 'm', 'brown', 'k', 'gray']
+                 '#fe01b1', '#ceb301', 'm', 'brown', 'purple', 'k', 'gray']
     shape_lst = ['D-.', 's--', 'o:', 'x-',
                  'P-', '*-',
-                 'v-', '^-', '<-', '>-']
+                 'v-', '^-', '+-', '<-', '>-', ]
     caption_lst = ['(a) dataset = ', '(b) dataset = ', '(c) dataset = ', '(d) dataset = ']
     for ax_idx, ax in enumerate(ax_tuple):
         lst_lst = []
@@ -71,7 +83,7 @@ def draw_max_err():
 
     plt.tight_layout()
     plt.legend(legend_lst, ncol=len(legend_lst), fontsize=LEGEND_SIZE, prop={'size': LEGEND_SIZE + 3, "weight": "bold"},
-               bbox_to_anchor=(0.7, 1.15))
+               bbox_to_anchor=(0.9, 1.15))
     exp_figure.subplots_adjust(wspace=0)
     plt.tight_layout()
     plt.savefig('figures/' + 'varying_eps_max_err' + '.pdf', bbox_inches='tight', dpi=300)

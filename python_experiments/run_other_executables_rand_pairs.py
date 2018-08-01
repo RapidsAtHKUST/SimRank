@@ -49,7 +49,7 @@ def run_exp():
 
     # sample_num_lst= [10 ** 3, 10 ** 4, 10 ** 5, 10 ** 6]
     # sample_num_lst = [10 ** 3, 10 ** 4]
-    sample_num_lst = [10 ** 4, 10 ** 5]
+    sample_num_lst = [10 ** 3, 10 ** 5]
 
     def one_round():
         # algorithm by algorithm to finish the experiment
@@ -95,15 +95,15 @@ def run_exp():
 
     # one_round()
 
-    sample_num_lst = [10 ** 4]
+    sample_num_lst = [10 ** 3, 10 ** 5]
     # sample_num_lst = [10 ** 3, 10 ** 4]
     # sample_num_lst = [10 ** 3]
     # sample_num_lst = [10 ** 6]
     range_idx_lst = range(1)
     data_set_lst = [
-        # 'ca-GrQc', 'ca-HepTh', 'p2p-Gnutella06', 'wiki-Vote',
-        # 'email-Enron', 'email-EuAll', 'web-NotreDame', 'web-Stanford', 'web-BerkStan', 'web-Google',
-        # 'cit-Patents',
+        'ca-GrQc', 'ca-HepTh', 'p2p-Gnutella06', 'wiki-Vote',
+        'email-Enron', 'email-EuAll', 'web-NotreDame', 'web-Stanford', 'web-BerkStan', 'web-Google',
+        'cit-Patents',
         'soc-LiveJournal1',
         'wiki-Link'
     ]

@@ -38,9 +38,10 @@ def run_varying_eps_exp():
         # '/homes/ywangby/workspace/yche/git-repos/SimRank/LPMC-Profile/build/bflpmc-rand-varying-gt',
         # '/homes/ywangby/workspace/yche/git-repos/SimRank/SPS-Variants/sling/build/sling-rand-varying-gt',
         # '/homes/ywangby/workspace/yche/git-repos/SimRank/SPS-Variants/isp-yche/build/isp-rand-varying-gt',
-        '/homes/ywangby/workspace/yche/git-repos/SimRank/SPS-Variants/tsf/build/tsf-rand-varying-gt',
+        # '/homes/ywangby/workspace/yche/git-repos/SimRank/SPS-Variants/tsf/build/tsf-rand-varying-gt',
         # '/homes/ywangby/workspace/yche/git-repos/SimRank/SPS-Variants/READS/build/reads-d-rand-bench',
         # '/homes/ywangby/workspace/yche/git-repos/SimRank/SPS-Variants/READS/build/reads-rq-rand-bench',
+        '/homes/ywangby/workspace/yche/new-git-repos-yche/SimRank/SPS-Variants/ProbeSim_vldb_pub/build/ProbeSim-gt'
     ]
     # sample_num_lst = [10 ** 5,
     #                   10 ** 5,
@@ -55,9 +56,9 @@ def run_varying_eps_exp():
     tag = 'exp_results'
     folder_name = 'varying_eps_for_gt_exp'
     data_set_name_lst = [
-        # 'ca-GrQc',
-        # 'ca-HepTh',
-        # 'p2p-Gnutella06',
+        'ca-GrQc',
+        'ca-HepTh',
+        'p2p-Gnutella06',
         'wiki-Vote'
     ]
     round_idx = 0
@@ -65,8 +66,8 @@ def run_varying_eps_exp():
     # algorithm parameters
     c = 0.6
     delta = 0.01
-    # eps_lst = list(reversed([0.001 * (i + 1) for i in xrange(100)]))
-    eps_lst = list(([0.001 * (i + 1) for i in xrange(10, 15)]))
+    eps_lst = list(reversed([0.001 * (i + 1) for i in xrange(1, 15)]))
+    # eps_lst = list(([0.001 * (i + 1) for i in xrange(1, 15)]))
 
     exec_path_lst = [
         # '/homes/ywangby/workspace/yche/git-repos/SimRank/LPMC-Profile/build/bprw-rand-varying-gt',
@@ -74,9 +75,10 @@ def run_varying_eps_exp():
         # '/homes/ywangby/workspace/yche/git-repos/SimRank/LPMC-Profile/build/bflpmc-rand-varying-gt',
         # '/homes/ywangby/workspace/yche/git-repos/SimRank/SPS-Variants/sling/build/sling-rand-varying-gt',
         # '/homes/ywangby/workspace/yche/git-repos/SimRank/SPS-Variants/isp-yche/build/isp-rand-varying-gt',
-        '/homes/ywangby/workspace/yche/git-repos/SimRank/SPS-Variants/tsf/build/tsf-rand-varying-gt',
+        # '/homes/ywangby/workspace/yche/git-repos/SimRank/SPS-Variants/tsf/build/tsf-rand-varying-gt',
         # '/homes/ywangby/workspace/yche/git-repos/SimRank/SPS-Variants/READS/build/reads-d-rand-bench',
-        # '/homes/ywangby/workspace/yche/git-repos/SimRank/SPS-Variants/READS/build/reads-rq-rand-bench'
+        # '/homes/ywangby/workspace/yche/git-repos/SimRank/SPS-Variants/READS/build/reads-rq-rand-bench',
+        '/homes/ywangby/workspace/yche/new-git-repos-yche/SimRank/SPS-Variants/ProbeSim_vldb_pub/build/ProbeSim-gt'
     ]
 
     def one_round():
@@ -95,10 +97,10 @@ def run_varying_eps_exp():
                         ['echo', my_splitter + time.ctime() + my_splitter, '>>', statistics_file_path]))
                     params_lst = map(str,
                                      [algorithm_path, data_set_name, sample_num_dict[algorithm_path], round_idx, c, eps,
-                                      delta, '>>',
+                                      delta, 200, '>>',
                                       statistics_file_path])
                     cmd = ' '.join(params_lst)
-                    time_out = 7200
+                    time_out = 900
 
                     # 2nd: run cmd
                     tle_flag, info, correct_info = time_out_util.run_with_timeout(cmd, timeout_sec=time_out)
