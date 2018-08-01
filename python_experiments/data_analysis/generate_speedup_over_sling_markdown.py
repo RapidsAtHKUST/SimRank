@@ -15,10 +15,11 @@ def get_cpu_time_dict(root_dir='.'):
 
 def get_cpu_time_dict_with_reads(root_dir='.'):
     local_cpu_time_dict = get_cpu_time_dict(root_dir)
-    with open(root_dir + os.sep + 'data-json/query_result_full_cpu_time_reads.json') as ifs:
-        reads_dict = json.load(ifs)
-        for key, val in reads_dict.iteritems():
-            local_cpu_time_dict[key] = val
+    for file in ['data-json/query_result_full_cpu_time_reads.json', 'data-json/query_result_full_cpu_time_probesim.json']:
+        with open(root_dir + os.sep + file) as ifs:
+            reads_dict = json.load(ifs)
+            for key, val in reads_dict.iteritems():
+                local_cpu_time_dict[key] = val
     return local_cpu_time_dict
 
 
