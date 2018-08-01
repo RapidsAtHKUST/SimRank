@@ -19,15 +19,17 @@ delta_index_dict = dict(itertools.chain(delta_index_dict.iteritems(), delta_read
 
 delta_query_dict = get_dict('../data_analysis/data-json/varying_parameters/varying_delta_query.json')
 delta_reads_query_dict = get_dict('../data_analysis/data-json/varying_parameters/varying_delta_query_reads.json')
-delta_query_dict = dict(itertools.chain(delta_query_dict.iteritems(), delta_reads_query_dict.iteritems()))
+delta_probesim_query_dict = get_dict('../data_analysis/data-json/varying_parameters/probesim_varying_delta_query.json')
+delta_query_dict = dict(itertools.chain(delta_query_dict.iteritems(), delta_reads_query_dict.iteritems(),
+                                        delta_probesim_query_dict.iteritems()))
 
 
 def draw_query_index_time():
     exp_figure, ax_tuple = plt.subplots(1, 2, sharex=True, figsize=(16, 7))
 
     # 1st: draw querying time
-    algorithm_tag_lst = [bflpmc_tag, flpmc_tag, bprw_tag, sling_tag, reads_d_tag, reads_rq_tag, tsf_tag]
-    legend_lst = ['FBLPMC', 'FLPMC', 'BLPMC', 'SLING', 'READS-D', 'READS-Rq', 'TSF']
+    algorithm_tag_lst = [bflpmc_tag, flpmc_tag, bprw_tag, sling_tag, reads_d_tag, reads_rq_tag, tsf_tag, probesim_tag]
+    legend_lst = ['FBLPMC', 'FLPMC', 'BLPMC', 'SLING', 'READS-D', 'READS-Rq', 'TSF', 'ProbeSim']
 
     ax = ax_tuple[0]
     lst_lst = []
@@ -42,16 +44,20 @@ def draw_query_index_time():
         lst_lst.append(time_lst)
         shape_lst = ['D-.', 's--', 'o:', 'x-',
                      'P-', '*-',
-                     '^-', '<-', '>-']
+                     '^-', '+-',
+                     '<-', '>-']
         color_lst = ['blue', 'orange', 'green', 'red',
                      '#fe01b1', '#ceb301',
-                     'brown', 'pink', 'gray']
+                     'brown', 'purple',
+                     'pink', 'gray']
 
         def get_marker_size():
             if idx == 0:
                 return 16
             elif idx == 5:
                 return 22
+            elif idx == 7:
+                return 28
             else:
                 return 18
 

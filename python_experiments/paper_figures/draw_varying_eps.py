@@ -18,7 +18,9 @@ eps_index_dict = dict(itertools.chain(eps_index_dict.iteritems(), eps_reads_inde
 
 eps_query_dict = get_dict('../data_analysis/data-json/varying_parameters/varying_eps_query.json')
 eps_reads_query_dict = get_dict('../data_analysis/data-json/varying_parameters/varying_eps_query_reads.json')
-eps_query_dict = dict(itertools.chain(eps_query_dict.iteritems(), eps_reads_query_dict.iteritems()))
+eps_probesim_query_dict = get_dict('../data_analysis/data-json/varying_parameters/probesim_varying_eps_query.json')
+eps_query_dict = dict(
+    itertools.chain(eps_query_dict.iteritems(), eps_reads_query_dict.iteritems(), eps_probesim_query_dict.iteritems()))
 
 
 def draw_query_index_time():
@@ -28,9 +30,9 @@ def draw_query_index_time():
 
     # 1st: draw querying time
     algorithm_tag_lst = [bflpmc_tag, flpmc_tag, bprw_tag, sling_tag,
-                         reads_d_tag, reads_rq_tag, isp_tag, tsf_tag]
+                         reads_d_tag, reads_rq_tag, isp_tag, tsf_tag, probesim_tag]
     legend_lst = ['FBLPMC', 'FLPMC', 'BLPMC', 'SLING',
-                  'READS-D', 'READS-Rq', 'ISP', 'TSF']
+                  'READS-D', 'READS-Rq', 'ISP', 'TSF', 'ProbeSim']
 
     ax = ax_tuple[0]
     lst_lst = []
@@ -44,16 +46,22 @@ def draw_query_index_time():
         time_lst = map(lambda val: float(val) / us_to_ms_factor if val is not None else None, time_lst)
         lst_lst.append(time_lst)
         color_lst = ['blue', 'orange', 'green', 'red',
-                     '#fe01b1', '#ceb301', 'm', 'brown', 'k', 'gray']
+                     '#fe01b1', '#ceb301', 'm', 'brown',
+                     'purple',
+                     'k', 'gray']
         shape_lst = ['D-.', 's--', 'o:', 'x-',
                      'P-', '*-',
-                     'v-', '^-', '<-', '>-']
+                     'v-', '^-',
+                     '+-',
+                     '<-', '>-']
 
         def get_marker_size(idx):
             if idx == 0:
                 return 12
             elif idx == 5:
                 return 20
+            elif idx == 8:
+                return 24
             else:
                 return 14
 
@@ -72,7 +80,7 @@ def draw_query_index_time():
     ax.set_ylabel('Avg Query Time (ms)', fontsize=LABEL_SIZE + large_size_plus)
     ax.set_xlabel('$\\epsilon$', fontsize=LABEL_SIZE + large_size_plus)
     ax.grid(True, alpha=0.4)
-    ax.legend(legend_lst, ncol=2, prop={'size': LEGEND_SIZE, "weight": "bold"}, loc=1)
+    ax.legend(legend_lst, ncol=2, prop={'size': LEGEND_SIZE - 2, "weight": "bold"}, loc=1)
 
     # 2nd: draw the index
     algorithm_tag_lst = [flp_tag, sling_tag, reads_d_tag, reads_rq_tag, tsf_tag]
