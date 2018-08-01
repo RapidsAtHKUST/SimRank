@@ -70,9 +70,9 @@ int main(int argc, char *argv[]) {
         auto probe_sim = SimStruct(simStruct, eps);
         auto *resultList = new double[probe_sim.g.n];
 #ifdef GROUND_TRUTH
-#pragma omp for reduction(max:max_err) schedule(dynamic, 100)
+#pragma omp for reduction(max:max_err) schedule(dynamic, 5)
 #else
-#pragma omp for schedule(dynamic, 100)
+#pragma omp for schedule(dynamic, 5)
 #endif
         for (auto pair_i = 0; pair_i < pair_num; pair_i++) {
             auto u = sample_pairs[pair_i].first;

@@ -91,7 +91,7 @@ def draw_precision():
 
     plt.tight_layout()
     plt.legend(legend_lst, ncol=len(legend_lst), fontsize=LEGEND_SIZE, prop={'size': LEGEND_SIZE + 3, "weight": "bold"},
-               bbox_to_anchor=(0.55, 1.15))
+               bbox_to_anchor=(0.75, 1.15))
     exp_figure.subplots_adjust(wspace=0)
     plt.tight_layout()
 
@@ -134,7 +134,7 @@ def draw_avg_diff():
 
     plt.tight_layout()
     plt.legend(legend_lst, ncol=len(legend_lst), fontsize=LEGEND_SIZE, prop={'size': LEGEND_SIZE + 3, "weight": "bold"},
-               bbox_to_anchor=(0.55, 1.15))
+               bbox_to_anchor=(0.75, 1.15))
     exp_figure.subplots_adjust(wspace=0)
     plt.tight_layout()
 

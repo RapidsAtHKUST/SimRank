@@ -1,0 +1,3 @@
+python2 run_varying_c_exp.py
+python2 run_varying_eps_exp.py
+python2 run_varying_delta_exp.py

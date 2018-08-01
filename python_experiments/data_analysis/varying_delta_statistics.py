@@ -1,5 +1,7 @@
 import os, json
 
+from data_analysis.probesim_querying_time_statistics import probesim_tag
+
 bprw_tag = 'bprw'
 flpmc_tag = 'flpmc'
 bflpmc_tag = 'bflpmc'
@@ -12,9 +14,11 @@ delta_lst = list(reversed([10 ** (-(i + 1)) for i in xrange(9)]))
 
 def get_file_path(eps, algorithm, pair_num=10 ** 6):
     root_path = '/home/yche/mnt/wangyue-clu/csproject/biggraph/ywangby/yche/' \
-                'git-repos/SimRank/python_experiments/exp_results/varying_delta_exp'
+                'git-repos/SimRank/python_experiments/exp_results/varying_delta_exp' if algorithm is not probesim_tag \
+        else '/home/yche/mnt/wangyue-clu/csproject/biggraph/ywangby/yche/new-git-repos-yche/SimRank/' \
+             'python_experiments/exp_results/varying_delta_exp'
     data_set_name = 'ca-GrQc'
-    suffix_str = '-rand-varying.txt'
+    suffix_str = '-rand-varying.txt' if algorithm is not probesim_tag else '.txt'
     return os.sep.join(map(str, [root_path, data_set_name, pair_num, eps, algorithm + suffix_str]))
 
 
@@ -66,32 +70,49 @@ def get_indexing_time_lst(algorithm, pair_num=10 ** 6):
 def get_pair_num(algorithm):
     if algorithm in [tsf_tag]:
         return 10 ** 3
+    elif algorithm in [probesim_tag]:
+        return 10 ** 3
     else:
         return 10 ** 6
 
 
 if __name__ == '__main__':
-    algorithm_lst = [bprw_tag, bflpmc_tag, flpmc_tag, sling_tag, tsf_tag]
-
     data_folder = 'data-json/varying_parameters'
     os.system('mkdir -p ' + data_folder)
 
 
-    def get_time_lst():
-        time_lst = [get_cpu_time_lst(algorithm, get_pair_num(algorithm)) for algorithm
-                    in algorithm_lst]
+    def stat_without_probesim():
+        algorithm_lst = [bprw_tag, bflpmc_tag, flpmc_tag, sling_tag, tsf_tag]
 
-        with open(os.sep.join([data_folder, 'varying_delta_query.json']), 'w') as ofs:
-            ofs.write(json.dumps(dict(zip(algorithm_lst, time_lst)), indent=4))
+        def get_time_lst():
+            time_lst = [get_cpu_time_lst(algorithm, get_pair_num(algorithm)) for algorithm
+                        in algorithm_lst]
+
+            with open(os.sep.join([data_folder, 'varying_delta_query.json']), 'w') as ofs:
+                ofs.write(json.dumps(dict(zip(algorithm_lst, time_lst)), indent=4))
+
+        def get_index_lst():
+            name_lst = [flp_tag, sling_tag, tsf_tag]
+            time_lst = [get_indexing_time_lst(algorithm, get_pair_num(algorithm)) for
+                        algorithm in [flpmc_tag, sling_tag, tsf_tag]]
+            with open(os.sep.join([data_folder, 'varying_delta_index.json']), 'w') as ofs:
+                ofs.write(json.dumps(dict(zip(name_lst, time_lst)), indent=4))
+
+        get_time_lst()
+        get_index_lst()
 
 
-    def get_index_lst():
-        name_lst = [flp_tag, sling_tag, tsf_tag]
-        time_lst = [get_indexing_time_lst(algorithm, get_pair_num(algorithm)) for
-                    algorithm in [flpmc_tag, sling_tag, tsf_tag]]
-        with open(os.sep.join([data_folder, 'varying_delta_index.json']), 'w') as ofs:
-            ofs.write(json.dumps(dict(zip(name_lst, time_lst)), indent=4))
+    def stat_with_probesim():
+        algorithm_lst = [probesim_tag]
+
+        def get_time_lst():
+            time_lst = [get_cpu_time_lst(algorithm, get_pair_num(algorithm)) for algorithm
+                        in algorithm_lst]
+
+            with open(os.sep.join([data_folder, 'probesim_varying_delta_query.json']), 'w') as ofs:
+                ofs.write(json.dumps(dict(zip(algorithm_lst, time_lst)), indent=4))
+
+        get_time_lst()
 
 
-    get_time_lst()
-    get_index_lst()
+    stat_with_probesim()

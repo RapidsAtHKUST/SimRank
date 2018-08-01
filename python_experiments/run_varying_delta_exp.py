@@ -33,21 +33,25 @@ def signal_handler(signal, frame):
 
 def run_exp():
     exec_path_lst = [
-        '/homes/ywangby/workspace/yche/git-repos/SimRank/LPMC-Profile/build/bprw-rand-varying',
-        '/homes/ywangby/workspace/yche/git-repos/SimRank/LPMC-Profile/build/flpmc-rand-varying',
-        '/homes/ywangby/workspace/yche/git-repos/SimRank/LPMC-Profile/build/bflpmc-rand-varying',
-        '/homes/ywangby/workspace/yche/git-repos/SimRank/SPS-Variants/sling/build/sling-rand-varying',
-        '/homes/ywangby/workspace/yche/git-repos/SimRank/SPS-Variants/tsf/build/tsf-rand-varying',
-        '/homes/ywangby/workspace/yche/git-repos/SimRank/SPS-Variants/READS/build/reads-d-rand-bench',
-        '/homes/ywangby/workspace/yche/git-repos/SimRank/SPS-Variants/READS/build/reads-rq-rand-bench',
+        # '/homes/ywangby/workspace/yche/git-repos/SimRank/LPMC-Profile/build/bprw-rand-varying',
+        # '/homes/ywangby/workspace/yche/git-repos/SimRank/LPMC-Profile/build/flpmc-rand-varying',
+        # '/homes/ywangby/workspace/yche/git-repos/SimRank/LPMC-Profile/build/bflpmc-rand-varying',
+        # '/homes/ywangby/workspace/yche/git-repos/SimRank/SPS-Variants/sling/build/sling-rand-varying',
+        # '/homes/ywangby/workspace/yche/git-repos/SimRank/SPS-Variants/tsf/build/tsf-rand-varying',
+        # '/homes/ywangby/workspace/yche/git-repos/SimRank/SPS-Variants/READS/build/reads-d-rand-bench',
+        # '/homes/ywangby/workspace/yche/git-repos/SimRank/SPS-Variants/READS/build/reads-rq-rand-bench',
+        '/homes/ywangby/workspace/yche/new-git-repos-yche/SimRank/SPS-Variants/ProbeSim_vldb_pub/build/ProbeSim'
     ]
-    sample_num_lst = [10 ** 6,
-                      10 ** 6,
-                      10 ** 6,
-                      10 ** 6,
-                      10 ** 3,
-                      10 ** 5,
-                      10 ** 5]
+    sample_num_lst = [
+        # 10 ** 6,
+        # 10 ** 6,
+        # 10 ** 6,
+        # 10 ** 6,
+        # 10 ** 3,
+        # 10 ** 5,
+        # 10 ** 5,
+        10 ** 3,
+    ]
     sample_num_dict = dict(zip(exec_path_lst, sample_num_lst))
 
     exec_path_lst = [
@@ -56,8 +60,9 @@ def run_exp():
         # '/homes/ywangby/workspace/yche/git-repos/SimRank/LPMC-Profile/build/bflpmc-rand-varying',
         # '/homes/ywangby/workspace/yche/git-repos/SimRank/SPS-Variants/sling/build/sling-rand-varying',
         # '/homes/ywangby/workspace/yche/git-repos/SimRank/SPS-Variants/tsf/build/tsf-rand-varying'
-        '/homes/ywangby/workspace/yche/git-repos/SimRank/SPS-Variants/READS/build/reads-d-rand-bench',
-        '/homes/ywangby/workspace/yche/git-repos/SimRank/SPS-Variants/READS/build/reads-rq-rand-bench',
+        # '/homes/ywangby/workspace/yche/git-repos/SimRank/SPS-Variants/READS/build/reads-d-rand-bench',
+        # '/homes/ywangby/workspace/yche/git-repos/SimRank/SPS-Variants/READS/build/reads-rq-rand-bench',
+        '/homes/ywangby/workspace/yche/new-git-repos-yche/SimRank/SPS-Variants/ProbeSim_vldb_pub/build/ProbeSim'
     ]
     tag = 'exp_results'
     folder_name = 'varying_delta_exp'
@@ -84,10 +89,10 @@ def run_exp():
                     ['echo', my_splitter + time.ctime() + my_splitter, '>>', statistics_file_path]))
                 params_lst = map(str,
                                  [algorithm_path, data_set_name, sample_num_dict[algorithm_path], round_idx, c, eps,
-                                  delta, '>>',
+                                  delta, 200, '>>',
                                   statistics_file_path])
                 cmd = ' '.join(params_lst)
-                time_out = 1200
+                time_out = 3600
 
                 # 2nd: run cmd
                 tle_flag, info, correct_info = time_out_util.run_with_timeout(cmd, timeout_sec=time_out)
