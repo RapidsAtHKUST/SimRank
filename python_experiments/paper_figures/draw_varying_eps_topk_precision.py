@@ -1,6 +1,7 @@
 import matplotlib.pyplot as plt
 
-from data_analysis.querying_time_accuracy_statistics import lind_tag, cw_tag
+from data_analysis.probesim_querying_time_statistics import probesim_gt_tag
+# from data_analysis.querying_time_accuracy_statistics import lind_tag, cw_tag
 from data_analysis.varying_eps_statistics import *
 from draw_indexing_time_size import TICK_SIZE, LEGEND_SIZE, LABEL_SIZE, reads_d_tag, reads_rq_tag, get_name_dict
 import json
@@ -12,6 +13,10 @@ def get_dict(file_path):
 
 
 eps_max_err_dict = get_dict('../data_analysis/data-json/topk_precision/precision_top_800_sample_10000.json')
+tmp = get_dict('../data_analysis/data-json/topk_precision/precision_probesim_top_800_sample_10000.json')
+for data_set in eps_max_err_dict:
+    eps_max_err_dict[data_set][probesim_gt_tag] = tmp[data_set][probesim_gt_tag]
+    tmp_dct = eps_max_err_dict[data_set][probesim_gt_tag]
 data_names = get_name_dict()
 
 
@@ -23,16 +28,23 @@ eps_lst = [0.0001, 0.0004, 0.0016, 0.0064, 0.0256]
 
 algorithm_tag_lst = [bflpmc_tag, flpmc_tag, bprw_tag, sling_tag,
                      reads_d_tag, reads_rq_tag, isp_tag, tsf_tag,
+                     probesim_gt_tag,
                      # lind_tag, cw_tag
                      ]
 legend_lst = ['FBLPMC', 'FLPMC', 'BLPMC', 'SLING',
-              'READS-D', 'READS-Rq', 'ISP', 'TSF', 'LIN', 'MCSP']
+              'READS-D', 'READS-Rq', 'ISP', 'TSF', 'ProbeSim',
+              # 'LIN', 'MCSP'
+              ]
 data_set_lst = ['ca-GrQc', 'ca-HepTh', 'p2p-Gnutella06', 'wiki-Vote']
 color_lst = ['blue', 'orange', 'green', 'red',
-             '#fe01b1', '#ceb301', 'm', 'brown', 'k', 'gray']
+             '#fe01b1', '#ceb301', 'm', 'brown', 'purple',
+             'k', 'gray']
 shape_lst = ['D-.', 's--', 'o:', 'x-',
              'P-', '*-',
-             'v-', '^-', '<-', '>-']
+             'v-', '^-',
+             '+-',
+             # '<-', '>-'
+             ]
 caption_lst = ['(a) dataset = ', '(b) dataset = ', '(c) dataset = ', '(d) dataset = ']
 
 
@@ -41,6 +53,8 @@ def get_marker_size(idx):
         return 16
     elif idx == 5:
         return 22
+    elif idx == 8:
+        return 30
     else:
         return 18
 
@@ -100,7 +114,10 @@ def draw_avg_diff():
 
             ax.plot(eps_lst, max_err_lst, shape_lst[idx], color=color_lst[idx], markersize=get_marker_size(idx),
                     markerfacecolor='none')
-        ax.set_ylim(10 ** (-6), 2 * 10 ** (-3))
+        if ax_idx != 3:
+            ax.set_ylim(10 ** (-6) if ax_idx < 2 else 10 ** (-7), 2 * 10 ** (-3))
+        else:
+            ax.set_ylim(10 ** (-7) / 3, 2 * 10 ** (-3))
         ax.set_xscale('log')
         ax.set_yscale('log')
         ax.set_xticks(eps_lst)
@@ -128,4 +145,8 @@ def draw_avg_diff():
 if __name__ == '__main__':
     draw_precision()
     eps_max_err_dict = get_dict('../data_analysis/data-json/topk_precision/avg_diff_top_800_sample_10000.json')
+    tmp = get_dict('../data_analysis/data-json/topk_precision/avg_diff_probesim_top_800_sample_10000.json')
+    for data_set in eps_max_err_dict:
+        eps_max_err_dict[data_set][probesim_gt_tag] = tmp[data_set][probesim_gt_tag]
+        tmp_dct = eps_max_err_dict[data_set][probesim_gt_tag]
     draw_avg_diff()

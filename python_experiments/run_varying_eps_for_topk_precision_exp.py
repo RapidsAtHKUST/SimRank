@@ -40,9 +40,10 @@ def run_varying_eps_exp():
         # '/homes/ywangby/workspace/yche/git-repos/SimRank/SPS-Variants/isp-yche/build/isp-rand-bench-gt',
         # '/homes/ywangby/workspace/yche/git-repos/SimRank/SPS-Variants/tsf/build/tsf-rand-bench-gt',
         # '/homes/ywangby/workspace/yche/git-repos/SimRank/SPS-Variants/READS/build/reads-d-rand-bench',
-        '/homes/ywangby/workspace/yche/git-repos/SimRank/SPS-Variants/READS/build/reads-rq-rand-bench',
+        # '/homes/ywangby/workspace/yche/git-repos/SimRank/SPS-Variants/READS/build/reads-rq-rand-bench',
         # '/homes/ywangby/workspace/yche/git-repos/SimRank/SPS-Variants/LinearD/build/lind-rand-ben-gt',
         # '/homes/ywangby/workspace/yche/git-repos/SimRank/SPS-Variants/LinearD/build/cw-rand-gen-gt',
+        '/homes/ywangby/workspace/yche/new-git-repos-yche/SimRank/SPS-Variants/ProbeSim_vldb_pub/build/ProbeSim-gt'
     ]
 
     tag = 'exp_results'
@@ -52,8 +53,8 @@ def run_varying_eps_exp():
     data_set_name_lst = [
         'ca-GrQc',
         'ca-HepTh',
-        # 'p2p-Gnutella06',
-        # 'wiki-Vote'
+        'p2p-Gnutella06',
+        'wiki-Vote'
     ]
     round_idx = 0
 
@@ -62,7 +63,7 @@ def run_varying_eps_exp():
         # algorithm by algorithm to finish the experiment
         for algorithm_path in exec_path_lst:
             for data_set_name in data_set_name_lst:
-                eps_lst = list(reversed([0.0001, 0.0004, 0.0016, 0.0064, 0.0256]))
+                eps_lst = list(reversed([0.0001, 0.0004, 0.0016, 0.0064, 0.0256]))[2:3]
                 if 'sling' in algorithm_path or 'reads-d' in algorithm_path:
                     eps_lst = list(reversed([0.0016, 0.0064, 0.0256]))
                 elif 'tsf' in algorithm_path:
@@ -83,10 +84,13 @@ def run_varying_eps_exp():
                     if algorithm_path.split('/')[-1] in ['lind-rand-ben-gt', 'cw-rand-gen-g']:
                         params_lst = map(str, [algorithm_path, data_set_name, sample_num, round_idx, k, '>>',
                                                statistics_file_path])
+                    if algorithm_path.endswith('ProbeSim-gt'):
+                        params_lst = map(str, [algorithm_path, data_set_name, sample_num, round_idx, 0.6, eps,
+                                               0.01, k, '>>', statistics_file_path])
 
                     cmd = ' '.join(params_lst)
                     print cmd
-                    time_out = 900
+                    time_out = 7200
 
                     # 2nd: run cmd
                     tle_flag, info, correct_info = time_out_util.run_with_timeout(cmd, timeout_sec=time_out)

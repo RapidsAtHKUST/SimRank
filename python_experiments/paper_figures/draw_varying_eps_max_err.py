@@ -56,6 +56,8 @@ def draw_max_err():
                     return 12
                 elif idx == 5:
                     return 20
+                elif idx == 8:
+                    return 30
                 else:
                     return 14
 
