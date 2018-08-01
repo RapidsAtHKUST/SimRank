@@ -34,19 +34,22 @@ def signal_handler(signal, frame):
 def run_exp():
     other_exec_path_lst = [
         # '/homes/ywangby/workspace/yche/git-repos/SimRank/SPS-Variants/sling/build/sling-rand-bench-gt',
-        '/homes/ywangby/workspace/yche/git-repos/SimRank/SPS-Variants/isp-yche/build/isp-rand-bench-gt',
-        '/homes/ywangby/workspace/yche/git-repos/SimRank/SPS-Variants/LinearD/build/lind-rand-ben-gt',
-        '/homes/ywangby/workspace/yche/git-repos/SimRank/SPS-Variants/LinearD/build/cw-rand-gen-gt',
-        '/homes/ywangby/workspace/yche/git-repos/SimRank/SPS-Variants/tsf/build/tsf-rand-bench-gt'
+        # '/homes/ywangby/workspace/yche/git-repos/SimRank/SPS-Variants/isp-yche/build/isp-rand-bench-gt',
+        # '/homes/ywangby/workspace/yche/git-repos/SimRank/SPS-Variants/LinearD/build/lind-rand-ben-gt',
+        # '/homes/ywangby/workspace/yche/git-repos/SimRank/SPS-Variants/LinearD/build/cw-rand-gen-gt',
+        # '/homes/ywangby/workspace/yche/git-repos/SimRank/SPS-Variants/tsf/build/tsf-rand-bench-gt'
+        '/homes/ywangby/workspace/yche/new-git-repos-yche/SimRank/SPS-Variants/ProbeSim_vldb_pub/build/ProbeSim-gt'
     ]
     data_set_lst = ['ca-GrQc', 'ca-HepTh', 'p2p-Gnutella06', 'wiki-Vote']
     # folder_name = 'other_methods_overview_01_17'
-    folder_name = 'other_methods_overview_03_29'
+    # folder_name = 'other_methods_overview_03_29'
+    folder_name = 'other_methods_overview_07_31'
     tag = 'exp_results'
     range_idx_lst = range(10)
 
     # sample_num_lst= [10 ** 3, 10 ** 4, 10 ** 5, 10 ** 6]
-    sample_num_lst = [10 ** 3, 10 ** 4]
+    # sample_num_lst = [10 ** 3, 10 ** 4]
+    sample_num_lst = [10 ** 4, 10 ** 5]
 
     def one_round():
         # algorithm by algorithm to finish the experiment
@@ -65,11 +68,14 @@ def run_exp():
                         # 1st: write header
                         os.system(' '.join(
                             ['echo', my_splitter + time.ctime() + my_splitter, '>>', statistics_file_path]))
-                        params_lst = map(str, [other_algorithm_path, data_set_name, sample_num, round_idx, '>>',
+                        params_lst = map(str, [other_algorithm_path, data_set_name, sample_num, round_idx,
+                                               '0.6 0.01 0.01' if other_algorithm_path.endswith(
+                                                   'ProbeSim-gt') or other_algorithm_path.endswith('ProbeSim') else '',
+                                               '>>',
                                                statistics_file_path])
                         cmd = ' '.join(params_lst)
                         # time_out = 1200 if data_set_name != 'soc-LiveJournal1' else 3600
-                        time_out = 7200
+                        time_out = 3600
 
                         tle_flag, info, correct_info = time_out_util.run_with_timeout(cmd, timeout_sec=time_out)
                         write_split(statistics_file_path)
@@ -89,7 +95,7 @@ def run_exp():
 
     # one_round()
 
-    sample_num_lst = [10 ** 4, 10 ** 5]
+    sample_num_lst = [10 ** 4]
     # sample_num_lst = [10 ** 3, 10 ** 4]
     # sample_num_lst = [10 ** 3]
     # sample_num_lst = [10 ** 6]
@@ -98,16 +104,17 @@ def run_exp():
         # 'ca-GrQc', 'ca-HepTh', 'p2p-Gnutella06', 'wiki-Vote',
         # 'email-Enron', 'email-EuAll', 'web-NotreDame', 'web-Stanford', 'web-BerkStan', 'web-Google',
         # 'cit-Patents',
-        # 'soc-LiveJournal1'
+        'soc-LiveJournal1',
         'wiki-Link'
     ]
 
     other_exec_path_lst = [
         # '/homes/ywangby/workspace/yche/git-repos/SimRank/SPS-Variants/sling/build/sling-rand-bench',
         # '/homes/ywangby/workspace/yche/git-repos/SimRank/SPS-Variants/isp-yche/build/isp-rand-bench',
-        '/homes/ywangby/workspace/yche/git-repos/SimRank/SPS-Variants/LinearD/build/lind-rand-ben',
+        # '/homes/ywangby/workspace/yche/git-repos/SimRank/SPS-Variants/LinearD/build/lind-rand-ben',
         # '/homes/ywangby/workspace/yche/git-repos/SimRank/SPS-Variants/LinearD/build/cw-rand-gen',
-        # '/homes/ywangby/workspace/yche/git-repos/SimRank/SPS-Variants/tsf/build/tsf-rand-bench'
+        # '/homes/ywangby/workspace/yche/git-repos/SimRank/SPS-Variants/tsf/build/tsf-rand-bench',
+        '/homes/ywangby/workspace/yche/new-git-repos-yche/SimRank/SPS-Variants/ProbeSim_vldb_pub/build/ProbeSim'
     ]
     one_round()
 
