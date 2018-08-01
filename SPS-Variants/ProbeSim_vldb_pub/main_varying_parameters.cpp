@@ -15,6 +15,10 @@
 
 using namespace boost;
 
+#ifdef GROUND_TRUTH
+int k = 200;
+#endif
+
 int main(int argc, char *argv[]) {
     // 1st: load graph
     string file_name = argv[1];
@@ -25,13 +29,18 @@ int main(int argc, char *argv[]) {
     double eps = atof(argv[5]);
     double delta = atof(argv[6]);
 
+#ifdef GROUND_TRUTH
+    if(argc > 7){
+        k = atoi(argv[7]);
+    }
+#endif
+
     string file_path = "/homes/ywangby/workspace/LinsysSimRank/datasets/edge_list/" + file_name + ".txt";
     auto sample_pairs = read_sample_pairs(file_name, pair_num, round_i);
 
     // 2nd: init gt, sample pairs
 #ifdef GROUND_TRUTH
-    int k = 200;
-
+    cout << "k: " << k << endl;
     GraphYche g_gt(file_path);
     TruthSim ts(file_name, g_gt, c, 0.01);
     auto failure_count = 0;
