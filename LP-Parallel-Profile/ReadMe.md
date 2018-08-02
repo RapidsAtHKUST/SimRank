@@ -1,7 +1,11 @@
-## Observations
+# PRLP & PFLP
 
-* Q.size() is small, e.g, `./rlp email-EuAll 0.01 ` to produce `max queue size #: 18`; `./rlp email-Enron 0.01 ` to produce
-`max queue size #: 69`.
+description | detail
+--- | ---
+notations/symbols | <img src="figures/notations.png" height="189px"/>
+prlp | <img src="figures/parallel_rlp.png" height="610px"/>
+prlp: task gen | <img src="figures/prlp_first_phase.png" height="542px"/>
+prlp: local push comp | <img src="figures/prlp_second_phase.png" height="318px"/>
 
 ## Parallelization Design
 
@@ -15,7 +19,6 @@
 * adopt `tcmalloc`(thread-local cache memory) to replace glibc's `malloc`
 
 ## Usage
-
 
 ```zsh
 ./rlp ca-GrQc 0.01
