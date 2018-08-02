@@ -299,7 +299,10 @@ if __name__ == '__main__':
     #     D_times.append(t2-t1)
     # print(D_times)
     # compute_Diagonal_correction_array("odlis")
-    for p in ["wiki-Link"]:
+    os.system('mkdir -p ./datasets/adj')
+    os.system('mkdir -p ./datasets/adj_T')
+    os.system('mkdir -p ./datasets/edge_list')
+    for p in ["flickr-growth"]:
         # convert_and_save_to_adj_matrix("./datasets/" + p + ".txt")
         convert_and_save_to_adj_matrix("./datasets/" + p + ".txt", False)
         write_to_edgelist(p)
