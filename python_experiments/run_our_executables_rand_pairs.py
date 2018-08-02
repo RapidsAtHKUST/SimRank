@@ -32,10 +32,10 @@ def signal_handler(signal, frame):
 
 
 def run_exp():
-    our_exec_path = '/homes/ywangby/workspace/yche/git-repos/SimRank/LPMC-Profile/build'
+    our_exec_path = '/homes/ywangby/workspace/yche/new-git-repos-yche/SimRank/LPMC-Profile/build'
     our_exec_name_lst = ['flpmc-rand-bench-gt', 'bflpmc-rand-bench-gt', 'bprw-rand-bench-gt', ]
     data_set_lst = ['ca-GrQc', 'ca-HepTh', 'p2p-Gnutella06', 'wiki-Vote']
-    folder_name = 'our_methods_overview_04_05'
+    folder_name = 'our_methods_overview_08_02'
     tag = 'exp_results'
     range_idx_lst = range(10)
 
@@ -85,8 +85,10 @@ def run_exp():
         # 'ca-GrQc', 'ca-HepTh', 'p2p-Gnutella06', 'wiki-Vote',
         # 'email-Enron', 'email-EuAll', 'web-NotreDame', 'web-Stanford', 'web-BerkStan', 'web-Google',
         # 'cit-Patents',
-        'soc-LiveJournal1',
-        # 'wiki-Link'
+        # 'soc-LiveJournal1',
+        # 'wiki-Link',
+        'digg-friends',
+        'flickr-growth',
     ]
 
     our_exec_name_lst = [

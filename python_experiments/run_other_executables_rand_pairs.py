@@ -33,11 +33,11 @@ def signal_handler(signal, frame):
 
 def run_exp():
     other_exec_path_lst = [
-        # '/homes/ywangby/workspace/yche/git-repos/SimRank/SPS-Variants/sling/build/sling-rand-bench-gt',
-        # '/homes/ywangby/workspace/yche/git-repos/SimRank/SPS-Variants/isp-yche/build/isp-rand-bench-gt',
-        # '/homes/ywangby/workspace/yche/git-repos/SimRank/SPS-Variants/LinearD/build/lind-rand-ben-gt',
-        # '/homes/ywangby/workspace/yche/git-repos/SimRank/SPS-Variants/LinearD/build/cw-rand-gen-gt',
-        # '/homes/ywangby/workspace/yche/git-repos/SimRank/SPS-Variants/tsf/build/tsf-rand-bench-gt'
+        '/homes/ywangby/workspace/yche/git-repos/SimRank/SPS-Variants/sling/build/sling-rand-bench-gt',
+        '/homes/ywangby/workspace/yche/git-repos/SimRank/SPS-Variants/isp-yche/build/isp-rand-bench-gt',
+        '/homes/ywangby/workspace/yche/git-repos/SimRank/SPS-Variants/LinearD/build/lind-rand-ben-gt',
+        '/homes/ywangby/workspace/yche/git-repos/SimRank/SPS-Variants/LinearD/build/cw-rand-gen-gt',
+        '/homes/ywangby/workspace/yche/git-repos/SimRank/SPS-Variants/tsf/build/tsf-rand-bench-gt',
         '/homes/ywangby/workspace/yche/new-git-repos-yche/SimRank/SPS-Variants/ProbeSim_vldb_pub/build/ProbeSim-gt'
     ]
     data_set_lst = ['ca-GrQc', 'ca-HepTh', 'p2p-Gnutella06', 'wiki-Vote']
@@ -95,26 +95,28 @@ def run_exp():
 
     # one_round()
 
-    sample_num_lst = [10 ** 3, 10 ** 5]
+    sample_num_lst = [10 ** 3, 10 ** 4, 10 ** 5]
     # sample_num_lst = [10 ** 3, 10 ** 4]
     # sample_num_lst = [10 ** 3]
     # sample_num_lst = [10 ** 6]
     range_idx_lst = range(1)
     data_set_lst = [
-        'ca-GrQc', 'ca-HepTh', 'p2p-Gnutella06', 'wiki-Vote',
-        'email-Enron', 'email-EuAll', 'web-NotreDame', 'web-Stanford', 'web-BerkStan', 'web-Google',
-        'cit-Patents',
-        'soc-LiveJournal1',
-        'wiki-Link'
+        # 'ca-GrQc', 'ca-HepTh', 'p2p-Gnutella06', 'wiki-Vote',
+        # 'email-Enron', 'email-EuAll', 'web-NotreDame', 'web-Stanford', 'web-BerkStan', 'web-Google',
+        # 'cit-Patents',
+        # 'soc-LiveJournal1',
+        # 'wiki-Link',
+        'digg-friends',
+        'flickr-growth',
     ]
 
     other_exec_path_lst = [
-        # '/homes/ywangby/workspace/yche/git-repos/SimRank/SPS-Variants/sling/build/sling-rand-bench',
-        # '/homes/ywangby/workspace/yche/git-repos/SimRank/SPS-Variants/isp-yche/build/isp-rand-bench',
-        # '/homes/ywangby/workspace/yche/git-repos/SimRank/SPS-Variants/LinearD/build/lind-rand-ben',
-        # '/homes/ywangby/workspace/yche/git-repos/SimRank/SPS-Variants/LinearD/build/cw-rand-gen',
-        # '/homes/ywangby/workspace/yche/git-repos/SimRank/SPS-Variants/tsf/build/tsf-rand-bench',
-        '/homes/ywangby/workspace/yche/new-git-repos-yche/SimRank/SPS-Variants/ProbeSim_vldb_pub/build/ProbeSim'
+        '/homes/ywangby/workspace/yche/git-repos/SimRank/SPS-Variants/sling/build/sling-rand-bench-gt',
+        '/homes/ywangby/workspace/yche/git-repos/SimRank/SPS-Variants/isp-yche/build/isp-rand-bench-gt',
+        '/homes/ywangby/workspace/yche/git-repos/SimRank/SPS-Variants/LinearD/build/lind-rand-ben-gt',
+        '/homes/ywangby/workspace/yche/git-repos/SimRank/SPS-Variants/LinearD/build/cw-rand-gen-gt',
+        '/homes/ywangby/workspace/yche/git-repos/SimRank/SPS-Variants/tsf/build/tsf-rand-bench-gt',
+        '/homes/ywangby/workspace/yche/new-git-repos-yche/SimRank/SPS-Variants/ProbeSim_vldb_pub/build/ProbeSim-gt'
     ]
     one_round()
 

@@ -12,16 +12,16 @@ endif ()
 
 aux_source_directory(. DIR_LIB_SRCS)
 # 生成链接库
-add_library (Utils ${DIR_LIB_SRCS} ../../SFMT/SFMT.c)
+add_library (Utils ${DIR_LIB_SRCS} ../../dependencies/SFMT/SFMT.c)
 
 set(exec_name Utils)
 
 target_include_directories(${exec_name} PRIVATE ../)
 target_include_directories(${exec_name} PRIVATE ${Boost_INCLUDE_DIRS})
-target_include_directories(${exec_name} PRIVATE ../../sparsehash-yche/include)
-target_include_directories(${exec_name} PRIVATE ../../sparsepp)
-target_include_directories(${exec_name} PRIVATE ../../SFMT)
-target_include_directories(${exec_name} PRIVATE ../../include)
+target_include_directories(${exec_name} PRIVATE ../../dependencies/sparsehash-yche/include)
+target_include_directories(${exec_name} PRIVATE ../../dependencies/sparsepp)
+target_include_directories(${exec_name} PRIVATE ../../dependencies/SFMT)
+target_include_directories(${exec_name} PRIVATE ../../dependencies/include)
 
 set(SFMT_COMPILE_FLAGS -DSFMT_MEXP=607 -msse2 -DHAVE_SSE2)
 

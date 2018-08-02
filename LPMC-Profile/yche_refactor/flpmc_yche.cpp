@@ -49,6 +49,8 @@ FLPMC::FLPMC(string g_name_, GraphYche &g_, double c_, double epsilon_, double d
 
     {
         // directly compute the index, instead of reading and parsing
+        auto clock_start = clock();
+
         auto start_time = std::chrono::high_resolution_clock::now();
 
         auto plp = PFLP(*g, g_name, c, get_lp_epsilon(), n);
@@ -56,6 +58,9 @@ FLPMC::FLPMC(string g_name_, GraphYche &g_, double c_, double epsilon_, double d
         swap(lp->P, plp.P);
         swap(lp->R, plp.R);
         auto end_time = std::chrono::high_resolution_clock::now();
+        auto clock_end = clock();
+        cout << "total indexing cpu time:" << static_cast<double>(clock_end - clock_start) / CLOCKS_PER_SEC << "s"
+             << endl;
         std::chrono::duration<double> elapsed = end_time - start_time;
         cout << format("total indexing cost: %s s") % elapsed.count() << endl; // record the pre-processing time
     }

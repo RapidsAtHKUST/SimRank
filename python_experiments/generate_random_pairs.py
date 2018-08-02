@@ -5,10 +5,12 @@ if __name__ == '__main__':
     data_set_lst = [
         # 'email-Enron', 'email-EuAll',
         # 'web-NotreDame', 'web-Stanford', 'web-BerkStan', 'web-Google', 'cit-Patents',
-        # 'soc-LiveJournal1'
-        'wiki-Link'
+        # 'soc-LiveJournal1',
+        # 'wiki-Link',
+        'digg-friends',
+        'flickr-growth',
     ]
-    generate_exec_path = '/homes/ywangby/workspace/yche/git-repos/SimRank/LPMC-Profile/build/playground/random_pair_gen'
+    generate_exec_path = '/homes/ywangby/workspace/yche/new-git-repos-yche/SimRank/LPMC-Profile/build/playground/random_pair_gen'
 
 
     def generate_small():

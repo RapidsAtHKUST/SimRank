@@ -59,7 +59,7 @@ endif ()
 
 #### sub cmake dir: playground  ######################################
 add_subdirectory(playground)
-# add_subdirectory(util)
+add_subdirectory(util)
 
 #### 1st: bprw #######################################################################################################
 macro(InitBprw exec_name)
