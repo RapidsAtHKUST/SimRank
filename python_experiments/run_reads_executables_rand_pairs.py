@@ -32,7 +32,7 @@ def signal_handler(signal, frame):
 
 
 def run_exp():
-    exec_root = '/homes/ywangby/workspace/yche/git-repos/SimRank/SPS-Variants/READS/build'
+    exec_root = '/homes/ywangby/workspace/yche/new-git-repos-yche/SimRank/SPS-Variants/READS/build'
     exec_name_lst = [
         # 'reads-s-rand-bench',
         'reads-d-rand-bench',
@@ -87,7 +87,7 @@ def run_exp():
                         break
 
     # 1st: accuracy
-    one_round()
+    # one_round()
 
     sample_num_lst = [
         10 ** 4,
@@ -99,8 +99,10 @@ def run_exp():
         # 'email-Enron', 'email-EuAll',
         # 'web-NotreDame', 'web-Stanford', 'web-BerkStan', 'web-Google',
         # 'cit-Patents',
-        # 'soc-LiveJournal1'
-        'wiki-Link'
+        # 'soc-LiveJournal1',
+        # 'wiki-Link',
+        'digg-friends',
+        'flickr-growth',
     ]
 
     # 2nd: efficiency

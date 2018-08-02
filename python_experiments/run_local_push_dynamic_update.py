@@ -36,16 +36,18 @@ def run_exp():
     our_exec_path = '/homes/ywangby/workspace/yche/git-repos/SimRank/APS/build'
 
     data_set_lst = [
-        'ca-GrQc', 'ca-HepTh', 'p2p-Gnutella06', 'wiki-Vote',
-        'email-Enron', 'email-EuAll', 'web-NotreDame', 'web-Stanford', 'web-BerkStan', 'web-Google',
-        'cit-Patents', 'soc-LiveJournal1',
-        # 'wiki-Link'
+        # 'ca-GrQc', 'ca-HepTh', 'p2p-Gnutella06', 'wiki-Vote',
+        # 'email-Enron', 'email-EuAll', 'web-NotreDame', 'web-Stanford', 'web-BerkStan', 'web-Google',
+        # 'cit-Patents', 'soc-LiveJournal1',
+        # 'wiki-Link',
+        'digg-friends',
+        'flickr-growth',
     ]
     our_algorithm = 'dynamic-rlp'
 
     # insert_edge_num = 100
 
-    def one_round():
+    def one_round(bool_val):
         timestamp_str = str(datetime.datetime.now()).split('.')[0].replace(' ', '-').replace(':', '-')
         name_str = 'flp_dynamic_update_time_' if 'rlp' in our_algorithm \
             else 'flp_dynamic_update_time_'
@@ -54,7 +56,8 @@ def run_exp():
 
         for data_set_name in data_set_lst:
             algorithm_path = our_exec_path + os.sep + our_algorithm
-            params_lst = map(str, [algorithm_path, data_set_name, insert_edge_num, 'ins', '>>', statistics_file_path])
+            params_lst = map(str, [algorithm_path, data_set_name, insert_edge_num, 'ins' if bool_val == True else 'del',
+                                   '>>', statistics_file_path])
             cmd = ' '.join(params_lst)
             # time_out = 1000 if data_set_name != 'soc-LiveJournal1' else 3600
             time_out = 72000
@@ -73,7 +76,8 @@ def run_exp():
     # one_round()
 
     our_algorithm = 'dynamic-flp'
-    one_round()
+    one_round(True)
+    one_round(False)
 
 
 if __name__ == '__main__':

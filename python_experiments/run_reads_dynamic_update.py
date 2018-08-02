@@ -32,19 +32,21 @@ def signal_handler(signal, frame):
 
 
 def run_exp():
-    our_exec_path = '/homes/ywangby/workspace/yche/git-repos/SimRank/SPS-Variants/READS/build'
+    our_exec_path = '/homes/ywangby/workspace/yche/new-git-repos-yche/SimRank/SPS-Variants/READS/build'
     data_set_lst = [
         # 'ca-GrQc', 'ca-HepTh', 'p2p-Gnutella06', 'wiki-Vote',
         # 'email-Enron', 'email-EuAll', 'web-NotreDame', 'web-Stanford',
         # 'web-BerkStan', 'web-Google',
-        'cit-Patents', 'soc-LiveJournal1',
-        # 'wiki-Link'
+        # 'cit-Patents', 'soc-LiveJournal1',
+        # 'wiki-Link',
+        'digg-friends',
+        'flickr-growth',
     ]
     dynamic_exec_tag_lst = [
-        # 'reads-rq-dynamic-del',
-        # 'reads-rq-dynamic-exp',
-        'reads-d-dynamic-del',
-        'reads-d-dynamic-exp',
+        'reads-rq-dynamic-del',
+        'reads-rq-dynamic-exp',
+        # 'reads-d-dynamic-del',
+        # 'reads-d-dynamic-exp',
     ]
 
     def one_round():

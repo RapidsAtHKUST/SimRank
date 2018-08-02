@@ -75,7 +75,7 @@ def run_exp():
                                                statistics_file_path])
                         cmd = ' '.join(params_lst)
                         # time_out = 1200 if data_set_name != 'soc-LiveJournal1' else 3600
-                        time_out = 3600
+                        time_out = 36000 if other_algorithm.endswith('sling-rand-bench') else 1200
 
                         tle_flag, info, correct_info = time_out_util.run_with_timeout(cmd, timeout_sec=time_out)
                         write_split(statistics_file_path)
@@ -111,12 +111,12 @@ def run_exp():
     ]
 
     other_exec_path_lst = [
-        '/homes/ywangby/workspace/yche/git-repos/SimRank/SPS-Variants/sling/build/sling-rand-bench-gt',
-        '/homes/ywangby/workspace/yche/git-repos/SimRank/SPS-Variants/isp-yche/build/isp-rand-bench-gt',
-        '/homes/ywangby/workspace/yche/git-repos/SimRank/SPS-Variants/LinearD/build/lind-rand-ben-gt',
-        '/homes/ywangby/workspace/yche/git-repos/SimRank/SPS-Variants/LinearD/build/cw-rand-gen-gt',
-        '/homes/ywangby/workspace/yche/git-repos/SimRank/SPS-Variants/tsf/build/tsf-rand-bench-gt',
-        '/homes/ywangby/workspace/yche/new-git-repos-yche/SimRank/SPS-Variants/ProbeSim_vldb_pub/build/ProbeSim-gt'
+        '/homes/ywangby/workspace/yche/new-git-repos-yche/SimRank/SPS-Variants/sling/build/sling-rand-bench',
+        # '/homes/ywangby/workspace/yche/new-git-repos-yche/SimRank/SPS-Variants/isp-yche/build/isp-rand-bench',
+        '/homes/ywangby/workspace/yche/new-git-repos-yche/SimRank/SPS-Variants/LinearD/build/lind-rand-ben',
+        '/homes/ywangby/workspace/yche/new-git-repos-yche/SimRank/SPS-Variants/LinearD/build/cw-rand-gen',
+        '/homes/ywangby/workspace/yche/new-git-repos-yche/SimRank/SPS-Variants/tsf/build/tsf-rand-bench',
+        '/homes/ywangby/workspace/yche/new-git-repos-yche/SimRank/SPS-Variants/ProbeSim_vldb_pub/build/ProbeSim'
     ]
     one_round()
 
