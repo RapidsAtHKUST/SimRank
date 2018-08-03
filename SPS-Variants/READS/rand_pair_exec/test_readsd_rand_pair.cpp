@@ -25,7 +25,7 @@ double eps = 0.01;
 // g++ reads*.h reads*.cpp timer.h -O3 -w -std=c++11 test.cpp -I . && ./a.out hp.data 3133
 int main(int argc, char **argv) {
     // 1st: eps, delta and c for computing sample number
-    double eps = 0.001;
+    double eps = 0.01;
     double delta = 0.01;
     double c = 0.6;
     random_device rd;
