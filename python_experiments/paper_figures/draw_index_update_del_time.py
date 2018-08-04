@@ -53,6 +53,15 @@ def draw_index_update_time():
         'wiki-Link',
         'digg-friends',
         'flickr-growth', ]
+    algorithm_lst = [tsf_tag, reads_d_tag, reads_rq_tag, local_push_tag]
+    time_dict = dict()
+    for algo in algorithm_lst:
+        time_dict[algo] = dict(zip(data_set_lst, get_algorithm_indexing_time_lst(algo)))
+    print time_dict
+
+    with open('data_set_lst.json') as ifs:
+        data_set_lst = json.load(ifs)
+    print data_set_lst
 
     g_names = map(lambda data: data_names[data], data_set_lst)
 
@@ -73,7 +82,7 @@ def draw_index_update_time():
 
     # 1st: bars
     for idx, tag in enumerate(algorithm_tag_lst):
-        ax.bar(indent_lst[idx], get_algorithm_indexing_time_lst(tag), width, hatch=hatch_lst[idx], label=label_lst[idx],
+        ax.bar(indent_lst[idx], map(lambda data: time_dict[tag][data], data_set_lst), width, hatch=hatch_lst[idx], label=label_lst[idx],
                edgecolor=color_lst[idx],
                fill=False)
 
