@@ -128,8 +128,8 @@ def draw_figures():
     N = len(g_names)
 
     # indent lst
-    width = 0.11
-    ind = 1.11 * np.arange(N)  # the x locations for the groups
+    width = 0.15
+    ind = 1.25 * np.arange(N)  # the x locations for the groups
     indent_lst = map(lambda idx: ind + idx * width, range(7))
 
     # other lst
