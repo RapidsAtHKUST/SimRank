@@ -4,16 +4,25 @@ from data_analysis.querying_time_accuracy_statistics import *
 from data_analysis.generate_speedup_over_sling_markdown import get_cpu_time_dict_with_reads
 
 g_cpu_time_dict = get_cpu_time_dict_with_reads(root_dir='../data_analysis')
+
+
+def get_cpu_time_others(root_dir='.'):
+    with open(os.sep.join([root_dir, 'data-json', 'new_datasets', 'query_result_full_cpu_time_all.json'])) as ifs:
+        return json.load(ifs)
+
+
+g_cpu_time_dict_others = get_cpu_time_others('../data_analysis')
+
+print g_cpu_time_dict_others
 us_to_ms_factor = 10 ** 3
 
 
-def get_algorithm_time_lst(algorithm, data_lst, cpu_time_dict=g_cpu_time_dict):
-    # if algorithm in [probesim_tag]:
-    #     print cpu_time_dict[algorithm]
+def get_algorithm_time_lst(algorithm, data_lst):
     def select_first_data_set(my_lst):
         return my_lst[0]
 
     def get_time(data_set):
+        cpu_time_dict = g_cpu_time_dict_others if data_set in ['digg-friends', 'flickr-growth'] else g_cpu_time_dict
         ret_data = 9999999999
         if algorithm in [bflpmc_tag, flpmc_tag, bprw_tag, sling_tag]:
             ret_data = select_first_data_set(cpu_time_dict[algorithm][data_set][str(10 ** 6)])
@@ -29,9 +38,13 @@ def get_algorithm_time_lst(algorithm, data_lst, cpu_time_dict=g_cpu_time_dict):
         else:
             lst = map(lambda my_str: select_first_data_set(cpu_time_dict[algorithm][data_set][my_str]),
                       map(str, [10 ** 5, 10 ** 4, 10 ** 3]))
+            if data_set in ['digg-friends', 'flickr-growth']:
+                print algorithm, lst
             for idx, number in enumerate(lst):
-                if number is not None:
+                if number is not None and number != 999999999999999:
                     ret_data = number * (10 ** (idx + 1))
+                    if data_set in ['digg-friends', 'flickr-growth']:
+                        print ret_data
                     break
         if ret_data is None:
             ret_data = 9999999999
@@ -39,7 +52,7 @@ def get_algorithm_time_lst(algorithm, data_lst, cpu_time_dict=g_cpu_time_dict):
             ret_data = ret_data / 2
         return ret_data
 
-    print algorithm
+    # print algorithm
     return map(get_time, data_lst)
 
 
@@ -57,9 +70,9 @@ def draw_average_query_one_pair_time():
 
     # indent lst
     width = 0.09
-    ind = 1.1 * np.arange(N)  # the x locations for the groups
+    ind = 1.2 * np.arange(N)  # the x locations for the groups
     indent_lst = map(lambda idx: ind + idx * width, range(11))
-
+    print indent_lst
     # other lst
     algorithm_tag_lst = [bflpmc_tag, flpmc_tag, bprw_tag, sling_tag,
                          reads_d_tag, reads_rq_tag,
@@ -71,12 +84,11 @@ def draw_average_query_one_pair_time():
     color_lst = ['blue', 'orange', 'green', 'red', '#fe01b1', '#ceb301', 'm', 'brown', 'k', 'gray', 'purple']
 
     # 1st: bars
-
     for idx, tag in enumerate(algorithm_tag_lst):
         # out of memory > 192GB
         my_data_lst = map(lambda val: float(val) / us_to_ms_factor, get_algorithm_time_lst(tag, data_set_lst))
         if tag == reads_d_tag:
-            my_data_lst[-1] = 0
+            my_data_lst[-3] = 0
         ax.bar(indent_lst[idx],
                my_data_lst, width,
                hatch=hatch_lst[idx],
@@ -85,7 +97,7 @@ def draw_average_query_one_pair_time():
                label=label_lst[idx], fill=is_fill[idx])
 
     # 2nd: x and y's ticks and labels
-    ax.set_xticks(ind + 4.5 * width)
+    ax.set_xticks(ind + 5 * width)
     ax.set_xticklabels(g_names, fontsize=LABEL_SIZE)
     plt.xticks(fontsize=TICK_SIZE)
 
@@ -94,6 +106,7 @@ def draw_average_query_one_pair_time():
     ax.set_ylabel("Avg Query Time (ms)", fontsize=LABEL_SIZE)
     plt.yticks(fontsize=TICK_SIZE)
 
+    plt.tight_layout()
     # 3rd: figure properties
     fig.set_size_inches(*size_of_fig)  # set ratio
     plt.legend(prop={'size': LEGEND_SIZE, "weight": "bold"}, loc="upper left", ncol=6)

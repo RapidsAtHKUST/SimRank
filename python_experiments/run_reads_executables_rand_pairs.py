@@ -41,7 +41,7 @@ def run_exp():
     other_exec_path_lst = map(lambda exec_name: exec_root + os.sep + exec_name, exec_name_lst)
 
     data_set_lst = ['ca-GrQc', 'ca-HepTh', 'p2p-Gnutella06', 'wiki-Vote']
-    folder_name = 'reads_03_31_efficiency'
+    folder_name = 'reads_08_03_efficiency'
     tag = 'exp_results'
     range_idx_lst = range(10)
 
@@ -90,7 +90,7 @@ def run_exp():
     # one_round()
 
     sample_num_lst = [
-        10 ** 4,
+        # 10 ** 4,
         10 ** 5
     ]
     range_idx_lst = [0]
