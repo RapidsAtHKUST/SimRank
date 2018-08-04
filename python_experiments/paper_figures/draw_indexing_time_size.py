@@ -21,13 +21,101 @@ LEGEND_SIZE = 22
 # get the data for figures
 index_info_dict = get_index_dict_with_reads('../data_analysis')
 
+digg_data_tag = 'digg-friends'
+flickr_data_tag = 'flickr-growth'
+
+
+def get_tsf_index_disk_size(v_num):
+    sample_one_way_graph_num = 100
+    return float(format_str(sample_one_way_graph_num * size_of_int * v_num / (1024. ** 2)))
+
+
+other_indexing_dict = {
+    local_push_tag: {
+        index_time_tag: {
+            digg_data_tag: 115.3,
+            flickr_data_tag: 2331.2
+        },
+        index_size_tag: {
+            digg_data_tag: 1312.0931777954102,
+            flickr_data_tag: 34209.90050125122
+        }
+    },
+    sling_tag: {
+        index_time_tag: {
+            digg_data_tag: 344.0978,
+            flickr_data_tag: 7418.728
+        },
+        index_size_tag: {
+            digg_data_tag: 2174.1439666748047,
+            flickr_data_tag: 13266.172889709473
+        }
+    },
+    cloud_walker_tag: {
+        index_time_tag: {
+            digg_data_tag: 53.5718,
+            flickr_data_tag: 475.563
+        },
+        index_size_tag: {
+            digg_data_tag: 2.1334609985351562,
+            flickr_data_tag: 17.569976806640625
+        }
+    },
+    linear_d_tag: {
+        index_time_tag: {
+            digg_data_tag: 86.4279,
+            flickr_data_tag: 873.217
+        },
+        index_size_tag: {
+            digg_data_tag: 43.90129852294922,
+            flickr_data_tag: 795.4868738174438
+        }
+    },
+    tsf_tag: {
+        index_time_tag: {
+            digg_data_tag: 0.214584,
+            flickr_data_tag: 1.79535
+        },
+        index_size_tag: {
+            digg_data_tag: get_tsf_index_disk_size(279630),
+            flickr_data_tag: get_tsf_index_disk_size(2302925)
+        }
+    },
+    reads_d_tag: {
+        index_time_tag: {
+            digg_data_tag: 32.4033,
+            flickr_data_tag: 2170.7
+        },
+        index_size_tag: {
+            digg_data_tag: 6367.288,
+            flickr_data_tag: 79520.180
+        }
+    },
+    reads_rq_tag: {
+        index_time_tag: {
+            digg_data_tag: 5.22391,
+            flickr_data_tag: 170.655
+        },
+        index_size_tag: {
+            digg_data_tag: 538.724,
+            flickr_data_tag: 6381.452
+        }
+    }
+}
+
 
 def get_algorithm_indexing_time_lst(algorithm_tag):
-    return map(lambda dataset: index_info_dict[algorithm_tag][index_time_tag][dataset], data_set_lst)
+    return map(lambda dataset:
+               other_indexing_dict[algorithm_tag][index_time_tag][dataset]
+               if dataset in [digg_data_tag, flickr_data_tag] else
+               index_info_dict[algorithm_tag][index_time_tag][dataset], data_set_lst)
 
 
 def get_algorithm_index_size_lst(algorithm_tag):
-    return map(lambda dataset: index_info_dict[algorithm_tag][index_size_tag][dataset], data_set_lst)
+    return map(lambda dataset:
+               other_indexing_dict[algorithm_tag][index_size_tag][dataset]
+               if dataset in [digg_data_tag, flickr_data_tag] else
+               index_info_dict[algorithm_tag][index_size_tag][dataset], data_set_lst)
 
 
 def draw_figures():
@@ -40,8 +128,8 @@ def draw_figures():
     N = len(g_names)
 
     # indent lst
-    width = 0.14
-    ind = 1.14 * np.arange(N)  # the x locations for the groups
+    width = 0.11
+    ind = 1.11 * np.arange(N)  # the x locations for the groups
     indent_lst = map(lambda idx: ind + idx * width, range(7))
 
     # other lst
@@ -65,7 +153,7 @@ def draw_figures():
             my_data_lst = get_algorithm_indexing_time_lst(tag)
             # out of memory > 192GB
             if tag == reads_d_tag:
-                my_data_lst[-1] = 0
+                my_data_lst[-3] = 0
             ax.bar(indent_lst[idx], my_data_lst, width, hatch=hatch_lst[idx],
                    label=label_lst[idx],
                    edgecolor=color_lst[idx],
@@ -93,7 +181,7 @@ def draw_figures():
             my_data_lst = get_algorithm_index_size_lst(tag)
             # out of memory > 192GB
             if tag == reads_d_tag:
-                my_data_lst[-1] = 0
+                my_data_lst[-3] = 0
             if idx == 0:
                 # make use of symmetric
                 my_data_lst = map(lambda rlp_val: rlp_val / 1., my_data_lst)
