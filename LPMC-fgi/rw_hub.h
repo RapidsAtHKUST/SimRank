@@ -204,7 +204,10 @@ struct Rw_Hubs{
     vector<double> utility_array; // the utility array uility[i] is the utility of node i, used in pruning  node pairs in bprw, index are node ids
     SFMTRand rand_gen; // the random number generator
     Rw_Hubs(DirectedG &g, int _N, int _l, double c_ ):l(_l),c(c_), g_ptr(&g){
-        N = std::min(_N, int(g.n * (g.n - 1) / 2.0)); // the total number of hubs can not exceed the upper triangular
+        if (g.n < 40000)
+            N = std::min(_N, int(g.n * (g.n - 1) / 2.0)); // the total number of hubs can not exceed the upper triangular
+        else 
+            N = _N;
         cout << format("actual hub number: %s") % N << endl;
         // init the vectors
         this->K = comput_K(this->N);

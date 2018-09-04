@@ -212,6 +212,9 @@ struct BackPush { // Backward Push and MC sampling method for SimRank estimation
     void lp_extract_feature(PushFeature &, vector<double>& f); // extract feature 
     void mc_extract_feature(MCFeature &, vector<double>& f);
 
+    vector<int> klist;
+    void init_klist(int klength);
+
     // related for hub index
     Rw_Hubs * rw_hubs = NULL; // the pointer to the hub index
     int sample_one_pair_with_hubs(NodePair np, int length_of_random_walk); // sample one pair of random walk
@@ -245,7 +248,9 @@ struct BackPush { // Backward Push and MC sampling method for SimRank estimation
     //pair<int, int> sample_N_random_walks_topk(vector<NodePair> &nps, vector<int> &lengths);
     void rw_init(unique_max_heap &bheap, vector<NodePair> &node_pairs, vector<int> &cdf);
     int MC_random_walk_topk(int N, vector<NodePair> &node_pairs, vector<int> &cdf, int nt);
-    int sample_N_random_walks_with_fg_topk(vector<NodePair> &nps, vector<int> &lengths, int nt);
+    int sample_N_random_walks_with_hubs_topk(vector<NodePair> &nps);
+    int sample_N_random_walks_with_fg_topk(vector<NodePair> &nps, int nt);
+    int sample_N_random_walks_topk(vector<NodePair> &nps);
 };
 
 

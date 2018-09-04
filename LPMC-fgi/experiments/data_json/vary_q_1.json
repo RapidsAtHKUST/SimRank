@@ -1,0 +1,176 @@
+{
+    "carmo-h": {
+        "ca-GrQc": {
+            "50000": {
+                "indexing time": 1.57803, 
+                "mem size": 67380, 
+                "topk cost": 0
+            }, 
+            "75000": {
+                "indexing time": 1.51901, 
+                "mem size": 63108, 
+                "topk cost": 0
+            }, 
+            "100000": {
+                "indexing time": 1.38688, 
+                "mem size": 65344, 
+                "topk cost": 10.145
+            }, 
+            "150000": {
+                "indexing time": 1.39027, 
+                "mem size": 67176, 
+                "topk cost": 0
+            }, 
+            "125000": {
+                "indexing time": 1.31798, 
+                "mem size": 62696, 
+                "topk cost": 0
+            }
+        }
+    }, 
+    "tsf-topk": {
+        "ca-GrQc": {
+            "50000": {
+                "indexing time": 0, 
+                "mem size": 0, 
+                "topk cost": 0
+            }, 
+            "75000": {
+                "indexing time": 0, 
+                "mem size": 0, 
+                "topk cost": 0
+            }, 
+            "100000": {
+                "indexing time": 0.00676644, 
+                "mem size": 11016, 
+                "topk cost": 38.6669
+            }, 
+            "150000": {
+                "indexing time": 0, 
+                "mem size": 0, 
+                "topk cost": 0
+            }, 
+            "125000": {
+                "indexing time": 0, 
+                "mem size": 0, 
+                "topk cost": 0
+            }
+        }
+    }, 
+    "sling-topk": {
+        "ca-GrQc": {
+            "50000": {
+                "indexing time": 8.23674, 
+                "mem size": 125288, 
+                "topk cost": 0
+            }, 
+            "75000": {
+                "indexing time": 8.4538, 
+                "mem size": 125116, 
+                "topk cost": 0
+            }, 
+            "100000": {
+                "indexing time": 8.52542, 
+                "mem size": 125372, 
+                "topk cost": 40.8227
+            }, 
+            "150000": {
+                "indexing time": 7.9208, 
+                "mem size": 126304, 
+                "topk cost": 0
+            }, 
+            "125000": {
+                "indexing time": 8.4879, 
+                "mem size": 125372, 
+                "topk cost": 0
+            }
+        }
+    }, 
+    "carmo": {
+        "ca-GrQc": {
+            "50000": {
+                "indexing time": 1.31715, 
+                "mem size": 64880, 
+                "topk cost": 0
+            }, 
+            "75000": {
+                "indexing time": 1.58016, 
+                "mem size": 68924, 
+                "topk cost": 0
+            }, 
+            "100000": {
+                "indexing time": 1.54071, 
+                "mem size": 65796, 
+                "topk cost": 9.66192
+            }, 
+            "150000": {
+                "indexing time": 1.546, 
+                "mem size": 64048, 
+                "topk cost": 0
+            }, 
+            "125000": {
+                "indexing time": 1.57332, 
+                "mem size": 66892, 
+                "topk cost": 0
+            }
+        }
+    }, 
+    "blpmc": {
+        "ca-GrQc": {
+            "50000": {
+                "indexing time": 1.52263, 
+                "mem size": 64404, 
+                "topk cost": 0
+            }, 
+            "75000": {
+                "indexing time": 1.55765, 
+                "mem size": 66016, 
+                "topk cost": 0
+            }, 
+            "100000": {
+                "indexing time": 1.54142, 
+                "mem size": 63008, 
+                "topk cost": 25.1029
+            }, 
+            "150000": {
+                "indexing time": 1.52874, 
+                "mem size": 66356, 
+                "topk cost": 0
+            }, 
+            "125000": {
+                "indexing time": 1.51912, 
+                "mem size": 64632, 
+                "topk cost": 0
+            }
+        }
+    }, 
+    "carmo-t": {
+        "ca-GrQc": {
+            "50000": {
+                "indexing time": 1.47869, 
+                "mem size": 64552, 
+                "topk cost": 0
+            }, 
+            "75000": {
+                "indexing time": 1.43706, 
+                "mem size": 64800, 
+                "topk cost": 0
+            }, 
+            "100000": {
+                "indexing time": 1.41942, 
+                "mem size": 66092, 
+                "topk cost": 11.2347
+            }, 
+            "150000": {
+                "indexing time": 1.43059, 
+                "mem size": 69844, 
+                "topk cost": 0
+            }, 
+            "125000": {
+                "indexing time": 1.37744, 
+                "mem size": 67880, 
+                "topk cost": 0
+            }
+        }
+    }
+}

@@ -1,3 +1,5 @@
+set(CMAKE_CXX_STANDARD 11)
+
 add_executable(bin_converter edge_lst_to_bin_converter.cpp graph_yche.cpp)
 target_compile_options(bin_converter PRIVATE -O3 -g)
 
@@ -27,4 +29,6 @@ set(SFMT_COMPILE_FLAGS -DSFMT_MEXP=607 -msse2 -DHAVE_SSE2)
 
 target_compile_definitions(${exec_name} PRIVATE -DHAS_OPENMP=1 -DSFMT=1)
 target_compile_options(${exec_name} PRIVATE -O3 -g ${SFMT_COMPILE_FLAGS} -march=native)
+
+set( CMAKE_EXPORT_COMPILE_COMMANDS ON) # add compile files for You Complete Me
 

@@ -2,6 +2,7 @@
 #include <ctime>
 
 #include <iostream>
+#include <fstream>
 #include <unordered_set>
 
 #include <boost/program_options.hpp>
@@ -13,12 +14,21 @@
 #include "simrank.h"
 #include <util/graph_yche.h>
 #include "rw_hub.h"
+#include "fgi.h"
 #include "phf.h"
 #include "minimal_perfect_hash.h"
 
 using namespace std;
 using namespace std::chrono;
 using namespace boost::program_options;
+using namespace bf;
+
+string TOY_GRAPH = "/homes/ywangby/workspace/LinsysSimRank/datasets/edge_list/cloud_walker2.txt";
+
+
+string get_new_graph_path(string data_name){
+    return string("/csproject/biggraph/ywangby/yche/git-repos/SimRank/LPMC/build/edge_list/") + data_name + string(".txt");
+}
 
 double ground_truth(string data_name, double c, double epsilon, double delta, int x, int y){
     /* compute the ground truth of x and y */
@@ -33,6 +43,14 @@ double ground_truth(string data_name, double c, double epsilon, double delta, in
     TruthSim ts(data_name, g, c, epsilon);
     // cout << format("ground truth: %s") % ts.sim(x,y) << endl;
     return ts.sim(x,y);
+}
+
+void compute_ground_truth(string data_name, double c, double epsilon){
+    string path = get_new_graph_path(data_name);
+    GraphYche g(path);
+    TruthSim ts(data_name, g, c, epsilon);
+    ts.run(g);
+    ts.save();
 }
 
 // void test_FLPMC(string data_name, double c, double epsilon, double delta, int x, int y){
@@ -169,9 +187,22 @@ void test_bp(string data_name, double c, double epsilon, double delta, int x, in
 // 
 // }
 
-void test_blpmc(string data_name){
-    string path = get_edge_list_path(data_name);
+void test_blpmc(string data_name, int h=1000000, int l=50, int q = 50000){
+    string path = get_new_graph_path(data_name);
     GraphYche g(path);
+    int max_small_graph_size = 10000; // don't load ground truth
+
+    // GraphYche * g_ptr;
+    // g_ptr = &g;
+    // for(int i = 0; i < g_ptr->n; i++){
+    //     int out_start = g_ptr->off_out[i]; 
+    //     int out_end = g_ptr->off_out[i+1];
+    //     for(int j = out_start; j < out_end; j++){ // j is not out-neighbor
+    //         auto out_neighbor = g_ptr->neighbors_out[j];
+    //         cout << format("edge: (%s, %s)") % i % out_neighbor << endl;
+    //     }
+    // }
+
 
     double c = 0.6;
     double epsilon = 0.01;
@@ -184,7 +215,7 @@ void test_blpmc(string data_name){
 
     // fill in queries
     vector<NodePair> queries;
-    for(int i = 0; i < 50000;i++){
+    for(int i = 0; i <q; i++){
         int a = random_int(0,n);
         int b = random_int(0,n);
         queries.push_back(NodePair(a,b));
@@ -192,7 +223,10 @@ void test_blpmc(string data_name){
 
     display_seperate_line();
 
-    TruthSim ts(data_name, g, c, epsilon);
+    TruthSim *ts;
+    if(n < max_small_graph_size){
+        ts = new TruthSim(data_name, g, c, epsilon);
+    }
     double max_error = 0;
 
     auto start = std::chrono::high_resolution_clock::now();
@@ -201,11 +235,12 @@ void test_blpmc(string data_name){
     for(auto& q: queries){
         // cout << format("querying %s-th node pair.") % i << endl;
         double result = bprw.query_one2one(q);
-        double truth = ts.sim(q.first,q.second);
-        double abs_error = abs(truth - result);
-        // cout << format("pair:%s, sim: %s, truth: %s, error:%s") % q % result % truth % abs_error << endl;
-        if(abs_error > max_error){
-            max_error = abs_error;
+        if(n < max_small_graph_size){
+            double truth = ts->sim(q.first,q.second);
+            double abs_error = abs(truth - result);
+            if(abs_error > max_error){
+                max_error = abs_error;
+            }
         }
         i ++;
     }
@@ -216,13 +251,13 @@ void test_blpmc(string data_name){
     display_seperate_line();
 
     /* test the method for cost estimation */
-    int nbh = 1000000;
+    int nbh = h;
     // for(int nbh = 1000000; nbh < 10000000; nbh = nbh + 1000000){ // varying number of hubs
     display_seperate_line();
     config.is_use_linear_regression_cost_estimation = true;
     config.is_use_hub_idx = true;
     config.number_of_hubs = nbh;
-    config.number_of_samples_per_hub = 500;
+    config.number_of_samples_per_hub = l;
     BackPush bprw2(data_name, g, c, epsilon, delta, config);
     cout << bprw2.config << endl;
     max_error = 0;
@@ -235,18 +270,20 @@ void test_blpmc(string data_name){
         // cout << format("querying %s-th node pair") % i << endl;
         double result = bprw2.query_one2one(q);
         i ++;
-        double truth = ts.sim(q.first,q.second);
-        double abs_error = abs(truth - result);
-        if(abs_error > max_error){
-            max_error = abs_error;
-            // cout << format("error: %s, np: %s, query result: %s, ground_truth: %s") % abs_error % q % 
+        if(n < max_small_graph_size){
+            double truth = ts->sim(q.first,q.second);
+            double abs_error = abs(truth - result);
+            // cout << format("pair:%s, sim: %s, truth: %s, error:%s") % q % result % truth % abs_error << endl;
+            if(abs_error > max_error){
+                max_error = abs_error;
+            }
         }
     }
     end = std::chrono::high_resolution_clock::now();
     elapsed = end - start;
-    cout << format("Total cost: %s, Maximum error: %s, #hubs: %s, #hits of hub: %s, #contain queries:%s") \
-        % elapsed.count() % max_error % config.number_of_hubs  % bprw2.hub_hits % \
-        bprw2.rw_hubs->number_of_contains_queries<< endl;
+    cout << format("Total cost: %s, Maximum error: %s, #hubs: %s, #rw/hub: %s, #hits of hub: %s, #contain queries:%s, #1s: %s in average") \
+        % elapsed.count() % max_error % bprw2.rw_hubs->N % config.number_of_samples_per_hub % bprw2.hub_hits % \
+        bprw2.rw_hubs->number_of_contains_queries % (bprw2.rw_hubs->number_of_1s/double(nbh)) << endl;
     display_seperate_line();
     // }
     cout << "close the problem" << endl;
@@ -300,10 +337,30 @@ int test_hub(string data_name){
     cout << format("number of meets: %s") % number_of_meets << endl;
 }
 
+void test_fgi() {
+    string path = get_edge_list_path("ca-GrQc");
+    GraphYche g(path);
+
+    double c = 0.6;
+
+    FG_Index fgi(g, 1, c);
+    fgi.build_index();
+    
+    for (int i = 0; i < 10; ++i)
+        for (int j = i + 1; j <= 10; ++j) {
+            NodePair np{i, j};
+            if (fgi.query(np, 0)) {
+                cout << "True" << endl;
+            } else {
+                cout << "False" << endl;
+            }
+        }
+}
+
 int test_bf(){
 	//tells bbhash to use included hash function working on u_int64_t input keys:
     SFMTRand rand_gen;
-    int length = 1000000;
+    int length = 20000000;
     unsigned int MAX_VALUE = 100000000;
 
     // generate input key
@@ -313,7 +370,7 @@ int test_bf(){
         s.insert(rand_key);
     }
 	//tells bbhash to use included hash function working on u_int64_t input keys :
-	typedef boomphf::SingleHashFunctor<u_int64_t>  hasher_t;
+    typedef boomphf::SingleHashFunctor<u_int64_t>  hasher_t;
 	typedef boomphf::mphf<  u_int64_t, hasher_t  > boophf_t;
     vector<unsigned int> input_keys;
     for(auto & item: s){
@@ -322,16 +379,16 @@ int test_bf(){
 	 
 	// ... fill the input_keys vector
 	//build the mphf  
-	// boophf_t * bphf = new boomphf::mphf<u_int64_t,hasher_t>(input_keys.size(),input_keys,8);
+	boophf_t * bphf = new boomphf::mphf<size_t,hasher_t>(input_keys.size(),input_keys,8);
 	 
 	 //query the mphf :
 
     // int number_of_unique_keys =  PHF::uniq(&input_keys[0], input_keys.size());
     // cout << format("number of unique keys: %s") % number_of_unique_keys << endl;
     // phf f;
-    minimal_perfect_hash::MinimalPerfectHash<unsigned int> mph;
-    int r = mph.Build(input_keys);
-    assert(r == 0);
+    // minimal_perfect_hash::MinimalPerfectHash<unsigned int> mph;
+    // int r = mph.Build(input_keys);
+    // assert(r == 0);
     // PHF::init<unsigned int, false>(&f, &input_keys[0], number_of_unique_keys, 0, 100, (unsigned int)rand_gen.double_rand() * 1000000);
     // for(int i = 0; i< length;i++){
     //     unsigned int hased_key = PHF::hash(&f, input_keys[i]) ;
@@ -340,15 +397,16 @@ int test_bf(){
     //     // cout << format("input key: %s, hashed key: %s") % input_keys[i] % bphf->lookup(input_keys[i]) << endl;
     //     s.insert(hased_key);
     // }
-    std::unordered_set<unsigned int> hased_keys;
+    std::unordered_set<u_int64_t> hashed_keys;
     for(auto & key: input_keys){
-        // auto hashed_key = bphf->lookup(key);
-        auto hashed_key = mph.GetHash(key);
-        hased_keys.insert(hashed_key);
-        cout << format("key: %s, hased key: %s") % key % hashed_key << endl;
+        size_t hashed_key = bphf->lookup(key);
+        // auto hashed_key = mph.GetHash(key);
+        hashed_keys.insert(hashed_key);
+        // cout << format("key: %s, hased key: %s") % key % hashed_key << endl;
     }
     cout << format("number of unique keys: %s") % s.size() << endl;
-    cout << format("number of unique hased keys: %s") % hased_keys.size() << endl;
+    cout << format("number of unique hased keys: %s") % hashed_keys.size() << endl;
+    cout << format("maximum id of key: %s") % (*std::max_element(hashed_keys.begin(), hashed_keys.end())) << endl;
 
     // cout << "random keys" << endl;
     // for(int i = 0; i< 1000;i++){
@@ -357,63 +415,179 @@ int test_bf(){
     // }
 }
 
-void test_minimal_perfect_hash(){
-    // Prepare the keys
-    std::vector<int> t;
-    t.push_back(1);
-    t.push_back(11);
-    t.push_back(111);
-    t.push_back(1111);
-    t.push_back(11111);
-    t.push_back(111111);
+void test_bloomfilter(){
+	// Construction.
+	bloom_filter* bf = new basic_bloom_filter(0.8, 100);
 
-    // Build
-    minimal_perfect_hash::MinimalPerfectHash<int> mph;
-    int r = mph.Build(t);
-    assert(r == 0);
+	// Addition.
+	bf->add("foo");
+	bf->add(42);
+    bf->add(Custome_HASH_NP{}(NodePair{4,3}));
 
-    // GetHash
-    for (size_t i = 0; i < t.size(); ++i) {
-      std::cout << t[i] << "\t" << mph.GetHash(t[i]) << std::endl;
-    }
-    std::cout << std::endl;
+	// Lookup.
+	cout << bf->lookup("foo")  << endl;
+	cout << bf->lookup(42)  << endl;
+	cout << bf->lookup(34)  << endl;
+    cout << bf->lookup(Custome_HASH_NP{}(NodePair{4,3})) << endl;
+    cout << bf->lookup(Custome_HASH_NP{}(NodePair{3,4})) << endl;
+
+	// Remove all elements from the Bloom filter.
+	bf->clear();
 }
 
 void test_Distance_1s(){
-    int max_length = 0;
-    vector<size_t> positions;
-    Distanct_1s d(positions, max_length);
+    // int max_length = 2;
+    // vector<size_t> positions{1};
+    // Distanct_1s d;
+    // d.init(positions, max_length);
 
-    for(auto & item: d.next){
-        cout << format("%s, ") % item ;
-    }
-    cout << endl;
+    // for(auto & item: d.next){
+    //     cout << format("%s, ") % item ;
+    // }
+    // cout << endl;
 
-    for(int i = 0 ; i < 100; i++){
-        int j = d.get();
-        // cout << format(" distance to next 1: %s, current i: %s, current return: %s ") % d.energy % d.i % j << endl;
-        cout << format("%s ") % j;
+    // for(int i = 0 ; i < 100; i++){
+    //     int j = d.get();
+    //     // cout << format(" distance to next 1: %s, current i: %s, current return: %s ") % d.energy % d.i % j << endl;
+    //     cout << format("%s ") % j;
+    // }
+    // cout << endl;
+}
+
+void test_hash64(){
+    NodePair np{34,56};
+    boost::dynamic_bitset<> left(sizeof(np.first) * 8, np.first);
+    boost::dynamic_bitset<> right(sizeof(np.second) * 8, np.second);
+    size_t x = Custome_HASH_NP{}(np);
+    boost::dynamic_bitset<> hashed(sizeof(x) * 8,x);
+    size_t y = 0;
+    cout << left << endl;
+    cout << right << endl;
+    cout << hashed << endl;
+    cout << format("size of np: %s, size of hashed: %s") % sizeof(np.first) % sizeof(x) << endl;
+    cout << format("size of size_t: %s") % sizeof(size_t) << endl;
+
+    google::dense_hash_map<NodePair, int, Custome_HASH_NP, Custome_EQ_NP> h;
+    h.set_empty_key(NodePair{0,0});
+    h[NodePair{2,3}] = 1;
+    h[NodePair{2,2}] = 1;
+    h[NodePair{2,2}] = 200;
+    for(auto & item : h){
+        cout << format("key: %s, value: %s") % item.first % item.second << endl;
     }
-    cout << endl;
+}
+
+void sort_graph_node_based_on_utility(string data_name){
+    string path = get_edge_list_path(data_name);
+    GraphYche g(path);
+    GraphYche * g_ptr = &g;
+    vector<pair<size_t, double>> utility(g_ptr->n); // utility for each node: node id, utility
+    vector<unsigned int> rank(g_ptr->n);
+    auto n = g_ptr->n;
+    // fill in the utility table
+    cout << "filling in the utility values..." << endl;
+    for(int i = 0; i < g_ptr->n; i++){
+        int out_start = g_ptr->off_out[i]; 
+        int out_end = g_ptr->off_out[i+1];
+        utility[i].first = i;
+        for(int j = out_start; j < out_end; j++){
+            auto out_neighbor = g_ptr->neighbors_out[j];
+            int in_deg = g_ptr->in_degree(out_neighbor);
+            if(in_deg > 0){
+                utility[i].second += (1.0 / double(in_deg));
+            }
+        }
+    }
+    cout << "sorting the index" << endl;
+    sort(utility.begin(), utility.end(), sort_hub_pred());
+
+    // fill in the rank
+    cout << "filling in the rank array" << endl;
+    for(int i = 0; i< n;i++){
+        rank[utility[i].first] = i;
+    }
+
+    // flush out the converted edges
+    string output_path = string("./edge_list/") + data_name + string(".txt");
+    ofstream outfile;
+    outfile.open(output_path);
+
+    vector<pair<int,int>> new_edge_list;
+    for(int i = 0; i < g_ptr->n; i++){
+        int out_start = g_ptr->off_out[i]; 
+        int out_end = g_ptr->off_out[i+1];
+        for(int j = out_start; j < out_end; j++){ // j is not out neighbor of i, the out_neighbor is
+            auto out_neighbor = g_ptr->neighbors_out[j];
+            int new_i = rank[i];
+            int new_out = rank[out_neighbor];
+            new_edge_list.push_back({new_i,new_out});
+        }
+    }
+    for(auto & item:new_edge_list){
+        outfile << format("%s %s") % item.first % item.second << endl;
+    }
+
+    outfile.close();
+}
+
+void test_new_graph(string data_name){
+    string path = get_new_graph_path(data_name);
+    GraphYche g(path);
+    GraphYche * g_ptr;
+    g_ptr = &g;
+    for(int i = 0; i < g_ptr->n; i++){
+        int out_start = g_ptr->off_out[i]; 
+        int out_end = g_ptr->off_out[i+1];
+        for(int j = out_start; j < out_end; j++){ // j is not out-neighbor
+            auto out_neighbor = g_ptr->neighbors_out[j];
+            cout << format("edge: (%s, %s)") % i % out_neighbor << endl;
+        }
+    }
+}
+
+void demo_for_paper(int x, int y){
+    // some example data
+    string path = TOY_GRAPH;
+    GraphYche g(path);
+    cout << format("number of nodes: %s, query pair: %s") % g.n % NodePair{x,y} << endl;
+
+    double c = 0.6;
+    double epsilon = 0.01;
+    double delta = 0.01;
+    BLPMC_Config config;
+    config.is_use_linear_regression_cost_estimation = false;
+    config.is_use_hub_idx = false;
+    BackPush bprw("cloud_walker", g, c, epsilon, delta, config);
+    size_t n = g.n;
+
+    NodePair q{x,y};
+    double r = bprw.query_one2one(q);
+    return;
 }
 
 int main(int args, char*argv[]){
+    vector<string> datasets{"ca-GrQc", "ca-HepTh", "p2p-Gnutella06", "wiki-Vote", "email-Enron", "email-EuAll", "web-Stanford", \
+        "web-BerkStan", "web-Google", "cit-Patents", "soc-LiveJournal1", "WikiLink"};
     try {
         options_description desc{"Options"};
         double c = 0.6;
         double epsilon = 0.01;
         double delta = 0.01;
+        int q = 50000; 
         string data_name;
         string method;
-        int x, y;
+        int x, y,h,l;
         desc.add_options()
             ("help,h", "Help Screen")
             ("DataName,d", value<string>(&data_name), "Graph Name")
             ("decay,c", value<double>(&c), "Decay Facrot c")
             ("x,x", value<int>(&x), "x: the query node")
             ("y,y", value<int>(&y), "y: the query node")
+            ("q,q", value<int>(&q), "q: the number of queries")
             ("method,m", value<string>(&method), "Method: blp/flp/bflp")
             ("delta,f", value<double>(&delta), "Failure probability")
+            ("n,n", value<int>(&h), "Number of hubs")
+            ("l,l", value<int>(&l), "Number of random walks per hub")
             ("epsilon,e", value<double>(&epsilon), "Error bound");
 
         variables_map vm;
@@ -432,10 +606,25 @@ int main(int args, char*argv[]){
             }else if (method == "bflpap"){
                 // test_bflp_all_pair(data_name);
             }else if (method == "carmo"){
-                test_blpmc(data_name);
+                test_blpmc(data_name, h,l,q);
             }
         }else{
-            test_Distance_1s();
+            // SFMTRand srand;
+            // for(int i = 0; i< 100;i++){
+            //     cout << srand.uint_rand() % 3 << endl;
+            // }
+
+            // demo_for_paper(x,y);
+            vector<string> ground_data{"ca-GrQc", "ca-HepTh", "p2p-Gnutella06", "wiki-Vote", "web-Stanford", "web-BerkStan", "web-Google", "cit-Patents", "soc-LiveJournal1", "wiki-Link"};
+            for(auto dataset: ground_data){
+                 cout << format("computing %s...") % dataset << endl;
+                 sort_graph_node_based_on_utility(dataset);
+            //     // compute_ground_truth(dataset, 0.6, 0.0000001);
+            }
+            // test_bloomfilter();
+            // test_bf();
+            // test_hash64();
+            // test_Distance_1s();
             // test_minimal_perfect_hash();
             // test_bf();
             // test_blpmc("ca-GrQc");
@@ -453,6 +642,7 @@ int main(int args, char*argv[]){
             // test_lr();
             // string d("ca-GrQc");
             // test_bflp_all_pair(d);
+            // test_fgi();
         }
 
     }

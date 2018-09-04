@@ -1,6 +1,8 @@
+exp_results
 *.pyc
 LPMC-Copy
 datasets
+dependencies
 *.iml
 .idea
 cmake-build-debug

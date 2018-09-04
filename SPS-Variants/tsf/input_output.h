@@ -14,6 +14,6 @@ using namespace std;
 
 vector<pair<uint32_t, uint32_t>> GetEdgeList(string &file_path);
 
-void InitGraph(string &file_path, vector<int> &off, vector<int> &dst);
+uint32_t InitGraph(string &file_path, vector<int> &off, vector<int> &dst);
 
 #endif //ISP_YCHE_INPUT_OUTPUT_H

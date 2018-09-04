@@ -1,0 +1,392 @@
+{
+    "carmo-h": {
+        "cit-Patents": {
+            "100": {
+                "indexing time": 31.8231, 
+                "mem size": 1078860, 
+                "topk cost": 27.8084
+            }
+        }, 
+        "wiki-Link": {
+            "100": {
+                "indexing time": 127.636, 
+                "mem size": 5351212, 
+                "topk cost": 28.944
+            }
+        }, 
+        "web-Stanford": {
+            "100": {
+                "indexing time": 52.4257, 
+                "mem size": 376148, 
+                "topk cost": 16.6709
+            }
+        }, 
+        "web-Google": {
+            "100": {
+                "indexing time": 48.1551, 
+                "mem size": 483952, 
+                "topk cost": 12.5956
+            }
+        }, 
+        "web-BerkStan": {
+            "100": {
+                "indexing time": 50.2919, 
+                "mem size": 465664, 
+                "topk cost": 21.4011
+            }
+        }, 
+        "p2p-Gnutella06": {
+            "100": {
+                "indexing time": 53.5322, 
+                "mem size": 447208, 
+                "topk cost": 15.328
+            }
+        }, 
+        "soc-LiveJournal1": {
+            "100": {
+                "indexing time": 169.832, 
+                "mem size": 1664044, 
+                "topk cost": 60.1063
+            }
+        }, 
+        "ca-GrQc": {
+            "100": {
+                "indexing time": 52.6883, 
+                "mem size": 300792, 
+                "topk cost": 8.58212
+            }
+        }, 
+        "ca-HepTh": {
+            "100": {
+                "indexing time": 53.5245, 
+                "mem size": 293912, 
+                "topk cost": 15.2026
+            }
+        }
+    }, 
+    "tsf-topk": {
+        "cit-Patents": {
+            "100": {
+                "indexing time": 2.6398, 
+                "mem size": 1663028, 
+                "topk cost": 12.941
+            }
+        }, 
+        "wiki-Link": {
+            "100": {
+                "indexing time": 12.4974, 
+                "mem size": 7955952, 
+                "topk cost": 105.851
+            }
+        }, 
+        "web-Stanford": {
+            "100": {
+                "indexing time": 0.180753, 
+                "mem size": 144724, 
+                "topk cost": 37.0668
+            }
+        }, 
+        "web-Google": {
+            "100": {
+                "indexing time": 0.598519, 
+                "mem size": 403164, 
+                "topk cost": 30.1338
+            }
+        }, 
+        "web-BerkStan": {
+            "100": {
+                "indexing time": 0.410126, 
+                "mem size": 345136, 
+                "topk cost": 36.5842
+            }
+        }, 
+        "p2p-Gnutella06": {
+            "100": {
+                "indexing time": 0.0057834, 
+                "mem size": 12472, 
+                "topk cost": 37.7252
+            }
+        }, 
+        "soc-LiveJournal1": {
+            "100": {
+                "indexing time": 4.35731, 
+                "mem size": 2520068, 
+                "topk cost": 176.35
+            }
+        }, 
+        "ca-GrQc": {
+            "100": {
+                "indexing time": 0.00691285, 
+                "mem size": 10624, 
+                "topk cost": 38.4858
+            }
+        }, 
+        "ca-HepTh": {
+            "100": {
+                "indexing time": 0.00640508, 
+                "mem size": 12380, 
+                "topk cost": 41.1016
+            }
+        }
+    }, 
+    "sling-topk": {
+        "cit-Patents": {
+            "100": {
+                "indexing time": 527.682, 
+                "mem size": 6099780, 
+                "topk cost": 6.81098
+            }
+        }, 
+        "wiki-Link": {
+            "100": {
+                "indexing time": 0, 
+                "mem size": 0, 
+                "topk cost": 0
+            }
+        }, 
+        "web-Stanford": {
+            "100": {
+                "indexing time": 343.21, 
+                "mem size": 3176752, 
+                "topk cost": 38.4572
+            }
+        }, 
+        "web-Google": {
+            "100": {
+                "indexing time": 627.931, 
+                "mem size": 7270664, 
+                "topk cost": 26.1088
+            }
+        }, 
+        "web-BerkStan": {
+            "100": {
+                "indexing time": 800.542, 
+                "mem size": 7747428, 
+                "topk cost": 41.584
+            }
+        }, 
+        "p2p-Gnutella06": {
+            "100": {
+                "indexing time": 5.6219, 
+                "mem size": 181336, 
+                "topk cost": 27.8017
+            }
+        }, 
+        "soc-LiveJournal1": {
+            "100": {
+                "indexing time": 0, 
+                "mem size": 0, 
+                "topk cost": 0
+            }
+        }, 
+        "ca-GrQc": {
+            "100": {
+                "indexing time": 7.91386, 
+                "mem size": 128964, 
+                "topk cost": 40.9389
+            }
+        }, 
+        "ca-HepTh": {
+            "100": {
+                "indexing time": 12.6557, 
+                "mem size": 192948, 
+                "topk cost": 39.312
+            }
+        }
+    }, 
+    "carmo": {
+        "cit-Patents": {
+            "100": {
+                "indexing time": 1.89337, 
+                "mem size": 352956, 
+                "topk cost": 6.27352
+            }
+        }, 
+        "wiki-Link": {
+            "100": {
+                "indexing time": 1.20103, 
+                "mem size": 3201060, 
+                "topk cost": 28.763
+            }
+        }, 
+        "web-Stanford": {
+            "100": {
+                "indexing time": 1.92854, 
+                "mem size": 144424, 
+                "topk cost": 17.033
+            }
+        }, 
+        "web-Google": {
+            "100": {
+                "indexing time": 1.55778, 
+                "mem size": 167056, 
+                "topk cost": 12.588
+            }
+        }, 
+        "web-BerkStan": {
+            "100": {
+                "indexing time": 1.65184, 
+                "mem size": 172904, 
+                "topk cost": 16.2274
+            }
+        }, 
+        "p2p-Gnutella06": {
+            "100": {
+                "indexing time": 3.77835, 
+                "mem size": 215148, 
+                "topk cost": 13.6108
+            }
+        }, 
+        "soc-LiveJournal1": {
+            "100": {
+                "indexing time": 1.71029, 
+                "mem size": 673172, 
+                "topk cost": 59.1751
+            }
+        }, 
+        "ca-GrQc": {
+            "100": {
+                "indexing time": 1.3729, 
+                "mem size": 70408, 
+                "topk cost": 10.231
+            }
+        }, 
+        "ca-HepTh": {
+            "100": {
+                "indexing time": 1.59476, 
+                "mem size": 57564, 
+                "topk cost": 12.7993
+            }
+        }
+    }, 
+    "blpmc": {
+        "cit-Patents": {
+            "100": {
+                "indexing time": 1.99049, 
+                "mem size": 360948, 
+                "topk cost": 6.2272
+            }
+        }, 
+        "wiki-Link": {
+            "100": {
+                "indexing time": 1.16271, 
+                "mem size": 3196264, 
+                "topk cost": 29.6452
+            }
+        }, 
+        "web-Stanford": {
+            "100": {
+                "indexing time": 1.95289, 
+                "mem size": 141932, 
+                "topk cost": 22.3897
+            }
+        }, 
+        "web-Google": {
+            "100": {
+                "indexing time": 1.64, 
+                "mem size": 171576, 
+                "topk cost": 12.2959
+            }
+        }, 
+        "web-BerkStan": {
+            "100": {
+                "indexing time": 1.62766, 
+                "mem size": 157820, 
+                "topk cost": 21.6798
+            }
+        }, 
+        "p2p-Gnutella06": {
+            "100": {
+                "indexing time": 3.769, 
+                "mem size": 217716, 
+                "topk cost": 20.7925
+            }
+        }, 
+        "soc-LiveJournal1": {
+            "100": {
+                "indexing time": 1.7283, 
+                "mem size": 674668, 
+                "topk cost": 61.5208
+            }
+        }, 
+        "ca-GrQc": {
+            "100": {
+                "indexing time": 1.54658, 
+                "mem size": 62592, 
+                "topk cost": 25.1009
+            }
+        }, 
+        "ca-HepTh": {
+            "100": {
+                "indexing time": 1.59844, 
+                "mem size": 57564, 
+                "topk cost": 28.1506
+            }
+        }
+    }, 
+    "carmo-t": {
+        "cit-Patents": {
+            "100": {
+                "indexing time": 1.93219, 
+                "mem size": 356000, 
+                "topk cost": 5.69727
+            }
+        }, 
+        "wiki-Link": {
+            "100": {
+                "indexing time": 1.15127, 
+                "mem size": 3198424, 
+                "topk cost": 29.0582
+            }
+        }, 
+        "web-Stanford": {
+            "100": {
+                "indexing time": 1.94627, 
+                "mem size": 141132, 
+                "topk cost": 15.5586
+            }
+        }, 
+        "web-Google": {
+            "100": {
+                "indexing time": 1.68451, 
+                "mem size": 165872, 
+                "topk cost": 11.0038
+            }
+        }, 
+        "web-BerkStan": {
+            "100": {
+                "indexing time": 1.65784, 
+                "mem size": 158132, 
+                "topk cost": 21.0098
+            }
+        }, 
+        "p2p-Gnutella06": {
+            "100": {
+                "indexing time": 3.72621, 
+                "mem size": 219256, 
+                "topk cost": 15.3562
+            }
+        }, 
+        "soc-LiveJournal1": {
+            "100": {
+                "indexing time": 1.72014, 
+                "mem size": 673232, 
+                "topk cost": 59.5786
+            }
+        }, 
+        "ca-GrQc": {
+            "100": {
+                "indexing time": 1.52697, 
+                "mem size": 63700, 
+                "topk cost": 9.75683
+            }
+        }, 
+        "ca-HepTh": {
+            "100": {
+                "indexing time": 1.47661, 
+                "mem size": 58164, 
+                "topk cost": 7.16125
+            }
+        }
+    }
+}

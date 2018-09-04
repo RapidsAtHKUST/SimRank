@@ -72,3 +72,7 @@ add_executable(tsf-rand-varying-gt main_rand_pair_query_varying_parameters.cpp g
 InitTSF(tsf-rand-varying-gt)
 target_compile_definitions(tsf-rand-varying-gt PRIVATE -DGROUND_TRUTH=1)
 
+add_executable(tsf-topk main_tsf_topk.cpp ground_truth/random_pair_generator.cpp yche_tsf.cpp yche_tsf.h input_output.cpp input_output.h ${GROUND_TRUTH_FILES} ../../SFMT/SFMT.c util/sfmt_based_rand.h)
+InitTSF(tsf-topk)
+
+

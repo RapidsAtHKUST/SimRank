@@ -78,8 +78,20 @@ BackPush::BackPush(string g_name_, DirectedG &graph, double c_, double epsilon_,
             fg_idx = new FG_Index(graph, config.number_of_trees, c);
             fg_idx->build_index();
         }
+        // cout << "init klist begin" << endl;
+        init_klist(100000);
+        // cout << "init klist end" << endl;
 }
 
+void BackPush::init_klist(int klength) {
+    klist.reserve(klength);
+    for (int i = 0; i < klength; ++i) {
+        klist[i] = 1;
+        while (rand_gen.double_rand() < c) {
+            ++klist[i];
+        }
+    }
+}
 
 size_t BackPush::number_of_walkers(double sum) {
     double r = pow(c * sum / epsilon, 2.0) * log(fail_prob / 2.0) / -2.0;
@@ -683,7 +695,7 @@ void BackPush::build_cost_estimation_model(){
         // cout << format("ground:%s, estimated: %s, error:%s") % ground_truth % estimated %  error << endl;
     }
 
-    // cout << "testing the linear model for local push..." << endl;
+    cout << "testing the linear model for local push..." << endl;
     double lp_test_sum_error = 0;
     for(int i = 0; i< lp_test_X.size();i++){
         double estimated = lp_linearmodel ->predict(lp_test_X[i]);
@@ -707,7 +719,7 @@ void BackPush::build_cost_estimation_model(){
         // cout << format("ground:%s, estimated: %s, error:%s") % ground_truth % estimated %  error << endl;
     }
 
-    // cout << "testing the linear model for local push..." << endl;
+    cout << "testing the linear model for local push..." << endl;
     double mc_test_sum_error = 0;
     for(int i = 0; i< mc_test_X.size();i++){
         double estimated = mc_linearmodel ->predict(mc_test_X[i]);
@@ -792,25 +804,37 @@ int BackPush::MC_random_walk_topk(int N, vector<NodePair> &node_pairs, vector<in
         NN = max(0, N - nt);
     }
     // cout << NN << endl;
-    vector<int> length_of_rws(NN);
+    if (this->is_use_hub()) {
+        return this->sample_N_random_walks_with_hubs_topk(starting_positions);
+    }
+    if (this->is_use_fg()) {
+        return this->sample_N_random_walks_with_fg_topk(starting_positions, nt);
+    }
+    vector<int> length_of_rws;
     for (int i = 0; i < NN; ++i) {
         int length_of_random_walk = 1;
         while (rand_gen.double_rand() < c) {
             length_of_random_walk++;
         }
-        length_of_rws[i] = length_of_random_walk;
-    }
-    if (this->is_use_hub()) {
-        return this->sample_N_random_walks_with_hubs(starting_positions, length_of_rws);
-    }
-    if (this->is_use_fg()) {
-        return this->sample_N_random_walks_with_fg_topk(starting_positions, length_of_rws, nt);
+        length_of_rws.push_back(length_of_random_walk);
     }
     // cout << starting_positions.size() << " " << length_of_rws.size() << endl;
-    return this->sample_N_random_walks(starting_positions, length_of_rws);
+    return this->sample_N_random_walks_topk(starting_positions);
 }
 
-int BackPush::sample_N_random_walks_with_fg_topk(vector<NodePair> &nps, vector<int> &lengths, int nt) {
+int BackPush::sample_N_random_walks_with_hubs_topk(vector<NodePair> &nps) {
+    int N = nps.size();
+    int meeting_count = 0;
+    for (int i = 0; i < N; ++i) {
+        int length_of_random_walk = klist[i];
+        NodePair sampled_np = nps[i];
+        int sample_result = this->sample_one_pair_with_hubs(sampled_np, length_of_random_walk);
+        meeting_count += sample_result;
+    }
+    return meeting_count;
+}
+
+int BackPush::sample_N_random_walks_with_fg_topk(vector<NodePair> &nps, int nt) {
     int N = nps.size();
     int NN = max(0, N - nt);
     int sum = 0;
@@ -824,11 +848,23 @@ int BackPush::sample_N_random_walks_with_fg_topk(vector<NodePair> &nps, vector<i
     }
     for (int i = nt, j = 0; i < N; ++i, ++j) {
         NodePair sampled_np = nps[i];
-        sum += this->sample_one_pair(sampled_np, lengths[j]);
+        sum += this->sample_one_pair(sampled_np, klist[j]);
     }
     return sum;
 }
 
+int BackPush::sample_N_random_walks_topk(vector<NodePair> &nps) {
+    int N = nps.size();
+    int meeting_count = 0;
+    for (int i = 0; i < N; ++i) {
+        int length_of_random_walk = klist[i];
+        NodePair sampled_np = nps[i];
+        int sample_result = this->sample_one_pair(sampled_np, length_of_random_walk);
+        meeting_count += sample_result;
+    }
+    return meeting_count;
+}
+        
 vector<QPair> BackPush::top_k_sort(vector<NodePair> &Q, int k) {
     auto cmp = [](QPair x, QPair y){return x.second > y.second;};
     vector<QPair> topk;
@@ -864,6 +900,8 @@ vector<QPair> BackPush::top_k_heap(vector<NodePair> &Q, int k) {
 }
 
 vector<QPair> BackPush::top_k(vector<NodePair> &Q, int k) {
+    auto start_time = std::chrono::high_resolution_clock::now();
+    
     int q = Q.size();
     set<int> T, C, D;
     vector<int> N(q), n(q, 0), sum(q, 0), nt(q);
@@ -892,7 +930,7 @@ vector<QPair> BackPush::top_k(vector<NodePair> &Q, int k) {
     // bheap.resize(q);
     topk.reserve(k);
 
-    // cout << "Initialization" << endl;
+    cout << "Initialization" << endl;
     for (int i = 0; i < q; ++i) {
         if (Q[i].first == Q[i].second) {
             // cout << "push" << Q[i] << endl;
@@ -906,7 +944,7 @@ vector<QPair> BackPush::top_k(vector<NodePair> &Q, int k) {
             return topk;
         }
     }
-    // cout << "BackPush" << endl;
+    cout << "BackPush" << endl;
     for (int i: C) {
         bheap[i] = new unique_max_heap(*g);
         zg[i] = backward_push(Q[i], *bheap[i]).first;
@@ -918,15 +956,19 @@ vector<QPair> BackPush::top_k(vector<NodePair> &Q, int k) {
             if (this->is_use_fg()) nt[i] = fg_idx->N;
         }
     }
-    
+    cout << T.size() << " " << C.size() << " " << D.size() << endl;
+    auto end_time = std::chrono::high_resolution_clock::now();
+    std::chrono::duration<double> elapsed = end_time - start_time;
+    cout << "BackPush time: " << elapsed.count() << endl;
+
     for (int i: D) {
         rw_init(*bheap[i], node_pairs[i], cdf[i]);
         ch[i] = c * bheap[i]->sum;
     }
-    // cout << T.size() << " " << C.size() << " " << D.size() << endl;
     double l2f = log(2 / fail_prob), l3f = log(3 / fail_prob);
     
     int lbub = 0, ublb = 0;
+    double mctime = 0;
 
     while (D.size() > 0) {
         // cout << "> new iteration" << endl;
@@ -937,7 +979,11 @@ vector<QPair> BackPush::top_k(vector<NodePair> &Q, int k) {
             
             // walk l times
             if (l > 0 && !bheap[i]->empty()) {
+                start_time = std::chrono::high_resolution_clock::now();
                 sum[i] += MC_random_walk_topk(l, node_pairs[i], cdf[i], nt[i]);
+                end_time = std::chrono::high_resolution_clock::now();
+                elapsed = end_time - start_time;
+                mctime += elapsed.count();
             }
             // cout << "sum: " << sum[i] << endl;
             
@@ -1023,6 +1069,7 @@ vector<QPair> BackPush::top_k(vector<NodePair> &Q, int k) {
                 if (T.size() == k) {
                     // sort(topk.begin(), topk.end(), cmpl);
                     cout << "LB<UB: " << lbub << ", UB<LB: " << ublb << endl;
+                    cout << "MC time: " << mctime << endl;
                     return topk;
                 }   
                 C.erase(i);
@@ -1051,6 +1098,7 @@ vector<QPair> BackPush::top_k(vector<NodePair> &Q, int k) {
     }
     // sort(topk.begin(), topk.end(), cmpl);
     cout << "LB<UB: " << lbub << ", UB<LB: " << ublb << endl;
+    cout << "MC time: " << mctime << endl;
     return topk;
 }
 

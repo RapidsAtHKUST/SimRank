@@ -8,11 +8,10 @@ find_package(Boost REQUIRED program_options)
 
 ##################### Release #################################################################
 
-# set(BPRW_SOURCES bprw.cpp simrank.cpp rw_hub.cpp  stat.cpp main.cpp file_serialization.h bflpmc.cpp flpmc.cpp)
-set(BPRW_SOURCES stat.cpp rw_hub.cpp bprw.cpp main.cpp simrank.cpp fgi.cpp)
+# set(BPRW_SOURCES bprw.cpp simrank.cpp rw_hub.cpp stat.cpp file_serialization.h bflpmc.cpp flpmc.cpp)
+set(BPRW_SOURCES stat.cpp rw_hub.cpp bprw.cpp simrank.cpp fgi.cpp)
 
-
-add_executable(bflpmc ${BPRW_SOURCES})
+add_executable(bflpmc ${BPRW_SOURCES} main.cpp)
 
 if (Boost_FOUND)
     message(${Boost_INCLUDE_DIRS})
@@ -26,14 +25,17 @@ if (OPENMP_FOUND)
     set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${OpenMP_CXX_FLAGS}")
     set (CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} ${OpenMP_EXE_LINKER_FLAGS}")
 endif()
-target_include_directories(bflpmc PRIVATE ./)
-target_include_directories(bflpmc PRIVATE ../include)
-target_include_directories(bflpmc PRIVATE ../sparsehash-yche/include)
-target_include_directories(bflpmc PRIVATE ../sparsepp)
-target_include_directories(bflpmc PRIVATE ../LPMC-Profile/)
-target_include_directories(bflpmc PRIVATE ../SFMT/)
-target_include_directories(bflpmc PRIVATE /homes/ywangby/workspace/DynamicSimRank/include/localsim)
-target_include_directories(bflpmc PRIVATE /homes/ywangby/workspace/include)
+
+macro(InitDirectories exec_name)
+    target_include_directories(${exec_name} PRIVATE ./)
+    target_include_directories(${exec_name} PRIVATE ../include)
+    target_include_directories(${exec_name} PRIVATE ../sparsehash-yche/include)
+    target_include_directories(${exec_name} PRIVATE ../sparsepp)
+    target_include_directories(${exec_name} PRIVATE ../LPMC-Profile/)
+    target_include_directories(${exec_name} PRIVATE ../SFMT/)
+    target_include_directories(${exec_name} PRIVATE /homes/ywangby/workspace/DynamicSimRank/include/localsim)
+    target_include_directories(${exec_name} PRIVATE /homes/ywangby/workspace/include)
+endmacro()
 
 # Cmake also process the cmakefile in the dir
 add_subdirectory(/homes/ywangby/workspace/DynamicSimRank/include/localsim ./localsim)
@@ -51,23 +53,54 @@ set_property(TARGET libbf PROPERTY IMPORTED_LOCATION "/homes/ywangby/workspace/l
 add_library(libroaring SHARED IMPORTED)
 set_property(TARGET libroaring PROPERTY IMPORTED_LOCATION "/homes/ywangby/workspace/lib/libroaring.so")
 
-target_link_libraries(bflpmc PRIVATE libbf)
+macro(InitLibraries exec_name)
+    target_link_libraries(${exec_name} PRIVATE libbf)
+    target_link_libraries(${exec_name} PRIVATE libphf)
+    target_link_libraries(${exec_name} PRIVATE libroaring)
+    target_link_libraries(${exec_name} PRIVATE LocalPushSimRank)
+    target_link_libraries(${exec_name} PRIVATE Utils)
+    # target_link_libraries(${exec_name} PRIVATE mlpack armadillo) # for mlpack: a C++ machine learning library 
+    target_compile_definitions(${exec_name} PRIVATE -DHAS_OPENMP=1 -DSFMT=1)
+    target_compile_options(${exec_name} PRIVATE -O3 -g ${SFMT_COMPILE_FLAGS})
+    target_link_libraries(${exec_name} PRIVATE ${Boost_LIBRARIES})
+endmacro()
 
-target_link_libraries(bflpmc PRIVATE libphf)
+InitDirectories(bflpmc)
+InitLibraries(bflpmc)
 
-target_link_libraries(bflpmc PRIVATE libroaring)
+add_executable(carmo ${BPRW_SOURCES} main_carmo_topk.cpp)
+InitDirectories(carmo)
+InitLibraries(carmo)
 
-target_link_libraries(bflpmc PRIVATE LocalPushSimRank)
+add_executable(carmo-h ${BPRW_SOURCES} main_carmo_h_topk.cpp)
+InitDirectories(carmo-h)
+InitLibraries(carmo-h)
 
-target_link_libraries(bflpmc PRIVATE Utils)
+add_executable(carmo-t ${BPRW_SOURCES} main_carmo_t_topk.cpp)
+InitDirectories(carmo-t)
+InitLibraries(carmo-t)
 
-# target_link_libraries(bflpmc PRIVATE mlpack armadillo) # for mlpack: a C++ machine learning library 
+add_executable(blpmc ${BPRW_SOURCES} main_blpmc_topk.cpp)
+InitDirectories(blpmc)
+InitLibraries(blpmc)
 
-target_compile_definitions(bflpmc PRIVATE -DHAS_OPENMP=1 -DSFMT=1)
-target_compile_options(bflpmc PRIVATE -O3 -g ${SFMT_COMPILE_FLAGS})
-target_link_libraries(bflpmc PRIVATE ${Boost_LIBRARIES})
+add_executable(blpmc-ap ${BPRW_SOURCES} main_blpmc.cpp)
+InitDirectories(blpmc-ap)
+InitLibraries(blpmc-ap)
 
-set( CMAKE_EXPORT_COMPILE_COMMANDS ON) # add compile files for You Complete Me
+add_executable(carmo-121 ${BPRW_SOURCES} main_carmo.cpp)
+InitDirectories(carmo-121)
+InitLibraries(carmo-121)
+
+add_executable(carmo-h-121 ${BPRW_SOURCES} main_carmo_h.cpp)
+InitDirectories(carmo-h-121)
+InitLibraries(carmo-h-121)
+
+add_executable(carmo-t-121 ${BPRW_SOURCES} main_carmo_t.cpp)
+InitDirectories(carmo-t-121)
+InitLibraries(carmo-t-121)
+
+set(CMAKE_EXPORT_COMPILE_COMMANDS ON) # add compile files for You Complete Me
 set(CMAKE_BUILD_TYPE RelWithDebInfo) # optimized code with debug symbols
 
 
@@ -80,3 +113,5 @@ set(CMAKE_BUILD_TYPE RelWithDebInfo) # optimized code with debug symbols
 # target_include_directories(ground_truth_gen PRIVATE ../sparsehash-yche/include)
 # target_include_directories(ground_truth_gen PRIVATE ../sparsepp)
 # target_compile_options(ground_truth_gen PRIVATE -O3 -g)
+
+

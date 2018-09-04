@@ -18,8 +18,8 @@ inline string get_bin_list_path(string s) {
 }
 
 inline string get_bin_list_path_from_txt(string path) {
-    auto tmp = path.replace(path.begin() + 48, path.begin() + 57, "bin_edge_list");
-    auto tmp2 = tmp.replace(tmp.end() - 3, tmp.end(), "bin");
+    string tmp = path.replace(path.begin() + 48, path.begin() + 57, "bin_edge_list");
+    string tmp2 = tmp.replace(tmp.end() - 3, tmp.end(), "bin");
     return tmp2;
 }
 

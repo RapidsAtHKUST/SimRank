@@ -25,9 +25,9 @@ TruthSim::TruthSim(string name, GraphYche &g, double c_, double epsilon_) {
     c = c_;
     epsilon = epsilon_;
     sim.resize(n, n);
-    cout << get_file_path() << endl;
+    // cout << get_file_path() << endl;
     if (file_exists(get_file_path())) {
-        cout << "loading ground truth...." << endl;
+        // cout << "loading ground truth...." << endl;
         load();
     } else {
         cout << "not found ground truth... "<< endl;

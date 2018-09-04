@@ -105,21 +105,21 @@ GraphYche::GraphYche(string &graph_path) {
     auto start_time = high_resolution_clock::now();
     auto edge_lst = vector<pair<int, int>>();
 
-    if (file_exists(get_bin_list_path_from_txt(graph_path))) {
+    if (file_exists(get_bin_list_path(graph_path))) {
         cout << "load from binary file..." << endl;
-        ReadFileToArr(get_bin_list_path_from_txt(graph_path), edge_lst);
+        ReadFileToArr(get_bin_list_path(graph_path), edge_lst);
     } else {
         edge_lst = GetEdgeList(graph_path);
     }
 
     auto end_time = high_resolution_clock::now();
-    cout << "load edge list time:" << duration_cast<milliseconds>(end_time - start_time).count()
-         << " ms\n";
+    // cout << "load edge list time:" << duration_cast<milliseconds>(end_time - start_time).count()
+    //      << " ms\n";
 
     LoadGraph(edge_lst);
     auto final_time = high_resolution_clock::now();
-    cout << "parse edge list to bi-dir csr time:" << duration_cast<milliseconds>(final_time - end_time).count()
-         << " ms\n";
+    // cout << "parse edge list to bi-dir csr time:" << duration_cast<milliseconds>(final_time - end_time).count()
+    //      << " ms\n";
 }
 
 bool GraphYche::BinarySearch(uint32_t offset_beg, uint32_t offset_end, int val) {

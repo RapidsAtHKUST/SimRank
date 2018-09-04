@@ -1,0 +1,372 @@
+{
+    "carmo": {
+        "cit-Patents": {
+            "10000": {
+                "500": {
+                    "indexing time": 1.64957, 
+                    "topk cost": 0.58998
+                }, 
+                "100": {
+                    "indexing time": 1.72606, 
+                    "topk cost": 0.578105
+                }
+            }
+        }, 
+        "wiki-Link": {
+            "10000": {
+                "500": {
+                    "indexing time": null, 
+                    "topk cost": null
+                }, 
+                "100": {
+                    "indexing time": null, 
+                    "topk cost": null
+                }
+            }
+        }, 
+        "web-Stanford": {
+            "10000": {
+                "500": {
+                    "indexing time": 1.79055, 
+                    "topk cost": 1.81889
+                }, 
+                "100": {
+                    "indexing time": 1.76566, 
+                    "topk cost": 1.89159
+                }
+            }
+        }, 
+        "web-Google": {
+            "10000": {
+                "500": {
+                    "indexing time": 1.63218, 
+                    "topk cost": 1.17562
+                }, 
+                "100": {
+                    "indexing time": 1.6032, 
+                    "topk cost": 1.11732
+                }
+            }
+        }, 
+        "web-BerkStan": {
+            "10000": {
+                "500": {
+                    "indexing time": 1.57441, 
+                    "topk cost": 2.25791
+                }, 
+                "100": {
+                    "indexing time": 1.54603, 
+                    "topk cost": 2.27778
+                }
+            }
+        }, 
+        "soc-LiveJournal1": {
+            "10000": {
+                "500": {
+                    "indexing time": 1.67539, 
+                    "topk cost": 6.34163
+                }, 
+                "100": {
+                    "indexing time": 1.69678, 
+                    "topk cost": 6.25712
+                }
+            }
+        }
+    }, 
+    "blpmc": {
+        "cit-Patents": {
+            "10000": {
+                "500": {
+                    "indexing time": 1.89859, 
+                    "topk cost": 0.646539
+                }, 
+                "100": {
+                    "indexing time": 1.8799, 
+                    "topk cost": 0.637004
+                }
+            }
+        }, 
+        "wiki-Link": {
+            "10000": {
+                "500": {
+                    "indexing time": null, 
+                    "topk cost": null
+                }, 
+                "100": {
+                    "indexing time": null, 
+                    "topk cost": null
+                }
+            }
+        }, 
+        "web-Stanford": {
+            "10000": {
+                "500": {
+                    "indexing time": 1.70936, 
+                    "topk cost": 1.98449
+                }, 
+                "100": {
+                    "indexing time": 1.71575, 
+                    "topk cost": 2.04923
+                }
+            }
+        }, 
+        "web-Google": {
+            "10000": {
+                "500": {
+                    "indexing time": 1.50563, 
+                    "topk cost": 1.24535
+                }, 
+                "100": {
+                    "indexing time": 1.55774, 
+                    "topk cost": 1.25095
+                }
+            }
+        }, 
+        "web-BerkStan": {
+            "10000": {
+                "500": {
+                    "indexing time": 1.50077, 
+                    "topk cost": 2.01923
+                }, 
+                "100": {
+                    "indexing time": 1.53891, 
+                    "topk cost": 2.30504
+                }
+            }
+        }, 
+        "soc-LiveJournal1": {
+            "10000": {
+                "500": {
+                    "indexing time": 1.69584, 
+                    "topk cost": 6.05492
+                }, 
+                "100": {
+                    "indexing time": 1.72407, 
+                    "topk cost": 6.13241
+                }
+            }
+        }
+    }, 
+    "carmo-h": {
+        "cit-Patents": {
+            "10000": {
+                "500": {
+                    "indexing time": 478.389, 
+                    "topk cost": 0.826708
+                }, 
+                "100": {
+                    "indexing time": 478.562, 
+                    "topk cost": 0.853058
+                }
+            }
+        }, 
+        "wiki-Link": {
+            "10000": {
+                "500": {
+                    "indexing time": null, 
+                    "topk cost": null
+                }, 
+                "100": {
+                    "indexing time": null, 
+                    "topk cost": null
+                }
+            }
+        }, 
+        "web-Stanford": {
+            "10000": {
+                "500": {
+                    "indexing time": 33.0199, 
+                    "topk cost": 2.01899
+                }, 
+                "100": {
+                    "indexing time": 33.1074, 
+                    "topk cost": 2.14985
+                }
+            }
+        }, 
+        "web-Google": {
+            "10000": {
+                "500": {
+                    "indexing time": 518.209, 
+                    "topk cost": 1.44624
+                }, 
+                "100": {
+                    "indexing time": 519.477, 
+                    "topk cost": 1.45479
+                }
+            }
+        }, 
+        "web-BerkStan": {
+            "10000": {
+                "500": {
+                    "indexing time": 1.98832, 
+                    "topk cost": 2.13743
+                }, 
+                "100": {
+                    "indexing time": 2.13689, 
+                    "topk cost": 2.25957
+                }
+            }
+        }, 
+        "soc-LiveJournal1": {
+            "10000": {
+                "500": {
+                    "indexing time": 3.56347, 
+                    "topk cost": 6.57409
+                }, 
+                "100": {
+                    "indexing time": 3.50014, 
+                    "topk cost": 6.37932
+                }
+            }
+        }
+    }, 
+    "sling-topk": {
+        "cit-Patents": {
+            "10000": {
+                "500": {
+                    "indexing time": 532.407, 
+                    "topk cost": 0.714735
+                }, 
+                "100": {
+                    "indexing time": 537.438, 
+                    "topk cost": 0.852003
+                }
+            }
+        }, 
+        "wiki-Link": {
+            "10000": {
+                "500": {
+                    "indexing time": null, 
+                    "topk cost": null
+                }, 
+                "100": {
+                    "indexing time": null, 
+                    "topk cost": null
+                }
+            }
+        }, 
+        "web-Stanford": {
+            "10000": {
+                "500": {
+                    "indexing time": 337.548, 
+                    "topk cost": 4.01904
+                }, 
+                "100": {
+                    "indexing time": 349.865, 
+                    "topk cost": 4.02693
+                }
+            }
+        }, 
+        "web-Google": {
+            "10000": {
+                "500": {
+                    "indexing time": 597.641, 
+                    "topk cost": 2.8132
+                }, 
+                "100": {
+                    "indexing time": 609.372, 
+                    "topk cost": 2.82443
+                }
+            }
+        }, 
+        "web-BerkStan": {
+            "10000": {
+                "500": {
+                    "indexing time": 861.086, 
+                    "topk cost": 4.31233
+                }, 
+                "100": {
+                    "indexing time": 834.299, 
+                    "topk cost": 4.275
+                }
+            }
+        }, 
+        "soc-LiveJournal1": {
+            "10000": {
+                "500": {
+                    "indexing time": 8696.7, 
+                    "topk cost": 6.93822
+                }, 
+                "100": {
+                    "indexing time": 8776.98, 
+                    "topk cost": 7.00877
+                }
+            }
+        }
+    }, 
+    "carmo-t": {
+        "cit-Patents": {
+            "10000": {
+                "500": {
+                    "indexing time": null, 
+                    "topk cost": null
+                }, 
+                "100": {
+                    "indexing time": null, 
+                    "topk cost": null
+                }
+            }
+        }, 
+        "wiki-Link": {
+            "10000": {
+                "500": {
+                    "indexing time": null, 
+                    "topk cost": null
+                }, 
+                "100": {
+                    "indexing time": null, 
+                    "topk cost": null
+                }
+            }
+        }, 
+        "web-Stanford": {
+            "10000": {
+                "500": {
+                    "indexing time": 241.64, 
+                    "topk cost": 2.23683
+                }, 
+                "100": {
+                    "indexing time": 241.286, 
+                    "topk cost": 2.2062
+                }
+            }
+        }, 
+        "web-Google": {
+            "10000": {
+                "500": {
+                    "indexing time": 939.697, 
+                    "topk cost": 1.9173
+                }, 
+                "100": {
+                    "indexing time": 931.711, 
+                    "topk cost": 1.63428
+                }
+            }
+        }, 
+        "web-BerkStan": {
+            "10000": {
+                "500": {
+                    "indexing time": 620.863, 
+                    "topk cost": 3.02067
+                }, 
+                "100": {
+                    "indexing time": 623.254, 
+                    "topk cost": 3.01137
+                }
+            }
+        }, 
+        "soc-LiveJournal1": {
+            "10000": {
+                "500": {
+                    "indexing time": null, 
+                    "topk cost": null
+                }, 
+                "100": {
+                    "indexing time": null, 
+                    "topk cost": null
+                }
+            }
+        }
+    }
+}

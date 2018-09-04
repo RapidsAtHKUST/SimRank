@@ -1,0 +1,597 @@
+{
+    "carmo": {
+        "ca-GrQc": {
+            "100000": {
+                "200": {
+                    "max err": 7.08923e-05, 
+                    "precison": 0.995, 
+                    "indexing time": 1.36079, 
+                    "ndcg": 0.999999, 
+                    "topk cost": 10.2469
+                }, 
+                "300": {
+                    "max err": 0.000419525, 
+                    "precison": 0.996667, 
+                    "indexing time": 1.38383, 
+                    "ndcg": 0.999994, 
+                    "topk cost": 10.2578
+                }, 
+                "400": {
+                    "max err": 0.000636958, 
+                    "precison": 0.99, 
+                    "indexing time": 1.34396, 
+                    "ndcg": 0.999966, 
+                    "topk cost": 15.3621
+                }, 
+                "100": {
+                    "max err": 0, 
+                    "precison": 1, 
+                    "indexing time": 1.3316, 
+                    "ndcg": 1, 
+                    "topk cost": 9.17809
+                }, 
+                "500": {
+                    "max err": 0.00104027, 
+                    "precison": 0.984, 
+                    "indexing time": 1.33123, 
+                    "ndcg": 0.999938, 
+                    "topk cost": 16.7842
+                }
+            }
+        }, 
+        "ca-HepTh": {
+            "100000": {
+                "200": {
+                    "max err": 0, 
+                    "precison": 1, 
+                    "indexing time": 1.38699, 
+                    "ndcg": 1, 
+                    "topk cost": 13.3252
+                }, 
+                "300": {
+                    "max err": 0.000503582, 
+                    "precison": 0.99, 
+                    "indexing time": 1.38272, 
+                    "ndcg": 0.99996, 
+                    "topk cost": 18.1467
+                }, 
+                "400": {
+                    "max err": 0.000738882, 
+                    "precison": 0.9825, 
+                    "indexing time": 1.37294, 
+                    "ndcg": 0.999957, 
+                    "topk cost": 24.0261
+                }, 
+                "100": {
+                    "max err": 0, 
+                    "precison": 1, 
+                    "indexing time": 1.36252, 
+                    "ndcg": 1, 
+                    "topk cost": 12.4634
+                }, 
+                "500": {
+                    "max err": 0.000557203, 
+                    "precison": 0.98, 
+                    "indexing time": 1.38727, 
+                    "ndcg": 0.999929, 
+                    "topk cost": 25.6646
+                }
+            }
+        }, 
+        "p2p-Gnutella06": {
+            "100000": {
+                "200": {
+                    "max err": 0, 
+                    "precison": 1, 
+                    "indexing time": 3.6219, 
+                    "ndcg": 1, 
+                    "topk cost": 15.2341
+                }, 
+                "300": {
+                    "max err": 0, 
+                    "precison": 1, 
+                    "indexing time": 3.60963, 
+                    "ndcg": 1, 
+                    "topk cost": 16.8249
+                }, 
+                "400": {
+                    "max err": 0, 
+                    "precison": 1, 
+                    "indexing time": 3.58224, 
+                    "ndcg": 1, 
+                    "topk cost": 16.231
+                }, 
+                "100": {
+                    "max err": 0, 
+                    "precison": 1, 
+                    "indexing time": 3.56577, 
+                    "ndcg": 1, 
+                    "topk cost": 14.0384
+                }, 
+                "500": {
+                    "max err": 2.58507e-05, 
+                    "precison": 0.998, 
+                    "indexing time": 3.57987, 
+                    "ndcg": 0.999999, 
+                    "topk cost": 16.6299
+                }
+            }
+        }
+    }, 
+    "blpmc": {
+        "ca-GrQc": {
+            "100000": {
+                "200": {
+                    "max err": 0.000566218, 
+                    "precison": 0.995, 
+                    "indexing time": 1.34032, 
+                    "ndcg": 0.999994, 
+                    "topk cost": 24.8259
+                }, 
+                "300": {
+                    "max err": 0.000726098, 
+                    "precison": 0.996667, 
+                    "indexing time": 1.36188, 
+                    "ndcg": 0.999989, 
+                    "topk cost": 24.7851
+                }, 
+                "400": {
+                    "max err": 0.000731657, 
+                    "precison": 0.9925, 
+                    "indexing time": 1.32784, 
+                    "ndcg": 0.999971, 
+                    "topk cost": 25.5023
+                }, 
+                "100": {
+                    "max err": 0, 
+                    "precison": 1, 
+                    "indexing time": 1.32191, 
+                    "ndcg": 1, 
+                    "topk cost": 24.971
+                }, 
+                "500": {
+                    "max err": 0.00038888, 
+                    "precison": 0.986, 
+                    "indexing time": 1.33238, 
+                    "ndcg": 0.999966, 
+                    "topk cost": 24.8496
+                }
+            }
+        }, 
+        "ca-HepTh": {
+            "100000": {
+                "200": {
+                    "max err": 0.000310795, 
+                    "precison": 0.99, 
+                    "indexing time": 1.36428, 
+                    "ndcg": 0.999987, 
+                    "topk cost": 28.1609
+                }, 
+                "300": {
+                    "max err": 0.000518044, 
+                    "precison": 0.99, 
+                    "indexing time": 1.37058, 
+                    "ndcg": 0.999982, 
+                    "topk cost": 29.1547
+                }, 
+                "400": {
+                    "max err": 0.000850778, 
+                    "precison": 0.98, 
+                    "indexing time": 1.35753, 
+                    "ndcg": 0.999947, 
+                    "topk cost": 29.0756
+                }, 
+                "100": {
+                    "max err": 0, 
+                    "precison": 1, 
+                    "indexing time": 1.36807, 
+                    "ndcg": 1, 
+                    "topk cost": 28.894
+                }, 
+                "500": {
+                    "max err": 0.00071728, 
+                    "precison": 0.972, 
+                    "indexing time": 1.36529, 
+                    "ndcg": 0.999894, 
+                    "topk cost": 29.0233
+                }
+            }
+        }, 
+        "p2p-Gnutella06": {
+            "100000": {
+                "200": {
+                    "max err": 0, 
+                    "precison": 1, 
+                    "indexing time": 3.65258, 
+                    "ndcg": 1, 
+                    "topk cost": 19.9326
+                }, 
+                "300": {
+                    "max err": 0, 
+                    "precison": 1, 
+                    "indexing time": 3.64174, 
+                    "ndcg": 1, 
+                    "topk cost": 20.0862
+                }, 
+                "400": {
+                    "max err": 1.46162e-05, 
+                    "precison": 0.9975, 
+                    "indexing time": 3.5976, 
+                    "ndcg": 1, 
+                    "topk cost": 20.475
+                }, 
+                "100": {
+                    "max err": 0, 
+                    "precison": 1, 
+                    "indexing time": 3.5846, 
+                    "ndcg": 1, 
+                    "topk cost": 20.1418
+                }, 
+                "500": {
+                    "max err": 2.84277e-05, 
+                    "precison": 0.998, 
+                    "indexing time": 3.60234, 
+                    "ndcg": 0.999999, 
+                    "topk cost": 19.9051
+                }
+            }
+        }
+    }, 
+    "carmo-h": {
+        "ca-GrQc": {
+            "100000": {
+                "200": {
+                    "max err": 0.000302538, 
+                    "precison": 0.995, 
+                    "indexing time": 1.83388, 
+                    "ndcg": 0.999994, 
+                    "topk cost": 11.7655
+                }, 
+                "300": {
+                    "max err": 0.00103092, 
+                    "precison": 0.993333, 
+                    "indexing time": 1.83414, 
+                    "ndcg": 0.999979, 
+                    "topk cost": 11.7115
+                }, 
+                "400": {
+                    "max err": 0.000885913, 
+                    "precison": 0.99, 
+                    "indexing time": 1.86994, 
+                    "ndcg": 0.999958, 
+                    "topk cost": 15.6953
+                }, 
+                "100": {
+                    "max err": 0, 
+                    "precison": 1, 
+                    "indexing time": 1.85671, 
+                    "ndcg": 1, 
+                    "topk cost": 8.84049
+                }, 
+                "500": {
+                    "max err": 0.00163896, 
+                    "precison": 0.982, 
+                    "indexing time": 1.87549, 
+                    "ndcg": 0.999916, 
+                    "topk cost": 15.1249
+                }
+            }
+        }, 
+        "ca-HepTh": {
+            "100000": {
+                "200": {
+                    "max err": 0.000333396, 
+                    "precison": 0.995, 
+                    "indexing time": 1.89816, 
+                    "ndcg": 0.999992, 
+                    "topk cost": 16.5132
+                }, 
+                "300": {
+                    "max err": 0.000676688, 
+                    "precison": 0.986667, 
+                    "indexing time": 1.90589, 
+                    "ndcg": 0.999941, 
+                    "topk cost": 18.766
+                }, 
+                "400": {
+                    "max err": 0.000639952, 
+                    "precison": 0.985, 
+                    "indexing time": 1.93596, 
+                    "ndcg": 0.999957, 
+                    "topk cost": 24.8099
+                }, 
+                "100": {
+                    "max err": 0, 
+                    "precison": 1, 
+                    "indexing time": 1.91856, 
+                    "ndcg": 1, 
+                    "topk cost": 11.8024
+                }, 
+                "500": {
+                    "max err": 0.00110089, 
+                    "precison": 0.968, 
+                    "indexing time": 1.91909, 
+                    "ndcg": 0.999866, 
+                    "topk cost": 27.8792
+                }
+            }
+        }, 
+        "p2p-Gnutella06": {
+            "100000": {
+                "200": {
+                    "max err": 0, 
+                    "precison": 1, 
+                    "indexing time": 4.04735, 
+                    "ndcg": 1, 
+                    "topk cost": 15.4783
+                }, 
+                "300": {
+                    "max err": 0, 
+                    "precison": 1, 
+                    "indexing time": 3.99162, 
+                    "ndcg": 1, 
+                    "topk cost": 15.9925
+                }, 
+                "400": {
+                    "max err": 0, 
+                    "precison": 1, 
+                    "indexing time": 4.07897, 
+                    "ndcg": 1, 
+                    "topk cost": 16.9706
+                }, 
+                "100": {
+                    "max err": 0, 
+                    "precison": 1, 
+                    "indexing time": 4.16688, 
+                    "ndcg": 1, 
+                    "topk cost": 13.9728
+                }, 
+                "500": {
+                    "max err": 3.13343e-05, 
+                    "precison": 0.998, 
+                    "indexing time": 4.06431, 
+                    "ndcg": 0.999998, 
+                    "topk cost": 17.7
+                }
+            }
+        }
+    }, 
+    "sling-topk": {
+        "ca-GrQc": {
+            "100000": {
+                "200": {
+                    "max err": 0, 
+                    "precison": 1, 
+                    "indexing time": 8.17019, 
+                    "ndcg": 1, 
+                    "topk cost": 40.4397
+                }, 
+                "300": {
+                    "max err": 0, 
+                    "precison": 1, 
+                    "indexing time": 8.05772, 
+                    "ndcg": 1, 
+                    "topk cost": 40.4694
+                }, 
+                "400": {
+                    "max err": 0, 
+                    "precison": 1, 
+                    "indexing time": 8.03062, 
+                    "ndcg": 1, 
+                    "topk cost": 40.4009
+                }, 
+                "100": {
+                    "max err": 0, 
+                    "precison": 1, 
+                    "indexing time": 8.05698, 
+                    "ndcg": 1, 
+                    "topk cost": 40.5148
+                }, 
+                "500": {
+                    "max err": 0, 
+                    "precison": 1, 
+                    "indexing time": 7.94957, 
+                    "ndcg": 1, 
+                    "topk cost": 40.4715
+                }
+            }
+        }, 
+        "ca-HepTh": {
+            "100000": {
+                "200": {
+                    "max err": 0, 
+                    "precison": 1, 
+                    "indexing time": 12.5524, 
+                    "ndcg": 1, 
+                    "topk cost": 39.0392
+                }, 
+                "300": {
+                    "max err": 0, 
+                    "precison": 1, 
+                    "indexing time": 12.3216, 
+                    "ndcg": 1, 
+                    "topk cost": 39.1319
+                }, 
+                "400": {
+                    "max err": 0, 
+                    "precison": 1, 
+                    "indexing time": 12.3465, 
+                    "ndcg": 1, 
+                    "topk cost": 39.2116
+                }, 
+                "100": {
+                    "max err": 0, 
+                    "precison": 1, 
+                    "indexing time": 12.2858, 
+                    "ndcg": 1, 
+                    "topk cost": 39.0919
+                }, 
+                "500": {
+                    "max err": 0, 
+                    "precison": 1, 
+                    "indexing time": 12.3435, 
+                    "ndcg": 1, 
+                    "topk cost": 39.0628
+                }
+            }
+        }, 
+        "p2p-Gnutella06": {
+            "100000": {
+                "200": {
+                    "max err": 0, 
+                    "precison": 1, 
+                    "indexing time": 5.59689, 
+                    "ndcg": 1, 
+                    "topk cost": 27.6871
+                }, 
+                "300": {
+                    "max err": 0, 
+                    "precison": 1, 
+                    "indexing time": 5.61937, 
+                    "ndcg": 1, 
+                    "topk cost": 27.601
+                }, 
+                "400": {
+                    "max err": 0, 
+                    "precison": 1, 
+                    "indexing time": 5.58201, 
+                    "ndcg": 1, 
+                    "topk cost": 27.7174
+                }, 
+                "100": {
+                    "max err": 0, 
+                    "precison": 1, 
+                    "indexing time": 5.53096, 
+                    "ndcg": 1, 
+                    "topk cost": 27.5757
+                }, 
+                "500": {
+                    "max err": 0, 
+                    "precison": 1, 
+                    "indexing time": 5.58037, 
+                    "ndcg": 1, 
+                    "topk cost": 27.6231
+                }
+            }
+        }
+    }, 
+    "carmo-t": {
+        "ca-GrQc": {
+            "100000": {
+                "200": {
+                    "max err": 0.000666831, 
+                    "precison": 0.995, 
+                    "indexing time": 5.40615, 
+                    "ndcg": 0.999986, 
+                    "topk cost": 9.03696
+                }, 
+                "300": {
+                    "max err": 0.000959694, 
+                    "precison": 0.996667, 
+                    "indexing time": 5.42614, 
+                    "ndcg": 0.999982, 
+                    "topk cost": 11.0729
+                }, 
+                "400": {
+                    "max err": 0.000691115, 
+                    "precison": 0.99, 
+                    "indexing time": 5.39214, 
+                    "ndcg": 0.999963, 
+                    "topk cost": 11.9142
+                }, 
+                "100": {
+                    "max err": 0, 
+                    "precison": 1, 
+                    "indexing time": 5.4108, 
+                    "ndcg": 1, 
+                    "topk cost": 9.90984
+                }, 
+                "500": {
+                    "max err": 0.000697139, 
+                    "precison": 0.982, 
+                    "indexing time": 5.40958, 
+                    "ndcg": 0.999941, 
+                    "topk cost": 14.0225
+                }
+            }
+        }, 
+        "ca-HepTh": {
+            "100000": {
+                "200": {
+                    "max err": 0.000488468, 
+                    "precison": 0.99, 
+                    "indexing time": 9.11894, 
+                    "ndcg": 0.999992, 
+                    "topk cost": 11.843
+                }, 
+                "300": {
+                    "max err": 0.000346392, 
+                    "precison": 0.986667, 
+                    "indexing time": 9.08103, 
+                    "ndcg": 0.999983, 
+                    "topk cost": 15.1639
+                }, 
+                "400": {
+                    "max err": 0.000639952, 
+                    "precison": 0.985, 
+                    "indexing time": 9.07234, 
+                    "ndcg": 0.999952, 
+                    "topk cost": 19.8737
+                }, 
+                "100": {
+                    "max err": 0, 
+                    "precison": 1, 
+                    "indexing time": 9.11549, 
+                    "ndcg": 1, 
+                    "topk cost": 13.3733
+                }, 
+                "500": {
+                    "max err": 0.000963102, 
+                    "precison": 0.97, 
+                    "indexing time": 9.09168, 
+                    "ndcg": 0.999862, 
+                    "topk cost": 22.1571
+                }
+            }
+        }, 
+        "p2p-Gnutella06": {
+            "100000": {
+                "200": {
+                    "max err": 0, 
+                    "precison": 1, 
+                    "indexing time": 8.96573, 
+                    "ndcg": 1, 
+                    "topk cost": 15.625
+                }, 
+                "300": {
+                    "max err": 0, 
+                    "precison": 1, 
+                    "indexing time": 8.96571, 
+                    "ndcg": 1, 
+                    "topk cost": 15.1918
+                }, 
+                "400": {
+                    "max err": 0, 
+                    "precison": 1, 
+                    "indexing time": 8.95566, 
+                    "ndcg": 1, 
+                    "topk cost": 16.4389
+                }, 
+                "100": {
+                    "max err": 0, 
+                    "precison": 1, 
+                    "indexing time": 8.96403, 
+                    "ndcg": 1, 
+                    "topk cost": 13.2054
+                }, 
+                "500": {
+                    "max err": 2.58507e-05, 
+                    "precison": 0.998, 
+                    "indexing time": 9.0307, 
+                    "ndcg": 0.999998, 
+                    "topk cost": 16.0961
+                }
+            }
+        }
+    }
+}

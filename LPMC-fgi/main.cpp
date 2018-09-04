@@ -450,20 +450,19 @@ void test_blpmc_fgi(string data_name, int h=1000000, int l=1000, int nt = 3443, 
     cout << "close the problem" << endl;
 }
 
-void test_topk(string data_name, int h=1000000, int l=1000, int nt=3443, int q=50000, int k=500, int debug=0) {
+void test_topk(string data_name, double eps=0.01, int h=1000000, int l=1000, int nt=3443, int q=50000, int k=500, int debug=0, int idxtype=0) {
     string path = get_new_graph_path(data_name);
     // string path = TOY_P + data_name;
     GraphYche g(path);
     int max_small_graph_size = 10000;
     
     double c = 0.6;
-    double epsilon = 0.01;
+    double epsilon = eps;
     double delta = 0.01;
     BLPMC_Config config;
-    config.is_use_linear_regression_cost_estimation = true;
-    config.is_use_hub_idx = false;
-    config.is_use_fg_idx = false;
-    BackPush bprw(data_name, g, c, epsilon, delta, config);
+    // config.is_use_linear_regression_cost_estimation = true;
+    // config.is_use_hub_idx = false;
+    // config.is_use_fg_idx = false;
     size_t n = g.n;
     double max_error = 0;
     int exceederr = 0;
@@ -476,10 +475,12 @@ void test_topk(string data_name, int h=1000000, int l=1000, int nt=3443, int q=5
         queries.push_back(NodePair(a, b));
     }
 
-    display_seperate_line();
+    // display_seperate_line();
 
     TruthSim *ts;
     vector<QPair> ts_topk;
+    set<NodePair> ts_set;
+    double zk = 0.0;
     if (n < max_small_graph_size) {
         ts = new TruthSim(data_name, g, c, epsilon);
         // ts->run(g);
@@ -489,6 +490,10 @@ void test_topk(string data_name, int h=1000000, int l=1000, int nt=3443, int q=5
         sort(ts_topk.begin(), ts_topk.end(), [](QPair x, QPair y) {
             return x.second > y.second;
         });
+        for (int i = 0; i < k; ++i) {
+            ts_set.insert(queries[ts_topk[i].first]);
+            zk += (pow(2, ts_topk[i].second) - 1) / log2(i + 2);
+        }
         if (debug) {
             for (int i = 0; i < k; ++i) {
                 cout << queries[ts_topk[i].first] << " " << ts_topk[i].second << endl;    
@@ -499,111 +504,83 @@ void test_topk(string data_name, int h=1000000, int l=1000, int nt=3443, int q=5
     auto end = std::chrono::high_resolution_clock::now();
     std::chrono::duration<double> elapsed = end - start;
     vector<QPair> topk;
-/*
-    // Naive Top-K
-    display_seperate_line();
 
-    start = std::chrono::high_resolution_clock::now();
-    topk = bprw.top_k_sort(queries, k);
-    end = std::chrono::high_resolution_clock::now();
-    elapsed = end - start;
-    
-    for (int i = 0; i < k; ++i) {
-        if (debug) cout << queries[topk[i].first] << " " << topk[i].second << endl;
-        if (n < max_small_graph_size) {
-            // double abs_error = abs(topk[i].second - ts_topk[i].second);
-            double abs_error = abs(ts->sim(queries[topk[i].first].first, queries[topk[i].first].second) - ts_topk[i].second);
-            if (abs_error > max_error) {
-                max_error = abs_error;
-            }
-            if (abs_error > epsilon) {
-                exceederr++;
-            }
-        }
+    // display_seperate_line();
+    if (idxtype == 1) {
+        // Naive Top-K
+        config.is_use_linear_regression_cost_estimation = true;
+        config.is_use_hub_idx = false;
+        config.is_use_fg_idx = false;
+        BackPush bprw(data_name, g, c, epsilon, delta, config);
+        max_error = exceederr = 0;
+
+        start = std::chrono::high_resolution_clock::now();
+        topk = bprw.top_k_sort(queries, k);
+        end = std::chrono::high_resolution_clock::now();
+        elapsed = end - start;
+    } else if (idxtype == 2) {
+        // Index-free Top-K
+        config.is_use_linear_regression_cost_estimation = true;
+        config.is_use_hub_idx = false;
+        config.is_use_fg_idx = false;
+        BackPush bprw(data_name, g, c, epsilon, delta, config);
+        max_error = exceederr = 0;
+
+        start = std::chrono::high_resolution_clock::now();
+        topk = bprw.top_k(queries, k);
+        end = std::chrono::high_resolution_clock::now();
+        elapsed = end - start;
+    } else if (idxtype == 3) {
+        // Hub Top-K
+        config.is_use_linear_regression_cost_estimation = true;
+        config.is_use_hub_idx = true;
+        config.is_use_fg_idx = false;
+        config.number_of_hubs = h;
+        config.number_of_samples_per_hub = l;
+        BackPush bprw2(data_name, g, c, epsilon, delta, config);
+        // cout << bprw2.config << endl;
+        max_error = exceederr = 0;
+
+        start = std::chrono::high_resolution_clock::now();
+        topk = bprw2.top_k(queries, k);
+        end = std::chrono::high_resolution_clock::now();
+        elapsed = end - start;
+    } else if (idxtype == 4) {
+        // Tree Top-K
+        config.is_use_linear_regression_cost_estimation = true;
+        config.is_use_hub_idx = false;
+        config.is_use_fg_idx = true;
+        config.number_of_trees = nt;
+        BackPush bprw3(data_name, g, c, epsilon, delta, config);
+        // cout << bprw3.config << endl;
+        max_error = exceederr = 0;
+
+        start = std::chrono::high_resolution_clock::now();
+        topk = bprw3.top_k(queries, k);
+        end  = std::chrono::high_resolution_clock::now();
+        elapsed = end - start;
     }
-    cout << format("Total cost: %s, Maximum error: %s") % elapsed.count() % max_error << endl;
-    cout << "Exceed epsilon: " << exceederr << endl;
-*/    
-    // Index-free Top-K
-    display_seperate_line();
-
-    max_error = 0;
-    exceederr = 0;
-    start = std::chrono::high_resolution_clock::now();
-    topk = bprw.top_k(queries, k);
-    end = std::chrono::high_resolution_clock::now();
-    elapsed = end - start;
     for (int i = 0; i < k; ++i) {
         topk[i].second = ts->sim(queries[topk[i].first].first, queries[topk[i].first].second);
     }
     sort(topk.begin(), topk.end(), [](QPair x, QPair y) {
         return x.second > y.second;
     });
-    for (int i = 0; i < k; ++i) {
-        if (debug) cout << queries[topk[i].first] << " " << topk[i].second << endl;
-        if (n < max_small_graph_size) {
-            // double abs_error = abs(topk[i].second - ts_topk[i].second);
-            double abs_error = abs(ts->sim(queries[topk[i].first].first, queries[topk[i].first].second) - ts_topk[i].second);
-            if (abs_error > max_error) max_error = abs_error;
-            if (abs_error > epsilon) exceederr++;
-        }
-    }
-    cout << format("Total cost: %s, Maximum error: %s") % elapsed.count() % max_error << endl;
-    cout << "Exceed epsilon: " << exceederr << endl;
-/*
-    // Hub Top-K
-    display_seperate_line();
-
-    config.is_use_linear_regression_cost_estimation = true;
-    config.is_use_hub_idx = true;
-    config.number_of_hubs = h;
-    config.number_of_samples_per_hub = l;
-    BackPush bprw2(data_name, g, c, epsilon, delta, config);
-    cout << bprw2.config << endl;
-    max_error = exceederr = 0;
-
-    start = std::chrono::high_resolution_clock::now();
-    topk = bprw2.top_k(queries, k);
-    end = std::chrono::high_resolution_clock::now();
-    elapsed = end - start;
+    int intersec = 0;
+    double ndcg = 0;
     for (int i = 0; i < k; ++i) {
         if (debug) cout << queries[topk[i].first] << " " << topk[i].second << endl;
         if (n < max_small_graph_size) {
             double abs_error = abs(ts->sim(queries[topk[i].first].first, queries[topk[i].first].second) - ts_topk[i].second);
             if (abs_error > max_error) max_error = abs_error;
             if (abs_error > epsilon) exceederr++;
+            if (ts_set.find(queries[topk[i].first]) != ts_set.end()) ++intersec;
+            ndcg += (pow(2, topk[i].second) - 1) / log2(i + 2);
         }
     }
-    cout << format("Total cost: %s, Maximum error: %s, #hubs: %s, #rw/hub: %s") % elapsed.count() % max_error % bprw2.rw_hubs->N % config.number_of_samples_per_hub << endl;
-    cout << "Exceed epsilon: " << exceederr << endl;
-
-    // Tree Top-K
-    display_seperate_line();
-
-    config.is_use_linear_regression_cost_estimation = true;
-    config.is_use_hub_idx = false;
-    config.is_use_fg_idx = true;
-    config.number_of_trees = nt;
-    BackPush bprw3(data_name, g, c, epsilon, delta, config);
-    cout << bprw3.config << endl;
-    max_error = exceederr = 0;
-
-    start = std::chrono::high_resolution_clock::now();
-    topk = bprw3.top_k(queries, k);
-    end  = std::chrono::high_resolution_clock::now();
-    elapsed = end - start;
-    for (int i = 0; i < k; ++i) {
-        if (debug) cout << queries[topk[i].first] << " " << topk[i].second << endl;
-        if (n < max_small_graph_size) {
-            double abs_error = abs(ts->sim(queries[topk[i].first].first, queries[topk[i].first].second) - ts_topk[i].second);
-            if (abs_error > max_error) max_error = abs_error;
-            if (abs_error > epsilon) exceederr++;
-        }
-    }
-    cout << format("Total cost: %s, Maximum error: %s, #trees: %s") % elapsed.count() % max_error % config.number_of_trees << endl;
-    cout << "Exceed epsilon: " << exceederr << endl;
-*/
-    display_seperate_line();
+    cout << format("Total cost: %s, Maximum error: %s, Exceed epsilon: %s") % elapsed.count() % max_error % exceederr << endl;
+    cout << format("Precison: %s, NDCG: %s") % ((double)intersec / k) % (ndcg / zk) << endl;
+    // display_seperate_line();
 }
 
 void test_blpmc_sp(string data_name, int h=1000000, int l=50, int nt = 3443, int q = 50000, int x = 2308, int y = 2129){
@@ -1126,7 +1103,7 @@ int main(int args, char*argv[]){
         int q = 50000; 
         string data_name;
         string method;
-        int x, y, h, l, t, k, b;
+        int x, y, h, l, t, k, b, idxtype;
         desc.add_options()
             ("help,h", "Help Screen")
             ("DataName,d", value<string>(&data_name), "Graph Name")
@@ -1141,7 +1118,8 @@ int main(int args, char*argv[]){
             ("t,t", value<int>(&t), "Number of trees")
             ("epsilon,e", value<double>(&epsilon), "Error bound")
             ("k,k", value<int>(&k), "Top K")
-            ("b,b", value<int>(&b), "debug");
+            ("b,b", value<int>(&b), "debug")
+            ("i,i", value<int>(&idxtype), "Index type");
 
         variables_map vm;
         store(parse_command_line(args, argv, desc), vm);
@@ -1165,7 +1143,7 @@ int main(int args, char*argv[]){
             }else if (method == "sp") {
                 test_blpmc_sp(data_name, h, l, t, q, x, y);
             }else if (method == "topk") {
-                test_topk(data_name, h, l, t, q, k, b);
+                test_topk(data_name, epsilon, h, l, t, q, k, b, idxtype);
             }
         }else{
             // SFMTRand srand;

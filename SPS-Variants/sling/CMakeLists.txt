@@ -69,6 +69,11 @@ add_executable(sling-rand-varying-gt ${SOURCE_FILES} ${GROUND_TRUTH_FILES} main_
 InitSlingAP(sling-rand-varying-gt)
 target_compile_definitions(sling-rand-varying-gt PRIVATE -DALWAYS_REBUILD=1 -DGROUND_TRUTH=1)
 
+### sling (topk)
+add_executable(sling-topk ${SOURCE_FILES} ${GROUND_TRUTH_FILES} main_sling_topk.cpp ground_truth/random_pair_generator.cpp)
+InitSlingAP(sling-topk)
+target_compile_definitions(sling-topk PRIVATE -DALWAYS_REBUILD=1 -DGROUND_TRUTH=1)
+
 ############# playground
 add_subdirectory(playground)
 

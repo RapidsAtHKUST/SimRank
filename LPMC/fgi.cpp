@@ -40,7 +40,7 @@ void FG_Index::build_index() {
         cout << "tree #" << i << endl;        
         cout << "random walk length " << len[i] << endl;
         for (int j = 0; j < gn; ++j) {
-            cout << format("%s,%s: f %s, t_pos %s") % i % j % f[i][j] % t_pos[i][j] << endl;
+            // cout << format("%s,%s: f %s, t_pos %s") % i % j % f[i][j] % t_pos[i][j] << endl;
         }
         cout << endl;
     }

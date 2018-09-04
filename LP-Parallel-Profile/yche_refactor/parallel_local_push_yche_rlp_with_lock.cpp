@@ -10,6 +10,7 @@
 #include <boost/format.hpp>
 
 #include "parallel_local_push_yche_with_lock.h"
+#include "../util/stat.h"
 
 using boost::format;
 
@@ -45,6 +46,8 @@ PRLP::PRLP(GraphYche &g, string name, double c_, double epsilon, size_t n_) : LP
 
 void PRLP::local_push(GraphYche &g) {
     int counter = 0;
+    int chosen_ones = 0;
+    float max_val = 0.0;
     bool is_go_on;
     auto g_start_time = std::chrono::high_resolution_clock::now();
     auto g_end_time = std::chrono::high_resolution_clock::now();
@@ -74,6 +77,7 @@ void PRLP::local_push(GraphYche &g) {
 #pragma omp single
             {
                 is_go_on = false;
+                cout << counter << ", " << getValue() << ", " << max_val << endl;
 #ifdef DEBUG
                 cout << "gen" << endl;
 #endif
@@ -128,6 +132,11 @@ void PRLP::local_push(GraphYche &g) {
                     marker[np] = false;
                     residual_ref -= residual_to_push;
                     P[np] += residual_to_push;
+// #pragma omp single
+                    /*{
+                        if (np.first != np.second && P[np] > max_val) max_val = P[np]; 
+                        if (np.first != np.second && P[np] > 0.5) cout << np << " " << P[np] << endl;
+                    }*/
 
                     for (auto off_a = g.off_out[a]; off_a < g.off_out[a + 1]; off_a++) {
                         auto out_nei_a = g.neighbors_out[off_a];
@@ -255,6 +264,17 @@ void PRLP::local_push(GraphYche &g) {
             omp_destroy_lock(&hash_table_lock[i]);
         }
     } // end of thread pool
+
+    for (int a = 0; a < n; ++a) {
+        for (int b = a + 1; b < n; ++b) {
+            if (P.query(a, b) > 0.5) {
+                cout << a << " " << b << " " << P.query(a,b) << endl;
+                ++chosen_ones;
+                break;
+            }
+        }
+        if (chosen_ones == 100) break;
+    }
 
     cout << "rounds:" << counter << "\n gen accumulation:" << total_ms << " ms" << endl;
 #ifdef PUSH_NUM_STAT

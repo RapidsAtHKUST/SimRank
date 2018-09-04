@@ -155,6 +155,7 @@ pair<double, double> BackPush::backward_push(NodePair np, unique_max_heap &conta
     double p = 0;
     container.clear();
     container.push(np, 1);
+    // cout << format("inital required samples: %s ") % number_of_walkers(container.sum) << endl;
 
     // stat the cost of local push 
     int  number_of_local_push_operations = 0;
@@ -236,6 +237,7 @@ pair<double, double> BackPush::backward_push(NodePair np, unique_max_heap &conta
         // for(auto & item: container.heap){
         //     cout << format("node pair: %s, residual: %s") % item.np % item.residual << endl;
         // }
+        // cout << format("required number of walks: %s") % number_of_walkers(container.sum) << endl;
     }
     // cout << format("Total number of pushes: %s") % cost << endl;
     // cout << format{"deterministic estimate: %s, final residual sum: %s"} % p  % container.sum << endl;

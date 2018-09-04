@@ -38,8 +38,8 @@ vector<pair<uint32_t, uint32_t>> GetEdgeList(string &file_path) {
     return lines;
 }
 
-void InitGraph(string &file_path, vector<int> &off, vector<int> &dst_v) {
-    auto n = 0u;
+uint32_t InitGraph(string &file_path, vector<int> &off, vector<int> &dst_v) {
+    uint32_t n = 0;
     auto edge_lst = GetEdgeList(file_path);
 
     auto out_deg_dict = unordered_map<uint32_t, uint32_t>();
@@ -82,4 +82,5 @@ void InitGraph(string &file_path, vector<int> &off, vector<int> &dst_v) {
 #ifdef DEBUG
     cout << "total vertex number:" << n << endl;
 #endif
+    return n;
 }

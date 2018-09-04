@@ -3,7 +3,6 @@
 #define __BPRW_H__
 
 #include <random>
-
 #include <boost/heap/fibonacci_heap.hpp>
 #include <boost/format.hpp>
 
