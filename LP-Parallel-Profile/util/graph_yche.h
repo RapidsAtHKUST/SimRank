@@ -15,6 +15,8 @@
 #include <vector>
 #include <random>
 
+#include "../util/log.h"
+
 using namespace std;
 
 class GraphYche {
@@ -49,21 +51,25 @@ public:
 template<typename T>
 void WriteArrToFile(string file_path, vector<T> &arr) {
     std::ofstream ofs(file_path, ios::binary);
-    auto arr_size = static_cast<int>(arr.size());
+    auto arr_size = static_cast<int64_t>(arr.size());
     cout << arr_size << endl;
     auto constexpr TYPE_SIZE = sizeof(T);
-    ofs.write(reinterpret_cast<const char *>(&arr_size), TYPE_SIZE);
+    ofs.write(reinterpret_cast<const char *>(&arr_size), sizeof(int64_t));
     ofs.write(reinterpret_cast<const char *>(&arr.front()), arr_size * TYPE_SIZE);
 }
 
 template<typename T>
 void ReadFileToArr(string file_path, vector<T> &arr) {
     ifstream ifs(file_path, ios::binary);
-    int arr_size;
+    int64_t arr_size;
     auto constexpr TYPE_SIZE = sizeof(T);
     ifs.read(reinterpret_cast<char *>(&arr_size), TYPE_SIZE);
     arr.resize(arr_size);
+    log_info("edge#: %lld", arr_size);
+    log_info("edge type size: %d", TYPE_SIZE);
+
     ifs.read(reinterpret_cast<char *>(&arr.front()), arr_size * TYPE_SIZE);
+    log_info("finish reading edge list");
 }
 
 // utility function
@@ -74,17 +80,19 @@ inline bool file_exists(std::string name) {
 
 inline string get_edge_list_path(string s) {
     // get file location of edgelist for graphs
-    return "/homes/ywangby/workspace/LinsysSimRank/datasets/edge_list/" + s + ".txt";
+    return string(DATA_ROOT) + "/edge_list/" + s + ".txt";
 }
 
 inline string get_bin_list_path(string s) {
     // get file location of edgelist for graphs
-    return "/homes/ywangby/workspace/LinsysSimRank/datasets/bin_edge_list/" + s + ".bin";
+    return string(DATA_ROOT) + "/bin_edge_list/" + s + ".bin";
 }
 
 inline string get_bin_list_path_from_txt(string path) {
-    auto tmp = path.replace(path.begin() + 48, path.begin() + 57, "bin_edge_list");
+    auto start_pos = string(DATA_ROOT).length() + 1;
+    auto tmp = path.replace(path.begin() + start_pos, path.begin() + start_pos + 9, "bin_edge_list");
     auto tmp2 = tmp.replace(tmp.end() - 3, tmp.end(), "bin");
+    cout << tmp2 << endl;
     return tmp2;
 }
 

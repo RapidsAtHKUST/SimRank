@@ -5,7 +5,15 @@ project(pLP)
 set(CMAKE_CXX_STANDARD 11)
 set(CMAKE_EXPORT_COMPILE_COMMANDS "ON")
 
+if (NOT DATA_ROOT_PATH)
+    message("not given")
+endif ()
+add_compile_definitions(DATA_ROOT="${DATA_ROOT_PATH}")
+add_compile_definitions(USE_LOG)
+message("Data Root Dir: ${DATA_ROOT_PATH}")
+set(CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/cmake ${CMAKE_MODULE_PATH}) # To allow CMake to locate our Find*.cmake files
 ################################ 2nd: libarary environmental variables ######################################
+find_package(Tcmalloc REQUIRED)
 find_package(Boost REQUIRED program_options)
 if (Boost_FOUND)
     message(${Boost_INCLUDE_DIRS})
@@ -19,7 +27,7 @@ if (OPENMP_FOUND)
 endif ()
 
 ################################ 3rd: source file environmental variables ######################################
-set(UTIL_FILES util/stat.cpp util/stat.h util/graph_yche.cpp util/file_serialization.h util/thread_pool.h)
+set(UTIL_FILES util/stat.cpp util/stat.h util/graph_yche.cpp util/file_serialization.h util/thread_pool.h util/log.cpp util/log.h)
 set(GROUND_TRUTH_FILES yche_refactor/simrank.cpp yche_refactor/simrank.h)
 set(LPMC_FILES util/sparse_matrix_utils.h)
 set(PLP_FILES yche_refactor/parallel_local_push_yche_with_lock.cpp yche_refactor/parallel_local_push_yche_with_lock.h yche_refactor/parallel_local_push_yche_rlp_with_lock.cpp)
@@ -40,7 +48,7 @@ endmacro()
 macro(InitFLPMC exec_name)
     InitBoostHashSFMTEigen(${exec_name})
     target_link_libraries(${exec_name} PRIVATE ${Boost_LIBRARIES})
-    target_link_libraries(${exec_name} PRIVATE tcmalloc)
+    target_link_libraries(${exec_name} PRIVATE ${Tcmalloc_LIBRARY})
     target_compile_options(${exec_name} PRIVATE -O3 -g -march=native)
     #    target_compile_options(${exec_name} PRIVATE -O3 -g -Wcpp)
     target_link_libraries(${exec_name} PRIVATE ${CMAKE_THREAD_LIBS_INIT})
@@ -52,34 +60,34 @@ endmacro()
 ####################### reduced local push testing
 #add_subdirectory(playground)
 
-add_executable(rlp playground/main_exec_reduced_local_push.cpp ${LPMC_FILES} ${UTIL_FILES} ${GROUND_TRUTH_FILES} ${LP_FILES})
-InitFLPMC(rlp)
-
-add_executable(flp playground/main_exec_reduced_local_push.cpp ${LPMC_FILES} ${UTIL_FILES} ${GROUND_TRUTH_FILES} ${LP_FILES})
-InitFLPMC(flp)
-target_compile_definitions(flp PRIVATE -DFLP=1)
-
-
-######### lock-based FLP/RLP
-add_executable(pflp-with-lock playground/main_exec_parallel_lp_with_lock.cpp ${LPMC_FILES} ${UTIL_FILES} ${GROUND_TRUTH_FILES} ${PLP_FILES})
-InitFLPMC(pflp-with-lock)
-target_compile_definitions(pflp-with-lock PRIVATE -DFLP=1)
-
-add_executable(prlp-with-lock playground/main_exec_parallel_lp_with_lock.cpp ${LPMC_FILES} ${UTIL_FILES} ${GROUND_TRUTH_FILES} ${PLP_FILES})
-InitFLPMC(prlp-with-lock)
-#target_compile_definitions(prlp-with-lock PRIVATE -DDEBUG=1)
-
-add_executable(prlp-with-lock-stat playground/main_exec_parallel_lp_with_lock.cpp ${LPMC_FILES} ${UTIL_FILES} ${GROUND_TRUTH_FILES} ${PLP_FILES})
-InitFLPMC(prlp-with-lock-stat)
-target_compile_definitions(prlp-with-lock-stat PRIVATE -DPUSH_NUM_STAT=1)
-
-######## lock-free FLP(not-supported)/RLP
-add_executable(pflp-lock-free playground/main_exec_parallel_lp.cpp ${LPMC_FILES} ${UTIL_FILES} ${GROUND_TRUTH_FILES} ${PLP_LOCK_FREE_FILES})
-InitFLPMC(pflp-lock-free)
-target_compile_definitions(pflp-lock-free PRIVATE -DFLP=1)
-
-add_executable(prlp-lock-free playground/main_exec_parallel_lp.cpp ${LPMC_FILES} ${UTIL_FILES} ${GROUND_TRUTH_FILES} ${PLP_LOCK_FREE_FILES})
-InitFLPMC(prlp-lock-free)
+#add_executable(rlp playground/main_exec_reduced_local_push.cpp ${LPMC_FILES} ${UTIL_FILES} ${GROUND_TRUTH_FILES} ${LP_FILES})
+#InitFLPMC(rlp)
+#
+#add_executable(flp playground/main_exec_reduced_local_push.cpp ${LPMC_FILES} ${UTIL_FILES} ${GROUND_TRUTH_FILES} ${LP_FILES})
+#InitFLPMC(flp)
+#target_compile_definitions(flp PRIVATE -DFLP=1)
+#
+#
+########## lock-based FLP/RLP
+#add_executable(pflp-with-lock playground/main_exec_parallel_lp_with_lock.cpp ${LPMC_FILES} ${UTIL_FILES} ${GROUND_TRUTH_FILES} ${PLP_FILES})
+#InitFLPMC(pflp-with-lock)
+#target_compile_definitions(pflp-with-lock PRIVATE -DFLP=1)
+#
+#add_executable(prlp-with-lock playground/main_exec_parallel_lp_with_lock.cpp ${LPMC_FILES} ${UTIL_FILES} ${GROUND_TRUTH_FILES} ${PLP_FILES})
+#InitFLPMC(prlp-with-lock)
+##target_compile_definitions(prlp-with-lock PRIVATE -DDEBUG=1)
+#
+#add_executable(prlp-with-lock-stat playground/main_exec_parallel_lp_with_lock.cpp ${LPMC_FILES} ${UTIL_FILES} ${GROUND_TRUTH_FILES} ${PLP_FILES})
+#InitFLPMC(prlp-with-lock-stat)
+#target_compile_definitions(prlp-with-lock-stat PRIVATE -DPUSH_NUM_STAT=1)
+#
+######### lock-free FLP(not-supported)/RLP
+#add_executable(pflp-lock-free playground/main_exec_parallel_lp.cpp ${LPMC_FILES} ${UTIL_FILES} ${GROUND_TRUTH_FILES} ${PLP_LOCK_FREE_FILES})
+#InitFLPMC(pflp-lock-free)
+#target_compile_definitions(pflp-lock-free PRIVATE -DFLP=1)
+#
+#add_executable(prlp-lock-free playground/main_exec_parallel_lp.cpp ${LPMC_FILES} ${UTIL_FILES} ${GROUND_TRUTH_FILES} ${PLP_LOCK_FREE_FILES})
+#InitFLPMC(prlp-lock-free)
 #target_compile_definitions(prlp-lock-free PRIVATE -DDEBUG=1)
 
 add_executable(prlp-lock-free-stat playground/main_exec_parallel_lp.cpp ${LPMC_FILES} ${UTIL_FILES} ${GROUND_TRUTH_FILES} ${PLP_LOCK_FREE_FILES})
