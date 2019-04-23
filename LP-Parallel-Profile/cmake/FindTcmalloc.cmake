@@ -11,6 +11,7 @@ find_path(Tcmalloc_INCLUDE_DIR google/tcmalloc.h NO_DEFAULT_PATH PATHS
         /opt/local/include
         /usr/local/include
         /home/yche/local/include
+        ${EXTRA_INCLUDE_DIR}
         )
 
 if (USE_TCMALLOC)
@@ -22,7 +23,7 @@ endif ()
 find_library(Tcmalloc_LIBRARY NO_DEFAULT_PATH
         NAMES ${Tcmalloc_NAMES}
         PATHS ${HT_DEPENDENCY_LIB_DIR} /lib /usr/lib /usr/local/lib /opt/local/lib
-        /home/yche/local/lib
+        /home/yche/local/lib ${EXTRA_INCLUDE_DIR}/../lib
         )
 
 if (Tcmalloc_INCLUDE_DIR AND Tcmalloc_LIBRARY)

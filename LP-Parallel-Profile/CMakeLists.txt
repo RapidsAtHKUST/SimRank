@@ -90,6 +90,10 @@ endmacro()
 #InitFLPMC(prlp-lock-free)
 #target_compile_definitions(prlp-lock-free PRIVATE -DDEBUG=1)
 
-add_executable(prlp-lock-free-stat playground/main_exec_parallel_lp.cpp ${LPMC_FILES} ${UTIL_FILES} ${GROUND_TRUTH_FILES} ${PLP_LOCK_FREE_FILES})
-InitFLPMC(prlp-lock-free-stat)
-target_compile_definitions(prlp-lock-free-stat PRIVATE -DPUSH_NUM_STAT=1)
+#add_executable(prlp-lock-free-stat playground/main_exec_parallel_lp.cpp ${LPMC_FILES} ${UTIL_FILES} ${GROUND_TRUTH_FILES} ${PLP_LOCK_FREE_FILES})
+#InitFLPMC(prlp-lock-free-stat)
+#target_compile_definitions(prlp-lock-free-stat PRIVATE -DPUSH_NUM_STAT=1)
+
+add_executable(prlp-simrank playground/main_exec_aminer_simrank.cpp ${LPMC_FILES} ${UTIL_FILES} ${GROUND_TRUTH_FILES} ${PLP_FILES})
+InitFLPMC(prlp-simrank)
+#target_compile_definitions(prlp-with-lock PRIVATE -DDEBUG=1)
