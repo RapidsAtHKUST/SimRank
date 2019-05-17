@@ -1,3 +1,5 @@
+.vscode
+data
 *.pyc
 LPMC-Copy
 datasets
