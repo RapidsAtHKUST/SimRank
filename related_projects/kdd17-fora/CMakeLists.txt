@@ -5,6 +5,7 @@ cmake_minimum_required(VERSION 2.8)
 #SET(CMAKE_CXX_FLAGS "-std=c++11 -O3 -Wall")
 SET(CMAKE_CXX_FLAGS "-std=c++11 -O3 -DNDEBUG -w -pthread -lboost_serialization -lboost_filesystem -lboost_system")
 #SET(CMAKE_CXX_FLAGS "-std=c++11 -O3 -w -pthread")
+set(CMAKE_VERBOSE_MAKEFILE ON)
 
 
 find_package(Boost REQUIRED  unit_test_framework filesystem system date_time program_options)
@@ -14,7 +15,7 @@ find_package(Boost REQUIRED  unit_test_framework filesystem system date_time pro
 #set(PPRLIB  mylib.cpp config.cpp)
 
 # Set the output folder where your program will be created
-set(CMAKE_BINARY_DIR ${CMAKE_SOURCE_DIR})
+#set(CMAKE_BINARY_DIR ${CMAKE_SOURCE_DIR})
 set(EXECUTABLE_OUTPUT_PATH ${CMAKE_BINARY_DIR})
 set(LIBRARY_OUTPUT_PATH ${CMAKE_BINARY_DIR})
 

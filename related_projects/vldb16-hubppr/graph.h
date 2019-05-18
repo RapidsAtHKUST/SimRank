@@ -1,6 +1,8 @@
 #ifndef __GRAPH_H__
 #define __GRAPH_H__
 
+#include <random>
+
 #include "mylib.h"
 #include "config.h"
 
@@ -228,7 +230,8 @@ public:
     }
 
     int sample_by_pr() {
-        static default_random_engine generator;
+        static std::random_device rd;
+        static std::mt19937 generator(rd());
         static discrete_distribution<int> distribution(global_ppr.begin(), global_ppr.end());
         int startnode = distribution(generator);
         return startnode;
