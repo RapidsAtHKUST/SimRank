@@ -8,6 +8,7 @@
 
 #include "local_push.h"
 #include "pretty_print.h"
+#include "util/log.h"
 
 using namespace std;
 using namespace std::chrono;
@@ -62,11 +63,11 @@ void exp_dynamic(string data_name, double c, double epsilon, int num_updates = 1
     DirectedG g;
     load_graph(get_edge_list_path(data_name), g);
     size_t n = num_vertices(g);
-    cout << "begin rlp constructing" << endl;
+    log_info("begin rlp constructing" );
     Reduced_LocalPush rlp(g, data_name, c, epsilon, n);
 
     // 1st: generate edges
-    cout << "begin generate edges..." << endl;
+    log_info("begin generate edges...");
     vector<pair<unsigned int, unsigned int>> ins_edges;
     random_device rd;
     mt19937 gen(rd());
@@ -80,7 +81,7 @@ void exp_dynamic(string data_name, double c, double epsilon, int num_updates = 1
     }
 
     // 2nd: dynamic updates
-    cout << "begin dynamic update..." << endl;
+    log_info("begin dynamic update...");
     auto start = std::chrono::high_resolution_clock::now();
 
     rlp.update_edges(g, ins_edges, '+');
@@ -88,10 +89,12 @@ void exp_dynamic(string data_name, double c, double epsilon, int num_updates = 1
     std::chrono::duration<double> elapsed = finish - start;
 
     // statistics
-    cout << "data: " << data_name << endl;
-    cout << "number of updates: " << num_updates << endl;
-    cout << "total time: " << elapsed.count() << endl;
-    cout << "avg time: " << elapsed.count() / num_updates << endl;
+    stringstream ss;
+    ss << "data: " << data_name << "\n";
+    ss << "number of updates: " << num_updates << "\n";
+    ss << "total time: " << elapsed.count() << "\n";
+    ss << "avg time: " << elapsed.count() / num_updates << "\n";
+    log_info("Finish computation, %s", ss.str().c_str());
 }
 
 void exp_dynamic_delete(string data_name, double c, double epsilon, int num_updates = 1000) {

@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 3.6)
 project(APS)
 
 set(CMAKE_CXX_STANDARD 11)
-
+add_compile_options(-DUSE_LOG)
 find_package(Boost REQUIRED serialization program_options)
 
 # not compiled yet : reads
@@ -16,13 +16,13 @@ set(SOURCE_FILES
         tkde17_sim.cpp tkde17_sim.h
         simrank.cpp simrank.h
         sling.cpp sling.h sling_graph.h ../dependencies/SFMT/SFMT.c
-        main.cpp)
+        main.cpp util/log.cpp)
 
 set(DYNAMIC_SOURCE_FILES
         stat.cpp stat.h file_serialization.h graph.cpp graph.h node_pair.h
         bprw.cpp bprw.h
         simrank.cpp simrank.h
-        main_dynamic_exp.cpp)
+        main_dynamic_exp.cpp  util/log.cpp)
 
 set(SFMT_COMPILE_FLAGS -DSFMT_MEXP=607 -msse2 -DHAVE_SSE2)
 

@@ -5,7 +5,7 @@
 
 #include "local_push.h"
 #include "file_serialization.h"
-
+#include "util/log.h"
 using boost::format;
 
 double cal_rmax(double c, double epsilon) {
@@ -760,5 +760,6 @@ void Reduced_LocalPush::update_edges(DirectedG &g, vector<NodePair> edges, char 
         cout << "Please indicate the edge update type" << endl;
         return;
     }
+    log_info("finish updating residuals...");
     Reduced_LocalPush::local_push(g);
 }
