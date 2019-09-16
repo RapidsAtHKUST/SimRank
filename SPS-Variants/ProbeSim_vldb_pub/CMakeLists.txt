@@ -27,7 +27,7 @@ set(FAKE_FILES ground_truth/simrank.h ground_truth/graph_yche.h ground_truth/spa
         evaluate.h Graph.h pooling.h Random.h SimStruct.h util.h)
 
 set(GROUND_TRUTH_FILES ground_truth/simrank.cpp ground_truth/graph_yche.cpp ground_truth/random_pair_generator.cpp
-        util/log.cpp)
+        util/log.cpp ground_truth/stat.cpp)
 
 macro(InitHashSFMTEigenPthread exec_name)
     target_include_directories(${exec_name} PRIVATE ../../dependencies/sparsehash-yche/include/)

@@ -2,8 +2,6 @@
 // Created by yche on 12/20/17.
 //
 
-#include <iostream>
-
 #include "ground_truth/simrank.h"
 #include "ground_truth/stat.h"
 
@@ -16,6 +14,11 @@ using namespace std;
 using namespace std::chrono;
 
 int main(int argc, char *argv[]) {
+    FILE *log_f = nullptr;
+    if (argc >= 3) {
+        log_f = fopen(argv[2], "a+");
+        log_set_fp(log_f);
+    }
     // eps = 0.01
     double eps_d = 0.002;
     double theta = 0.00029;
@@ -36,10 +39,13 @@ int main(int argc, char *argv[]) {
     indexing_time = timer.elapsed();
     log_info("Indexing Time: %.9lfs", timer.elapsed_and_reset());
 
+    log_info("Initial Memory Consumption: %d KB", getValue());
     bool need_ground_truth = g.n < 10000;
     if (need_ground_truth) {
         GraphYche g_gt(file_path);
         TruthSim ts(file_name, g_gt, c, 0.01);
+        log_info("After TruthSim Memory Consumption: %d KB", getValue());
+
         auto max_err = 0.0;
         auto avg_err = 0.0;
         timer.reset();
@@ -66,4 +72,12 @@ int main(int argc, char *argv[]) {
         log_info("Computation Time: %.9lfs", timer.elapsed_and_reset());
     }
     log_info("Total Time: %.9lfs", indexing_time + comp_time);
+    log_info("Final Memory Consumption: %d KB", getValue());
+
+    if (log_f != nullptr) {
+        log_info("Flush File and Close...");
+        fflush(log_f);
+        fclose(log_f);
+    }
+    return 0;
 }

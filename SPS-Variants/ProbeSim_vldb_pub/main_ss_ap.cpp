@@ -19,6 +19,11 @@ using namespace boost;
 int k = 200;
 
 int main(int argc, char *argv[]) {
+    FILE *log_f = nullptr;
+    if (argc >= 3) {
+        log_f = fopen(argv[2], "a+");
+        log_set_fp(log_f);
+    }
     // 1st: load graph
     string file_name = argv[1];
 
@@ -37,8 +42,10 @@ int main(int argc, char *argv[]) {
     SimStruct simStructGlobal = SimStruct(file_path, c, eps, delta);
     // 3rd: querying pairs
     bool need_ground_truth = g_gt.n < 10000;
+    log_info("Initial Memory Consumption: %d KB", getValue());
     if (need_ground_truth) {
         TruthSim ts(file_name, g_gt, c, 0.01);
+        log_info("After TruthSim Memory Consumption: %d KB", getValue());
         auto max_err = 0.0;
         auto avg_err = 0.0;
         timer.reset();
@@ -68,6 +75,12 @@ int main(int argc, char *argv[]) {
             auto res = simStruct.batch_single_source(u);
         }
         log_info("Computation Time: %.9lfs", timer.elapsed_and_reset());
+    }
+    log_info("Final Memory Consumption: %d KB", getValue());
+    if (log_f != nullptr) {
+        log_info("Flush File and Close...");
+        fflush(log_f);
+        fclose(log_f);
     }
     return 0;
 }
