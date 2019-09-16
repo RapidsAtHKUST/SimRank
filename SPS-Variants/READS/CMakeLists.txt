@@ -1,15 +1,20 @@
 cmake_minimum_required(VERSION 3.8)
-project(release)
+project(READS)
+add_compile_options(-Wall -O3 -g -march=native)
+add_definitions(-DUSE_LOG -DTIME_RESULTS)
 
 set(CMAKE_CXX_STANDARD 11)
+include_directories(${CMAKE_SOURCE_DIR})
 
 # environmental variables
-set(COMMON_FILES util/inBuf.h util/outBuf.h util/meminfo.cpp util/meminfo.h util/timer.h util/sample_num.h
-        ground_truth/stat.cpp)
-set(STATIC_GRAPH_FILES algorithm/reads.cpp algorithm/reads.h)
-set(GROUND_TRUTH_FILES ground_truth/simrank.cpp ground_truth/simrank.h ground_truth/graph_yche.cpp ground_truth/graph_yche.h
-        ground_truth/sparse_matrix_utils.h ground_truth/file_serialization.h ground_truth/stat.cpp ground_truth/stat.h
-        ground_truth/random_pair_generator.cpp)
+set(FAKE_FILES util/inBuf.h util/outBuf.h util/meminfo.h util/timer.h
+        util/sample_num.h ground_truth/graph_yche.h ground_truth/stat.h algorithm/reads.h ground_truth/simrank.h
+        round_truth/sparse_matrix_utils.h ground_truth/file_serialization.h)
+
+set(COMMON_FILES util/meminfo.cpp ground_truth/stat.cpp util/log.cpp)
+set(STATIC_GRAPH_FILES algorithm/reads.cpp)
+set(GROUND_TRUTH_FILES ground_truth/simrank.cpp ground_truth/graph_yche.cpp
+        ground_truth/stat.cpp ground_truth/random_pair_generator.cpp util/log.cpp)
 
 find_package(Boost)
 find_package(OpenMP)
@@ -29,6 +34,7 @@ macro(InitREADS exec_name)
     target_link_libraries(${exec_name} tcmalloc)
 endmacro()
 
+
 add_subdirectory(static_solution)
 
 #### reads release by the original authors
@@ -38,7 +44,7 @@ target_compile_options(reads-original-release PRIVATE -O3 -g -w)
 target_include_directories(reads-original-release PRIVATE ../../dependencies/sparsehash-yche/include/)
 
 ############### 1st: reads static single-pair
-add_executable(reads-s ${COMMON_FILES} ${GROUND_TRUTH_FILES} algorithm/reads.cpp test_reads_sp.cpp)
+add_executable(reads-s ${COMMON_FILES} ${GROUND_TRUTH_FILES} algorithm/reads.cpp single_pair/test_reads_sp.cpp)
 InitREADS(reads-s)
 target_compile_definitions(reads-s PRIVATE STORE_INDEX=1)
 
@@ -48,9 +54,19 @@ InitREADS(reads-s-rand-bench)
 target_compile_definitions(reads-s-rand-bench PRIVATE STORE_INDEX=1)
 
 ############### 2nd: reads dynamic single-pair
-add_executable(reads-d ${COMMON_FILES} ${GROUND_TRUTH_FILES} algorithm/readsd.cpp test_readsd_sp.cpp)
+add_executable(reads-d ${COMMON_FILES} ${GROUND_TRUTH_FILES} algorithm/readsd.cpp single_pair/test_readsd_sp.cpp)
 InitREADS(reads-d)
 target_compile_definitions(reads-d PRIVATE STORE_INDEX=1)
+
+##################### New ##################################
+add_executable(readsd-ap ${COMMON_FILES} ${GROUND_TRUTH_FILES} algorithm/readsd.cpp test_readsd_ap.cpp)
+InitREADS(readsd-ap)
+target_compile_definitions(reads-d PRIVATE STORE_INDEX=1)
+
+#add_executable(readsd-ap ${COMMON_FILES} ${GROUND_TRUTH_FILES} algorithm/readsd.cpp test_readsd_ap.cpp)
+#InitREADS(readsd-ap)
+#target_compile_definitions(reads-d PRIVATE STORE_INDEX=1)
+#################################333
 
 #### reads-d (random pairs)
 add_executable(reads-d-rand-bench ${COMMON_FILES} ${GROUND_TRUTH_FILES} algorithm/readsd.cpp rand_pair_exec/test_readsd_rand_pair.cpp)
@@ -58,7 +74,7 @@ InitREADS(reads-d-rand-bench)
 target_compile_definitions(reads-d-rand-bench PRIVATE STORE_INDEX=1)
 
 ############### 3rd: reads-rq single-pair
-add_executable(reads-rq ${COMMON_FILES} ${GROUND_TRUTH_FILES} algorithm/readsrq.cpp test_reads_rq_sp.cpp)
+add_executable(reads-rq ${COMMON_FILES} ${GROUND_TRUTH_FILES} algorithm/readsrq.cpp single_pair/test_reads_rq_sp.cpp)
 InitREADS(reads-rq)
 target_compile_definitions(reads-rq PRIVATE STORE_INDEX=1)
 

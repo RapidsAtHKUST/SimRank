@@ -30,6 +30,8 @@ using namespace boost;
 using namespace std;
 using namespace Eigen;
 
+//using spp::sparse_hash_map;
+using spp::sparse_hash_set;
 using google::dense_hash_map;
 
 using NodePair=pair<unsigned int, unsigned int>;
@@ -62,7 +64,8 @@ namespace std {
 
 template<typename T>
 struct DensePairMap {
-    vector<spp::sparse_hash_map<unsigned int, T, std::hash<unsigned int>>> v;
+    vector<sparse_hash_map<unsigned int, T, std::hash<unsigned int>>>
+            v;
 
     // assume np.first <= np.second
     T &operator[](NodePair np) {
@@ -76,7 +79,7 @@ struct DensePairMap {
     }
 
     void add(size_t n) {
-        v.insert(v.end(), n, spp::sparse_hash_map<unsigned int, T, std::hash<unsigned int>>
+        v.insert(v.end(), n, sparse_hash_map<unsigned int, T, std::hash<unsigned int>>
                 {});
     }
 

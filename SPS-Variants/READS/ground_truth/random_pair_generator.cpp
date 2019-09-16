@@ -4,8 +4,7 @@
 #include <iostream>
 
 #include "random_pair_generator.h"
-
-//#include "../playground/pretty_print.h"
+#include "util/pretty_print.h"
 
 void generate_sample_pairs(string graph_name, int pair_num, int round_num) {
     string path = get_edge_list_path(graph_name);

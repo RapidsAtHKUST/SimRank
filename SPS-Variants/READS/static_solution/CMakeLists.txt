@@ -1,5 +1,7 @@
 set(LOCAL_STATIC_GRAPH_FILES ../algorithm/reads.cpp ../algorithm/reads.h)
-set(LOCAL_COMMON_FILES ../util/inBuf.h ../util/outBuf.h ../util/meminfo.cpp ../util/meminfo.h ../util/timer.h ../util/sample_num.h)
+set(LOCAL_COMMON_FILES
+        ../util/inBuf.h ../util/outBuf.h ../util/meminfo.cpp ../util/meminfo.h ../util/timer.h ../util/sample_num.h
+        ../util/log.cpp)
 
 #### reads static
 add_executable(reads-ssource ${LOCAL_COMMON_FILES} ${LOCAL_STATIC_GRAPH_FILES} ./test_single_source.cpp)
