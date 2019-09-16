@@ -116,11 +116,11 @@ public:
     }
 
     SimStruct(string fn, double C_value, double eps, double delta) : g(fn), C_value(C_value) {
-        cout << "graph= " << fn << endl;
-        cout << "(c, eps, delta):" << C_value << " , " << eps << " , " << delta << endl;
+        log_info("graph= %s", fn.c_str());
+        log_info("(c, eps, delta): (%.9lf, %.9lf, %.9lf)", C_value, eps, delta);
 //        nr = (int) (0.5 / (eps * eps) * log(g.n) / log(2));
         nr = (int) (C_value * 3 / (eps * eps) * log(g.n / delta) / log(2));
-        cout << "nr= " << nr << endl;
+        log_info("nr = %d", nr);
 
         H[0] = new double[g.n];
         H[1] = new double[g.n];
@@ -210,6 +210,34 @@ public:
         return resultList[v];
     }
 
+    vector<double> batch_single_source(int u) {
+        int *nodeList = new int[maxStep + 1];
+        vector<double> resultList(g.n, 0);
+
+        // first traverse one hop
+        oneHopDeter(u, &resultList.front());
+
+        trunStep = maxStep;
+        for (int i = 0; i <= maxStep; i++) {
+            lvl[i].clear();
+            sampleLvl[i].clear();
+            mustRandom[i] = false;
+            randomCost[i] = 0;
+            deterCost[i] = 0;
+        }
+        // batch
+        simRank_WalkTree(u, &resultList.front(), nodeList);
+
+        for (int i = 0; i < g.n; i++) {
+            if (i != u && resultList[i] > 0)
+                resultList[i] /= (double) nr;
+        }
+        resultList[u] = 1;
+
+        delete[] nodeList;
+        return resultList;
+    }
+
     double batch(int u, string res_dir) {
         double time = 0;
         int *nodeList = new int[maxStep + 1];
@@ -264,7 +292,7 @@ public:
         root->id = 0;
         unordered_map<pair<int, int>, WalkTree *, HashFunc, EqualKey> W_map;
         int idCount = 1;
-#ifdef DEBUG
+#ifdef DEBUG_PROBESIM
         clock_t t0 = clock();
 #endif
         // insert nr C walks
@@ -290,7 +318,7 @@ public:
             if (nodeCount > 2)
                 insertTree(root, nodeList, nodeCount, W_map, idCount);
         }
-#ifdef DEBUG
+#ifdef DEBUG_PROBESIM
         clock_t t1 = clock();
         cout << "tree construction time: " << (t1 - t0) / (double) CLOCKS_PER_SEC << endl;
         cout << "walk tree size: " << idCount << endl;
@@ -298,7 +326,7 @@ public:
         int maxRatio = 10;    // trade off between deter cost and random cost
         // for step = 2 to maxStep, estimate the random cost and the deter cost
         estProbeCost(root, maxRatio);
-#ifdef DEBUG
+#ifdef DEBUG_PROBESIM
         clock_t t2 = clock();
         cout << "probe cost est time: " << (t2 - t1) / (double) CLOCKS_PER_SEC << endl;
         cout << "maxStep= " << maxStep << endl;
@@ -309,7 +337,7 @@ public:
         // probe
         calculateResult(root, resultList, maxRatio);
 
-#ifdef DEBUG
+#ifdef DEBUG_PROBESIM
         clock_t t3 = clock();
         cout << "calculateResult time: " << (t3 - t2) / (double) CLOCKS_PER_SEC << endl;
 #endif
@@ -364,7 +392,7 @@ public:
                 }
             }
         }
-#ifdef DEBUG
+#ifdef DEBUG_PROBESIM
         for (int x = 2; x <= maxStep; x++)
             cout << x << "\tlvl size: " << lvl[x].size() << "\tsampleLvl size:" << sampleLvl[x].size() << endl;
 #endif
@@ -387,7 +415,7 @@ public:
                 int thres_random_visit = (int) (level * 1000 * 2.0 * g.m /
                                                 g.n);    // level * 1000 * (int)(2.0 * g.m / g.n)
                 int num_random_visit = randomProbe(nodeList, nullptr, thres_random_visit);    //
-#ifdef DEBUG
+#ifdef DEBUG_PROBESIM
                 cout << "level: " << level << "\tnum_random_visit= " << num_random_visit << " , thres_random_visit= "
                      << thres_random_visit << endl;
 #endif
@@ -398,7 +426,7 @@ public:
                 } else if (mustRandom[level] == false) {
                     int num_deter_visit = deterProbe(nodeList, 0, nullptr,
                                                      max(thres_random_visit, num_random_visit * maxRatio));    //
-#ifdef DEBUG
+#ifdef DEBUG_PROBESIM
                     cout << "num_deter_visit= " << num_deter_visit << " , thres_random_visit= " << thres_random_visit
                          << " , num_random_visit * maxRatio= " << num_random_visit * maxRatio << endl;
 #endif
@@ -701,14 +729,14 @@ public:
 
     // traverse one hop from the query node u
     double oneHopDeter(int u, double *resultList) {
-#ifdef DEBUG
+#ifdef DEBUG_PROBESIM
         cout << "deterministically bfs one hop: ";
 #endif
         int tempLength = g.getInSize(u);
         if (tempLength == 0) {
             return 0;
         }
-#ifdef DEBUG
+#ifdef DEBUG_PROBESIM
 
         cout << tempLength << " , ";
 
@@ -721,7 +749,7 @@ public:
             // by calling deterProbe
             deterProbe(tempList, C_value * nr / (double) tempLength, resultList);
         }
-#ifdef DEBUG
+#ifdef DEBUG_PROBESIM
         clock_t t1 = clock();
         double t = (t1 - t0) / (double) CLOCKS_PER_SEC;
         cout << t << "s" << endl;

@@ -13,6 +13,8 @@ using namespace std::chrono;
 
 #include "graph_yche.h"
 
+#include "util/timer.h"
+
 vector<pair<int, int>> GraphYche::GetEdgeList(string &file_path) {
     vector<pair<int, int>> lines;
 
@@ -71,7 +73,7 @@ void GraphYche::LoadGraph(vector<pair<int, int>> &edge_lst) {
     // 4th: init m
     m = off_in[n];
 
-    // 5th: init neighbors, assume no duplicate in the inAdjList list
+    // 5th: init neighbors, assume no duplicate in the edge list
     neighbors_out.resize(m);
     auto cur_off_arr = off_out; // copy for later usage
     for (auto &edge: edge_lst) {
@@ -102,16 +104,12 @@ int GraphYche::out_degree(int u) {
 }
 
 GraphYche::GraphYche(string &graph_path) {
-    auto start_time = high_resolution_clock::now();
+    Timer timer;
     auto edge_lst = GetEdgeList(graph_path);
-    auto end_time = high_resolution_clock::now();
-    cout << "load inAdjList list time:" << duration_cast<milliseconds>(end_time - start_time).count()
-         << " ms\n";
+    log_info("Loading EdgeList Time: %.9lfs", timer.elapsed_and_reset());
 
     LoadGraph(edge_lst);
-    auto final_time = high_resolution_clock::now();
-    cout << "parse inAdjList list to bi-dir csr time:" << duration_cast<milliseconds>(final_time - end_time).count()
-         << " ms\n";
+    log_info("Parse edge list to bi-dir csr time: %.9lfs", timer.elapsed_and_reset());
 }
 
 bool GraphYche::BinarySearch(uint32_t offset_beg, uint32_t offset_end, int val) {

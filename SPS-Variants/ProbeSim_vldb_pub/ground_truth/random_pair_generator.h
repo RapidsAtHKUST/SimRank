@@ -15,7 +15,7 @@
 using namespace std;
 
 const string INPUT_PAIRS_DIR =
-        "/homes/ywangby/workspace/LinsysSimRank/datasets/input_pairs/";
+        "/homes/ywangby/workspace/yche/git-repos/SimRank/LPMC-Profile/build/datasets/input_pairs/";
 
 inline string get_file_path(string g_name, int round_num, int sample_num) {
     return INPUT_PAIRS_DIR + boost::str(boost::format("RANDOM_PAIRS_%s-%s-%s") % g_name % sample_num % round_num);

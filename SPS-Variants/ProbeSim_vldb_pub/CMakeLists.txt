@@ -3,10 +3,11 @@ project(ProbeSim_vldb_pub)
 
 set(CMAKE_CXX_STANDARD 11)
 
-include_directories(.)
+add_compile_options(-Wall -O3 -g -march=native)
+add_definitions(-DUSE_LOG -DTIME_RESULTS)
+include_directories(${CMAKE_SOURCE_DIR})
 
 # setup pthread environmental variables
-
 find_package(Threads)
 find_package(OpenMP)
 
@@ -20,10 +21,13 @@ if (Boost_FOUND)
     message(${Boost_INCLUDE_DIRS})
 endif ()
 
-set(GROUND_TRUTH_FILES ground_truth/simrank.cpp ground_truth/simrank.h ground_truth/graph_yche.cpp ground_truth/graph_yche.h
-        ground_truth/sparse_matrix_utils.h ground_truth/file_serialization.h ground_truth/stat.h
-        ground_truth/random_pair_generator.cpp ground_truth/random_pair_generator.h
-        ground_truth/yche_serialization.h)
+set(FAKE_FILES ground_truth/simrank.h ground_truth/graph_yche.h ground_truth/sparse_matrix_utils.h
+        ground_truth/file_serialization.h ground_truth/stat.h ground_truth/random_pair_generator.h
+        ground_truth/yche_serialization.h
+        evaluate.h Graph.h pooling.h Random.h SimStruct.h util.h)
+
+set(GROUND_TRUTH_FILES ground_truth/simrank.cpp ground_truth/graph_yche.cpp ground_truth/random_pair_generator.cpp
+        util/log.cpp)
 
 macro(InitHashSFMTEigenPthread exec_name)
     target_include_directories(${exec_name} PRIVATE ../../dependencies/sparsehash-yche/include/)
@@ -35,19 +39,21 @@ macro(InitHashSFMTEigenPthread exec_name)
     target_link_libraries(${exec_name} PRIVATE tcmalloc)
 
     target_compile_options(${exec_name} PRIVATE -O3 -g -DSFMT_MEXP=607 -msse2 -DHAVE_SSE2)
-#    target_compile_options(${exec_name} PRIVATE -O3 -g -DSFMT_MEXP=607 -msse2 -DHAVE_SSE2)
+    #    target_compile_options(${exec_name} PRIVATE -O3 -g -DSFMT_MEXP=607 -msse2 -DHAVE_SSE2)
 endmacro()
 
 
 # with gt
 add_executable(ProbeSim-gt
-        evaluate.h Graph.h Graph.cpp pooling.h Random.h SimStruct.h util.h main_varying_parameters.cpp
-        ../../dependencies/SFMT/SFMT.c ${GROUND_TRUTH_FILES})
+        Graph.cpp main_varying_parameters.cpp ../../dependencies/SFMT/SFMT.c ${GROUND_TRUTH_FILES})
 target_compile_options(ProbeSim-gt PRIVATE -DGROUND_TRUTH=1)
 InitHashSFMTEigenPthread(ProbeSim-gt)
 
 # without gt
 add_executable(ProbeSim
-        evaluate.h Graph.h Graph.cpp pooling.h Random.h SimStruct.h util.h main_varying_parameters.cpp
-        ../../dependencies/SFMT/SFMT.c ${GROUND_TRUTH_FILES})
+        Graph.cpp main_varying_parameters.cpp ../../dependencies/SFMT/SFMT.c ${GROUND_TRUTH_FILES})
 InitHashSFMTEigenPthread(ProbeSim)
+
+add_executable(probesim_ss_ap
+        Graph.cpp main_ss_ap.cpp ../../dependencies/SFMT/SFMT.c ${GROUND_TRUTH_FILES})
+InitHashSFMTEigenPthread(probesim_ss_ap)
