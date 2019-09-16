@@ -8,6 +8,7 @@
 #include "ground_truth/stat.h"
 #include "ground_truth/graph_yche.h"
 #include "ground_truth/yche_serialization.h"
+#include "util/log.h"
 
 const double Sling::BACKEPS = 7.28e-4; //EPS / 23.;
 const double Sling::K = 10.;
@@ -455,20 +456,20 @@ void Sling::build_or_load_index() {
     string p_file_path = get_file_path_base() + ".p";
     string pstart_file_path = get_file_path_base() + ".pstart";
     if (file_exists(d_file_path) && file_exists(p_file_path) && file_exists(pstart_file_path)) {
-        cout << "indexing exists......." << endl;
+        log_info("indexing exists.......");
         YcheSerializer serializer;
-        cout << d_file_path << endl;
-        cout << p_file_path << endl;
+        log_info("d_file_path: %s", d_file_path.c_str());
+        log_info("p_file_path: %s", p_file_path.c_str());
         FILE *pFile = fopen(d_file_path.c_str(), "r");
         size_t tmp;
         serializer.read_array_into_ref(pFile, d, tmp);
-        cout << boost::format("d size: %s") % tmp << endl;
+        log_info("d size: %s", to_string(tmp).c_str());
         fclose(pFile);
 
         FILE *pFile2 = fopen(p_file_path.c_str(), "r");
         serializer.read_tuple_vec(pFile2, p);
         fclose(pFile2);
-        cout << boost::format("p size: %s") % p.size() << endl;
+        log_info("p size: %s", to_string(p.size()).c_str());
 
         FILE *pFile3 = fopen(pstart_file_path.c_str(), "r");
         serializer.read_vec(pFile3, pstart);

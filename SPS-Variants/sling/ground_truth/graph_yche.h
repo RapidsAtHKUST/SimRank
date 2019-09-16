@@ -12,6 +12,7 @@
 #include <string>
 #include <vector>
 #include <random>
+#include "util/log.h"
 
 using namespace std;
 

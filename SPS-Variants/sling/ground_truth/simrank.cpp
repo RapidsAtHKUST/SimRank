@@ -1,5 +1,7 @@
 #include "simrank.h"
 
+#include "util/log.h"
+
 void indegree_mat(const GraphYche &g, SparseMatrix<float> &P) {
     // column normalized adjacency matrix
     typedef Triplet<float> T;
@@ -25,9 +27,9 @@ TruthSim::TruthSim(string name, GraphYche &g, double c_, double epsilon_) {
     c = c_;
     epsilon = epsilon_;
     sim.resize(n, n);
-    cout << get_file_path() << endl;
+    log_info("%s", get_file_path().c_str());
     if (file_exists(get_file_path())) {
-        cout << "loading ground truth...." << endl;
+        log_info("loading ground truth....");
         load();
     } else {
         sim.setZero();
@@ -46,7 +48,7 @@ void TruthSim::run(GraphYche &g) {
     // size_t maxIter = size_t(ceil(log(epsilon) / log(c)));
     size_t maxIter = 100; // the groud thruth, iterate enough time
     size_t k = 0;
-    cout << "max iterations: " << maxIter << endl;
+    log_info("max iterations: %zu", maxIter);
     while (k < maxIter) {
         sim = PT * sim;
         sim = sim * P;

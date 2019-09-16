@@ -3,10 +3,18 @@ project(sling)
 
 set(CMAKE_CXX_STANDARD 11)
 
-set(GROUND_TRUTH_FILES ground_truth/simrank.cpp ground_truth/simrank.h ground_truth/graph_yche.cpp ground_truth/graph_yche.h
+set(FAKE_FILES ground_truth/graph_yche.h
         ground_truth/sparse_matrix_utils.h ground_truth/file_serialization.h ground_truth/stat.h
-        ground_truth/yche_serialization.h)
-set(SOURCE_FILES graph.h sling.h sling.cpp ../../dependencies/SFMT/SFMT.c input_output.cpp input_output.h util.h util.cpp ground_truth/stat.cpp)
+        ground_truth/yche_serialization.h ground_truth/simrank.h graph.h sling.h input_output.h util.h)
+set(GROUND_TRUTH_FILES ground_truth/simrank.cpp ground_truth/graph_yche.cpp)
+set(SOURCE_FILES util/log.cpp
+        sling.cpp ../../dependencies/SFMT/SFMT.c input_output.cpp util.cpp ground_truth/stat.cpp)
+
+set(CMAKE_VERBOSE_MAKEFILE ON)
+
+add_compile_options(-Wall -O3 -g -march=native)
+add_definitions(-DUSE_LOG -DTIME_RESULTS)
+include_directories(${CMAKE_SOURCE_DIR})
 
 # setup pthread environmental variables
 find_package(Boost REQUIRED program_options)
@@ -42,6 +50,9 @@ macro(InitSlingAP exec_name)
     target_include_directories(${exec_name} PRIVATE ../../dependencies/sparsepp)
     InitHashSFMTEigenPthread(${exec_name})
 endmacro()
+
+add_executable(sling_ss_ap ${SOURCE_FILES} ${GROUND_TRUTH_FILES} main_single_source_all_pair.cpp)
+InitSlingAP(sling_ss_ap)
 
 add_executable(sling_all ${SOURCE_FILES} ${GROUND_TRUTH_FILES} main_query_all_vertices.cpp)
 InitSlingAP(sling_all)

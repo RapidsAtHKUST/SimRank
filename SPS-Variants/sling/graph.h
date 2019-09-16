@@ -9,6 +9,7 @@
 #include <iostream>
 
 #include "input_output.h"
+#include "util/log.h"
 
 class Graph {
 public:
@@ -38,8 +39,8 @@ public:
         }
         n += 1;
         m = static_cast<int>(edge_lst.size());
-        cout << "total vertex#:" << n << endl;
-        cout << "total edge#:" << m << endl;
+        log_info("total vertex#: %d", n);
+        log_info("total edge#: %d", m);
 
         edge = new std::vector<int>[n];
         inedge = new std::vector<int>[n];
