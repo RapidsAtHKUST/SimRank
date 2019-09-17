@@ -25,7 +25,8 @@ set(FAKE_FILES
         sling/graph.h sling/sling.h sling/input_output.h sling/util.h
         probesim/evaluate.h probesim/Graph.h probesim/pooling.h probesim/Random.h probesim/SimStruct.h probesim/util.h
         local_push/parallel_local_push_yche_with_lock.h
-        local_push/parallel_local_push_yche.h local_push/local_push_yche.h)
+        local_push/parallel_local_push_yche.h local_push/local_push_yche.h
+        pcg_tkde17/tkde17_sim.h)
 
 set(GROUND_TRUTH_FILES
         ${CMAKE_SOURCE_DIR}/../../dependencies/SFMT/SFMT.c
@@ -99,6 +100,9 @@ add_executable(reads-rq-dynamic-del reads/readsrq.cpp reads/dynamic_update_exp/m
 target_compile_definitions(reads-rq-dynamic-del PRIVATE STORE_INDEX=1)
 ################################################################
 
+################################# LIN ###################
 add_executable(LinSimBench lineard14/main_lineard_ap.cpp lineard14/linearD.cpp)
+################################# MCAP #########################
 add_executable(CloudWalkerBench cloud_walker15/cloud_walker.cpp cloud_walker15/main_cloud_ap.cpp)
-
+#############################  PCG  #############################
+add_executable(pcg pcg_tkde17/main_pcg.cpp pcg_tkde17/tkde17_sim.cpp)

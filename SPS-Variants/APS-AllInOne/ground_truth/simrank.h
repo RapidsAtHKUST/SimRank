@@ -12,7 +12,7 @@ using SimRank_matrix= boost::multi_array<double, 2>;
 //extern void basic_simrank(GraphYche &g, double c, SimRank_matrix &);
 
 const string GROUND_TRUTH_DIR(
-        "/homes/ywangby/workspace/yche/git-repos/SimRank/LPMC-Profile/build/datasets/power_iter_ground_truth/");
+        "/homes/ywangby/workspace/yche/git-repos/SimRank/LPMC-Profile/build/datasets/ground_truth/");
 
 extern void indegree_mat(const GraphYche &g, SparseMatrix<float> &P);// column normalized adjacency matrix
 
