@@ -76,7 +76,7 @@ Full_LocalPush::Full_LocalPush(GraphYche &g, string name, double c_, double epsi
     init_PR();
 }
 
-//void LocalPush::local_push(GraphYche &g) { // local push given current P and R
+//void LocalPush::local_push1819(GraphYche &g) { // local push given current P and R
 //    auto start = std::chrono::high_resolution_clock::now();
 //
 //    while (!Q.empty()) {

@@ -34,7 +34,7 @@ int main(int argc, char *argv[]) {
     g.inputGraph(file_path);
     log_info("Loading Time: %.9lfs", timer.elapsed_and_reset());
 
-    // 2nd: construct sling algorithm, indexing
+    // 2nd: construct sling16 algorithm, indexing
     Sling sling_algo(&g, file_name, c, eps_d, theta);
     indexing_time = timer.elapsed();
     log_info("Indexing Time: %.9lfs", timer.elapsed_and_reset());

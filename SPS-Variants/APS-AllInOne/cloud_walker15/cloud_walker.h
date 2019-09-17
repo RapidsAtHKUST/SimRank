@@ -1,7 +1,7 @@
 #ifndef __CLOAD_WALKER_H__
 #define __CLOAD_WALKER_H__
 
-#include "lineard14/graph.h"
+#include "util/graph_ywangby.h"
 
 const string CLOUD_WALKER_DIR = "/homes/ywangby/workspace/LinsysSimRank/datasets/cloudwalker/";
 

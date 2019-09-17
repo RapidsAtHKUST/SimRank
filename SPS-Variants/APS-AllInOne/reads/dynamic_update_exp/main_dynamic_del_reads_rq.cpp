@@ -10,7 +10,7 @@
 
 #include "util/graph_yche.h"
 #include "reads/sample_num.h"
-#include "../reads/readsd.h"
+#include "reads/readsrq.h"
 
 using namespace std;
 using namespace boost;
@@ -44,10 +44,11 @@ int main(int argc, char *argv[]) {
     double delta = 0.01;
     double c = 0.6;
     int t = 10;
-    int r = compute_reads_sample_num(eps, delta, c);
+    int r = 100;
+    int rq = compute_reads_rq_num(eps, delta, c, r);
     int num_updates = 1000;
 
-    cout << "sample num:" << r << endl;
+    cout << "sample num:" << r << ", on-line rand-walk:" << rq << endl;
 
     // 1st: generate edges
     cout << "begin generate edges..." << endl;
@@ -75,11 +76,12 @@ int main(int argc, char *argv[]) {
 
     vector<pair<unsigned int, unsigned int>> del_edge_vec{std::begin(del_edges), std::end(del_edges)};
 
-    // construct the reads-d reads object
-    readsd algorithm(data_name, n, r, c, t);
+    // construct the reads17-rq reads17 object
+    readsrq algorithm(data_name, n, r, rq, c, t);
+
 
     // 2nd: dynamic update statistics
-    cout << "reads-d begin dynamic update..." << endl;
+    cout << "reads17-d begin dynamic update..." << endl;
     auto start = std::chrono::high_resolution_clock::now();
     for (auto &edge:del_edge_vec) {
         algorithm.delEdge(edge.first, edge.second);

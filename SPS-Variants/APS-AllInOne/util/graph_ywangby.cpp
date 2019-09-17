@@ -1,4 +1,4 @@
-#include "graph.h"
+#include "graph_ywangby.h"
 
 string EDGE_LIST_PATH = "./datasets/edge_list/";
 vector<string> DATA_NAME = {

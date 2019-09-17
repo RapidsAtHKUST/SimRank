@@ -199,7 +199,7 @@ reads::reads(char *gName_, int n_, int r_, double c_, int t_) {
     t1 = t2 = qCnt = 0;
 
     char iName[125];
-    sprintf(iName, "%s.reads.%d_%d_%lf_%d", gName, n, r, c, t);
+    sprintf(iName, "%s.reads17.%d_%d_%lf_%d", gName, n, r, c, t);
 
 #ifdef STORE_INDEX
     if (fopen(iName, "rb") != NULL) {
@@ -235,7 +235,7 @@ reads::reads(string gName_, int n_, int r_, double c_, int t_) {
 
     // init index path
     string iName = boost::str(boost::format(
-            "/homes/ywangby/workspace/yche/git-repos/SimRank/LPMC-Profile/build/datasets/reads/%s_%d_%d_%lf_%d.bin") %
+            "/homes/ywangby/workspace/yche/git-repos/SimRank/LPMC-Profile/build/datasets/reads17/%s_%d_%d_%lf_%d.bin") %
                               gName_ % n % r % c % t);
 
     if (fopen(iName.c_str(), "rb") != nullptr) {

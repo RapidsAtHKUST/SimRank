@@ -20,7 +20,7 @@
 using boost::format;
 using PairMarker= spp::sparse_hash_map<NodePair, bool>;
 
-const string LOCAL_PUSH_DIR = "/homes/ywangby/workspace/yche/git-repos/SimRank/LPMC-Profile/build/datasets/local_push/";
+const string LOCAL_PUSH_DIR = "/homes/ywangby/workspace/yche/git-repos/SimRank/LPMC-Profile/build/datasets/local_push1819/";
 
 inline double cal_rmax(double c, double epsilon) {
     return (1 - c) * epsilon;

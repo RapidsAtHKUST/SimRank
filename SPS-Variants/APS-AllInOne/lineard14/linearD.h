@@ -3,7 +3,7 @@
 
 #include <memory>
 
-#include "graph.h"
+#include "util/graph_ywangby.h"
 
 const string LINEAR_D_DIR = "/homes/ywangby/workspace/LinsysSimRank/datasets/linearD/";
 

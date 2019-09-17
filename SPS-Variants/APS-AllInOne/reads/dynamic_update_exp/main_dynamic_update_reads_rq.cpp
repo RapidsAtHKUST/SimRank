@@ -10,7 +10,7 @@
 
 #include "util/graph_yche.h"
 #include "reads/sample_num.h"
-#include "../reads/readsrq.h"
+#include "reads/readsrq.h"
 
 using namespace std;
 using namespace boost;
@@ -63,12 +63,12 @@ int main(int argc, char *argv[]) {
         }
     }
 
-    // construct the reads-rq reads object
+    // construct the reads17-rq reads17 object
     readsrq algorithm(data_name, n, r, rq, c, t);
 
 
     // 2nd: dynamic update statistics
-    cout << "reads-d begin dynamic update..." << endl;
+    cout << "reads17-d begin dynamic update..." << endl;
     auto start = std::chrono::high_resolution_clock::now();
     for (auto &edge:ins_edges) {
         algorithm.insEdge(edge.first, edge.second);
