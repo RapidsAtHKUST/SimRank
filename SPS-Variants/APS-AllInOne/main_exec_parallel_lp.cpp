@@ -5,7 +5,7 @@
 #include <boost/program_options.hpp>
 
 #include "ground_truth/simrank.h"
-#include "../local_push/parallel_local_push_yche.h"
+#include "local_push/parallel_local_push_yche.h"
 
 using namespace std;
 using namespace boost::program_options;

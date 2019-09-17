@@ -9,7 +9,7 @@
 #include <boost/graph/adjacency_list.hpp>
 
 #include "util/graph_yche.h"
-#include "../util/sample_num.h"
+#include "reads/sample_num.h"
 #include "../reads/readsrq.h"
 
 using namespace std;

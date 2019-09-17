@@ -7,7 +7,7 @@
 
 #include "util/stat.h"
 #include "util/graph_yche.h"
-#include "ground_truth/yche_serialization.h"
+#include "util/yche_serialization.h"
 #include "util/log.h"
 
 const double Sling::BACKEPS = 7.28e-4; //EPS / 23.;

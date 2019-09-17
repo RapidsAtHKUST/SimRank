@@ -7,7 +7,7 @@
 #include <iostream>
 
 #include "reads/reads.h"
-#include "util/sample_num.h"
+#include "reads/sample_num.h"
 #include "reads/readsd.h"
 
 #include "util/graph_yche.h"

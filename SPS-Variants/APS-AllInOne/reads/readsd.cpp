@@ -15,8 +15,8 @@
 #include "sparsehash/dense_hash_map"
 
 #include "../util/timer.h"
-#include "../util/inBuf.h"
-#include "../util/outBuf.h"
+#include "inBuf.h"
+#include "outBuf.h"
 #include "../util/meminfo.h"
 #include "util/stat.h"
 
