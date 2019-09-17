@@ -12,8 +12,7 @@
 using namespace std::chrono;
 
 #include "graph_yche.h"
-
-#include "util/timer.h"
+#include "timer.h"
 
 vector<pair<int, int>> GraphYche::GetEdgeList(string &file_path) {
     vector<pair<int, int>> lines;

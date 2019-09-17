@@ -11,7 +11,7 @@
 #include "util/sample_num.h"
 #include "reads/readsrq.h"
 
-#include "ground_truth/graph_yche.h"
+#include "util/graph_yche.h"
 #include "ground_truth/simrank.h"
 
 using namespace std;

@@ -10,7 +10,7 @@
 #include "util/sample_num.h"
 #include "reads/readsd.h"
 
-#include "ground_truth/graph_yche.h"
+#include "util/graph_yche.h"
 #include "ground_truth/simrank.h"
 
 using namespace std;

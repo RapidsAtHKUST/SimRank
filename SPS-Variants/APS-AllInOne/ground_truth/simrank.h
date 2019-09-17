@@ -4,8 +4,8 @@
 #include <boost/format.hpp>
 #include <boost/multi_array.hpp>
 
-#include "graph_yche.h"
-#include "sparse_matrix_utils.h"
+#include "util/graph_yche.h"
+#include "util/sparse_matrix_utils.h"
 
 using SimRank_matrix= boost::multi_array<double, 2>;
 

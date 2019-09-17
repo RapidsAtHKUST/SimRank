@@ -9,7 +9,7 @@
 
 #include <boost/format.hpp>
 
-#include "graph_yche.h"
+#include "util/graph_yche.h"
 #include "yche_serialization.h"
 
 using namespace std;

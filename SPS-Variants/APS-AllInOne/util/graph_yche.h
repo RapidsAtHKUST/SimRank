@@ -12,7 +12,7 @@
 #include <string>
 #include <vector>
 #include <random>
-#include "util/log.h"
+#include "log.h"
 
 using namespace std;
 
@@ -53,7 +53,7 @@ inline bool file_exists(const std::string &name) {
 
 inline string get_edge_list_path(string s) {
     // get file location of edgelist for graph s
-    return "./datasets/edge_list/" + s + ".txt";
+    return "/homes/ywangby/workspace/LinsysSimRank/datasets/edge_list/" + s + ".txt";
 }
 
 #endif //SPS_GRAPH_YCHE_H

@@ -8,7 +8,7 @@
 
 #include <boost/graph/adjacency_list.hpp>
 
-#include "../ground_truth/graph_yche.h"
+#include "util/graph_yche.h"
 #include "../util/sample_num.h"
 #include "../reads/readsrq.h"
 

@@ -6,7 +6,7 @@
 #include <boost/format.hpp>
 
 #include "util/stat.h"
-#include "ground_truth/graph_yche.h"
+#include "util/graph_yche.h"
 #include "ground_truth/yche_serialization.h"
 #include "util/log.h"
 
