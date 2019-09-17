@@ -34,4 +34,30 @@ private:
     std::chrono::time_point<clock_> beg_;
 };
 
+
+class ClockTimer {
+public:
+    ClockTimer() : beg_(clock()) {}
+
+    void reset() { beg_ = clock(); }
+
+    double elapsed() const {
+        return (clock() - beg_) / CLOCKS_PER_SEC;
+    }
+
+    double getTime() {
+        return elapsed();
+    }
+
+    double elapsed_and_reset() {
+        double elapsed = clock() - beg_;
+        beg_ = clock();
+        return elapsed / CLOCKS_PER_SEC;
+    }
+
+private:
+    clock_t beg_;
+};
+
+
 #endif 

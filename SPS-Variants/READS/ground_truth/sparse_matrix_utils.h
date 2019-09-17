@@ -64,7 +64,7 @@ namespace std {
 
 template<typename T>
 struct DensePairMap {
-    vector<sparse_hash_map<unsigned int, T, std::hash<unsigned int>>>
+    vector<spp::sparse_hash_map<unsigned int, T, std::hash<unsigned int>>>
             v;
 
     // assume np.first <= np.second
@@ -79,7 +79,7 @@ struct DensePairMap {
     }
 
     void add(size_t n) {
-        v.insert(v.end(), n, sparse_hash_map<unsigned int, T, std::hash<unsigned int>>
+        v.insert(v.end(), n, spp::sparse_hash_map<unsigned int, T, std::hash<unsigned int>>
                 {});
     }
 

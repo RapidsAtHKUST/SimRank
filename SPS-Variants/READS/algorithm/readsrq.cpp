@@ -385,6 +385,7 @@ void readsrq::queryAll(int x, double *ansVal) {
     if (qCnt++ < 20) t2 += tm.getTime();
 }
 #endif
+    ansVal[x] = 1;
 }
 
 void readsrq::insEdge(int x, int y) {

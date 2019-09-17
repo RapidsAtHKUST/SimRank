@@ -63,9 +63,9 @@ add_executable(readsd-ap ${COMMON_FILES} ${GROUND_TRUTH_FILES} algorithm/readsd.
 InitREADS(readsd-ap)
 target_compile_definitions(reads-d PRIVATE STORE_INDEX=1)
 
-#add_executable(readsd-ap ${COMMON_FILES} ${GROUND_TRUTH_FILES} algorithm/readsd.cpp test_readsd_ap.cpp)
-#InitREADS(readsd-ap)
-#target_compile_definitions(reads-d PRIVATE STORE_INDEX=1)
+add_executable(readsrq-ap ${COMMON_FILES} ${GROUND_TRUTH_FILES} algorithm/readsrq.cpp test_readsrq_ap.cpp)
+InitREADS(readsrq-ap)
+target_compile_definitions(readsrq-ap PRIVATE STORE_INDEX=1)
 #################################333
 
 #### reads-d (random pairs)

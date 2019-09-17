@@ -7,8 +7,9 @@
 #include <iostream>
 
 #include "algorithm/reads.h"
+
 #include "util/sample_num.h"
-#include "algorithm/readsd.h"
+#include "algorithm/readsrq.h"
 
 #include "ground_truth/graph_yche.h"
 #include "ground_truth/simrank.h"
@@ -28,8 +29,13 @@ int main(int argc, char **argv) {
     double eps = 0.01;
     double delta = 0.01;
     double c = 0.6;
-    int r = compute_reads_sample_num(eps, delta, c);
-    log_info("sample num: %d", r);
+    int r = 100;
+    int rq = compute_reads_rq_num(eps, delta, c, r);
+    {
+        stringstream ss;
+        ss << "sample num:" << r << ", on-line rand-walk:" << rq;
+        log_info("%s", ss.str().c_str());
+    }
 
     // 2nd: t(max length), n
     int t = 10;
@@ -42,7 +48,7 @@ int main(int argc, char **argv) {
     // 3rd: construct index
     Timer timer;
     ClockTimer clock_timer;
-    readsd i2(data_name, n, r, c, t);
+    readsrq i3(data_name, n, r, rq, c, t);
     log_info("Indexing Time: %.9lfs", timer.elapsed());
 
     log_info("Initial Memory Consumption: %d KB", getValue());
@@ -58,7 +64,7 @@ int main(int argc, char **argv) {
             auto *ansVal = new double[n];
 #pragma omp for reduction(max:max_err) reduction(+:avg_err) schedule(dynamic, 1)
             for (auto u = 0; u < g_gt.n; u++) {
-                i2.queryAll(u, ansVal);
+                i3.queryAll(u, ansVal);
 
                 for (auto v = 0; v < g_gt.n; v++) {
                     auto result = ansVal[v];
@@ -77,7 +83,7 @@ int main(int argc, char **argv) {
             auto *ansVal = new double[n];
 #pragma omp for schedule(dynamic, 1)
             for (auto u = 0; u < g_gt.n; u++) {
-                i2.queryAll(u, ansVal);
+                i3.queryAll(u, ansVal);
             }
             delete[] ansVal;
         }
