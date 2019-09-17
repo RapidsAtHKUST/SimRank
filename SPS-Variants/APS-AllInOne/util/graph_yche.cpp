@@ -130,3 +130,26 @@ bool GraphYche::exists_edge(int src, int dst) {
 //    return false;
     return BinarySearch(static_cast<uint32_t>(off_out[src]), static_cast<uint32_t>(off_out[src + 1]), dst);
 }
+
+#if !defined(SFMT)
+int sample_in_neighbor(int a, GraphYche &g) {
+    // sample one in-neighbor of node a in g
+    auto in_deg = g.in_deg_arr[a];
+    if (in_deg > 0) {
+        return g.neighbors_in[select_randomly(g.off_in[a], g.off_in[a + 1])];
+    } else {
+        return -1;
+    }
+}
+#else
+
+//int sample_in_neighbor(int a, GraphYche &g, SFMTRand &sfmt_rand_gen) {
+//    auto in_deg = g.in_deg_arr[a];
+//    if (in_deg > 0) {
+//        return g.neighbors_in[select_randomly_sfmt(g.off_in[a], g.off_in[a + 1], sfmt_rand_gen)];
+//    } else {
+//        return -1;
+//    }
+//}
+
+#endif

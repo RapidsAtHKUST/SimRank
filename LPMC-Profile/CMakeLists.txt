@@ -66,10 +66,10 @@ macro(InitBprw exec_name)
     InitBoostHashSFMTEigen(${exec_name})
     target_link_libraries(${exec_name} PRIVATE tcmalloc)
     target_compile_options(${exec_name} PRIVATE -O3 -g ${SFMT_COMPILE_FLAGS} -march=native)
-#    target_compile_options(${exec_name} PRIVATE -O3 -g ${SFMT_COMPILE_FLAGS})
+    #    target_compile_options(${exec_name} PRIVATE -O3 -g ${SFMT_COMPILE_FLAGS})
 endmacro()
 
-set(BLPMC_SOURCE_FILES ${BPRW_FILES} ${UTIL_FILES} ${GROUND_TRUTH_FILES} playground/main_bprw.cpp)
+set(BLPMC_SOURCE_FILES ${BPRW_FILES} playground/main_bprw.cpp)
 add_executable(bprw ${BLPMC_SOURCE_FILES})
 InitBprw(bprw)
 target_compile_definitions(bprw PRIVATE -DSFMT=1)
@@ -81,36 +81,36 @@ InitBprw(bprw-std)
 #target_compile_definitions(bprw-std PRIVATE -DDEBUG=1)
 
 #### bprw(all pair)
-add_executable(bprw-ap ${BPRW_FILES} ${UTIL_FILES} ${GROUND_TRUTH_FILES} playground/main_bprw_all_pair.cpp)
+add_executable(bprw-ap ${BPRW_FILES} playground/main_bprw_all_pair.cpp)
 InitBprw(bprw-ap)
 target_compile_definitions(bprw-ap PRIVATE -DSFMT=1 -DGROUND_TRUTH=1 -DALL_PAIR=1)
 
 #### bprw benchmark
-add_executable(bprw-bench ${BPRW_FILES} ${UTIL_FILES} ${GROUND_TRUTH_FILES} playground/main_bprw_all_pair.cpp)
+add_executable(bprw-bench ${BPRW_FILES} playground/main_bprw_all_pair.cpp)
 InitBprw(bprw-bench)
 target_compile_definitions(bprw-bench PRIVATE -DSFMT=1)
 #target_compile_definitions(bprw-bench PRIVATE -DSFMT=1 -DSPARSE_HASH_MAP_FOR_HEAP=1)
 
 #### bprw(random pairs)
-add_executable(bprw-rand-bench ${BPRW_FILES} ${UTIL_FILES} ${GROUND_TRUTH_FILES} playground/random_pairs/main_bprw_rand_pair.cpp
+add_executable(bprw-rand-bench ${BPRW_FILES} playground/random_pairs/main_bprw_rand_pair.cpp
         util/random_pair_generator.cpp)
 InitBprw(bprw-rand-bench)
 target_compile_definitions(bprw-rand-bench PRIVATE -DSFMT=1)
 
-add_executable(bprw-rand-bench-gt ${BPRW_FILES} ${UTIL_FILES} ${GROUND_TRUTH_FILES} playground/random_pairs/main_bprw_rand_pair.cpp
+add_executable(bprw-rand-bench-gt ${BPRW_FILES} playground/random_pairs/main_bprw_rand_pair.cpp
         util/random_pair_generator.cpp)
 InitBprw(bprw-rand-bench-gt)
 target_compile_definitions(bprw-rand-bench-gt PRIVATE -DSFMT=1 -DGROUND_TRUTH=1)
 
 #### bprw(random paris varying parameters)
-add_executable(bprw-rand-varying ${BPRW_FILES} ${UTIL_FILES} ${GROUND_TRUTH_FILES}
+add_executable(bprw-rand-varying ${BPRW_FILES}
         playground/varying_parameters/main_bprw_rand_pair_varying_parameters.cpp
         util/random_pair_generator.cpp)
 InitBprw(bprw-rand-varying)
 target_compile_definitions(bprw-rand-varying PRIVATE -DSFMT=1)
 
 ## add groud-truth support
-add_executable(bprw-rand-varying-gt ${BPRW_FILES} ${UTIL_FILES} ${GROUND_TRUTH_FILES}
+add_executable(bprw-rand-varying-gt ${BPRW_FILES}
         playground/varying_parameters/main_bprw_rand_pair_varying_parameters.cpp
         util/random_pair_generator.cpp)
 InitBprw(bprw-rand-varying-gt)
@@ -124,14 +124,14 @@ macro(InitFLPMC exec_name)
     target_link_libraries(${exec_name} PRIVATE tcmalloc)
     target_compile_options(${exec_name} PRIVATE -O3 -g ${SFMT_COMPILE_FLAGS} -march=native)
 endmacro()
-set(FLPMC_SOURCE_FILES ${LPMC_FILES} ${UTIL_FILES} ${GROUND_TRUTH_FILES} playground/main_flpmc.cpp)
+set(FLPMC_SOURCE_FILES ${LPMC_FILES} playground/main_flpmc.cpp)
 
 add_executable(flpmc ${FLPMC_SOURCE_FILES})
 InitFLPMC(flpmc)
 target_compile_definitions(flpmc PRIVATE -DSFMT=1)
 
 #### flpmc(all pair)
-set(FLPMC_SOURCE_FILES ${LPMC_FILES} ${UTIL_FILES} ${GROUND_TRUTH_FILES} playground/main_flpmc_all_pair.cpp)
+set(FLPMC_SOURCE_FILES ${LPMC_FILES} playground/main_flpmc_all_pair.cpp)
 add_executable(flpmc-ap ${FLPMC_SOURCE_FILES})
 InitFLPMC(flpmc-ap)
 target_compile_definitions(flpmc-ap PRIVATE -DSFMT=1 -DGROUND_TRUTH=1 -DALL_PAIR=1)
@@ -142,7 +142,7 @@ InitFLPMC(flpmc-bench)
 target_compile_definitions(flpmc-bench PRIVATE -DSFMT=1)
 
 #### flpmc(random pairs)
-set(FLPMC_SOURCE_FILES_RAND ${LPMC_FILES} ${UTIL_FILES} ${GROUND_TRUTH_FILES} playground/random_pairs/main_flpmc_rand_pair.cpp
+set(FLPMC_SOURCE_FILES_RAND ${LPMC_FILES} playground/random_pairs/main_flpmc_rand_pair.cpp
         util/random_pair_generator.cpp)
 add_executable(flpmc-rand-bench ${FLPMC_SOURCE_FILES_RAND})
 InitFLPMC(flpmc-rand-bench)
@@ -153,7 +153,7 @@ InitFLPMC(flpmc-rand-bench-gt)
 target_compile_definitions(flpmc-rand-bench-gt PRIVATE -DSFMT=1 -DGROUND_TRUTH=1)
 
 #### flpmc(random pairs, varying r_max)
-set(FLPMC_RMAX_SOURCE_FILES_RAND ${LPMC_FILES} ${UTIL_FILES} ${GROUND_TRUTH_FILES}
+set(FLPMC_RMAX_SOURCE_FILES_RAND ${LPMC_FILES}
         playground/varying_rmax/main_flpmc_rand_pair_varying_rmax.cpp
         util/random_pair_generator.cpp)
 add_executable(flpmc-rand-rmax ${FLPMC_RMAX_SOURCE_FILES_RAND})
@@ -165,7 +165,7 @@ InitFLPMC(flpmc-rand-rmax-gt)
 target_compile_definitions(flpmc-rand-rmax-gt PRIVATE -DSFMT=1 -DGROUND_TRUTH=1 -DVARYING_RMAX=1)
 
 #### flpmc(random pairs varying parameters)
-set(FLPMC_SOURCE_FILES_RAND ${LPMC_FILES} ${UTIL_FILES} ${GROUND_TRUTH_FILES}
+set(FLPMC_SOURCE_FILES_RAND ${LPMC_FILES}
         playground/varying_parameters/main_flpmc_rand_pair_varying_parameters.cpp
         util/random_pair_generator.cpp)
 add_executable(flpmc-rand-varying ${FLPMC_SOURCE_FILES_RAND})
@@ -180,14 +180,14 @@ target_compile_definitions(flpmc-rand-varying-gt PRIVATE -DSFMT=1 -DGROUND_TRUTH
 macro(InitBFLPMC exec_name)
     InitFLPMC(${exec_name})
 endmacro()
-set(BFLPMC_SOURCE_FILES ${LPMC_FILES} ${BPRW_FILES} ${UTIL_FILES} ${GROUND_TRUTH_FILES}
+set(BFLPMC_SOURCE_FILES ${LPMC_FILES} ${BPRW_FILES}
         yche_refactor/bflpmc_yche.h yche_refactor/bflpmc_yche.cpp playground/main_bflpmc.cpp)
 add_executable(bflpmc ${BFLPMC_SOURCE_FILES})
 InitBFLPMC(bflpmc)
 target_compile_definitions(bflpmc PRIVATE -DSFMT=1)
 
 #### bflpmc(all pair)
-set(BFLPMC_SOURCE_FILES ${LPMC_FILES} ${BPRW_FILES} ${UTIL_FILES} ${GROUND_TRUTH_FILES}
+set(BFLPMC_SOURCE_FILES ${LPMC_FILES} ${BPRW_FILES}
         yche_refactor/bflpmc_yche.h yche_refactor/bflpmc_yche.cpp playground/main_bflpmc_all_pair.cpp)
 add_executable(bflpmc-ap ${BFLPMC_SOURCE_FILES})
 InitBFLPMC(bflpmc-ap)
@@ -200,7 +200,7 @@ target_compile_definitions(bflpmc-bench PRIVATE -DSFMT=1)
 #target_compile_definitions(bflpmc-bench PRIVATE -DSFMT=1 -DSPARSE_HASH_MAP_FOR_HEAP=1)
 
 #### bflpmc(random pairs)
-set(BFLPMC_SOURCE_FILES_RAND ${LPMC_FILES} ${BPRW_FILES} ${UTIL_FILES} ${GROUND_TRUTH_FILES}
+set(BFLPMC_SOURCE_FILES_RAND ${LPMC_FILES} ${BPRW_FILES}
         yche_refactor/bflpmc_yche.h yche_refactor/bflpmc_yche.cpp playground/random_pairs/main_bflpmc_rand_pair.cpp
         util/random_pair_generator.cpp)
 add_executable(bflpmc-rand-bench ${BFLPMC_SOURCE_FILES_RAND})
@@ -212,7 +212,7 @@ InitBFLPMC(bflpmc-rand-bench-gt)
 target_compile_definitions(bflpmc-rand-bench-gt PRIVATE -DSFMT=1 -DGROUND_TRUTH=1 -DGROUND_TRUTH_STATISTICS=1)
 
 #### bflpmc(random pairs, varying r_max)
-set(BFLPMC_RMAX_SOURCE_FILES_RAND ${LPMC_FILES} ${BPRW_FILES} ${UTIL_FILES} ${GROUND_TRUTH_FILES}
+set(BFLPMC_RMAX_SOURCE_FILES_RAND ${LPMC_FILES} ${BPRW_FILES}
         yche_refactor/bflpmc_yche.h yche_refactor/bflpmc_yche.cpp
         playground/varying_rmax/main_bflpmc_rand_pair_varying_rmax.cpp
         util/random_pair_generator.cpp)
@@ -226,7 +226,7 @@ InitBFLPMC(bflpmc-rand-rmax-gt)
 target_compile_definitions(bflpmc-rand-rmax-gt PRIVATE -DSFMT=1 -DGROUND_TRUTH=1 -DVARYING_RMAX=1)
 
 #### bflpmc(random pairs varying parameters)
-set(BFLPMC_SOURCE_FILES_RAND ${LPMC_FILES} ${BPRW_FILES} ${UTIL_FILES} ${GROUND_TRUTH_FILES}
+set(BFLPMC_SOURCE_FILES_RAND ${LPMC_FILES} ${BPRW_FILES}
         yche_refactor/bflpmc_yche.h yche_refactor/bflpmc_yche.cpp playground/varying_parameters/main_bflpmc_rand_pair_varying_parameters.cpp
         util/random_pair_generator.cpp)
 add_executable(bflpmc-rand-varying ${BFLPMC_SOURCE_FILES_RAND})
@@ -238,6 +238,6 @@ InitBFLPMC(bflpmc-rand-varying-gt)
 target_compile_definitions(bflpmc-rand-varying-gt PRIVATE -DSFMT=1 -DGROUND_TRUTH=1)
 
 ####################### reduced local push testing
-add_executable(rlp playground/reduced_local_push/main_exec_reduced_local_push.cpp ${LPMC_FILES} ${UTIL_FILES} ${GROUND_TRUTH_FILES})
+add_executable(rlp playground/reduced_local_push/main_exec_reduced_local_push.cpp ${LPMC_FILES})
 InitFLPMC(rlp)
 target_compile_definitions(rlp PRIVATE -DSFMT=1)

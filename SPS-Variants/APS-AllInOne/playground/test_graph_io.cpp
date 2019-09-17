@@ -5,7 +5,7 @@
 #include <iostream>
 
 #include "../util/graph_yche.h"
-#include "../util/pretty_print.h"
+#include "../playground/pretty_print.h"
 
 int main(int argc, char *argv[]) {
     auto my_path = string(argv[1]);

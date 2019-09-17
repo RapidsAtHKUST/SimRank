@@ -28,6 +28,7 @@
 #include "util/file_serialization.h"
 #include "util/stat.h"
 #include "util/sparse_matrix_utils.h"
+#include "random_utils.h"
 
 using namespace boost;
 using namespace std;
@@ -48,20 +49,6 @@ using google::dense_hash_map;
 
 // types definition
 typedef boost::adjacency_list<vecS, vecS, bidirectionalS> DirectedG;
-
-template<typename Iter, typename RandomGenerator>
-Iter select_randomly(Iter start, Iter end, RandomGenerator &g) {
-    std::uniform_int_distribution<> dis(0, std::distance(start, end) - 1);
-    std::advance(start, dis(g));
-    return start;
-}
-
-template<typename Iter>
-Iter select_randomly(Iter start, Iter end) {
-    static std::random_device rd;
-    static std::mt19937 gen(rd());
-    return select_randomly(start, end, gen);
-}
 
 // graph function
 extern void load_graph(string path, DirectedG &g);

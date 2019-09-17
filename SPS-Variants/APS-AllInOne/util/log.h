@@ -44,7 +44,6 @@ void log_log(int level, const char *file, int line, const char *fmt, ...);
 
 
 inline void print_str(std::string str) {
-#define DEBUG
 #ifdef DEBUG
     static thread_local bool is_first = true;
     if (is_first) {
