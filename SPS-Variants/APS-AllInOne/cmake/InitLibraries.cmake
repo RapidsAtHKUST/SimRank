@@ -1,4 +1,4 @@
-find_package(Boost)
+find_package(Boost REQUIRED serialization program_options filesystem)
 find_package(OpenMP)
 if (OPENMP_FOUND)
     set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} ${OpenMP_C_FLAGS}")
@@ -14,3 +14,4 @@ include_directories(${CMAKE_SOURCE_DIR}/../../dependencies/sparsehash-yche/inclu
 include_directories(${CMAKE_SOURCE_DIR}/../../dependencies/SFMT)
 link_libraries(tcmalloc)
 link_libraries(${CMAKE_THREAD_LIBS_INIT})
+link_libraries(${Boost_LIBRARIES})

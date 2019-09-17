@@ -99,4 +99,6 @@ add_executable(reads-rq-dynamic-del reads/readsrq.cpp dynamic_update_exp/main_dy
 target_compile_definitions(reads-rq-dynamic-del PRIVATE STORE_INDEX=1)
 ################################################################
 
+add_executable(LinSimBench lineard14/main_lineard_ap.cpp lineard14/graph.cpp lineard14/linearD.cpp)
+add_executable(CloudWalkerBench cloud_walker15/cloud_walker.cpp lineard14/graph.cpp cloud_walker15/main_cloud_ap.cpp)
 
