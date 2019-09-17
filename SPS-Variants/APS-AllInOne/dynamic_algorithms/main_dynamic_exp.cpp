@@ -7,7 +7,7 @@
 #include <chrono>
 
 #include "local_push.h"
-#include "pretty_print.h"
+#include "util/pretty_print.h"
 #include "util/log.h"
 
 using namespace std;

@@ -14,7 +14,8 @@
 
 #include <sparsepp/spp.h>
 
-#include "graph.h"
+#include "util/graph_ywangby.h"
+using PairMarker= spp::sparse_hash_map<NodePair, bool>;
 
 using boost::format;
 const string LOCAL_PUSH_DIR = "/export/data/ywangby_datasets/local_push/";

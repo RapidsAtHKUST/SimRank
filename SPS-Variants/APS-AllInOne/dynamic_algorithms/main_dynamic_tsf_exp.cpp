@@ -2,7 +2,7 @@
 // Created by yche on 1/22/18.
 //
 #include <random>
-#include "graph.h"
+#include "util/graph_ywangby.h"
 
 int main(int argc, char *argv[]) {
     // load reversed graph

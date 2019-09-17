@@ -18,6 +18,7 @@ include(InitLibraries)
 
 ###### For Jetbrains Indexing Files #############################
 set(FAKE_FILES
+        dynamic_algorithms/local_push.h
         ground_truth/simrank.h
         reads/inBuf.h reads/outBuf.h util/meminfo.h util/timer.h
         reads/sample_num.h util/graph_yche.h util/stat.h reads/reads.h
@@ -86,23 +87,33 @@ add_executable(readsrq-ap reads/readsrq.cpp reads/test_readsrq_ap.cpp)
 target_compile_definitions(readsrq-ap PRIVATE STORE_INDEX=1)
 #########################################################################
 
-############## READS Dynamic Updates ##################################
-add_executable(reads-d-dynamic-exp reads/readsd.cpp reads/dynamic_update_exp/main_dynamic_update_reads_d.cpp)
-target_compile_definitions(reads-d-dynamic-exp PRIVATE STORE_INDEX=1)
-
-add_executable(reads-rq-dynamic-exp reads/readsrq.cpp reads/dynamic_update_exp/main_dynamic_update_reads_rq.cpp)
-target_compile_definitions(reads-rq-dynamic-exp PRIVATE STORE_INDEX=1)
-
-add_executable(reads-d-dynamic-del reads/readsd.cpp reads/dynamic_update_exp/main_dynamic_del_reads_d.cpp)
-target_compile_definitions(reads-d-dynamic-del PRIVATE STORE_INDEX=1)
-
-add_executable(reads-rq-dynamic-del reads/readsrq.cpp reads/dynamic_update_exp/main_dynamic_del_reads_rq.cpp)
-target_compile_definitions(reads-rq-dynamic-del PRIVATE STORE_INDEX=1)
-################################################################
-
 ################################# LIN ###################
 add_executable(LinSimBench lineard14/main_lineard_ap.cpp lineard14/linearD.cpp)
 ################################# MCAP #########################
 add_executable(CloudWalkerBench cloud_walker15/cloud_walker.cpp cloud_walker15/main_cloud_ap.cpp)
 #############################  PCG  #############################
 add_executable(pcg pcg_tkde17/main_pcg.cpp pcg_tkde17/tkde17_sim.cpp)
+
+
+##################### Dynamic-Graph Algorithms ###########
+################### dynamic-flp
+add_executable(dynamic-flp dynamic_algorithms/main_dynamic_exp.cpp dynamic_algorithms/local_push.cpp)
+target_compile_definitions(dynamic-flp PRIVATE -DFLP=1)
+############# dynamic-rlp
+add_executable(dynamic-rlp dynamic_algorithms/main_dynamic_exp.cpp dynamic_algorithms/local_push.cpp)
+###### dynamic tsf
+add_executable(dynamic-tsf dynamic_algorithms/main_dynamic_tsf_exp.cpp)
+
+############## READS Dynamic Updates ##################################
+add_executable(reads-d-dynamic-exp reads/readsd.cpp dynamic_algorithms/main_dynamic_update_reads_d.cpp)
+target_compile_definitions(reads-d-dynamic-exp PRIVATE STORE_INDEX=1)
+
+add_executable(reads-rq-dynamic-exp reads/readsrq.cpp dynamic_algorithms/main_dynamic_update_reads_rq.cpp)
+target_compile_definitions(reads-rq-dynamic-exp PRIVATE STORE_INDEX=1)
+
+add_executable(reads-d-dynamic-del reads/readsd.cpp dynamic_algorithms/main_dynamic_del_reads_d.cpp)
+target_compile_definitions(reads-d-dynamic-del PRIVATE STORE_INDEX=1)
+
+add_executable(reads-rq-dynamic-del reads/readsrq.cpp dynamic_algorithms/main_dynamic_del_reads_rq.cpp)
+target_compile_definitions(reads-rq-dynamic-del PRIVATE STORE_INDEX=1)
+################################################################
