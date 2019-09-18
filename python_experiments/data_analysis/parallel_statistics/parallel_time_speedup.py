@@ -48,7 +48,6 @@ if __name__ == '__main__':
                             '/python_experiments/plp_scalability_results_'
         stat_dict = {}
         for our_algorithm in our_algorithm_lst:
-            print our_algorithm
             tmp_dict = {}
             for data_set_name in data_set_lst:
                 def get_file_path(thread_num):
@@ -86,7 +85,6 @@ if __name__ == '__main__':
                             '/python_experiments/plp_scalability_results_'
         stat_dict = {}
         for our_algorithm in our_algorithm_lst:
-            print our_algorithm
             tmp_dict = {}
             for data_set_name in data_set_lst:
                 def get_file_path(thread_num):
@@ -118,7 +116,6 @@ if __name__ == '__main__':
 
         stat_dict = {}
         for our_algorithm in our_algorithm_lst:
-            print our_algorithm
             tmp_dict = {}
             for data_set_name in data_set_lst:
                 def get_file_path(thread_num):

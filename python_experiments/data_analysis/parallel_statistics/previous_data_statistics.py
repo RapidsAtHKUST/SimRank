@@ -1,6 +1,6 @@
 import json
 import os
-from generate_parallel_speedup_md import format_str
+from data_analysis.parallel_statistics.generate_parallel_speedup_md import format_str
 
 rlp_old_tag = 'rlp-old'
 flp_old_tag = 'flp-old'

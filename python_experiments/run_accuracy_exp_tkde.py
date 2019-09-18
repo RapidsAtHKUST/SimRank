@@ -19,10 +19,11 @@ def run_exp(env_tag=lccpu12_tag, with_c_group=True):
     folder_name = 'exp-ground-truth-2019-09-18' + os.sep + hostname
 
     our_exec_name_lst = [
-        'probesim_ss_ap',
-        'readsrq-ap',
-        'readsd-ap',
-        'sling_ss_ap'
+        'gen_gt'
+        # 'probesim_ss_ap',
+        # 'readsrq-ap',
+        # 'readsd-ap',
+        # 'sling_ss_ap'
     ]
 
     work_dir = os.sep.join([exp_res_root_name, folder_name])
@@ -61,7 +62,7 @@ def run_exp(env_tag=lccpu12_tag, with_c_group=True):
                                            algorithm_path, data_set_name, statistics_file_path])
                     cmd = ' '.join(params_lst)
                     logger.info('exec-cmd: {}'.format(cmd))
-                    time_out = 3600
+                    time_out = 360000
                     my_env = os.environ.copy()
 
                     def execute_cmd(my_cmd):

@@ -16,9 +16,9 @@ def get_tag_info(file_path, tag, functor):
     if not os.path.exists(file_path):
         return None
     with open(file_path) as ifs:
-        # assume unit seconds
-        lst = map(lambda line: eval(line.split(':')[-1].split('KB')[0]),
-                  filter(lambda line: line.startswith(tag), ifs.readlines()))
+        # ass ume unit seconds
+        lst = list(map(lambda line: eval(line.split(':')[-1].split('KB')[0]),
+                       filter(lambda line: line.startswith(tag), ifs.readlines())))
         return None if len(lst) == 0 else functor(lst)
 
 
@@ -44,7 +44,7 @@ if __name__ == '__main__':
                             '/python_experiments/plp_scalability_results_'
         stat_dict = {}
         for our_algorithm in our_algorithm_lst:
-            print our_algorithm
+            print(our_algorithm)
             tmp_dict = {}
             for data_set_name in data_set_lst:
                 def get_file_path(thread_num):

@@ -1,6 +1,6 @@
 import decimal
 
-from parallel_time_speedup import *
+from data_analysis.parallel_statistics.parallel_time_speedup import *
 
 prlp_tag = 'prlp-with-lock'
 prlp_lock_free_tag = 'prlp-lock-free'
@@ -40,7 +40,7 @@ if __name__ == '__main__':
             info_dict = speedup_data[algorithm][data_set]
             if len(lines) == 0:
                 lines.append(' | '.join(['dataset'] + map(str, info_dict[thread_lst_tag])))
-                lines.append(' | '.join(['---' for _ in xrange(len(info_dict[thread_lst_tag]) + 1)]))
+                lines.append(' | '.join(['---' for _ in range(len(info_dict[thread_lst_tag]) + 1)]))
             lines.append(' | '.join([data_set] + map(format_str, info_dict[tag])))
         return '\n'.join(lines)
 
@@ -57,13 +57,13 @@ if __name__ == '__main__':
 
             if len(lines) == 0:
                 lines.append(' | '.join(['dataset'] + tag_lst))
-                lines.append(' | '.join(['---' for _ in xrange(len(tag_lst) + 1)]))
+                lines.append(' | '.join(['---' for _ in range(len(tag_lst) + 1)]))
             lines.append(' | '.join([data_set] + map(format_str, map(get_time, tag_lst))))
         return '\n'.join(lines)
 
 
-    print get_md_table()
-    print get_seq_time_table()
+    print(get_md_table())
+    print(get_seq_time_table())
 
     # 1st
     with open(os.sep.join([parallel_exp_dir, 'speedup_04_28.md']), 'w') as ofs:

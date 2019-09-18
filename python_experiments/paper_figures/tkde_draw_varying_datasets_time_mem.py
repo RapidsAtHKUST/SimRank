@@ -24,14 +24,14 @@ def draw_figures():
     global data_set_lst
     with open('tkde_data_set_lst.json') as ifs:
         data_set_lst = json.load(ifs)
-    g_names = map(lambda data: data_names[data], data_set_lst)
+    g_names = list(map(lambda data: data_names[data], data_set_lst))
     size_of_fig = (FIG_SIZE_MULTIPLE)
     N = len(g_names)
 
     # indent lst
     width = 0.14
     ind = 1.14 * np.arange(N)  # the x locations for the groups
-    indent_lst = map(lambda idx: ind + idx * width, range(7))
+    indent_lst = list(map(lambda idx: ind + idx * width, range(7)))
 
     # other lst
     hatch_lst = ["//", "**", '', 'O', '--', 'x', '++']
@@ -53,27 +53,27 @@ def draw_figures():
         if tag in [prlp_tag, prlp_lock_free_tag]:
             with open('../data_analysis/data-json/parallel_exp/scalability_04_24.json') as ifs:
                 p_algo_dict = json.load(ifs)[tag]
-                return map(lambda data_set: min(p_algo_dict[data_set][time_tag]), data_set_lst)
+                return list(map(lambda data_set: min(p_algo_dict[data_set][time_tag]), data_set_lst))
         elif tag in [rlp_tag, flp_tag]:
             with open('../data_analysis/data-json/parallel_exp/seq_time_04_24.json') as ifs:
                 seq_our_algo_dict = json.load(ifs)[tag]
-                return map(lambda data_set: seq_our_algo_dict[data_set], data_set_lst)
+                return list(map(lambda data_set: seq_our_algo_dict[data_set], data_set_lst))
         else:
             with open('../data_analysis/data-json/parallel_exp/seq_time_previous.json') as ifs:
                 seq_other_algo_dict = json.load(ifs)[tag]
-                return map(lambda data_set: seq_other_algo_dict[data_set], data_set_lst)
+                return list(map(lambda data_set: seq_other_algo_dict[data_set], data_set_lst))
 
     def get_algorithm_mem_usage_lst(tag):
         mem_lst = None
         if tag in [prlp_tag, prlp_lock_free_tag, rlp_tag, flp_tag]:
             with open('../data_analysis/data-json/parallel_exp/err_mem_size04_24.json') as ifs:
                 our_algo_dict = json.load(ifs)[tag]
-                mem_lst = map(lambda data_set: our_algo_dict[data_set][mem_size_tag], data_set_lst)
+                mem_lst = list(map(lambda data_set: our_algo_dict[data_set][mem_size_tag], data_set_lst))
         else:
             with open('../data_analysis/data-json/parallel_exp/seq_mem_previous.json') as ifs:
                 seq_other_algo_dict = json.load(ifs)[tag]
                 mem_lst = map(lambda data_set: seq_other_algo_dict[data_set], data_set_lst)
-        return map(lambda mem_size: mem_size / 1024., mem_lst)
+        return list(map(lambda mem_size: mem_size / 1024., mem_lst))
 
     def draw_elapsed_time():
         fig, ax = plt.subplots()

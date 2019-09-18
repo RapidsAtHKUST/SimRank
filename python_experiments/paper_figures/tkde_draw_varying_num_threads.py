@@ -19,16 +19,16 @@ def draw_figures():
 
     thread_lst = None
     for algorithm in [prlp_tag, prlp_lock_free_tag]:
-        print algorithm
+        print(algorithm)
         for data_set in data_set_lst:
             if thread_lst is None:
                 thread_lst = para_algo_dict[algorithm][data_set][thread_lst_tag]
-            print para_algo_dict[algorithm][data_set][time_tag], gen_time_dict[algorithm][data_set][task_gen_tag]
+            print(para_algo_dict[algorithm][data_set][time_tag], gen_time_dict[algorithm][data_set][task_gen_tag])
 
     for algorithm in [rlp_tag]:
-        print algorithm
+        print(algorithm)
         for data_set in data_set_lst:
-            print [seq_algo_dict[algorithm][data_set]] * len(thread_lst)
+            print([seq_algo_dict[algorithm][data_set]] * len(thread_lst))
 
     # some parameters
     thread_lst[-1] = 64
@@ -57,7 +57,6 @@ def draw_figures():
         sub_titles[idx] += data_names[data_set_lst[idx]]
 
     def draw_overall_time():
-        print 'drawing...'
         exp_figure, ax_tuple = plt.subplots(1, 4, sharex=True, figsize=(32, 5))
         algorithm_tag_lst = [prlp_tag, prlp_lock_free_tag, rlp_tag]
         legend_lst = ['PLB-Opt-LP', 'PLF-Opt-LP', 'Opt-LP']
@@ -95,7 +94,6 @@ def draw_figures():
         plt.close()
 
     def draw_gen_time():
-        print 'drawing...'
         exp_figure, ax_tuple = plt.subplots(1, 4, sharex=True, figsize=(32, 5))
         algorithm_tag_lst = [prlp_tag, prlp_lock_free_tag]
         legend_lst = ['PLB-Opt-LP Task Table Generation', 'PLF-Opt-LP Task Table Generation']

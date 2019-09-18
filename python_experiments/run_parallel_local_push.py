@@ -1,4 +1,3 @@
-import commands
 import sys
 import time
 
@@ -6,7 +5,7 @@ import os
 
 import time_out_util
 
-my_splitter = '-'.join(['*' for _ in xrange(20)])
+my_splitter = '-'.join(['*' for _ in range(20)])
 
 
 def kill_all():
@@ -26,7 +25,8 @@ def write_split(statistics_file_path):
 
 
 def signal_handler(signal, frame):
-    print 'You pressed Ctrl+C!'
+    print
+    'You pressed Ctrl+C!'
     kill_all()
     sys.exit(0)
 
@@ -80,7 +80,7 @@ def run_exp():
                         ofs.write(my_splitter + time.ctime() + my_splitter)
                         ofs.write('is_time_out:' + str(tle_flag))
                         ofs.write('\n\n\n\n')
-                    print 'finish:', cmd
+                    print('finish:' + cmd)
 
         # for i in xrange(5):
 
