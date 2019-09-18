@@ -1,0 +1,15 @@
+{
+  "lccpu12": {
+    "our_exec_path": "/homes/ywangby/workspace/yche/build-aps",
+    "thread num lst": [
+      56
+    ],
+    "exp_res_root_path": "/export/data/ywangby/python_exp_results",
+    "data_set_lst": [
+      "ca-GrQc",
+      "ca-HepTh",
+      "p2p-Gnutella06",
+      "wiki-Vote"
+    ]
+  }
+}
