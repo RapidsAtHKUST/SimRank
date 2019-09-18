@@ -1,5 +1,3 @@
-### Usage: cmake .. -DDATA_ROOT_PATH=/homes/ywangby/workspace/DynamicSimRank/datasets -DBUILD_MC_VLDBJ=OFF -DBUILD_PFLP=OFF
-## -DBUILD_PLAYGROUND=OFF
 cmake_minimum_required(VERSION 3.8)
 project(APS-AllInOne)
 SET(CMAKE_BUILD_TYPE "Release")
