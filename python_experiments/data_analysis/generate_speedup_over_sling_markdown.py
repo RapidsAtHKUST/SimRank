@@ -1,7 +1,7 @@
 import decimal
 
-from querying_time_accuracy_statistics import *
-from reads_indexing_statistics import reads_tag, reads_d_tag, reads_rq_tag
+from data_analysis.querying_time_accuracy_statistics import *
+from data_analysis.reads_indexing_statistics import reads_tag, reads_d_tag, reads_rq_tag
 
 
 def format_str(float_num):
@@ -18,7 +18,7 @@ def get_cpu_time_dict_with_reads(root_dir='.'):
     for file in ['data-json/query_result_full_cpu_time_reads.json', 'data-json/query_result_full_cpu_time_probesim.json']:
         with open(root_dir + os.sep + file) as ifs:
             reads_dict = json.load(ifs)
-            for key, val in reads_dict.iteritems():
+            for key, val in reads_dict.items():
                 local_cpu_time_dict[key] = val
     return local_cpu_time_dict
 
@@ -50,7 +50,7 @@ def get_algorithm_time_lst(algorithm, data_lst, cpu_time_dict):
             ret_data = ret_data / 2
         return ret_data
 
-    return map(get_time, data_lst)
+    return list(map(get_time, data_lst))
 
 
 def get_time_table(data_set_lst):
@@ -104,13 +104,13 @@ def play():
 
     sling_lst = map(lambda data_set: select_first_data_set(g_cpu_time_dict[sling_tag][data_set][str(10 ** 6)]),
                     data_set_lst)
-    print lst_divide(sling_lst, bflpmc_lst)
-    print lst_divide(sling_lst, flpmc_lst)
-    print lst_divide(sling_lst, bprw_lst)
+    # print lst_divide(sling_lst, bflpmc_lst)
+    # print lst_divide(sling_lst, flpmc_lst)
+    # print lst_divide(sling_lst, bprw_lst)
 
     # time (us) for each pair, two is for hyper-threading
-    print lst_divide(sling_lst, len(sling_lst) * [2])
-    print lst_divide(bflpmc_lst, len(bflpmc_lst) * [2])
+    # print lst_divide(sling_lst, len(sling_lst) * [2])
+    # print lst_divide(bflpmc_lst, len(bflpmc_lst) * [2])
 
 
 if __name__ == '__main__':

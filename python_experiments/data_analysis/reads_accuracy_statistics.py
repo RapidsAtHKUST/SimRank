@@ -1,4 +1,4 @@
-from querying_time_accuracy_statistics import get_accuracy_lst, accuracy_data_set_lst
+from data_analysis.querying_time_accuracy_statistics import get_accuracy_lst, accuracy_data_set_lst
 import json
 
 reads_tag = 'reads-s'

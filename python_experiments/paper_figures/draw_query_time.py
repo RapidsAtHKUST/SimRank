@@ -1,5 +1,5 @@
 from data_analysis.probesim_querying_time_statistics import probesim_tag
-from draw_indexing_time_size import *
+from paper_figures.draw_indexing_time_size import *
 from data_analysis.querying_time_accuracy_statistics import *
 from data_analysis.generate_speedup_over_sling_markdown import get_cpu_time_dict_with_reads
 
@@ -13,7 +13,6 @@ def get_cpu_time_others(root_dir='.'):
 
 g_cpu_time_dict_others = get_cpu_time_others('../data_analysis')
 
-print g_cpu_time_dict_others
 us_to_ms_factor = 10 ** 3
 
 
@@ -39,12 +38,12 @@ def get_algorithm_time_lst(algorithm, data_lst):
             lst = map(lambda my_str: select_first_data_set(cpu_time_dict[algorithm][data_set][my_str]),
                       map(str, [10 ** 5, 10 ** 4, 10 ** 3]))
             if data_set in ['digg-friends', 'flickr-growth']:
-                print algorithm, lst
+                print(algorithm, lst)
             for idx, number in enumerate(lst):
                 if number is not None and number != 999999999999999:
                     ret_data = number * (10 ** (idx + 1))
                     if data_set in ['digg-friends', 'flickr-growth']:
-                        print ret_data
+                        print(ret_data)
                     break
         if ret_data is None:
             ret_data = 9999999999
@@ -60,9 +59,8 @@ def draw_average_query_one_pair_time():
     global data_set_lst
     with open('data_set_lst.json') as ifs:
         data_set_lst = json.load(ifs)
-    print data_set_lst
 
-    g_names = map(lambda data: data_names[data], data_set_lst)
+    g_names = list(map(lambda data: data_names[data], data_set_lst))
 
     size_of_fig = (FIG_SIZE_MULTIPLE)
     fig, ax = plt.subplots()
@@ -71,8 +69,8 @@ def draw_average_query_one_pair_time():
     # indent lst
     width = 0.09
     ind = 1.2 * np.arange(N)  # the x locations for the groups
-    indent_lst = map(lambda idx: ind + idx * width, range(11))
-    print indent_lst
+    indent_lst = list(map(lambda idx: ind + idx * width, range(11)))
+    # print indent_lst
     # other lst
     algorithm_tag_lst = [bflpmc_tag, flpmc_tag, bprw_tag, sling_tag,
                          reads_d_tag, reads_rq_tag,
@@ -86,7 +84,7 @@ def draw_average_query_one_pair_time():
     # 1st: bars
     for idx, tag in enumerate(algorithm_tag_lst):
         # out of memory > 192GB
-        my_data_lst = map(lambda val: float(val) / us_to_ms_factor, get_algorithm_time_lst(tag, data_set_lst))
+        my_data_lst = list(map(lambda val: float(val) / us_to_ms_factor, get_algorithm_time_lst(tag, data_set_lst)))
         if tag == reads_d_tag:
             my_data_lst[-1] = 0
         ax.bar(indent_lst[idx],

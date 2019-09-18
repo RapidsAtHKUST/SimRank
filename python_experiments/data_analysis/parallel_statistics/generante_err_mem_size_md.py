@@ -1,5 +1,5 @@
-from generate_parallel_speedup_md import format_str
-from err_mem_size_statistics import *
+from data_analysis.parallel_statistics.generate_parallel_speedup_md import format_str
+from data_analysis.parallel_statistics.err_mem_size_statistics import *
 
 rlp_old_tag = 'rlp-old'
 flp_old_tag = 'flp-old'
@@ -24,7 +24,7 @@ if __name__ == '__main__':
         for data_set in data_set_iter:
             if len(lines) == 0:
                 lines.append(' | '.join(['dataset'] + tag_lst))
-                lines.append(' | '.join(['---' for _ in xrange(len(tag_lst) + 1)]))
+                lines.append(' | '.join(['---' for _ in range(len(tag_lst) + 1)]))
 
             lines.append(' | '.join([data_set] + map(lambda tag: '{:.5e}'.format(float(
                 err_mem_size_dict[tag][data_set][info_tag])), tag_lst)))
@@ -39,7 +39,7 @@ if __name__ == '__main__':
         for data_set in data_set_iter:
             if len(lines) == 0:
                 lines.append(' | '.join(['dataset'] + tag_lst))
-                lines.append(' | '.join(['---' for _ in xrange(len(tag_lst) + 1)]))
+                lines.append(' | '.join(['---' for _ in range(len(tag_lst) + 1)]))
 
             lines.append(' | '.join([data_set] + map(lambda tag: format_str(float(
                 err_mem_size_dict[tag][data_set][info_tag] if tag in err_mem_size_dict else prev_mem_size_dict[tag][
@@ -48,9 +48,9 @@ if __name__ == '__main__':
         return '\n'.join(lines)
 
 
-    print get_seq_time_table(mean_err_tag), '\n'
-    print get_seq_time_table(max_err_tag), '\n'
-    print get_seq_mem_table(mem_size_tag)
+    # print get_seq_time_table(mean_err_tag), '\n'
+    # print get_seq_time_table(max_err_tag), '\n'
+    # print get_seq_mem_table(mem_size_tag)
 
     parallel_exp_dir = os.sep.join(['..', 'data-markdown', 'parallel'])
     with open(os.sep.join([parallel_exp_dir, 'err_mem_size_04_28.md']), 'w') as ofs:

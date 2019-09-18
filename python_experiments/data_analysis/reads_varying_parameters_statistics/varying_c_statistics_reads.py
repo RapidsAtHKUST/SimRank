@@ -5,7 +5,7 @@ reads_d_tag = 'reads-d'
 reads_rq_tag = 'reads-rq'
 suffix_str = '-rand-bench.txt'
 
-c_lst = [0.1 * (i + 1) for i in xrange(8)]
+c_lst = [0.1 * (i + 1) for i in range(8)]
 
 
 def format_str(float_num):
@@ -45,7 +45,7 @@ def get_cpu_time_lst(algorithm, pair_num=10 ** 6):
     def get_estimated_single_thread_time(c):
         if algorithm in [reads_rq_tag]:
             if has_infeasible_on_line_rand_walk_num(get_file_path(c, algorithm, pair_num)):
-                print c
+                print(c)
         result = get_tag_info(get_file_path(c, algorithm, pair_num), 'total query cpu time', min)
         cpu_time = result / 2.0 if result is not None else 99999999
         cpu_time *= (10 ** 6 / pair_num)

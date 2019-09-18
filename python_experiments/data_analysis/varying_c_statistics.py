@@ -10,7 +10,7 @@ isp_tag = 'isp'
 tsf_tag = 'tsf'
 
 flp_tag = "full local push"
-c_lst = [0.1 * (i + 1) for i in xrange(8)]
+c_lst = [0.1 * (i + 1) for i in range(8)]
 
 
 def format_str(float_num):
@@ -50,8 +50,8 @@ def get_tag_no_colon_info(file_path, tag, functor):
 
 def get_cpu_time_lst(algorithm, pair_num=10 ** 6):
     def get_estimated_single_thread_time(c):
-        if algorithm is probesim_tag:
-            print get_file_path(c, algorithm, pair_num)
+        # if algorithm is probesim_tag:
+        #     print get_file_path(c, algorithm, pair_num)
         result = get_tag_info(get_file_path(c, algorithm, pair_num), 'total query cpu time', min)
         cpu_time = result / 2.0 if result is not None else 99999999
         cpu_time *= (10 ** 6 / pair_num)

@@ -1,5 +1,5 @@
-from querying_time_accuracy_statistics import *
-from reads_accuracy_statistics import *
+from data_analysis.querying_time_accuracy_statistics import *
+from data_analysis.reads_accuracy_statistics import *
 import decimal
 
 
@@ -14,7 +14,7 @@ def get_accuracy_dict_with_reads(root_dir='.', file_name='accuracy_result'):
     for file in ['accuracy_result_reads', 'accuracy_result_probesim']:
         read_dict = get_accuracy_dict(root_dir, file_name=file)
         assert isinstance(read_dict, dict)
-        for key, val in read_dict.iteritems():
+        for key, val in read_dict.items():
             accuracy_dict[key] = val
     return accuracy_dict
 

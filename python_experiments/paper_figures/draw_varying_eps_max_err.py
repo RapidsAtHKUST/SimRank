@@ -2,7 +2,7 @@ import matplotlib.pyplot as plt
 
 from data_analysis.probesim_querying_time_statistics import probesim_gt_tag
 from data_analysis.varying_eps_statistics import *
-from draw_indexing_time_size import TICK_SIZE, LEGEND_SIZE, LABEL_SIZE, reads_d_tag, reads_rq_tag, get_name_dict
+from paper_figures.draw_indexing_time_size import TICK_SIZE, LEGEND_SIZE, LABEL_SIZE, reads_d_tag, reads_rq_tag, get_name_dict
 import json
 
 
@@ -17,7 +17,7 @@ tmp = get_dict(
 for data_set in eps_max_err_dict:
     eps_max_err_dict[data_set][probesim_gt_tag] = tmp[data_set][probesim_gt_tag]
     tmp_dct = eps_max_err_dict[data_set][probesim_gt_tag]
-    for i in xrange(3, 1, -1):
+    for i in range(3, 1, -1):
         tmp_str = '0.00' + str(i)
         tmp_str2 = '0.00' + str(i + 1)
         if tmp_dct[tmp_str] is None:
@@ -26,7 +26,7 @@ data_names = get_name_dict()
 
 
 def draw_max_err():
-    eps_lst = [0.001 * (i + 1) for i in xrange(1, 15, 1)]
+    eps_lst = [0.001 * (i + 1) for i in range(1, 15, 1)]
     xtick_lst = [0, 0.005, 0.01, 0.015]
     exp_figure, ax_tuple = plt.subplots(1, 4, sharex=True, figsize=(32, 7))
 
@@ -45,9 +45,9 @@ def draw_max_err():
         lst_lst = []
         data_set_name = data_set_lst[ax_idx]
         for idx, algorithm in enumerate(algorithm_tag_lst):
-            max_err_lst = map(lambda eps: eps_max_err_dict[data_set_name][algorithm][format_str(eps)], eps_lst)
-
-            max_err_lst = map(lambda err: 0.015 if err > 0.015 else err, max_err_lst)
+            max_err_lst = list(map(lambda eps: eps_max_err_dict[data_set_name][algorithm][format_str(eps)], eps_lst))
+            print(max_err_lst)
+            max_err_lst = list(map(lambda err: 0.015 if err is not None and err > 0.015 else err, max_err_lst))
 
             lst_lst.append(max_err_lst)
 
@@ -63,7 +63,7 @@ def draw_max_err():
 
             ax.plot(eps_lst, max_err_lst, shape_lst[idx], color=color_lst[idx], markersize=get_marker_size(idx),
                     markerfacecolor='none')
-        total_eps_lst = [0.001 * i for i in xrange(17)]
+        total_eps_lst = [0.001 * i for i in range(17)]
         ax.plot(total_eps_lst, total_eps_lst, '--', color='black', markerfacecolor='none')
 
         # setup ticks for x and y axis

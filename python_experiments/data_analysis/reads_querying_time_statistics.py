@@ -1,4 +1,4 @@
-from reads_indexing_statistics import *
+from data_analysis.reads_indexing_statistics import *
 
 pair_num_lst = [10 ** 4, 10 ** 5]
 
@@ -9,7 +9,7 @@ def get_time_lst(data_set, pair_num, round_num, result_file_name):
     cpu_time_lst = []
     stat_folder = reads_efficiency_folder
 
-    for round_i in xrange(round_num):
+    for round_i in range(round_num):
         my_path = os.sep.join(map(str, [stat_folder, data_set, pair_num, round_i, result_file_name]))
         # use the first one for this round
         querying_time = get_tag_info(my_path, query_time_tag)

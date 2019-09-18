@@ -1,5 +1,5 @@
 from data_analysis.probesim_querying_time_statistics import probesim_folder, probesim_gt_tag, suffix_str
-from querying_time_accuracy_statistics import get_accuracy_lst, accuracy_data_set_lst
+from data_analysis.querying_time_accuracy_statistics import get_accuracy_lst, accuracy_data_set_lst
 import json
 
 

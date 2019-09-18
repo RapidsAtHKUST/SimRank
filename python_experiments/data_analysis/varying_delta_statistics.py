@@ -9,7 +9,7 @@ sling_tag = 'sling'
 tsf_tag = 'tsf'
 
 flp_tag = "full local push"
-delta_lst = list(reversed([10 ** (-(i + 1)) for i in xrange(9)]))
+delta_lst = list(reversed([10 ** (-(i + 1)) for i in range(9)]))
 
 
 def get_file_path(eps, algorithm, pair_num=10 ** 6):

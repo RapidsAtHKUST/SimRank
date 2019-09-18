@@ -11,7 +11,7 @@ tsf_tag = 'tsf'
 read_d_tag = 'reads-d'
 reads_rq_tag = 'reads-rq'
 
-eps_lst = [0.001 * (i + 1) for i in xrange(30)]
+eps_lst = [0.001 * (i + 1) for i in range(30)]
 
 
 def format_str(float_num):
@@ -86,7 +86,7 @@ if __name__ == '__main__':
         def get_max_err(data_set_name):
             max_err_lst = [get_max_err_lst(algorithm, data_set_name=data_set_name, pair_num=get_pair_num(algorithm)) for
                            algorithm in algorithm_lst]
-            for eps_str in map(format_str, [0.001 * i for i in xrange(1, 8)]):
+            for eps_str in map(format_str, [0.001 * i for i in range(1, 8)]):
                 max_err_lst[-1][eps_str] = None
             return dict(zip(algorithm_lst, max_err_lst))
 
@@ -108,7 +108,7 @@ if __name__ == '__main__':
         def get_max_err(data_set_name):
             max_err_lst = [get_max_err_lst(algorithm, data_set_name=data_set_name, pair_num=get_pair_num(algorithm)) for
                            algorithm in algorithm_lst]
-            # for eps_str in map(format_str, [0.001 * i for i in xrange(1, 8)]):
+            # for eps_str in map(format_str, [0.001 * i for i in range(1, 8)]):
             #     max_err_lst[-1][eps_str] = None
             return dict(zip(algorithm_lst, max_err_lst))
 
@@ -116,7 +116,7 @@ if __name__ == '__main__':
         eps_gt_dict = {}
         for data_set in data_set_lst:
             eps_gt_dict[data_set] = get_max_err(data_set)
-        print eps_gt_dict
+        # print eps_gt_dict
         with open(os.sep.join([data_folder, 'varying_eps_max_err_probesim.json']), 'w') as ofs:
             ofs.write(json.dumps(eps_gt_dict, indent=4))
 

@@ -1,6 +1,6 @@
 import matplotlib.pyplot as plt
 from data_analysis.varying_eps_statistics import *
-from draw_indexing_time_size import TICK_SIZE, LEGEND_SIZE, LABEL_SIZE
+from paper_figures.draw_indexing_time_size import TICK_SIZE, LEGEND_SIZE, LABEL_SIZE
 import json
 
 from paper_figures.draw_varying_c import us_to_ms_factor, large_size_plus
@@ -17,7 +17,7 @@ rmax_query_dict = get_dict('../data_analysis/data-json/varying_parameters/varyin
 
 def draw_query_index_time():
     # rmax_lst = [0.01 * (i + 1) for i in xrange(0, 30, 1)]
-    rmax_lst = [0.01 * (i + 1) for i in xrange(4, 10, 1)]
+    rmax_lst = [0.01 * (i + 1) for i in range(4, 10, 1)]
     exp_figure, ax_tuple = plt.subplots(1, 2, sharex=True, figsize=(16, 7))
 
     # 1st: draw querying time
@@ -28,7 +28,7 @@ def draw_query_index_time():
     lst_lst = []
     for idx, algorithm in enumerate(algorithm_tag_lst):
         time_lst = map(lambda rmax: rmax_query_dict[algorithm][format_str(rmax)], rmax_lst)
-        time_lst = map(lambda val: float(val) / us_to_ms_factor, time_lst)
+        time_lst = list(map(lambda val: float(val) / us_to_ms_factor, time_lst))
         lst_lst.append(time_lst)
         shape_lst = ['D-.', 's--', 'o:', 'x-', 'v-', '^-', '<-', '>-']
         color_lst = ['blue', 'orange', 'green', 'red', 'm', 'brown', 'pink', 'gray']
@@ -56,7 +56,7 @@ def draw_query_index_time():
     ax = ax_tuple[1]
     lst_lst = []
     for idx, algorithm in enumerate(algorithm_tag_lst):
-        time_lst = map(lambda rmax: rmax_index_dict[algorithm][format_str(rmax)], rmax_lst)
+        time_lst = list(map(lambda rmax: rmax_index_dict[algorithm][format_str(rmax)], rmax_lst))
         lst_lst.append(time_lst)
 
         shape_lst = ['D-.', 'x-', '^-']
@@ -90,10 +90,9 @@ if __name__ == '__main__':
     # unit: us
     algorithm_lst = [bflpmc_tag, flpmc_tag]
     for algorithm in algorithm_lst:
-        print algorithm, rmax_query_dict[algorithm]
+        print(algorithm, rmax_query_dict[algorithm])
 
-    print
     index_lst = [flp_tag]
     for algorithm in index_lst:
-        print algorithm, rmax_index_dict[algorithm]
+        print(algorithm, rmax_index_dict[algorithm])
     draw_query_index_time()

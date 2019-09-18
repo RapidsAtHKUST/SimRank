@@ -1,6 +1,6 @@
 import matplotlib.pyplot as plt
 from data_analysis.varying_c_statistics import *
-from draw_indexing_time_size import TICK_SIZE, LEGEND_SIZE, LABEL_SIZE, reads_d_tag, reads_rq_tag
+from paper_figures.draw_indexing_time_size import TICK_SIZE, LEGEND_SIZE, LABEL_SIZE, reads_d_tag, reads_rq_tag
 import json
 import itertools
 
@@ -15,13 +15,13 @@ def get_dict(file_path):
 
 c_index_dict = get_dict('../data_analysis/data-json/varying_parameters/varying_c_index.json')
 c_reads_index_dict = get_dict('../data_analysis/data-json/varying_parameters/varying_c_index_reads.json')
-c_index_dict = dict(itertools.chain(c_index_dict.iteritems(), c_reads_index_dict.iteritems()))
+c_index_dict = dict(itertools.chain(c_index_dict.items(), c_reads_index_dict.items()))
 
 c_query_dict = get_dict('../data_analysis/data-json/varying_parameters/varying_c_query.json')
 c_reads_query_dict = get_dict('../data_analysis/data-json/varying_parameters/varying_c_query_reads.json')
 c_probesim_query_dict = get_dict('../data_analysis/data-json/varying_parameters/probesim_varying_c_query.json')
 c_query_dict = dict(
-    itertools.chain(c_query_dict.iteritems(), c_reads_query_dict.iteritems(), c_probesim_query_dict.iteritems()))
+    itertools.chain(c_query_dict.items(), c_reads_query_dict.items(), c_probesim_query_dict.items()))
 
 
 # print c_query_dict
@@ -63,11 +63,11 @@ def draw_query_index_time():
                 else:
                     return 22
 
-            print idx, algorithm, time_lst
+            # print idx, algorithm, time_lst
             ax.plot(c_lst, time_lst, shape_lst[idx], color=color_lst[idx],
                     markersize=get_marker_size(),
                     markerfacecolor='none')
-            print 'after plot', idx, algorithm
+            # print 'after plot', idx, algorithm
 
         # setup ticks for x and y axis
         ax.set_ylim(0.4 / us_to_ms_factor, 10 ** 10.5 * 0.3 / us_to_ms_factor)
@@ -138,11 +138,10 @@ def draw_query_index_time():
 if __name__ == '__main__':
     # unit: us
     algorithm_lst = [bflpmc_tag, flpmc_tag, bprw_tag, sling_tag, tsf_tag, probesim_tag]
-    for algorithm in algorithm_lst:
-        print algorithm, c_query_dict[algorithm]
+    # for algorithm in algorithm_lst:
+    #     print algorithm, c_query_dict[algorithm]
 
-    print
     index_lst = [flp_tag, sling_tag, tsf_tag]
-    for algorithm in index_lst:
-        print algorithm, c_index_dict[algorithm]
+    # for algorithm in index_lst:
+    #     print algorithm, c_index_dict[algorithm]
     draw_query_index_time()

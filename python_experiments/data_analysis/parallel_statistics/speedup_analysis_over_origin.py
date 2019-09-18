@@ -11,5 +11,5 @@ if __name__ == '__main__':
         # for three_tupe in three_tuple_lst:
         #     print three_tupe[0] / min(three_tupe)
         speedup_lst = map(lambda three_tuple: three_tuple[0] / min(three_tuple), three_tuple_lst)
-        for k in zip(data_set_lst, speedup_lst):
-            print k
+        # for k in zip(data_set_lst, speedup_lst):
+        #     print k

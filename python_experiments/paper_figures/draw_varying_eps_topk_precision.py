@@ -3,7 +3,8 @@ import matplotlib.pyplot as plt
 from data_analysis.probesim_querying_time_statistics import probesim_gt_tag
 # from data_analysis.querying_time_accuracy_statistics import lind_tag, cw_tag
 from data_analysis.varying_eps_statistics import *
-from draw_indexing_time_size import TICK_SIZE, LEGEND_SIZE, LABEL_SIZE, reads_d_tag, reads_rq_tag, get_name_dict
+from paper_figures.draw_indexing_time_size import TICK_SIZE, LEGEND_SIZE, LABEL_SIZE, reads_d_tag, reads_rq_tag, \
+    get_name_dict
 import json
 
 
@@ -67,8 +68,8 @@ def draw_precision():
         data_set_name = data_set_lst[ax_idx]
         y_lim_lst = [(0.58, 1.05), (0.48, 1.05), (0.48, 1.05), (0.72, 1.03)]
         for idx, algorithm in enumerate(algorithm_tag_lst):
-            max_err_lst = map(lambda eps: eps_max_err_dict[data_set_name][algorithm][format_str(eps)], eps_lst)
-            for i in xrange(len(max_err_lst) - 2, -1, -1):
+            max_err_lst = [eps_max_err_dict[data_set_name][algorithm][format_str(eps)] for eps in eps_lst]
+            for i in range(len(max_err_lst) - 2, -1, -1):
                 if max_err_lst[i] is None:
                     max_err_lst[i] = max_err_lst[i + 1]
 
@@ -106,8 +107,8 @@ def draw_avg_diff():
         lst_lst = []
         data_set_name = data_set_lst[ax_idx]
         for idx, algorithm in enumerate(algorithm_tag_lst):
-            max_err_lst = map(lambda eps: eps_max_err_dict[data_set_name][algorithm][format_str(eps)], eps_lst)
-            for i in xrange(len(max_err_lst) - 2, -1, -1):
+            max_err_lst = [eps_max_err_dict[data_set_name][algorithm][format_str(eps)] for eps in eps_lst]
+            for i in range(len(max_err_lst) - 2, -1, -1):
                 if max_err_lst[i] is None:
                     max_err_lst[i] = max_err_lst[i + 1]
             lst_lst.append(max_err_lst)

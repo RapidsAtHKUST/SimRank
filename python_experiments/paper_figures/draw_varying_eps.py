@@ -1,7 +1,7 @@
 import itertools
 import matplotlib.pyplot as plt
 from data_analysis.varying_eps_statistics import *
-from draw_indexing_time_size import TICK_SIZE, LEGEND_SIZE, LABEL_SIZE, reads_d_tag, reads_rq_tag
+from paper_figures.draw_indexing_time_size import TICK_SIZE, LEGEND_SIZE, LABEL_SIZE, reads_d_tag, reads_rq_tag
 import json
 
 from paper_figures.draw_varying_c import us_to_ms_factor, large_size_plus
@@ -14,17 +14,17 @@ def get_dict(file_path):
 
 eps_index_dict = get_dict('../data_analysis/data-json/varying_parameters/varying_eps_index.json')
 eps_reads_index_dict = get_dict('../data_analysis/data-json/varying_parameters/varying_eps_index_reads.json')
-eps_index_dict = dict(itertools.chain(eps_index_dict.iteritems(), eps_reads_index_dict.iteritems()))
+eps_index_dict = dict(itertools.chain(eps_index_dict.items(), eps_reads_index_dict.items()))
 
 eps_query_dict = get_dict('../data_analysis/data-json/varying_parameters/varying_eps_query.json')
 eps_reads_query_dict = get_dict('../data_analysis/data-json/varying_parameters/varying_eps_query_reads.json')
 eps_probesim_query_dict = get_dict('../data_analysis/data-json/varying_parameters/probesim_varying_eps_query.json')
 eps_query_dict = dict(
-    itertools.chain(eps_query_dict.iteritems(), eps_reads_query_dict.iteritems(), eps_probesim_query_dict.iteritems()))
+    itertools.chain(eps_query_dict.items(), eps_reads_query_dict.items(), eps_probesim_query_dict.items()))
 
 
 def draw_query_index_time():
-    eps_lst = [0.001 * (i + 1) for i in xrange(1, 20, 1)]
+    eps_lst = [0.001 * (i + 1) for i in range(1, 20, 1)]
     xtick_lst = [0.002, 0.008, 0.014, 0.02]
     exp_figure, ax_tuple = plt.subplots(1, 2, sharex=True, figsize=(16, 7))
 
@@ -37,13 +37,13 @@ def draw_query_index_time():
     ax = ax_tuple[0]
     lst_lst = []
     for idx, algorithm in enumerate(algorithm_tag_lst):
-        time_lst = map(lambda eps: eps_query_dict[algorithm][format_str(eps)], eps_lst)
+        time_lst = list(map(lambda eps: eps_query_dict[algorithm][format_str(eps)], eps_lst))
         if algorithm in [tsf_tag]:
-            for offset in xrange(1, len(time_lst) - 1):
+            for offset in range(1, len(time_lst) - 1):
                 if time_lst[offset] > time_lst[offset - 1]:
                     time_lst[offset] = time_lst[offset - 1]
 
-        time_lst = map(lambda val: float(val) / us_to_ms_factor if val is not None else None, time_lst)
+        time_lst = list(map(lambda val: float(val) / us_to_ms_factor if val is not None else None, time_lst))
         lst_lst.append(time_lst)
         color_lst = ['blue', 'orange', 'green', 'red',
                      '#fe01b1', '#ceb301', 'm', 'brown',
@@ -89,11 +89,11 @@ def draw_query_index_time():
     ax = ax_tuple[1]
     lst_lst = []
     for idx, algorithm in enumerate(algorithm_tag_lst):
-        time_lst = map(lambda eps: eps_index_dict[algorithm][format_str(eps)], eps_lst)
+        time_lst = list(map(lambda eps: eps_index_dict[algorithm][format_str(eps)], eps_lst))
         if algorithm in [tsf_tag]:
-            time_lst = map(lambda time_val: 0.0042 if time_val > 0.005 else time_val, time_lst)
+            time_lst = list(map(lambda time_val: 0.0042 if time_val > 0.005 else time_val, time_lst))
         if algorithm in [flp_tag]:
-            for offset in xrange(1, len(time_lst)):
+            for offset in range(1, len(time_lst)):
                 if time_lst[offset] > time_lst[offset - 1]:
                     time_lst[offset] = time_lst[offset - 1]
 
@@ -137,11 +137,13 @@ def draw_query_index_time():
 if __name__ == '__main__':
     # unit: us
     algorithm_lst = [bflpmc_tag, flpmc_tag, bprw_tag, sling_tag, isp_tag, tsf_tag]
-    for algorithm in algorithm_lst:
-        print algorithm, eps_query_dict[algorithm]
+    # for algorithm in algorithm_lst:
+    #     print
+    #     algorithm, eps_query_dict[algorithm]
 
-    print
+    # print
     index_lst = [flp_tag, sling_tag, tsf_tag]
-    for algorithm in index_lst:
-        print algorithm, eps_index_dict[algorithm]
+    # for algorithm in index_lst:
+    #     print
+    #     algorithm, eps_index_dict[algorithm]
     draw_query_index_time()

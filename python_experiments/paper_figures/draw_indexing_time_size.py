@@ -105,17 +105,15 @@ other_indexing_dict = {
 
 
 def get_algorithm_indexing_time_lst(algorithm_tag):
-    return map(lambda dataset:
-               other_indexing_dict[algorithm_tag][index_time_tag][dataset]
-               if dataset in [digg_data_tag, flickr_data_tag] else
-               index_info_dict[algorithm_tag][index_time_tag][dataset], data_set_lst)
+    return [other_indexing_dict[algorithm_tag][index_time_tag][dataset]
+            if dataset in [digg_data_tag, flickr_data_tag] else
+            index_info_dict[algorithm_tag][index_time_tag][dataset] for dataset in data_set_lst]
 
 
 def get_algorithm_index_size_lst(algorithm_tag):
-    return map(lambda dataset:
-               other_indexing_dict[algorithm_tag][index_size_tag][dataset]
-               if dataset in [digg_data_tag, flickr_data_tag] else
-               index_info_dict[algorithm_tag][index_size_tag][dataset], data_set_lst)
+    return [other_indexing_dict[algorithm_tag][index_size_tag][dataset] \
+                if dataset in [digg_data_tag, flickr_data_tag] else \
+                index_info_dict[algorithm_tag][index_size_tag][dataset] for dataset in data_set_lst]
 
 
 def draw_figures():
@@ -123,14 +121,14 @@ def draw_figures():
     global data_set_lst
     with open('data_set_lst.json') as ifs:
         data_set_lst = json.load(ifs)
-    g_names = map(lambda data: data_names[data], data_set_lst)
+    g_names = list(map(lambda data: data_names[data], data_set_lst))
     size_of_fig = (FIG_SIZE_MULTIPLE)
     N = len(g_names)
 
     # indent lst
     width = 0.15
     ind = 1.25 * np.arange(N)  # the x locations for the groups
-    indent_lst = map(lambda idx: ind + idx * width, range(7))
+    indent_lst = list(map(lambda idx: ind + idx * width, range(7)))
 
     # other lst
     hatch_lst = ["//", "**", '', 'O', '--', 'x', '++']
@@ -184,7 +182,7 @@ def draw_figures():
                 my_data_lst[-1] = 0
             if idx == 0:
                 # make use of symmetric
-                my_data_lst = map(lambda rlp_val: rlp_val / 1., my_data_lst)
+                my_data_lst = list(map(lambda rlp_val: rlp_val / 1., my_data_lst))
             ax.bar(indent_lst[idx], my_data_lst, width, hatch=hatch_lst[idx],
                    label=label_lst[idx],
                    edgecolor=color_lst[idx],

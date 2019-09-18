@@ -4,7 +4,7 @@ flpmc_tag = 'flpmc'
 bflpmc_tag = 'bflpmc'
 
 flp_tag = "full local push"
-rmax_lst = [0.01 * (i + 1) for i in xrange(30)]
+rmax_lst = [0.01 * (i + 1) for i in range(30)]
 
 
 def format_str(float_num):
@@ -42,7 +42,7 @@ def get_tag_no_colon_info(file_path, tag, functor):
 
 def get_cpu_time_lst(algorithm):
     def get_estimated_single_thread_time(rmax):
-        print get_file_path(rmax, algorithm)
+        # print get_file_path(rmax, algorithm)
         result = get_tag_info(get_file_path(rmax, algorithm), 'total query cpu time', min)
         cpu_time = result / 2.0
         return cpu_time

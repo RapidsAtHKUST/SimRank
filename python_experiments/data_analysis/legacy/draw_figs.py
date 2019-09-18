@@ -855,9 +855,9 @@ if __name__ == '__main__':
     # for data in datasets:
     #     data_file = get_lineard_file(data)
     #     print(parse_lin_file(data_file))
-    varying_delta_E()
-    # varying_epsilon_on_caGrQc()
-    # varying_c_on_ca_GrQc()
+    # varying_delta_E()
+    varying_epsilon_on_caGrQc()
+    varying_c_on_ca_GrQc()
     # draw_dynamic_compare()
     # for d in datasets[0:4]:
     #     draw_accuracy_single(d)

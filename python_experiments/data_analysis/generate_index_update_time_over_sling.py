@@ -1,5 +1,5 @@
-from generate_index_markdown import get_index_dict, sling_tag, data_set_lst, format_str
-from generate_speedup_over_sling_markdown import lst_divide
+from data_analysis.generate_index_markdown import get_index_dict, sling_tag, data_set_lst, format_str
+from data_analysis.generate_speedup_over_sling_markdown import lst_divide
 
 our_avg_index_update_lst = [0.00130415, 0.00241406, 0.00237629, 0.00163426, 0.0139743, 0.0493718,
                             # 0.124753,

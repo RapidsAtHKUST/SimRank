@@ -1,5 +1,5 @@
-from indexing_time_space_statistics import *
-from reads_indexing_statistics import reads_tag, reads_rq_tag, reads_d_tag
+from data_analysis.indexing_time_space_statistics import *
+from data_analysis.reads_indexing_statistics import reads_tag, reads_rq_tag, reads_d_tag
 
 
 def get_index_dict(root_dir='.', file_name='index_result'):
@@ -11,8 +11,7 @@ def get_index_dict_with_reads(root_dir='.'):
     index_dict = get_index_dict(root_dir)
     read_dict = get_index_dict(root_dir, file_name='index_result_reads')
     assert isinstance(read_dict, dict)
-    for key, val in read_dict.iteritems():
-        print key
+    for key, val in read_dict.items():
         index_dict[key] = val
     return index_dict
 

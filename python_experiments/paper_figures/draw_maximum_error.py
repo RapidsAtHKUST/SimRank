@@ -2,7 +2,7 @@ import matplotlib.pyplot as plt
 
 from data_analysis.generate_accuracy_markdown import *
 from data_analysis.probesim_querying_time_statistics import probesim_gt_tag
-from draw_indexing_time_size import get_name_dict, LABEL_SIZE, TICK_SIZE, LEGEND_SIZE
+from paper_figures.draw_indexing_time_size import get_name_dict, LABEL_SIZE, TICK_SIZE, LEGEND_SIZE
 
 data_names = get_name_dict()
 

@@ -52,7 +52,7 @@ def get_accuracy_lst(data_set, pair_num, round_num, result_file_name, stat_folde
         if result_file_name.startswith(algorithm):
             stat_folder = our_algo_indexing_stat_root_folder
 
-    for round_i in xrange(round_num):
+    for round_i in range(round_num):
         my_path = os.sep.join(map(str, [stat_folder, data_set, pair_num, round_i, result_file_name]))
         # use the first one for this round
         accuracy_lst.append(get_tag_info(my_path, 'max err', lambda x: x[0]))
@@ -105,7 +105,7 @@ def get_time_lst(data_set, pair_num, round_num, result_file_name):
         if result_file_name.startswith(algorithm):
             stat_folder = our_algo_indexing_stat_root_folder
 
-    for round_i in xrange(round_num):
+    for round_i in range(round_num):
         my_path = os.sep.join(map(str, [stat_folder, data_set, pair_num, round_i, result_file_name]))
         # use the first one for this round
         # cpu_time_lst.append(get_tag_info(my_path, query_time_tag, lambda x: x[0]))

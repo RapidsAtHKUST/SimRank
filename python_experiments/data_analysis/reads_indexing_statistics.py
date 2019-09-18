@@ -1,6 +1,7 @@
-from indexing_time_space_statistics import get_tag_info, data_set_lst, index_size_tag, index_time_tag, v_num_dict, \
+from data_analysis.indexing_time_space_statistics import \
+    get_tag_info, data_set_lst, index_size_tag, index_time_tag, v_num_dict, \
     format_str
-from reads_accuracy_statistics import *
+from data_analysis.reads_accuracy_statistics import *
 import os
 
 reads_efficiency_folder = '/home/yche/mnt/wangyue-clu/csproject/biggraph/ywangby/' \

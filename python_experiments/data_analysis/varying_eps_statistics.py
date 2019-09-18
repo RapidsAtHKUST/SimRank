@@ -10,7 +10,7 @@ isp_tag = 'isp'
 tsf_tag = 'tsf'
 
 flp_tag = "full local push"
-eps_lst = [0.001 * (i + 1) for i in xrange(30)]
+eps_lst = [0.001 * (i + 1) for i in range(30)]
 
 
 def format_str(float_num):
