@@ -448,7 +448,8 @@ vector<double> Sling::simrank(int u) {
 }
 
 string Sling::get_file_path_base() {
-    return SLING_INDEX_DIR + "/" + boost::str(boost::format("RLP_%s-%.3f-%.6f-%.6f") % g_name % c % eps_d % theta);
+    mkdir_if_not_exist(SLING_INDEX_DIR);
+    return SLING_INDEX_DIR + "/" + boost::str(boost::format("%s-%.3f-%.6f-%.6f") % g_name % c % eps_d % theta);
 }
 
 void Sling::build_or_load_index() {

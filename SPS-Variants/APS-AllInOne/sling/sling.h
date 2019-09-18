@@ -19,6 +19,7 @@
 
 #include "graph.h"
 #include "util.h"
+#include "extern_include.h"
 
 using namespace std;
 
@@ -29,7 +30,6 @@ using gmap = google::sparse_hash_map<Key, Value, HashFcn>;
 template<typename Key>
 using gset = google::sparse_hash_set<Key>;
 
-const string SLING_INDEX_DIR = "/export/data/ywangby_datasets/sling16";
 
 class Sling {
 // two thread functions

@@ -21,12 +21,11 @@
 #include <Eigen/Sparse>
 
 #include "util/graph_ywangby.h"
+#include "extern_include.h"
 
 using namespace Eigen;
 using namespace std;
 typedef Triplet<float> Trip;
-
-extern string TKDE17_RESULT_DIR;
 
 void tkde17_sim(DirectedG &g, float c, float epsilon);
 
@@ -51,8 +50,8 @@ struct LinearSystemSim {
     void Ax(SparseMatrix<float> &P, MatrixXf &x, MatrixXf &result);
 
     string get_file_path() { // file path to save and load
-        return TKDE17_RESULT_DIR + str(format("TKDE17_%s-%.3f-%.6f") %
-                                       g_name % c % epsilon);
+        mkdir_if_not_exist(TKDE17_RESULT_DIR);
+        return TKDE17_RESULT_DIR + str(format("%s-%.3f-%.6f") % g_name % c % epsilon);
     }
 
     void save();

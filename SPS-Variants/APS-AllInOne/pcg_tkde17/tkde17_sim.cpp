@@ -1,7 +1,5 @@
 #include "tkde17_sim.h"
 
-string TKDE17_RESULT_DIR = "./datasets/pcg_tkde17/";
-
 LinearSystemSim::LinearSystemSim(string name, const DirectedG &g, float c_, float epsilon_) {
     g_name = name;
     n = num_vertices(g);

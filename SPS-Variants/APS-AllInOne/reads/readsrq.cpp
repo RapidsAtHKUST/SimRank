@@ -20,6 +20,7 @@
 #include "outBuf.h"
 #include "../util/meminfo.h"
 #include "util/stat.h"
+#include "extern_include.h"
 
 using google::sparse_hash_set;
 using google::dense_hash_map;
@@ -207,15 +208,13 @@ readsrq::readsrq(string gName_, int n_, int r_, int rq_, double c_, int t_) {
     t1 = t2 = qCnt = 0;
 
     // init graph path
-    string input_graph_full_path =
-            "/homes/ywangby/workspace/yche/git-repos/SimRank/LPMC-Profile/build/datasets/edge_list/" + gName_ + ".txt";
+    string input_graph_full_path = TXT_INPUT_DIR + gName_ + ".txt";
     memcpy(gName, input_graph_full_path.c_str(), sizeof(char) * input_graph_full_path.size());
     gName[input_graph_full_path.size()] = '\0';
 
     // init index path
-    string iName = boost::str(boost::format(
-            "/export/data/ywangby_reads/readsrq/%s_%d_%d_%lf_%d.bin") %
-                              gName_ % n % r % c % t);
+    mkdir_if_not_exist(READSRQ_INDEX_DIR);
+    string iName = boost::str(boost::format(READSRQ_INDEX_DIR + "/%s_%d_%d_%lf_%d.bin") % gName_ % n % r % c % t);
 
     if (fopen(iName.c_str(), "rb") != nullptr) {
         deserializeForSingleSource(const_cast<char *>(iName.c_str()));
