@@ -68,13 +68,17 @@ int main(int argc, char *argv[]) {
         log_info("Max Error: %.9lf", max_err);
         log_info("Avg Error: %.9lf", avg_err / g_gt.n / g_gt.n);
     } else {
-        SimStruct simStruct = simStructGlobal;
         timer.reset();
-#pragma omp parallel for schedule(dynamic, 1)
-        for (auto u = 0; u < g_gt.n; u++) {
-            auto res = simStruct.batch_single_source(u);
+
+#pragma omp parallel
+        {
+            SimStruct simStruct(simStructGlobal, eps);
+#pragma omp for schedule(dynamic, 1)
+            for (auto u = 0; u < g_gt.n; u++) {
+                auto res = simStruct.batch_single_source(u);
+            }
+            log_info("Computation Time: %.9lfs", timer.elapsed_and_reset());
         }
-        log_info("Computation Time: %.9lfs", timer.elapsed_and_reset());
     }
     log_info("Final Memory Consumption: %d KB", getValue());
     if (log_f != nullptr) {
