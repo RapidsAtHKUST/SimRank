@@ -1,35 +1,7 @@
-import commands
 import datetime
-import sys
-import time
 
-import os
-
-import time_out_util
-
-my_splitter = '-'.join(['*' for _ in xrange(20)])
-
-
-def kill_all():
-    # kill *-bench
-    exec_name_lst = []
-    for exec_name in exec_name_lst:
-        err_code, output = commands.getstatusoutput("ps -ef | grep " + exec_name + " | awk '{print $2}'")
-        for pid in output.strip().split('\n'):
-            os.system('kill -9 ' + pid)
-    time.sleep(5)
-
-
-def write_split(statistics_file_path):
-    with open(statistics_file_path, 'a+') as ifs:
-        ifs.write(my_splitter + my_splitter + '\n')
-        ifs.write(my_splitter + my_splitter + '\n')
-
-
-def signal_handler(signal, frame):
-    print 'You pressed Ctrl+C!'
-    kill_all()
-    sys.exit(0)
+from exec_utilities import time_out_util
+from exec_utilities.exec_utils import *
 
 
 def run_exp():
@@ -52,7 +24,6 @@ def run_exp():
         name_str = 'flp_dynamic_update_time_' if 'rlp' in our_algorithm \
             else 'flp_dynamic_update_time_'
         statistics_file_path = 'exp_results/' + name_str + str(insert_edge_num) + '_' + timestamp_str + '.txt'
-        print statistics_file_path
 
         for data_set_name in data_set_lst:
             algorithm_path = our_exec_path + os.sep + our_algorithm
@@ -69,7 +40,6 @@ def run_exp():
                 ifs.write(my_splitter + time.ctime() + my_splitter)
                 ifs.write('is_time_out:' + str(tle_flag))
                 ifs.write('\n\n\n\n')
-            print 'finish:', cmd
 
     # one_round()
     insert_edge_num = 1000

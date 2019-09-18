@@ -2,7 +2,7 @@ import matplotlib.pyplot as plt
 
 from data_analysis.probesim_querying_time_statistics import probesim_gt_tag
 from data_analysis.varying_eps_statistics import *
-from paper_figures.draw_indexing_time_size import TICK_SIZE, LEGEND_SIZE, LABEL_SIZE, reads_d_tag, reads_rq_tag, get_name_dict
+from paper_figures.vldbj.draw_indexing_time_size import TICK_SIZE, LEGEND_SIZE, LABEL_SIZE, reads_d_tag, reads_rq_tag, get_name_dict
 import json
 
 

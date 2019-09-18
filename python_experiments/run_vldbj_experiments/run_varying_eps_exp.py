@@ -1,34 +1,5 @@
-import commands
-import sys
-import time
-
-import os
-
-import time_out_util
-
-my_splitter = '-'.join(['*' for _ in xrange(20)])
-
-
-def kill_all():
-    # kill *-bench
-    exec_name_lst = []
-    for exec_name in exec_name_lst:
-        err_code, output = commands.getstatusoutput("ps -ef | grep " + exec_name + " | awk '{print $2}'")
-        for pid in output.strip().split('\n'):
-            os.system('kill -9 ' + pid)
-    time.sleep(5)
-
-
-def write_split(statistics_file_path):
-    with open(statistics_file_path, 'a+') as ifs:
-        ifs.write(my_splitter + my_splitter + '\n')
-        ifs.write(my_splitter + my_splitter + '\n')
-
-
-def signal_handler(signal, frame):
-    print 'You pressed Ctrl+C!'
-    kill_all()
-    sys.exit(0)
+from exec_utilities import time_out_util
+from exec_utilities.exec_utils import *
 
 
 def run_varying_eps_exp():
@@ -63,8 +34,8 @@ def run_varying_eps_exp():
     # algorithm parameters
     c = 0.6
     delta = 0.01
-    # eps_lst = list(reversed([0.001 * (i + 1) for i in xrange(100)]))
-    eps_lst = list(([0.001 * (i + 1) for i in xrange(1, 30)]))
+    # eps_lst = list(reversed([0.001 * (i + 1) for i in range(100)]))
+    eps_lst = list(([0.001 * (i + 1) for i in range(1, 30)]))
 
     exec_path_lst = [
         # '/homes/ywangby/workspace/yche/git-repos/SimRank/LPMC-Profile/build/bprw-rand-varying',
@@ -106,11 +77,9 @@ def run_varying_eps_exp():
                     ifs.write(my_splitter + time.ctime() + my_splitter)
                     ifs.write('is_time_out:' + str(tle_flag))
                     ifs.write('\n\n\n\n')
-                print 'finish:', cmd
 
                 # 3rd: if tle, break
                 if tle_flag:
-                    print 'too much time, not able to finish', cmd
                     break
 
     one_round()

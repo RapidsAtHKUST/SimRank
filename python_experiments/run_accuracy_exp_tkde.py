@@ -19,11 +19,11 @@ def run_exp(env_tag=lccpu12_tag, with_c_group=True):
     folder_name = 'exp-ground-truth-2019-09-18' + os.sep + hostname
 
     our_exec_name_lst = [
-        'gen_gt'
-        # 'probesim_ss_ap',
-        # 'readsrq-ap',
-        # 'readsd-ap',
-        # 'sling_ss_ap'
+        # 'gen_gt',
+        'probesim_ss_ap',
+        'readsrq-ap',
+        'readsd-ap',
+        'sling_ss_ap'
     ]
 
     work_dir = os.sep.join([exp_res_root_name, folder_name])

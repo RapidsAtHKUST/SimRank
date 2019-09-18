@@ -1,5 +1,5 @@
 from data_analysis.probesim_querying_time_statistics import probesim_tag
-from paper_figures.draw_indexing_time_size import *
+from paper_figures.vldbj.draw_indexing_time_size import *
 from data_analysis.querying_time_accuracy_statistics import *
 from data_analysis.generate_speedup_over_sling_markdown import get_cpu_time_dict_with_reads
 

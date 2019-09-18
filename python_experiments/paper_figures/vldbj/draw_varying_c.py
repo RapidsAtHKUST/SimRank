@@ -1,6 +1,6 @@
 import matplotlib.pyplot as plt
 from data_analysis.varying_c_statistics import *
-from paper_figures.draw_indexing_time_size import TICK_SIZE, LEGEND_SIZE, LABEL_SIZE, reads_d_tag, reads_rq_tag
+from paper_figures.vldbj.draw_indexing_time_size import TICK_SIZE, LEGEND_SIZE, LABEL_SIZE, reads_d_tag, reads_rq_tag
 import json
 import itertools
 

@@ -1,10 +1,10 @@
 import itertools
 import matplotlib.pyplot as plt
 from data_analysis.varying_eps_statistics import *
-from paper_figures.draw_indexing_time_size import TICK_SIZE, LEGEND_SIZE, LABEL_SIZE, reads_d_tag, reads_rq_tag
+from paper_figures.vldbj.draw_indexing_time_size import TICK_SIZE, LEGEND_SIZE, LABEL_SIZE, reads_d_tag, reads_rq_tag
 import json
 
-from paper_figures.draw_varying_c import us_to_ms_factor, large_size_plus
+from paper_figures.vldbj.draw_varying_c import us_to_ms_factor, large_size_plus
 
 
 def get_dict(file_path):
