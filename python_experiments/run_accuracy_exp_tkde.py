@@ -62,7 +62,7 @@ def run_exp(env_tag=lccpu12_tag, with_c_group=True):
                                            algorithm_path, data_set_name, statistics_file_path])
                     cmd = ' '.join(params_lst)
                     logger.info('exec-cmd: {}'.format(cmd))
-                    time_out = 360000
+                    time_out = 800
                     my_env = os.environ.copy()
 
                     def execute_cmd(my_cmd):

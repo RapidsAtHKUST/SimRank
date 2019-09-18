@@ -1,15 +1,27 @@
 {
   "lccpu12": {
+    "hostname": "lccpu12.cse.ust.hk",
     "our_exec_path": "/homes/ywangby/workspace/yche/build-aps",
     "thread num lst": [
       56
     ],
     "exp_res_root_path": "/export/data/ywangby/python_exp_results",
-    "data_set_lst": [
+    "exp_res_root_mount_path": "/home/yche/mnt/wangyue-clu/export/data/ywangby/python_exp_results",
+    "gt_data_set_lst": [
       "ca-GrQc",
       "ca-HepTh",
       "p2p-Gnutella06",
       "wiki-Vote"
+    ],
+    "data_set_lst": [
+      "email-Enron",
+      "email-EuAll",
+      "web-NotreDame",
+      "web-Stanford",
+      "web-BerkStan",
+      "web-Google",
+      "cit-Patents",
+      "soc-LiveJournal1"
     ]
   }
 }

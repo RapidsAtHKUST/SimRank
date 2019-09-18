@@ -1,0 +1,74 @@
+{
+    "probesim_ss_ap": {
+        "ca-GrQc": {
+            "Max Error": "0.009196493",
+            "Avg Error": "0.009196493"
+        },
+        "ca-HepTh": {
+            "Max Error": "0.008924916",
+            "Avg Error": "0.008924916"
+        },
+        "p2p-Gnutella06": {
+            "Max Error": "0.007903747",
+            "Avg Error": "0.007903747"
+        },
+        "wiki-Vote": {
+            "Max Error": "0.000242133",
+            "Avg Error": "0.000242133"
+        }
+    },
+    "readsrq-ap": {
+        "ca-GrQc": {
+            "Max Error": "0.037601269",
+            "Avg Error": "0.037601269"
+        },
+        "ca-HepTh": {
+            "Max Error": "0.027404598",
+            "Avg Error": "0.027404598"
+        },
+        "p2p-Gnutella06": {
+            "Max Error": "0.144000014",
+            "Avg Error": "0.144000014"
+        },
+        "wiki-Vote": {
+            "Max Error": "0.004497579",
+            "Avg Error": "0.004497579"
+        }
+    },
+    "readsd-ap": {
+        "ca-GrQc": {
+            "Max Error": "0.030701198",
+            "Avg Error": "0.030701198"
+        },
+        "ca-HepTh": {
+            "Max Error": "0.026829562",
+            "Avg Error": "0.026829562"
+        },
+        "p2p-Gnutella06": {
+            "Max Error": "0.144000014",
+            "Avg Error": "0.144000014"
+        },
+        "wiki-Vote": {
+            "Max Error": "0.002292966",
+            "Avg Error": "0.002292966"
+        }
+    },
+    "sling_ss_ap": {
+        "ca-GrQc": {
+            "Max Error": "0.001671214",
+            "Avg Error": "0.001671214"
+        },
+        "ca-HepTh": {
+            "Max Error": "0.001396476",
+            "Avg Error": "0.001396476"
+        },
+        "p2p-Gnutella06": {
+            "Max Error": "0.001069263",
+            "Avg Error": "0.001069263"
+        },
+        "wiki-Vote": {
+            "Max Error": "0.000548246",
+            "Avg Error": "0.000548246"
+        }
+    }
+}
