@@ -55,6 +55,8 @@ if (BUILD_PLAYGROUND)
     add_subdirectory(playground)
 endif ()
 
+add_executable(gen_gt ground_truth/gen_gt.cpp)
+
 ################################## FLP/RLP ##################################
 set(PLP_FILES local_push/parallel_local_push_yche_with_lock.cpp local_push/parallel_local_push_yche_rlp_with_lock.cpp)
 set(PLP_LOCK_FREE_FILES local_push/parallel_local_push_yche.cpp local_push/parallel_local_push_yche_rlp_lock_free.cpp)
