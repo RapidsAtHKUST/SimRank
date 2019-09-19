@@ -2,6 +2,8 @@ import matplotlib.pyplot as plt
 
 from data_analysis.parallel_statistics.generate_parallel_speedup_md import *
 
+relative_data_root_dir_path = '../..'
+
 
 def get_name_dict():
     with open('data_names.json') as ifs:
@@ -10,11 +12,13 @@ def get_name_dict():
 
 def draw_figures():
     data_set_lst = ["web-Stanford", "web-Google", "cit-Patents", "soc-LiveJournal1"]
-    with open('../data_analysis/data-json/parallel_exp/scalability_04_24.json') as ifs:
+    with open('{}/data_analysis/data-json/parallel_exp/scalability_04_24.json'.format(
+            relative_data_root_dir_path)) as ifs:
         para_algo_dict = json.load(ifs)
-    with open('../data_analysis/data-json/parallel_exp/seq_time_04_24.json') as ifs:
+    with open('{}/data_analysis/data-json/parallel_exp/seq_time_04_24.json'.format(relative_data_root_dir_path)) as ifs:
         seq_algo_dict = json.load(ifs)
-    with open('../data_analysis/data-json/parallel_exp/scalability_gen_time_04_24.json') as ifs:
+    with open('{}/data_analysis/data-json/parallel_exp/scalability_gen_time_04_24.json'.format(
+            relative_data_root_dir_path)) as ifs:
         gen_time_dict = json.load(ifs)
 
     thread_lst = None

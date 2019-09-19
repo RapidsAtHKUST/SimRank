@@ -4,10 +4,46 @@ from data_analysis.parallel_statistics.err_mem_size_statistics import *
 from data_analysis.parallel_statistics.previous_data_statistics import *
 from data_analysis.parallel_statistics.generate_parallel_speedup_md import *
 
+relative_data_root_dir_path = '../..'
+
+os.system('mkdir -p {}'.format('figures'))
+
 
 def get_name_dict():
     with open('data_names.json') as ifs:
         return eval(''.join(ifs.readlines()))
+
+
+def get_algorithm_elapsed_time_lst(tag):
+    if tag in [prlp_tag, prlp_lock_free_tag]:
+        with open('{}/data_analysis/data-json/parallel_exp/scalability_04_24.json'.format(
+                relative_data_root_dir_path)) as ifs:
+            p_algo_dict = json.load(ifs)[tag]
+            return list(map(lambda data_set: min(p_algo_dict[data_set][time_tag]), data_set_lst))
+    elif tag in [rlp_tag, flp_tag]:
+        with open('{}/data_analysis/data-json/parallel_exp/seq_time_04_24.json'.format(
+                relative_data_root_dir_path)) as ifs:
+            seq_our_algo_dict = json.load(ifs)[tag]
+            return list(map(lambda data_set: seq_our_algo_dict[data_set], data_set_lst))
+    else:
+        with open('{}/data_analysis/data-json/parallel_exp/seq_time_previous.json'.format(
+                relative_data_root_dir_path)) as ifs:
+            seq_other_algo_dict = json.load(ifs)[tag]
+            return list(map(lambda data_set: seq_other_algo_dict[data_set], data_set_lst))
+
+
+def get_algorithm_mem_usage_lst(tag):
+    if tag in [prlp_tag, prlp_lock_free_tag, rlp_tag, flp_tag]:
+        with open('{}/data_analysis/data-json/parallel_exp/err_mem_size04_24.json'.format(
+                relative_data_root_dir_path)) as ifs:
+            our_algo_dict = json.load(ifs)[tag]
+            mem_lst = list(map(lambda data_set: our_algo_dict[data_set][mem_size_tag], data_set_lst))
+    else:
+        with open('{}/data_analysis/data-json/parallel_exp/seq_mem_previous.json'.format(
+                relative_data_root_dir_path)) as ifs:
+            seq_other_algo_dict = json.load(ifs)[tag]
+            mem_lst = map(lambda data_set: seq_other_algo_dict[data_set], data_set_lst)
+    return list(map(lambda mem_size: mem_size / 1024., mem_lst))
 
 
 def draw_figures():
@@ -48,32 +84,6 @@ def draw_figures():
         'brown', 'k', 'green']
     # tick offset
     tick_offset = 3
-
-    def get_algorithm_elapsed_time_lst(tag):
-        if tag in [prlp_tag, prlp_lock_free_tag]:
-            with open('../data_analysis/data-json/parallel_exp/scalability_04_24.json') as ifs:
-                p_algo_dict = json.load(ifs)[tag]
-                return list(map(lambda data_set: min(p_algo_dict[data_set][time_tag]), data_set_lst))
-        elif tag in [rlp_tag, flp_tag]:
-            with open('../data_analysis/data-json/parallel_exp/seq_time_04_24.json') as ifs:
-                seq_our_algo_dict = json.load(ifs)[tag]
-                return list(map(lambda data_set: seq_our_algo_dict[data_set], data_set_lst))
-        else:
-            with open('../data_analysis/data-json/parallel_exp/seq_time_previous.json') as ifs:
-                seq_other_algo_dict = json.load(ifs)[tag]
-                return list(map(lambda data_set: seq_other_algo_dict[data_set], data_set_lst))
-
-    def get_algorithm_mem_usage_lst(tag):
-        mem_lst = None
-        if tag in [prlp_tag, prlp_lock_free_tag, rlp_tag, flp_tag]:
-            with open('../data_analysis/data-json/parallel_exp/err_mem_size04_24.json') as ifs:
-                our_algo_dict = json.load(ifs)[tag]
-                mem_lst = list(map(lambda data_set: our_algo_dict[data_set][mem_size_tag], data_set_lst))
-        else:
-            with open('../data_analysis/data-json/parallel_exp/seq_mem_previous.json') as ifs:
-                seq_other_algo_dict = json.load(ifs)[tag]
-                mem_lst = map(lambda data_set: seq_other_algo_dict[data_set], data_set_lst)
-        return list(map(lambda mem_size: mem_size / 1024., mem_lst))
 
     def draw_elapsed_time():
         fig, ax = plt.subplots()

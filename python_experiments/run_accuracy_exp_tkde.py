@@ -20,9 +20,9 @@ def run_exp(env_tag=lccpu12_tag, with_c_group=True):
 
     our_exec_name_lst = [
         # 'gen_gt',
-        'probesim_ss_ap',
-        'readsrq-ap',
-        'readsd-ap',
+        # 'probesim_ss_ap',
+        # 'readsrq-ap',
+        # 'readsd-ap',
         'sling_ss_ap'
     ]
 
@@ -62,7 +62,7 @@ def run_exp(env_tag=lccpu12_tag, with_c_group=True):
                                            algorithm_path, data_set_name, statistics_file_path])
                     cmd = ' '.join(params_lst)
                     logger.info('exec-cmd: {}'.format(cmd))
-                    time_out = 800
+                    time_out = 800000
                     my_env = os.environ.copy()
 
                     def execute_cmd(my_cmd):
