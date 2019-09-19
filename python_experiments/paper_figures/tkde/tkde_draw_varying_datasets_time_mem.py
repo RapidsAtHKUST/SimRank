@@ -9,10 +9,30 @@ relative_data_root_dir_path = '../..'
 
 os.system('mkdir -p {}'.format('figures'))
 
+algorithm_tag_lst = [prlp_tag, prlp_lock_free_tag, rlp_tag, flp_tag,
+                     lin_tag, cw_tag, pcg_tag,
+                     vldbj_sling_tag, vldbj_probesim_tag, vldbj_reasd_tag, vldbj_readrq_tag]
+label_lst = ["PLB-Opt-LP", "PLF-Opt-LP", 'Opt-LP', 'FLP', "LIN", "MCSP", "PCG",
+             "SLING", "ProbeSim", "READS-D", "READS-Rq"]
+
 
 def get_name_dict():
     with open('data_names.json') as ifs:
         return eval(''.join(ifs.readlines()))
+
+
+# data set abbreviation dictionary
+data_names = get_name_dict()
+
+# figure parameters
+FIG_SIZE_MULTIPLE = (32, 4)
+LABEL_SIZE = 22
+TICK_SIZE = 22
+LEGEND_SIZE = 22
+
+# init graph names and size
+with open('tkde_data_set_lst.json') as ifs:
+    data_set_lst = json.load(ifs)
 
 
 def get_algorithm_elapsed_time_lst(tag):
@@ -46,33 +66,20 @@ def get_algorithm_mem_usage_lst(tag):
         with open('{}/data_analysis/data-json/parallel_exp/err_mem_size04_24.json'.format(
                 relative_data_root_dir_path)) as ifs:
             our_algo_dict = json.load(ifs)[tag]
-            mem_lst = list(map(lambda data_set: our_algo_dict[data_set][mem_size_tag], data_set_lst))
+            mem_lst = [our_algo_dict[data_set][mem_size_tag] for data_set in data_set_lst]
     else:
         with open('{}/data_analysis/data-json/parallel_exp/seq_mem_previous.json'.format(
                 relative_data_root_dir_path)) as ifs:
             seq_other_algo_dict = json.load(ifs)[tag]
         if tag in [lin_tag, cw_tag]:
-            mem_lst = map(lambda data_set: seq_other_algo_dict[data_set] + 1024 * tmp[vldbj_probesim_tag][data_set],
-                          data_set_lst)
+            mem_lst = [seq_other_algo_dict[data_set] + 1024 * tmp[vldbj_probesim_tag][data_set] \
+                       for data_set in data_set_lst]
         else:
-            mem_lst = map(lambda data_set: seq_other_algo_dict[data_set], data_set_lst)
+            mem_lst = [seq_other_algo_dict[data_set] for data_set in data_set_lst]
     return list(map(lambda mem_size: mem_size / 1024., mem_lst))
 
 
 def draw_figures():
-    # data set abbreviation dictionary
-    data_names = get_name_dict()
-
-    # figure parameters
-    FIG_SIZE_MULTIPLE = (32, 4)
-    LABEL_SIZE = 22
-    TICK_SIZE = 22
-    LEGEND_SIZE = 22
-
-    # init graph names and size
-    global data_set_lst
-    with open('tkde_data_set_lst.json') as ifs:
-        data_set_lst = json.load(ifs)
     g_names = list(map(lambda data: data_names[data], data_set_lst))
     size_of_fig = (FIG_SIZE_MULTIPLE)
     N = len(g_names)
@@ -84,19 +91,11 @@ def draw_figures():
 
     # other lst
     hatch_lst = ["//", "**", '.', 'O', '--', 'x', '++', '\\\\', '', '|||', 'o']
-    algorithm_tag_lst = [prlp_tag, prlp_lock_free_tag,
-                         rlp_tag, flp_tag,
-                         lin_tag, cw_tag, pcg_tag,
-                         vldbj_sling_tag, vldbj_probesim_tag, vldbj_reasd_tag, vldbj_readrq_tag
-                         ]
-    label_lst = ["PLB-Opt-LP", "PLF-Opt-LP", 'Opt-LP', 'FLP', "LIN", "MCSP", "PCG",
-                 "SLING", "ProbeSim", "READS-D", "READS-Rq"]
     color_lst = [
         '#fe01b1', '#ceb301', 'red', 'orange', 'green', 'blue', 'm', 'brown', 'grey', 'k', 'pink'
     ]
     # tick offset
     tick_offset = 5
-    logger = get_logger('/home/yche/logs/tmp.log', __name__)
 
     def draw_elapsed_time():
         fig, ax = plt.subplots()
@@ -126,7 +125,6 @@ def draw_figures():
         # 1st: bars
         for idx, tag in enumerate(algorithm_tag_lst):
             my_data_lst = get_algorithm_mem_usage_lst(tag)
-            logger.info('{} {}'.format(tag, my_data_lst))
             ax.bar(indent_lst[idx], my_data_lst, width, hatch=hatch_lst[idx],
                    label=label_lst[idx], edgecolor=color_lst[idx], fill=False)
 
@@ -138,7 +136,6 @@ def draw_figures():
         plt.yscale('log')
         ax.set_ylabel("Memory Usage(MB)", fontsize=LABEL_SIZE)
         plt.yticks(fontsize=TICK_SIZE)
-        # plt.ylim(10 ** 0 * 3, 10 ** 6 / 1.1)
         plt.ylim(10 ** 0 * 3, 10 ** 8 / 1.1)
 
         # 3rd: figure properties
