@@ -1,5 +1,5 @@
 import matplotlib.pyplot as plt
-from data_analysis.varying_eps_statistics import *
+from data_analysis.vldbj_data_parsing.varying_eps_statistics import *
 from paper_figures.vldbj.draw_indexing_time_size import TICK_SIZE, LEGEND_SIZE, LABEL_SIZE
 import json
 
@@ -10,9 +10,10 @@ def get_dict(file_path):
     with open(file_path) as ifs:
         return json.load(ifs)
 
+relative_root_path = '../..'
 
-rmax_index_dict = get_dict('../data_analysis/data-json/varying_parameters/varying_rmax_index.json')
-rmax_query_dict = get_dict('../data_analysis/data-json/varying_parameters/varying_rmax_query.json')
+rmax_index_dict = get_dict('{}/data_analysis/data-json/varying_parameters/varying_rmax_index.json'.format(relative_root_path))
+rmax_query_dict = get_dict('{}/data_analysis/data-json/varying_parameters/varying_rmax_query.json'.format(relative_root_path))
 
 
 def draw_query_index_time():

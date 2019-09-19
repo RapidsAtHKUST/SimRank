@@ -1,9 +1,9 @@
-from data_analysis.probesim_querying_time_statistics import probesim_tag
+from data_analysis.vldbj_data_parsing.probesim_querying_time_statistics import probesim_tag
 from paper_figures.vldbj.draw_indexing_time_size import *
-from data_analysis.querying_time_accuracy_statistics import *
-from data_analysis.generate_speedup_over_sling_markdown import get_cpu_time_dict_with_reads
+from data_analysis.vldbj_data_parsing.querying_time_accuracy_statistics import *
+from data_analysis.vldbj_data_parsing.generate_speedup_over_sling_markdown import get_cpu_time_dict_with_reads
 
-g_cpu_time_dict = get_cpu_time_dict_with_reads(root_dir='../data_analysis')
+g_cpu_time_dict = get_cpu_time_dict_with_reads(root_dir='../../data_analysis')
 
 
 def get_cpu_time_others(root_dir='.'):
@@ -11,7 +11,7 @@ def get_cpu_time_others(root_dir='.'):
         return json.load(ifs)
 
 
-g_cpu_time_dict_others = get_cpu_time_others('../data_analysis')
+g_cpu_time_dict_others = get_cpu_time_others('../../data_analysis')
 
 us_to_ms_factor = 10 ** 3
 

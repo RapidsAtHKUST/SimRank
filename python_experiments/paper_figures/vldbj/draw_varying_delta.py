@@ -1,5 +1,5 @@
 import matplotlib.pyplot as plt
-from data_analysis.varying_delta_statistics import *
+from data_analysis.vldbj_data_parsing.varying_delta_statistics import *
 from paper_figures.vldbj.draw_indexing_time_size import TICK_SIZE, LEGEND_SIZE, LABEL_SIZE, reads_d_tag, reads_rq_tag
 import json
 import itertools
@@ -12,14 +12,19 @@ def get_dict(file_path):
         return json.load(ifs)
 
 
-delta_index_dict = get_dict('../data_analysis/data-json/varying_parameters/varying_delta_index.json')
+relative_root_path = '../..'
+delta_index_dict = get_dict(
+    '{}/data_analysis/data-json/varying_parameters/varying_delta_index.json'.format(relative_root_path))
 delta_reads_index_dict = get_dict(
-    '../data_analysis/data-json/varying_parameters/varying_delta_index_reads.json')
+    '{}/data_analysis/data-json/varying_parameters/varying_delta_index_reads.json'.format(relative_root_path))
 delta_index_dict = dict(itertools.chain(delta_index_dict.items(), delta_reads_index_dict.items()))
 
-delta_query_dict = get_dict('../data_analysis/data-json/varying_parameters/varying_delta_query.json')
-delta_reads_query_dict = get_dict('../data_analysis/data-json/varying_parameters/varying_delta_query_reads.json')
-delta_probesim_query_dict = get_dict('../data_analysis/data-json/varying_parameters/probesim_varying_delta_query.json')
+delta_query_dict = get_dict(
+    '{}/data_analysis/data-json/varying_parameters/varying_delta_query.json'.format(relative_root_path))
+delta_reads_query_dict = get_dict(
+    '{}/data_analysis/data-json/varying_parameters/varying_delta_query_reads.json'.format(relative_root_path))
+delta_probesim_query_dict = get_dict(
+    '{}/data_analysis/data-json/varying_parameters/probesim_varying_delta_query.json'.format(relative_root_path))
 delta_query_dict = dict(itertools.chain(delta_query_dict.items(), delta_reads_query_dict.items(),
                                         delta_probesim_query_dict.items()))
 

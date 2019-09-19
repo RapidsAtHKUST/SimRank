@@ -1,5 +1,5 @@
-from data_analysis.generate_index_markdown import *
-from data_analysis.generate_speedup_over_sling_markdown import lst_divide
+from data_analysis.vldbj_data_parsing.generate_index_markdown import *
+from data_analysis.vldbj_data_parsing.generate_speedup_over_sling_markdown import lst_divide
 
 
 def time_lst_per_algorithm(algorithm, data_set_lst):

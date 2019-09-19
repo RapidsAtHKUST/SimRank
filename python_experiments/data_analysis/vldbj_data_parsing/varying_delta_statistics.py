@@ -1,6 +1,6 @@
 import os, json
 
-from data_analysis.probesim_querying_time_statistics import probesim_tag
+from data_analysis.vldbj_data_parsing.probesim_querying_time_statistics import probesim_tag
 
 bprw_tag = 'bprw'
 flpmc_tag = 'flpmc'

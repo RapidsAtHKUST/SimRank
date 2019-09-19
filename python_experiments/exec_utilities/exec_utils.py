@@ -5,6 +5,7 @@ import logging
 import sys
 
 my_splitter = '-'.join(['*' for _ in range(20)])
+yche_logger_root_dir = '/home/yche/logs'
 
 
 def modify_dstat_file(dstat_file_path):

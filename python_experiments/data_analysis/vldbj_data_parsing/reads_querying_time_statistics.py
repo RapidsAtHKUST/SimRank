@@ -1,4 +1,4 @@
-from data_analysis.reads_indexing_statistics import *
+from data_analysis.vldbj_data_parsing.reads_indexing_statistics import *
 
 pair_num_lst = [10 ** 4, 10 ** 5]
 

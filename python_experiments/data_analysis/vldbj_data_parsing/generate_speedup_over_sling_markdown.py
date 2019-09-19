@@ -1,7 +1,7 @@
 import decimal
 
-from data_analysis.querying_time_accuracy_statistics import *
-from data_analysis.reads_indexing_statistics import reads_tag, reads_d_tag, reads_rq_tag
+from data_analysis.vldbj_data_parsing.querying_time_accuracy_statistics import *
+from data_analysis.vldbj_data_parsing.reads_indexing_statistics import reads_tag, reads_d_tag, reads_rq_tag
 
 
 def format_str(float_num):

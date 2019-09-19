@@ -1,8 +1,7 @@
 import matplotlib.pyplot as plt
 import numpy as np
 
-from data_analysis.generate_index_markdown import *
-from data_analysis.reads_indexing_statistics import reads_d_tag, reads_rq_tag
+from data_analysis.vldbj_data_parsing.generate_index_markdown import *
 
 
 def get_name_dict():

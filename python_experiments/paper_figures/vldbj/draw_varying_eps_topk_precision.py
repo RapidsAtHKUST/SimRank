@@ -1,8 +1,8 @@
 import matplotlib.pyplot as plt
 
-from data_analysis.probesim_querying_time_statistics import probesim_gt_tag
+from data_analysis.vldbj_data_parsing.probesim_querying_time_statistics import probesim_gt_tag
 # from data_analysis.querying_time_accuracy_statistics import lind_tag, cw_tag
-from data_analysis.varying_eps_statistics import *
+from data_analysis.vldbj_data_parsing.varying_eps_statistics import *
 from paper_figures.vldbj.draw_indexing_time_size import TICK_SIZE, LEGEND_SIZE, LABEL_SIZE, reads_d_tag, reads_rq_tag, \
     get_name_dict
 import json
@@ -13,8 +13,11 @@ def get_dict(file_path):
         return json.load(ifs)
 
 
-eps_max_err_dict = get_dict('../data_analysis/data-json/topk_precision/precision_top_800_sample_10000.json')
-tmp = get_dict('../data_analysis/data-json/topk_precision/precision_probesim_top_800_sample_10000.json')
+relative_root_path = '../..'
+eps_max_err_dict = get_dict(
+    '{}/data_analysis/data-json/topk_precision/precision_top_800_sample_10000.json'.format(relative_root_path))
+tmp = get_dict(
+    '{}/data_analysis/data-json/topk_precision/precision_probesim_top_800_sample_10000.json'.format(relative_root_path))
 for data_set in eps_max_err_dict:
     eps_max_err_dict[data_set][probesim_gt_tag] = tmp[data_set][probesim_gt_tag]
     tmp_dct = eps_max_err_dict[data_set][probesim_gt_tag]
@@ -145,8 +148,10 @@ def draw_avg_diff():
 
 if __name__ == '__main__':
     draw_precision()
-    eps_max_err_dict = get_dict('../data_analysis/data-json/topk_precision/avg_diff_top_800_sample_10000.json')
-    tmp = get_dict('../data_analysis/data-json/topk_precision/avg_diff_probesim_top_800_sample_10000.json')
+    eps_max_err_dict = get_dict(
+        '{}/data_analysis/data-json/topk_precision/avg_diff_top_800_sample_10000.json'.format(relative_root_path))
+    tmp = get_dict('{}/data_analysis/data-json/topk_precision/avg_diff_probesim_top_800_sample_10000.json'.format(
+        relative_root_path))
     for data_set in eps_max_err_dict:
         eps_max_err_dict[data_set][probesim_gt_tag] = tmp[data_set][probesim_gt_tag]
         tmp_dct = eps_max_err_dict[data_set][probesim_gt_tag]

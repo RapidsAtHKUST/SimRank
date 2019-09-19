@@ -1,7 +1,7 @@
 import json
 import os
 
-from data_analysis.indexing_time_space_statistics import get_tag_info, format_str, data_set_lst
+from data_analysis.vldbj_data_parsing.indexing_time_space_statistics import get_tag_info, format_str, data_set_lst
 
 pair_num_lst = [10 ** 4, 10 ** 5]
 

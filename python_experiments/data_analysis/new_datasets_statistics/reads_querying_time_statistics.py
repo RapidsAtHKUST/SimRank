@@ -1,8 +1,8 @@
 import os
 
-from data_analysis.generate_accuracy_markdown import get_tag_info, reads_d_tag, reads_rq_tag, json, \
+from data_analysis.vldbj_data_parsing.generate_accuracy_markdown import get_tag_info, reads_d_tag, reads_rq_tag, json, \
     bprw_tag, bflpmc_tag, flpmc_tag, cw_tag, isp_tag, lind_tag, sling_tag, tsf_tag
-from data_analysis.probesim_querying_time_statistics import probesim_tag
+from data_analysis.vldbj_data_parsing.probesim_querying_time_statistics import probesim_tag
 
 pair_num_lst = [10 ** 3, 10 ** 4, 10 ** 5, 10 ** 6]
 

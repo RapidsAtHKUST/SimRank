@@ -1,5 +1,5 @@
-from data_analysis.querying_time_accuracy_statistics import *
-from data_analysis.reads_accuracy_statistics import *
+from data_analysis.vldbj_data_parsing.querying_time_accuracy_statistics import *
+from data_analysis.vldbj_data_parsing.reads_accuracy_statistics import *
 import decimal
 
 

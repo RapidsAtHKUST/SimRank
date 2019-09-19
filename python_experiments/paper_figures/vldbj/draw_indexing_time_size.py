@@ -1,7 +1,8 @@
 import matplotlib.pyplot as plt
 import numpy as np
 
-from data_analysis.generate_index_markdown import *
+from data_analysis.vldbj_data_parsing.generate_index_markdown import *
+from exec_utilities.exec_utils import get_logger, yche_logger_root_dir
 
 
 def get_name_dict():
@@ -19,8 +20,9 @@ TICK_SIZE = 22
 LEGEND_SIZE = 22
 
 # get the data for figures
-index_info_dict = get_index_dict_with_reads('../data_analysis')
-
+index_info_dict = get_index_dict_with_reads('../../data_analysis')
+logger = get_logger('{}/tkde_indexing_time_drawing_log.log'.format(yche_logger_root_dir), __name__)
+logger.info(index_info_dict)
 digg_data_tag = 'digg-friends'
 flickr_data_tag = 'flickr-growth'
 

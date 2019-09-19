@@ -1,6 +1,6 @@
 import itertools
 import matplotlib.pyplot as plt
-from data_analysis.varying_eps_statistics import *
+from data_analysis.vldbj_data_parsing.varying_eps_statistics import *
 from paper_figures.vldbj.draw_indexing_time_size import TICK_SIZE, LEGEND_SIZE, LABEL_SIZE, reads_d_tag, reads_rq_tag
 import json
 
@@ -12,13 +12,19 @@ def get_dict(file_path):
         return json.load(ifs)
 
 
-eps_index_dict = get_dict('../data_analysis/data-json/varying_parameters/varying_eps_index.json')
-eps_reads_index_dict = get_dict('../data_analysis/data-json/varying_parameters/varying_eps_index_reads.json')
+relative_root_path = '../..'
+eps_index_dict = get_dict(
+    '{}/data_analysis/data-json/varying_parameters/varying_eps_index.json'.format(relative_root_path))
+eps_reads_index_dict = get_dict(
+    '{}/data_analysis/data-json/varying_parameters/varying_eps_index_reads.json'.format(relative_root_path))
 eps_index_dict = dict(itertools.chain(eps_index_dict.items(), eps_reads_index_dict.items()))
 
-eps_query_dict = get_dict('../data_analysis/data-json/varying_parameters/varying_eps_query.json')
-eps_reads_query_dict = get_dict('../data_analysis/data-json/varying_parameters/varying_eps_query_reads.json')
-eps_probesim_query_dict = get_dict('../data_analysis/data-json/varying_parameters/probesim_varying_eps_query.json')
+eps_query_dict = get_dict(
+    '{}/data_analysis/data-json/varying_parameters/varying_eps_query.json'.format(relative_root_path))
+eps_reads_query_dict = get_dict(
+    '{}/data_analysis/data-json/varying_parameters/varying_eps_query_reads.json'.format(relative_root_path))
+eps_probesim_query_dict = get_dict(
+    '{}/data_analysis/data-json/varying_parameters/probesim_varying_eps_query.json'.format(relative_root_path))
 eps_query_dict = dict(
     itertools.chain(eps_query_dict.items(), eps_reads_query_dict.items(), eps_probesim_query_dict.items()))
 

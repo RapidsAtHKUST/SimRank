@@ -1,8 +1,9 @@
 import matplotlib.pyplot as plt
 
-from data_analysis.probesim_querying_time_statistics import probesim_gt_tag
-from data_analysis.varying_eps_statistics import *
-from paper_figures.vldbj.draw_indexing_time_size import TICK_SIZE, LEGEND_SIZE, LABEL_SIZE, reads_d_tag, reads_rq_tag, get_name_dict
+from data_analysis.vldbj_data_parsing.probesim_querying_time_statistics import probesim_gt_tag
+from data_analysis.vldbj_data_parsing.varying_eps_statistics import *
+from paper_figures.vldbj.draw_indexing_time_size import TICK_SIZE, LEGEND_SIZE, LABEL_SIZE, reads_d_tag, reads_rq_tag, \
+    get_name_dict
 import json
 
 
@@ -11,9 +12,11 @@ def get_dict(file_path):
         return json.load(ifs)
 
 
-eps_max_err_dict = get_dict('../data_analysis/data-json/varying_parameters/varying_eps_max_err.json')
+relative_root_path = '../..'
+eps_max_err_dict = get_dict(
+    '{}/data_analysis/data-json/varying_parameters/varying_eps_max_err.json'.format(relative_root_path))
 tmp = get_dict(
-    '../data_analysis/data-json/varying_parameters/varying_eps_max_err_probesim.json')
+    '{}/data_analysis/data-json/varying_parameters/varying_eps_max_err_probesim.json'.format(relative_root_path))
 for data_set in eps_max_err_dict:
     eps_max_err_dict[data_set][probesim_gt_tag] = tmp[data_set][probesim_gt_tag]
     tmp_dct = eps_max_err_dict[data_set][probesim_gt_tag]
