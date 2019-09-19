@@ -74,7 +74,7 @@ def draw_average_query_one_pair_time():
         if tag == reads_d_tag:
             my_data_lst[-1] = 0
         avg_query_time_dict[tag] = dict(zip(data_set_lst, my_data_lst))
-        with open('data-legacy/query.json', 'w') as ofs:
+        with open('data_legacy/query.json', 'w') as ofs:
             ofs.write(json.dumps(avg_query_time_dict, indent=4))
 
 
