@@ -58,7 +58,7 @@ def get_computation_time(dataset, tag, query, index):
         if dataset in sling_parallel_ap_time_dict:
             query_time = sling_parallel_ap_time_dict[dataset] * 15  # parallel efficiency : 15
         else:
-            query_time *= 100
+            query_time *= 3000
     if tag is vldbj_probesim_tag:
         return query_time
     else:

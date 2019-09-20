@@ -107,7 +107,9 @@ def varying_delta_E():
 
     fig.set_size_inches(*FIG_SIZE_SINGLE)
     fig.savefig("./figures/" + data_name + '_varying_insertE_mem.pdf', bbox_inches='tight', dpi=300)
-
+    print(dict(zip(updates, ICDE_cpu_time)))
+    print(dict(zip(updates, ICDE_mem)))
+    
     # edge deletion
     d = "ca-HepTh"
     data_name = d
@@ -180,6 +182,8 @@ def varying_delta_E():
                            markersize=MARKER_SIZE)
     icde_mem_line = ax.plot(updates, ICDE_mem, "bs-", label="Inc-SR", markerfacecolor="None", \
                             markersize=MARKER_SIZE)
+    print(dict(zip(updates, ICDE_cpu_time)))
+    print(dict(zip(updates, ICDE_mem)))
     ax.set_xlabel(r"$|\Delta{E}|$", fontsize=LABEL_SIZE)
     ax.set_ylabel("Memory Usage(MB)", fontsize=LABEL_SIZE)
     plt.xticks(fontsize=TICK_SIZE)
