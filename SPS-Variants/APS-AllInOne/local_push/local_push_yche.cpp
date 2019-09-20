@@ -76,29 +76,6 @@ Full_LocalPush::Full_LocalPush(GraphYche &g, string name, double c_, double epsi
     init_PR();
 }
 
-//void LocalPush::local_push1819(GraphYche &g) { // local push given current P and R
-//    auto start = std::chrono::high_resolution_clock::now();
-//
-//    while (!Q.empty()) {
-//        max_q_size = max(max_q_size, Q.size());
-//        NodePair np = Q.front();
-//        Q.pop();
-//        marker[np] = false;
-//        double residual_to_push = how_much_residual_to_push(g, np);
-//
-//        R[np] -= residual_to_push;
-//        P[np] += residual_to_push;
-//        push_to_neighbors(g, np, residual_to_push); // push residuals to neighbors of np
-//    }
-//
-//    auto finish = std::chrono::high_resolution_clock::now();
-//    std::chrono::duration<double> elapsed = finish - start;
-//    if (cpu_time == -1) {
-//        cpu_time = elapsed.count();
-//        mem_size = getValue();
-//    }
-//}
-
 void Full_LocalPush::push(NodePair &pab, double inc) {
     n_push++;
     // only probing once

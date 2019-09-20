@@ -22,6 +22,7 @@ string SLING_INDEX_DIR = RESULT_ROOT_DIR + "/sling_16";
 string READSRQ_INDEX_DIR = RESULT_ROOT_DIR + "/reads_rq_17/";
 string READSD_INDEX_DIR = RESULT_ROOT_DIR + "/reads_d_17/";
 string TKDE17_RESULT_DIR = RESULT_ROOT_DIR + "/pcg_tkde_17/";
+string LOCAL_PUSH_DIR = RESULT_ROOT_DIR + "/local_push1819/";
 
 void mkdir_if_not_exist(string &path) {
     stringstream ss;

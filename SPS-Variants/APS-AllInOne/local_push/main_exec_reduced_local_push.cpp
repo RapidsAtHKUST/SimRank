@@ -16,7 +16,7 @@ int main(int argc, char *argv[]) {
     double eps = atof(argv[2]);
     string path = get_edge_list_path(g_name);
     GraphYche g(path);
-    double c = 0.6;
+    double c = atof(argv[3]);
 //    double eps = 0.0001;
 
     auto n = g.n;
@@ -38,6 +38,8 @@ int main(int argc, char *argv[]) {
     cout << format("R size: %s") % lp->R.size() << endl;
     cout << format("avg push merge #: %s") % (lp->n_push / lp->R.size()) << endl;
 
+    log_info("Computation Time: %.9lfs", elapsed.count());
+    log_info("Final Memory Consumption: %.9lf MB", getValue() / 1024.0);
     // 2nd: verify the correcness
     if (n < 10000) {
         TruthSim ts(g_name, g, c, eps);

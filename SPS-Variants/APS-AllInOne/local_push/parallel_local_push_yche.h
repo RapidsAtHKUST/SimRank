@@ -16,11 +16,10 @@
 
 #include "../util/graph_yche.h"
 #include "../util/sparse_matrix_utils.h"
+#include "extern_include.h"
 
 using boost::format;
 using PairMarker= spp::sparse_hash_map<NodePair, bool>;
-
-const string LOCAL_PUSH_DIR = "/homes/ywangby/workspace/yche/git-repos/SimRank/LPMC-Profile/build/datasets/local_push1819/";
 
 inline double cal_rmax(double c, double epsilon) {
     return (1 - c) * epsilon;

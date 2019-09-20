@@ -15,11 +15,10 @@
 
 #include "../util/graph_yche.h"
 #include "../util/sparse_matrix_utils.h"
+#include "extern_include.h"
 
 using boost::format;
 using PairMarker= spp::sparse_hash_map<NodePair, bool>;
-
-const string LOCAL_PUSH_DIR = "/homes/ywangby/workspace/yche/git-repos/SimRank/LPMC-Profile/build/datasets/local_push1819/";
 
 extern double cal_rmax(GraphYche &g, double c, double epsilon, double delta); //calculate r_,max
 
@@ -65,7 +64,6 @@ public:
 
     virtual void push_to_neighbors(GraphYche &g, NodePair &np, double current_residual) {}
 
-//    void local_push1819(GraphYche &g); // empty function for local push
 public:
     void save();
 
