@@ -1,3 +1,5 @@
+import json
+
 import matplotlib
 import numpy as np
 
@@ -60,6 +62,11 @@ def draw_dynamic_compare():
         dlp_mem.append(dlp_data["mem"])
         icde14_time.append(icde14_data["time"])
         icde14_mem.append(icde14_data["mem"])
+
+    # print()
+    time_dict = dict(zip(datasets, icde14_time))
+    mem_dict = dict(zip(datasets, icde14_mem))
+    print(json.dumps({'time': time_dict, 'mem': mem_dict}, indent=4))
 
     # draw the cpu figures
     size_of_fig = (FIG_SIZE_MULTIPLE)

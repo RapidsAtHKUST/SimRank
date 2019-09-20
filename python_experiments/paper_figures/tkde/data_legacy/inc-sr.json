@@ -1,0 +1,30 @@
+{
+    "time": {
+        "ca-GrQc": 6.947740219999999,
+        "ca-HepTh": 16.20482097,
+        "p2p-Gnutella06": 12.886348029999999,
+        "wiki-Vote": 10.80440535,
+        "email-Enron": 135.05831604000002,
+        "email-EuAll": 3452.12973929,
+        "web-NotreDame": 0,
+        "web-Stanford": 0,
+        "web-BerkStan": 0,
+        "web-Google": 0,
+        "cit-Patents": 0,
+        "soc-LiveJournal1": 0
+    },
+    "mem": {
+        "ca-GrQc": 289.241506,
+        "ca-HepTh": 1207.69008,
+        "p2p-Gnutella06": 1170.339244,
+        "wiki-Vote": 92.575218,
+        "email-Enron": 18233.915366,
+        "email-EuAll": 43678.80935,
+        "web-NotreDame": 0,
+        "web-Stanford": 0,
+        "web-BerkStan": 0,
+        "web-Google": 0,
+        "cit-Patents": 0,
+        "soc-LiveJournal1": 0
+    }
+}

@@ -1,0 +1,55 @@
+{
+    "sling": {
+        "ca-GrQc": 81.804,
+        "ca-HepTh": 162.306,
+        "p2p-Gnutella06": 136.476,
+        "wiki-Vote": 17.994999999999997,
+        "email-Enron": 505.535,
+        "email-EuAll": 552.487,
+        "web-Stanford": 3833.33,
+        "web-BerkStan": 9303.288,
+        "web-Google": 9089.925,
+        "cit-Patents": 13593.384,
+        "soc-LiveJournal1": 58407.703
+    },
+    "reads-d": {
+        "ca-GrQc": 304.2206912841797,
+        "ca-HepTh": 543.2802669677734,
+        "p2p-Gnutella06": 306.40953942871096,
+        "wiki-Vote": 147.46574841308595,
+        "email-Enron": 1396.9833963623046,
+        "email-EuAll": 4513.4509353637695,
+        "web-Stanford": 12407.233438476562,
+        "web-BerkStan": 27884.20529522705,
+        "web-Google": 30574.911901367188,
+        "cit-Patents": 107481.44823718262,
+        "soc-LiveJournal1": 206552.91553125
+    },
+    "reads-rq": {
+        "ca-GrQc": 38.818,
+        "ca-HepTh": 70.032,
+        "p2p-Gnutella06": 42.282,
+        "wiki-Vote": 23.266,
+        "email-Enron": 191.298,
+        "email-EuAll": 682.5,
+        "web-Stanford": 1668.118,
+        "web-BerkStan": 3822.346,
+        "web-Google": 4265.076,
+        "cit-Patents": 16068.454,
+        "soc-LiveJournal1": 27114.042
+    },
+    "Inc-SR": {
+        "ca-GrQc": 289.241506,
+        "ca-HepTh": 1207.69008,
+        "p2p-Gnutella06": 1170.339244,
+        "wiki-Vote": 92.575218,
+        "email-Enron": 18233.915366,
+        "email-EuAll": 43678.80935,
+        "web-NotreDame": 0,
+        "web-Stanford": 0,
+        "web-BerkStan": 0,
+        "web-Google": 0,
+        "cit-Patents": 0,
+        "soc-LiveJournal1": 0
+    }
+}

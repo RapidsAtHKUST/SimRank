@@ -2,11 +2,13 @@ import json
 
 from exec_utilities.exec_utils import get_logger
 
+vldbj_dlp_tag = 'dlp'
 vldbj_sling_tag = 'sling'
 vldbj_reasd_tag = 'reads-d'
 vldbj_readrq_tag = 'reads-rq'
 vldbj_probesim_tag = 'ProbeSim'
-
+icde_inc_sr_tag = 'Inc-SR'
+tkde_pdlp_tag = 'pdlp'
 vldbj_indexing_time_tag = 'indexing time'
 vldbj_index_size_tag = 'index disk size'
 
