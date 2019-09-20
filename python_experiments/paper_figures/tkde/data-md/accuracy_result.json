@@ -1,0 +1,56 @@
+{
+    "probesim_ss_ap": {
+        "ca-GrQc": {
+            "Max Error": "9.19649e-03",
+            "Avg Error": "2.55010e-05"
+        },
+        "ca-HepTh": {
+            "Max Error": "8.92492e-03",
+            "Avg Error": "1.66630e-05"
+        },
+        "p2p-Gnutella06": {
+            "Max Error": "7.90375e-03",
+            "Avg Error": "3.17630e-05"
+        },
+        "wiki-Vote": {
+            "Max Error": "2.42133e-04",
+            "Avg Error": "9.04000e-07"
+        }
+    },
+    "readsrq-ap": {
+        "ca-GrQc": {
+            "Max Error": "3.76013e-02",
+            "Avg Error": "3.80680e-05"
+        },
+        "ca-HepTh": {
+            "Max Error": "2.74046e-02",
+            "Avg Error": "3.10190e-05"
+        },
+        "p2p-Gnutella06": {
+            "Max Error": "1.44000e-01",
+            "Avg Error": "8.97480e-05"
+        },
+        "wiki-Vote": {
+            "Max Error": "4.49758e-03",
+            "Avg Error": "7.15000e-06"
+        }
+    },
+    "readsd-ap": {
+        "ca-GrQc": {
+            "Max Error": "3.07012e-02",
+            "Avg Error": "2.81790e-05"
+        },
+        "ca-HepTh": {
+            "Max Error": "2.68296e-02",
+            "Avg Error": "2.43300e-05"
+        },
+        "p2p-Gnutella06": {
+            "Max Error": "1.44000e-01",
+            "Avg Error": "5.51530e-05"
+        },
+        "wiki-Vote": {
+            "Max Error": "2.29297e-03",
+            "Avg Error": "7.06900e-06"
+        }
+    }
+}

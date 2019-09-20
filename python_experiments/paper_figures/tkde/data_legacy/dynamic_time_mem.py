@@ -1,3 +1,4 @@
+from data_analysis.parallel_statistics.err_mem_size_statistics import prlp_tag, rlp_tag, mem_size_tag
 from paper_figures.tkde.data_legacy.static_data_loader import *
 
 
@@ -20,6 +21,22 @@ def get_algorithm_indexing_time_lst(tag):
                 0.56654, 8.8932]
 
 
+def get_algorithm_mem_usage_lst(tag):
+    relative_data_root_dir_path = '../../..'
+
+    if tag in [prlp_tag, rlp_tag]:
+        with open('{}/data_analysis/data-json/parallel_exp/err_mem_size04_24.json'.format(
+                relative_data_root_dir_path)) as ifs:
+            our_algo_dict = json.load(ifs)[tag]
+            mem_lst = [our_algo_dict[data_set][mem_size_tag] for data_set in local_data_set_lst]
+    else:
+        with open('{}/data_analysis/data-json/parallel_exp/seq_mem_previous.json'.format(
+                relative_data_root_dir_path)) as ifs:
+            seq_other_algo_dict = json.load(ifs)[tag]
+            mem_lst = [seq_other_algo_dict[data_set] for data_set in local_data_set_lst]
+    return list(map(lambda mem_size: mem_size / 1024., mem_lst))
+
+
 if __name__ == '__main__':
     logger = get_logger('/home/yche/logs/tmp.log', __name__)
     data_set_lst = [
@@ -27,6 +44,12 @@ if __name__ == '__main__':
         "email-Enron", "email-EuAll", "digg-friends", "web-Stanford",
         "web-BerkStan", "web-Google", "flickr-growth", "cit-Patents",
         "soc-LiveJournal1", "wiki-Link"
+    ]
+    local_data_set_lst = [
+        "ca-GrQc", "ca-HepTh", "p2p-Gnutella06", "wiki-Vote",
+        "email-Enron", "email-EuAll", "web-Stanford",
+        "web-BerkStan", "web-Google", "cit-Patents",
+        "soc-LiveJournal1",
     ]
     with open('inc-sr.json') as ifs:
         inc_sr_dict = json.load(ifs)
@@ -45,5 +68,8 @@ if __name__ == '__main__':
         mem_size_dict = json.load(ifs)
         mem_size_dict[icde_inc_sr_tag] = inc_sr_dict['mem']
         mem_size_dict.pop(vldbj_probesim_tag)
+        mem_size_dict.pop(vldbj_sling_tag)
+        mem_size_dict[tkde_pdlp_tag] = dict(zip(local_data_set_lst, get_algorithm_mem_usage_lst(prlp_tag)))
+        mem_size_dict[vldbj_dlp_tag] = dict(zip(local_data_set_lst, get_algorithm_mem_usage_lst(rlp_tag)))
         with open('vldbj-icde-dynamic-mem.json', 'w') as ofs:
             ofs.write(json.dumps(mem_size_dict, indent=4))

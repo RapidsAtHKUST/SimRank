@@ -4,35 +4,15 @@ from data_analysis.parallel_statistics.err_mem_size_statistics import *
 from data_analysis.parallel_statistics.previous_data_statistics import *
 from data_analysis.parallel_statistics.generate_parallel_speedup_md import *
 from paper_figures.tkde.data_legacy.static_data_loader import *
+from paper_figures.tkde.tkde_common import *
 
 relative_data_root_dir_path = '../..'
-
-os.system('mkdir -p {}'.format('figures'))
 
 algorithm_tag_lst = [prlp_tag, prlp_lock_free_tag, rlp_tag, flp_tag,
                      lin_tag, cw_tag, pcg_tag,
                      vldbj_sling_tag, vldbj_probesim_tag, vldbj_reasd_tag, vldbj_readrq_tag]
-label_lst = ["PLB-Opt-LP", "PLF-Opt-LP", 'Opt-LP', 'FLP', "LIN", "MCSP", "PCG",
-             "SLING", "ProbeSim", "READS-D", "READS-Rq"]
-
-
-def get_name_dict():
-    with open('data_names.json') as ifs:
-        return eval(''.join(ifs.readlines()))
-
-
-# data set abbreviation dictionary
-data_names = get_name_dict()
-
-# figure parameters
-FIG_SIZE_MULTIPLE = (32, 4)
-LABEL_SIZE = 22
-TICK_SIZE = 22
-LEGEND_SIZE = 22
-
-# init graph names and size
-with open('tkde_data_set_lst.json') as ifs:
-    data_set_lst = json.load(ifs)
+static_label_lst = ["PLB-Opt-LP", "PLF-Opt-LP", 'Opt-LP', 'FLP', "LIN", "MCSP", "PCG",
+                    "SLING", "ProbeSim", "READS-D", "READS-Rq"]
 
 
 def get_algorithm_elapsed_time_lst(tag):
@@ -80,8 +60,6 @@ def get_algorithm_mem_usage_lst(tag):
 
 
 def draw_figures():
-    g_names = list(map(lambda data: data_names[data], data_set_lst))
-    size_of_fig = (FIG_SIZE_MULTIPLE)
     N = len(g_names)
 
     # indent lst
@@ -103,7 +81,7 @@ def draw_figures():
         for idx, tag in enumerate(algorithm_tag_lst):
             my_data_lst = get_algorithm_elapsed_time_lst(tag)
             ax.bar(indent_lst[idx], my_data_lst, width, hatch=hatch_lst[idx],
-                   label=label_lst[idx], edgecolor=color_lst[idx], fill=False)
+                   label=static_label_lst[idx], edgecolor=color_lst[idx], fill=False)
 
         # 2nd: x and y's ticks and labels
         ax.set_xticks(ind + tick_offset * width)
@@ -126,7 +104,7 @@ def draw_figures():
         for idx, tag in enumerate(algorithm_tag_lst):
             my_data_lst = get_algorithm_mem_usage_lst(tag)
             ax.bar(indent_lst[idx], my_data_lst, width, hatch=hatch_lst[idx],
-                   label=label_lst[idx], edgecolor=color_lst[idx], fill=False)
+                   label=static_label_lst[idx], edgecolor=color_lst[idx], fill=False)
 
         # 2nd: x and y's ticks and labels
         ax.set_xticks(ind + tick_offset * width)
