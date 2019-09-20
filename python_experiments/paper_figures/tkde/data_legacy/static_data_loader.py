@@ -40,8 +40,23 @@ def get_legacy_data(relative_path: str = '.'):
 
 def get_computation_time(dataset, tag, query, index):
     query_time = query[tag][dataset] * size_g[dataset][0]
+    sling_parallel_ap_time_dict = {
+        'ca-GrQc': 0.272663665,
+        'ca-HepTh': 0.566204357,
+        'p2p-Gnutella06': 0.566204357,
+        'wiki-Vote': 0.115870139,
+        'email-Enron': 18.440552859,
+        'email-EuAll': 142.367051626,
+        'web-Stanford': 4220.202582435,
+        'web-BerkStan': 23623.203228326,
+        'web-Google': 27734.27,
+    }
     if tag is vldbj_sling_tag:
-        query_time *= 10  # single-pair vs single-source
+        # query_time *= 10  # single-pair vs single-source
+        if dataset in sling_parallel_ap_time_dict:
+            query_time = sling_parallel_ap_time_dict[dataset] * 15  # parallel efficiency : 15
+        else:
+            query_time *= 100
     if tag is vldbj_probesim_tag:
         return query_time
     else:

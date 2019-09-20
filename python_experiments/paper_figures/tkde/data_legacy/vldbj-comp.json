@@ -1,16 +1,16 @@
 {
     "sling": {
-        "ca-GrQc": 54.08689580000001,
-        "ca-HepTh": 94.25363265,
-        "p2p-Gnutella06": 33.2354522,
-        "wiki-Vote": 23.0264215,
-        "email-Enron": 605.0793606,
-        "email-EuAll": 346.6774813,
-        "web-Stanford": 3108.1448450999997,
-        "web-BerkStan": 7498.6476845,
-        "web-Google": 5760.74483945,
-        "cit-Patents": 4644.5216672,
-        "soc-LiveJournal1": 61380.832323300005
+        "ca-GrQc": 31.914954975,
+        "ca-HepTh": 54.898065355,
+        "p2p-Gnutella06": 17.612065355,
+        "wiki-Vote": 5.169052085,
+        "email-Enron": 426.136292885,
+        "email-EuAll": 2176.40477439,
+        "web-Stanford": 65037.83673652501,
+        "web-BerkStan": 358125.79442489,
+        "web-Google": 418795.05,
+        "cit-Patents": 28269.284671999998,
+        "soc-LiveJournal1": 419668.19823300006
     },
     "ProbeSim": {
         "ca-GrQc": 566.746693,
