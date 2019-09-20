@@ -32,6 +32,50 @@ void load_graph(string path, DirectedG &g) {
     }
 }
 
+vector<pair<unsigned int, unsigned int>> GenerateInsEdges(int num_updates, DirectedG &g) {
+    size_t n = num_vertices(g);
+
+    vector<pair<unsigned int, unsigned int>> ins_edges;
+    random_device rd;
+    mt19937 gen(rd());
+    uniform_int_distribution<int> distribution(0, static_cast<int>(n - 1));
+    while (ins_edges.size() < num_updates) {
+        auto e1 = distribution(gen) % n;
+        auto e2 = distribution(gen) % n;
+        if (!boost::edge(e1, e2, g).second && boost::in_degree(e1, g) > 0 && boost::in_degree(e2, g) > 0) {
+            ins_edges.emplace_back(e1, e2);
+        }
+    }
+    return ins_edges;
+}
+
+vector<pair<unsigned int, unsigned int>> GenerateDelEdges(int num_updates, DirectedG &g) {
+    cout << "begin generate edges..." << endl;
+    std::set<std::pair<unsigned int, unsigned int>> del_edges;
+    random_device rd;
+    mt19937 gen(rd());
+    auto num_v = num_vertices(g);
+
+    vector<int> weights;
+    weights.reserve(num_v);
+    DirectedG::vertex_iterator v_it, v_end;
+    tie(v_it, v_end) = vertices(g);
+    for (; v_it != v_end; ++v_it) { weights.emplace_back(static_cast<int>(out_degree(*v_it, g))); }
+
+    discrete_distribution<int> geometric_distribution(weights.begin(), weights.end());
+    while (del_edges.size() < num_updates) {
+        auto src_v = geometric_distribution(gen);
+        uniform_int_distribution<int> distribution(0, weights[src_v] - 1);
+        DirectedG::out_edge_iterator outi_iter, outi_end;
+        tie(outi_iter, outi_end) = out_edges(src_v, g);
+        auto dst_v = target(*(outi_iter + distribution(gen)), g);
+        del_edges.emplace(src_v, dst_v);
+    }
+
+    vector<pair<unsigned int, unsigned int>> del_edge_vec{std::begin(del_edges), std::end(del_edges)};
+    return del_edge_vec;
+}
+
 void show_graph(DirectedG &g) {
     DirectedG::vertex_iterator v_it, v_end;
     DirectedG::out_edge_iterator e_it, e_end;

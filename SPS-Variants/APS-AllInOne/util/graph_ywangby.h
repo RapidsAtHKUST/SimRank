@@ -53,6 +53,10 @@ typedef boost::adjacency_list<vecS, vecS, bidirectionalS> DirectedG;
 // graph function
 extern void load_graph(string path, DirectedG &g);
 
+extern vector<pair<unsigned int, unsigned int>> GenerateInsEdges(int num_updates, DirectedG &g);
+
+extern vector<pair<unsigned int, unsigned int>> GenerateDelEdges(int num_updates, DirectedG &g);
+
 extern void show_graph(DirectedG &g);
 
 extern string get_edge_list_path(string s);

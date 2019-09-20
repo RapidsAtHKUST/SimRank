@@ -3,12 +3,13 @@
 //
 
 #include <iostream>
-#include <fstream>
 #include <chrono>
 
 #include <boost/graph/adjacency_list.hpp>
 
 #include "util/graph_yche.h"
+#include "util/stat.h"
+
 #include "reads/sample_num.h"
 #include "reads/readsd.h"
 
@@ -17,24 +18,16 @@ using namespace boost;
 using namespace std::chrono;
 typedef boost::adjacency_list<vecS, vecS, bidirectionalS> DirectedG;
 
-void load_graph(string path, DirectedG &g) {
-    // load graph from edge_list file
-    if (file_exists(path)) {
-        int a, b;
-        cout << "loading " << path << endl;;
-        ifstream edgeFile(path, ios::in);
-        while (edgeFile >> a >> b) {
-            add_edge(a, b, g);
-        }
-        edgeFile.close();
-        return;
-    } else {
-        cout << "file doesn't exit" << endl;
-        return;
-    }
-}
+extern void load_graph(string path, DirectedG &g);
+
+extern vector<pair<unsigned int, unsigned int>> GenerateInsEdges(int num_updates, DirectedG &g);
 
 int main(int argc, char *argv[]) {
+    FILE *log_f = nullptr;
+    if (argc >= 4) {
+        log_f = fopen(argv[3], "a+");
+        log_set_fp(log_f);
+    }
     DirectedG g;
     string data_name = argv[1];
     load_graph(get_edge_list_path(data_name), g);
@@ -48,31 +41,27 @@ int main(int argc, char *argv[]) {
     cout << "sample num:" << r << endl;
 
     // 1st: generate edges
-    int num_updates = 1000;
+    int num_updates = atoi(argv[2]);
     cout << "begin generate edges..." << endl;
-    vector<pair<unsigned int, unsigned int>> ins_edges;
-    random_device rd;
-    mt19937 gen(rd());
-    uniform_int_distribution<int> distribution(0, static_cast<int>(n - 1));
-    while (ins_edges.size() < num_updates) {
-        auto e1 = distribution(gen) % n;
-        auto e2 = distribution(gen) % n;
-        if (!boost::edge(e1, e2, g).second && boost::in_degree(e1, g) > 0 && boost::in_degree(e2, g) > 0) {
-            ins_edges.emplace_back(e1, e2);
-        }
-    }
+    auto ins_edges = GenerateInsEdges(num_updates, g);
 
     // construct the reads17-d reads17 object
     readsd algorithm(data_name, n, r, c, t);
 
     // 2nd: dynamic update statistics
     cout << "reads17-d begin dynamic update..." << endl;
-    auto start = std::chrono::high_resolution_clock::now();
+    Timer timer;
     for (auto &edge:ins_edges) {
         algorithm.insEdge(edge.first, edge.second);
     }
-    auto finish = std::chrono::high_resolution_clock::now();
-    std::chrono::duration<double> elapsed = finish - start;
-    cout << "total time: " << elapsed.count() << endl;
-    cout << "avg time: " << elapsed.count() / num_updates << endl;
+    cout << "total time: " << timer.elapsed() << endl;
+    cout << "avg time: " << timer.elapsed() / num_updates << endl;
+
+    log_info("Mem Size: %.9lf MB", getValue() / 1024.0);
+    log_info("Update Time: %.9lfs", timer.elapsed());
+    if (log_f != nullptr) {
+        log_info("Flush File and Close...");
+        fflush(log_f);
+        fclose(log_f);
+    }
 }

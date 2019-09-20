@@ -122,11 +122,11 @@ add_executable(dynamic-rlp dynamic_algorithms/main_dynamic_exp.cpp dynamic_algor
 add_executable(dynamic-tsf dynamic_algorithms/main_dynamic_tsf_exp.cpp)
 
 ############## READS Dynamic Updates ##################################
-add_executable(reads-d-dynamic-exp reads/readsd.cpp dynamic_algorithms/main_dynamic_update_reads_d.cpp)
-target_compile_definitions(reads-d-dynamic-exp PRIVATE STORE_INDEX=1)
+add_executable(reads-d-dynamic-ins reads/readsd.cpp dynamic_algorithms/main_dynamic_update_reads_d.cpp)
+target_compile_definitions(reads-d-dynamic-ins PRIVATE STORE_INDEX=1)
 
-add_executable(reads-rq-dynamic-exp reads/readsrq.cpp dynamic_algorithms/main_dynamic_update_reads_rq.cpp)
-target_compile_definitions(reads-rq-dynamic-exp PRIVATE STORE_INDEX=1)
+add_executable(reads-rq-dynamic-ins reads/readsrq.cpp dynamic_algorithms/main_dynamic_update_reads_rq.cpp)
+target_compile_definitions(reads-rq-dynamic-ins PRIVATE STORE_INDEX=1)
 
 add_executable(reads-d-dynamic-del reads/readsd.cpp dynamic_algorithms/main_dynamic_del_reads_d.cpp)
 target_compile_definitions(reads-d-dynamic-del PRIVATE STORE_INDEX=1)

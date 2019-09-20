@@ -18,11 +18,11 @@ void exp_dynamic_prev(string data_name, double c, double epsilon, int num_update
     DirectedG g;
     load_graph(get_edge_list_path(data_name), g);
     size_t n = num_vertices(g);
-    cout << "begin flp constructing" << endl;
+    log_info("begin flp constructing");
     Full_LocalPush flp(g, data_name, c, epsilon, n);
 
     // 1st: generate edges
-    cout << "begin generate edges..." << endl;
+    log_info("begin generate edges...");
     vector<pair<unsigned int, unsigned int>> ins_edges;
     random_device rd;
     mt19937 gen(rd());
@@ -36,7 +36,7 @@ void exp_dynamic_prev(string data_name, double c, double epsilon, int num_update
     }
 
     // 2nd: dynamic updates
-    cout << "begin dynamic update..." << endl;
+    log_info("begin dynamic update...");
     auto start = std::chrono::high_resolution_clock::now();
     for (auto &edge:ins_edges) {
         // add to g
@@ -44,7 +44,7 @@ void exp_dynamic_prev(string data_name, double c, double epsilon, int num_update
         // update P and R
         flp.insert(edge.first, edge.second, g);
     }
-    cout << "begin local push..." << endl;
+    log_info("begin local push...");
     auto middle = std::chrono::high_resolution_clock::now();
     flp.local_push(g);
     auto finish = std::chrono::high_resolution_clock::now();
@@ -52,10 +52,14 @@ void exp_dynamic_prev(string data_name, double c, double epsilon, int num_update
     cout << duration_cast<microseconds>(middle - start).count() / pow(10, 6) << endl;
 
     // statistics
-    cout << "data: " << data_name << endl;
-    cout << "number of updates: " << num_updates << endl;
-    cout << "total time: " << elapsed.count() << endl;
-    cout << "avg time: " << elapsed.count() / num_updates << endl;
+    stringstream ss;
+    ss << "data: " << data_name << "\n";
+    ss << "number of updates: " << num_updates << "\n";
+    ss << "total time: " << elapsed.count() << "\n";
+    ss << "avg time: " << elapsed.count() / num_updates << "\n";
+    log_info("Finish computation, %s", ss.str().c_str());
+    log_info("Mem Size: %.9lf MB", getValue() / 1024.0);
+    log_info("Update Time: %.9lfs", elapsed.count());
 }
 
 void exp_dynamic(string data_name, double c, double epsilon, int num_updates = 1000) {
@@ -63,7 +67,7 @@ void exp_dynamic(string data_name, double c, double epsilon, int num_updates = 1
     DirectedG g;
     load_graph(get_edge_list_path(data_name), g);
     size_t n = num_vertices(g);
-    log_info("begin rlp constructing" );
+    log_info("begin rlp constructing");
     Reduced_LocalPush rlp(g, data_name, c, epsilon, n);
 
     // 1st: generate edges
@@ -95,6 +99,8 @@ void exp_dynamic(string data_name, double c, double epsilon, int num_updates = 1
     ss << "total time: " << elapsed.count() << "\n";
     ss << "avg time: " << elapsed.count() / num_updates << "\n";
     log_info("Finish computation, %s", ss.str().c_str());
+    log_info("Mem Size: %.9lf MB", getValue() / 1024.0);
+    log_info("Update Time: %.9lfs", elapsed.count());
 }
 
 void exp_dynamic_delete(string data_name, double c, double epsilon, int num_updates = 1000) {
@@ -102,11 +108,11 @@ void exp_dynamic_delete(string data_name, double c, double epsilon, int num_upda
     DirectedG g;
     load_graph(get_edge_list_path(data_name), g);
     size_t n = num_vertices(g);
-    cout << "begin rlp constructing" << endl;
+    log_info("begin flp constructing");
     Reduced_LocalPush rlp(g, data_name, c, epsilon, n);
 
     // 1st: generate edges
-    cout << "begin generate edges..." << endl;
+    log_info("begin generate edges...");
     std::set<std::pair<unsigned int, unsigned int>> del_edges;
     random_device rd;
     mt19937 gen(rd());
@@ -134,31 +140,39 @@ void exp_dynamic_delete(string data_name, double c, double epsilon, int num_upda
     cout << del_edge_vec << endl;
 #endif
     // 2nd: dynamic updates
-    cout << "begin dynamic delete..." << endl;
+    log_info("begin dynamic update...");
     auto start = std::chrono::high_resolution_clock::now();
 
     rlp.update_edges(g, del_edge_vec, '-');
     auto finish = std::chrono::high_resolution_clock::now();
     std::chrono::duration<double> elapsed = finish - start;
 
-    // statistics
-    cout << "data: " << data_name << endl;
-    cout << "number of deletes: " << num_updates << endl;
-    cout << "total time: " << elapsed.count() << endl;
-    cout << "avg delete time: " << elapsed.count() / num_updates << endl;
+    stringstream ss;
+    ss << "data: " << data_name << "\n";
+    ss << "number of updates: " << num_updates << "\n";
+    ss << "total time: " << elapsed.count() << "\n";
+    ss << "avg time: " << elapsed.count() / num_updates << "\n";
+    log_info("Finish computation, %s", ss.str().c_str());
+    log_info("Mem Size: %.9lf MB", getValue() / 1024.0);
+    log_info("Update Time: %.9lfs", elapsed.count());
 }
 
 
 int main(int argc, char *argv[]) {
+    FILE *log_f = nullptr;
+    if (argc >= 5) {
+        log_f = fopen(argv[4], "a+");
+        log_set_fp(log_f);
+    }
     string data_name = argv[1];
     int num_updates = atoi(argv[2]);
     double c = 0.6;
-    double eps = 0.116040;
-//    double eps = 0.01;
+//    double eps = 0.116040;
+    double eps = 0.01;
 
     string type(argv[3]);
     if (type == string("ins")) {
-        cout << "insertion exp" << endl;
+        log_info("insertion exp");
 #ifdef FLP
         exp_dynamic_prev(data_name, c, eps, num_updates);
 #else
@@ -166,7 +180,12 @@ int main(int argc, char *argv[]) {
 #endif
 
     } else if (type == string("del")) {
-        cout << "del exp" << endl;
+        log_info("del exp");
         exp_dynamic_delete(data_name, c, eps, num_updates);
+    }
+    if (log_f != nullptr) {
+        log_info("Flush File and Close...");
+        fflush(log_f);
+        fclose(log_f);
     }
 }
