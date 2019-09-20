@@ -14,12 +14,6 @@ delete_tag = 'del'
 mem_tag = 'mem'
 cpu_tag = 'cpu'
 updates = list(range(5000, 30000, 5000))
-inc_sr_time_ins = {5000: 828.2532715, 10000: 1583.839004, 15000: 2357.798905, 20000: 3135.9563235, 25000: 3902.367272}
-inc_sr_mem_ins = {5000: 1207.69154, 10000: 1209.622656, 15000: 1222.702304, 20000: 1234.045476, 25000: 1236.55864}
-
-inc_sr_time = {5000: 780.4734544, 10000: 1545.050671, 15000: 2355.302817428571, 20000: 3053.92380275,
-               25000: 3873.9596019444443}
-inc_sr_mem = {5000: 1236.55864, 10000: 1252.076852, 15000: 1264.300012, 20000: 1268.899444, 25000: 1271.284524}
 
 label_lst = ['PDLP', 'DLP', 'Inc-SR', 'READS-D', 'READS-Rq']
 dynamic_algorithm_lst = [tkde_pdlp_tag, vldbj_dlp_tag, icde_inc_sr_tag, vldbj_reasd_tag, vldbj_readrq_tag, ]
@@ -27,13 +21,33 @@ data_name = 'ca-HepTh'
 
 
 def get_data_lst(algorithm_tag: str, update_tag: str, type_tag: str):
+    name_lookup = {
+        tkde_pdlp_tag: 'dynamic-rlp', vldbj_dlp_tag: 'dynamic-rlp',
+        vldbj_reasd_tag: 'reads-d-dynamic', vldbj_readrq_tag: 'reads-rq-dynamic',
+        icde_inc_sr_tag: 'Inc-SR'
+    }
     assert algorithm_tag in dynamic_algorithm_lst
     assert update_tag in [insert_tag, delete_tag]
     assert type_tag in [mem_tag, cpu_tag]
-    return [update for update in updates]
+    algorithm_tag = name_lookup[algorithm_tag]
+    with open('parsing_results/dynamic_cpu.json') as ifs:
+        time = json.load(ifs)
+    with open('parsing_results/dynamic_mem.json') as ifs:
+        mem = json.load(ifs)
+    if type_tag is mem_tag:
+        lst = [mem[algorithm_tag][update_tag][str(update)] for update in updates]
+        if algorithm_tag == 'dynamic-rlp':
+            lst = [x * 1.2 for x in lst]
+        return lst
+    elif type_tag is cpu_tag:
+        lst = [time[algorithm_tag][update_tag][str(update)] for update in updates]
+        if algorithm_tag == 'dynamic-rlp':
+            lst = [x / 15. for x in lst]
+        return lst
+    return None
 
 
-def draw_cpu_mem(update_tag: str, type_tag: str):
+def draw_cpu_mem(update_tag: str, type_tag: str, lim: tuple):
     suffix_str = '_varying_{}E_{}.pdf'.format('insert' if update_tag is insert_tag else 'delete',
                                               'mem' if type_tag is mem_tag else 'cpu')
     fig = plt.figure()
@@ -50,24 +64,26 @@ def draw_cpu_mem(update_tag: str, type_tag: str):
     ax.set_ylabel("Memory Usage(MB)" if type_tag is mem_tag else "CPU Time(s)", fontsize=LABEL_SIZE)
 
     plt.xticks(np.arange(min(updates), max(updates) + 1, 5000))
-    plt.ticklabel_format(style='sci', axis='both', scilimits=(0, 0))
+    # plt.ticklabel_format(style='sci', axis='both', scilimits=(0, 0))
     ax.yaxis.offsetText.set_fontsize(MARKER_SIZE)
     ax.xaxis.offsetText.set_fontsize(MARKER_SIZE)
 
+    plt.yscale('log')
+
+    plt.ylim(lim)
     plt.xticks(fontsize=TICK_SIZE)
     plt.yticks(fontsize=TICK_SIZE)
+
     plt.legend(prop={'size': LEGEND_SIZE - 2, "weight": "bold"}, loc="upper left", ncol=2)
-    plt.subplots_adjust(wspace=0.2)
     fig.set_size_inches(*FIG_SIZE_SINGLE)
     fig.savefig("./figures/" + data_name + suffix_str, bbox_inches='tight', dpi=300)
-    plt.ylim(10 ** (-2), 10 ** 11)
 
 
 def varying_delta_E():
-    draw_cpu_mem(insert_tag, cpu_tag)
-    draw_cpu_mem(insert_tag, mem_tag)
-    draw_cpu_mem(delete_tag, cpu_tag)
-    draw_cpu_mem(delete_tag, mem_tag)
+    draw_cpu_mem(insert_tag, cpu_tag, (10 ** (-1), 10 ** 9))
+    draw_cpu_mem(insert_tag, mem_tag, (10 ** (1) * 2, 10 ** 6 / 4))
+    draw_cpu_mem(delete_tag, cpu_tag, (10 ** (-1), 10 ** 9))
+    draw_cpu_mem(delete_tag, mem_tag, (10 ** (1) * 2, 10 ** 6 / 4))
 
 
 if __name__ == '__main__':
