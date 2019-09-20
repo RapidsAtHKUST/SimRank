@@ -15,13 +15,13 @@ using namespace std::chrono;
 
 int main(int argc, char *argv[]) {
     FILE *log_f = nullptr;
-    if (argc >= 3) {
-        log_f = fopen(argv[2], "a+");
+    if (argc >= 5) {
+        log_f = fopen(argv[4], "a+");
         log_set_fp(log_f);
     }
     // eps = 0.01
-    double eps = 0.01;
-    double c = 0.6;
+    double eps = atof(argv[2]);
+    double c = atof(argv[3]);
 
     double half_eps = eps / 2;
     double eps_d = (1 - c) * half_eps;
@@ -46,7 +46,7 @@ int main(int argc, char *argv[]) {
     log_info("Indexing Time: %.9lfs", timer.elapsed_and_reset());
 
     log_info("Initial Memory Consumption: %d KB", getValue());
-    bool need_ground_truth = g.n < 10000;
+    bool need_ground_truth = argc >= 6 && atoi(argv[5]) == 1;
     if (need_ground_truth) {
         GraphYche g_gt(file_path);
         TruthSim ts(file_name, g_gt, c, 0.01);

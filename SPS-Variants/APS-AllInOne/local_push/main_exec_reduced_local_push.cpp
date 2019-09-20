@@ -11,6 +11,11 @@ using namespace std;
 using namespace boost::program_options;
 
 int main(int argc, char *argv[]) {
+    FILE *log_f = nullptr;
+    if (argc >= 5) {
+        log_f = fopen(argv[4], "a+");
+        log_set_fp(log_f);
+    }
     // 1st: compute reduce local push
     string g_name = argv[1];
     double eps = atof(argv[2]);
@@ -62,4 +67,10 @@ int main(int argc, char *argv[]) {
         cout << "max err:" << max_err << endl;
         cout << "mean err:" << (err / ((n + 1) * n / 2)) << endl;
     };
+
+    if (log_f != nullptr) {
+        log_info("Flush File and Close...");
+        fflush(log_f);
+        fclose(log_f);
+    }
 }

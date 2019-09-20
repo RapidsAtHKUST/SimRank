@@ -90,10 +90,12 @@ target_compile_definitions(prlp-lock-free-stat PRIVATE -DPUSH_NUM_STAT=1)
 set(SLING_SOURCE_FILES
         sling/sling.cpp sling/input_output.cpp sling/util.cpp)
 add_executable(sling_ss_ap ${SLING_SOURCE_FILES} sling/main_single_source_all_pair.cpp)
+add_executable(sling_ss_ap_bench ${SLING_SOURCE_FILES} sling/main_ap_bench.cpp)
 ###################################################################
 
 #################### ProbeSim #################################################
 add_executable(probesim_ss_ap probesim/Graph.cpp probesim/main_ss_ap.cpp)
+add_executable(probesim_ss_ap_bench probesim/Graph.cpp probesim/main_ss_ap_bench.cpp)
 ###############################################################
 
 ##################### READS-D/READS-RQ ##################################

@@ -61,7 +61,7 @@ def draw_cpu_mem(update_tag: str, type_tag: str, lim: tuple):
         ax.plot(updates, get_data_lst(tag, update_tag, type_tag), shape_lst[idx], label=label_lst[idx],
                 color=color_lst[idx], markerfacecolor="None", markersize=MARKER_SIZE)
     ax.set_xlabel(r"$|\Delta{E}|$", fontsize=LABEL_SIZE)
-    ax.set_ylabel("Memory Usage(MB)" if type_tag is mem_tag else "CPU Time(s)", fontsize=LABEL_SIZE)
+    ax.set_ylabel("Memory Usage(MB)" if type_tag is mem_tag else "Elapsed Time(s)", fontsize=LABEL_SIZE)
 
     plt.xticks(np.arange(min(updates), max(updates) + 1, 5000))
     # plt.ticklabel_format(style='sci', axis='both', scilimits=(0, 0))
