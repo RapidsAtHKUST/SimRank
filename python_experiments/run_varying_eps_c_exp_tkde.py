@@ -21,7 +21,7 @@ def run_exp(env_tag=lccpu12_tag, with_c_group=True):
     our_exec_name_lst = [
         # 'rlp',
         # 'flp'
-        'sling_ss_ap_bench',
+        # 'sling_ss_ap_bench',
         'probesim_ss_ap_bench'
     ]
 
@@ -63,7 +63,7 @@ def run_exp(env_tag=lccpu12_tag, with_c_group=True):
                     logger.info('exec-cmd: {}'.format(cmd))
                     time_out = 800000
                     my_env = os.environ.copy()
-                    my_env["OMP_NUM_THREADS"] = '1'
+                    my_env["OMP_NUM_THREADS"] = '56'
 
                     def execute_cmd(my_cmd):
                         logger.info('sub-process: {}'.format(my_cmd))

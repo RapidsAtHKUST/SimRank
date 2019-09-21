@@ -127,7 +127,8 @@ def varying_epsilon_on_caGrQc():
         # flp_mem.append(flp_data["mem"] / 1000)
         tkde_cpu_time.append(tkde_data["time"])
         tkde_mem.append(tkde_data["mem"])
-
+    print(dict(zip(['%.3f' % x for x in epsilons], tkde_cpu_time)))
+    print(dict(zip(['%.3f' % x for x in epsilons], tkde_mem)))
     # draw the figure
     fig = plt.figure()
     ax = fig.add_subplot(111)
@@ -181,7 +182,8 @@ def varying_c_on_ca_GrQc():
         # flp_mem.append(flp_data["mem"] / 1000)
         tkde_cpu_time.append(tkde_data["time"])
         tkde_mem.append(tkde_data["mem"])
-
+    print(dict(zip(['%.1f' % x for x in c_range], tkde_cpu_time)))
+    print(dict(zip(['%.1f' % x for x in c_range], tkde_mem)))
     # draw the figure
     fig = plt.figure()
     ax = fig.add_subplot(111)
