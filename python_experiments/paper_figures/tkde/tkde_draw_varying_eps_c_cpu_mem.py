@@ -31,8 +31,8 @@ def get_c_lst(algorithm: str, info_tag: str, c_lst: list, eps: str):
     return [data[algorithm][c][eps] for c in c_lst]
 
 
-tag_lst = ['rlp', 'flp', 'pcg']
-label_lst = ['Opt-LP', 'FLP', 'PCG']
+tag_lst = ['rlp', 'flp', 'pcg', 'sling_ss_ap_bench']
+label_lst = ['Opt-LP', 'FLP', 'PCG', 'SLING']
 color_lst = ['red', 'blue', 'green', '#ceb301', '#fe01b1', 'm', 'brown', 'grey', ]
 shape_lst = ['s--', 'o:', '*-.', 'v-', 'x-', 'P-', '*-', 'v-', '^-', '<-', '>-']
 
@@ -52,7 +52,7 @@ def varying_eps_on_caGrQc(update_tag: str, lim: tuple):
     ax.set_ylabel("CPU Time(s)" if update_tag is time_tag else "Memory Usage(MB)", fontsize=LABEL_SIZE)
     plt.xticks(fontsize=TICK_SIZE)
     plt.yticks(fontsize=TICK_SIZE)
-    plt.legend(prop={'size': LEGEND_SIZE - 2, "weight": "bold"}, ncol=3, loc="upper left")
+    plt.legend(prop={'size': LEGEND_SIZE - 2, "weight": "bold"}, ncol=2, loc="upper right")
     plt.ylim(lim)
     plt.yscale('log')
     fig.set_size_inches(*FIG_SIZE_SINGLE)
@@ -75,7 +75,7 @@ def varying_c_on_caGrQc(update_tag: str, lim: tuple):
     ax.set_ylabel("CPU Time(s)" if update_tag is time_tag else "Memory Usage(MB)", fontsize=LABEL_SIZE)
     plt.xticks(fontsize=TICK_SIZE)
     plt.yticks(fontsize=TICK_SIZE)
-    plt.legend(prop={'size': LEGEND_SIZE - 2, "weight": "bold"}, ncol=3, loc="upper left")
+    plt.legend(prop={'size': LEGEND_SIZE - 2, "weight": "bold"}, ncol=2, loc="upper left")
     plt.ylim(lim)
     plt.yscale('log')
     fig.set_size_inches(*FIG_SIZE_SINGLE)
@@ -85,8 +85,8 @@ def varying_c_on_caGrQc(update_tag: str, lim: tuple):
 if __name__ == '__main__':
     os.system('mkdir -p {}'.format("./figures/"))
     # varying_epsilon_on_caGrQc()
-    varying_eps_on_caGrQc(time_tag, lim=(10 ** (-2), 10 ** 2 * 2))
-    varying_eps_on_caGrQc(mem_tag, lim=(10 ** 1 / 2, 10 ** 3 * 4))
+    varying_eps_on_caGrQc(time_tag, lim=(10 ** (-2), 10 ** 4 / 2))
+    varying_eps_on_caGrQc(mem_tag, lim=(10 ** 1 / 2, 10 ** 5 / 4))
 
-    varying_c_on_caGrQc(time_tag, lim=(10 ** (-2), 10 ** 2 * 2))
-    varying_c_on_caGrQc(mem_tag, lim=(10 ** 1 / 2, 10 ** 3 * 4))
+    varying_c_on_caGrQc(time_tag, lim=(10 ** (-2), 10 ** 4 * 4))
+    varying_c_on_caGrQc(mem_tag, lim=(10 ** 1 / 2, 10 ** 5 / 4))

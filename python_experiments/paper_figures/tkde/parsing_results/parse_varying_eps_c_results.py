@@ -23,9 +23,7 @@ if __name__ == '__main__':
         # Algorithm -> Update -> Edge#
         static_mem_dict = dict()
         static_cpu_dict = dict()
-        for algorithm in ['flp', 'rlp',
-                          # 'sling_ss_ap_bench'
-                          ]:
+        for algorithm in ['flp', 'rlp', 'sling_ss_ap_bench']:
             tmp_mem_dict = dict()
             tmp_cpu_dict = dict()
             for c in c_lst:
@@ -44,11 +42,18 @@ if __name__ == '__main__':
                     else:
                         lst = re.findall('Final Memory Consumption: [0-9]+ KB', line)
                         mem_size = eval(lst[0].split(':')[-1].split()[0]) / 1024.
-                    update_time = eval(
-                        re.findall('Computation Time: [0-9]+[.][0-9]+s', line)[0].replace('s', '').split(':')[
-                            -1].split()[0])
+                    if algorithm in ['flp', 'rlp']:
+                        update_time = eval(
+                            re.findall('Computation Time: [0-9]+[.][0-9]+s', line)[0].replace('s', '').split(':')[
+                                -1].split()[0])
+                    else:
+                        update_time = eval(
+                            re.findall('Total Time: [0-9]+[.][0-9]+s', line)[0].replace('s', '').split(':')[
+                                -1].split()[0])
                     if algorithm in ['flp', 'rlp']:
                         update_time /= 1.5
+                    elif algorithm in ['']:
+                        update_time *= 15
                     mem_dict[eps] = mem_size
                     cpu_dict[eps] = update_time
                 tmp_mem_dict[c] = mem_dict
