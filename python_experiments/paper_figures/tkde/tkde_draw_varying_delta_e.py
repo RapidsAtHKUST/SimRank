@@ -68,22 +68,23 @@ def draw_cpu_mem(update_tag: str, type_tag: str, lim: tuple):
     ax.yaxis.offsetText.set_fontsize(MARKER_SIZE)
     ax.xaxis.offsetText.set_fontsize(MARKER_SIZE)
 
-    plt.yscale('log')
+    if type_tag == cpu_tag:
+        plt.yscale('log')
 
     plt.ylim(lim)
     plt.xticks(fontsize=TICK_SIZE)
     plt.yticks(fontsize=TICK_SIZE)
-
     plt.legend(prop={'size': LEGEND_SIZE - 2, "weight": "bold"}, loc="upper left", ncol=2)
+
     fig.set_size_inches(*FIG_SIZE_SINGLE)
     fig.savefig("./figures/" + data_name + suffix_str, bbox_inches='tight', dpi=300)
 
 
 def varying_delta_E():
     draw_cpu_mem(insert_tag, cpu_tag, (10 ** (-1), 10 ** 9))
-    draw_cpu_mem(insert_tag, mem_tag, (10 ** (1) * 2, 10 ** 6 / 4))
+    draw_cpu_mem(insert_tag, mem_tag, (0, 10 ** 2 * 30))
     draw_cpu_mem(delete_tag, cpu_tag, (10 ** (-1), 10 ** 9))
-    draw_cpu_mem(delete_tag, mem_tag, (10 ** (1) * 2, 10 ** 6 / 4))
+    draw_cpu_mem(delete_tag, mem_tag, (0, 10 ** 2 * 30))
 
 
 if __name__ == '__main__':

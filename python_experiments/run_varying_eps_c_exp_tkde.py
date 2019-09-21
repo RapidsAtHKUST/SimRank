@@ -61,9 +61,9 @@ def run_exp(env_tag=lccpu12_tag, with_c_group=True):
                                            algorithm_path, data_set_name, eps, c, statistics_file_path])
                     cmd = ' '.join(params_lst)
                     logger.info('exec-cmd: {}'.format(cmd))
-                    time_out = 800000
+                    time_out = 600
                     my_env = os.environ.copy()
-                    my_env["OMP_NUM_THREADS"] = '56'
+                    my_env["OMP_NUM_THREADS"] = '1' if our_algorithm != 'probesim_ss_ap_bench' else '56'
 
                     def execute_cmd(my_cmd):
                         logger.info('sub-process: {}'.format(my_cmd))
@@ -96,8 +96,9 @@ def run_exp(env_tag=lccpu12_tag, with_c_group=True):
     second_lst = ['%.1lf' % (x * 0.1) for x in range(1, 10)]
     logger.info(first_lst)
     logger.info(second_lst)
-    one_round(eps_lst=first_lst, c_lst=['0.6'])
+
     one_round(eps_lst=['0.01'], c_lst=second_lst)
+    one_round(eps_lst=first_lst, c_lst=['0.6'])
 
 
 if __name__ == '__main__':

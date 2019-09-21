@@ -47,20 +47,22 @@ if __name__ == '__main__':
                     update_time = eval(
                         re.findall('Computation Time: [0-9]+[.][0-9]+s', line)[0].replace('s', '').split(':')[
                             -1].split()[0])
+                    if algorithm in ['flp', 'rlp']:
+                        update_time /= 1.5
                     mem_dict[eps] = mem_size
                     cpu_dict[eps] = update_time
                 tmp_mem_dict[c] = mem_dict
                 tmp_cpu_dict[c] = cpu_dict
             static_mem_dict[algorithm] = tmp_mem_dict
             static_cpu_dict[algorithm] = tmp_cpu_dict
-        inc_sr = 'Inc-SR'
+        pcg = 'pcg'
         label = 'eps' if len(eps_lst) > 1 else 'c'
-        with open('../data_legacy/inc-sr-varying-{}-cpu.json'.format(label)) as ifs:
+        with open('../data_legacy/pcg-varying-{}-cpu.json'.format(label)) as ifs:
             data = json.load(ifs)
-            static_cpu_dict[inc_sr] = data[inc_sr]
-        with open('../data_legacy/inc-sr-varying-{}-mem.json'.format(label)) as ifs:
+            static_cpu_dict[pcg] = data[pcg]
+        with open('../data_legacy/pcg-varying-{}-mem.json'.format(label)) as ifs:
             data = json.load(ifs)
-            static_mem_dict[inc_sr] = data[inc_sr]
+            static_mem_dict[pcg] = data[pcg]
 
         with open('{}_mem.json'.format('varying-' + label), 'w') as ofs:
             ofs.write(json.dumps(static_mem_dict, indent=4))
