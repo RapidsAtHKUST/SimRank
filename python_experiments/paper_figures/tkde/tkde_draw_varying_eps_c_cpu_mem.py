@@ -89,8 +89,8 @@ def varying_c_on_caGrQc(update_tag: str, lim: tuple):
 if __name__ == '__main__':
     os.system('mkdir -p {}'.format("./figures/"))
     # varying_epsilon_on_caGrQc()
-    varying_eps_on_caGrQc(time_tag, lim=(10 ** (-2), 10 ** 7 / 2))
+    varying_eps_on_caGrQc(time_tag, lim=(10 ** (-2) / 2, 10 ** 7 / 2))
     varying_eps_on_caGrQc(mem_tag, lim=(10 ** 1 / 2, 10 ** 5 * 2))
 
-    varying_c_on_caGrQc(time_tag, lim=(10 ** (-2), 10 ** 8 * 4))
+    varying_c_on_caGrQc(time_tag, lim=(10 ** (-2) / 2, 10 ** 8 * 4))
     varying_c_on_caGrQc(mem_tag, lim=(10 ** 1 / 2, 10 ** 5 * 2))
