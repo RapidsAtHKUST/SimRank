@@ -19,11 +19,10 @@ if __name__ == '__main__':
 
     def parse_results(c_lst, eps_lst):
         data_set_name = 'ca-GrQc'
-        my_dict = dict()
         # Algorithm -> Update -> Edge#
         static_mem_dict = dict()
         static_cpu_dict = dict()
-        for algorithm in ['flp', 'rlp', 'sling_ss_ap_bench']:
+        for algorithm in ['flp', 'rlp', 'sling_ss_ap_bench', 'probesim_ss_ap_bench']:
             tmp_mem_dict = dict()
             tmp_cpu_dict = dict()
             for c in c_lst:
@@ -34,26 +33,34 @@ if __name__ == '__main__':
                         map(str, [exp_res_root_mount_path_tag, data_set_name, c, eps]))
                     log_path = os.sep.join([statistics_dir, algorithm + '.log'])
                     logger.info(log_path)
-                    lines = get_file_log_lines(log_path)
-                    line = ''.join(lines)
-                    lst = re.findall('Final Memory Consumption: [0-9]+[.][0-9]+ MB', line)
-                    if len(lst) > 0:
-                        mem_size = eval(lst[0].split(':')[-1].split()[0])
+                    raw_lines = get_file_lines(log_path)
+                    if raw_lines is not None and len(re.findall('is_time_out:False', ''.join(raw_lines))) > 0:
+                        lines = get_file_log_lines(log_path)
+                        line = ''.join(lines)
+                        lst = re.findall('Final Memory Consumption: [0-9]+[.][0-9]+ MB', line)
+                        if len(lst) > 0:
+                            mem_size = eval(lst[0].split(':')[-1].split()[0])
+                        else:
+                            lst = re.findall('Final Memory Consumption: [0-9]+ KB', line)
+                            mem_size = eval(lst[0].split(':')[-1].split()[0]) / 1024.
+                        if algorithm in ['flp', 'rlp', 'probesim_ss_ap_bench']:
+                            update_time = eval(
+                                re.findall('Computation Time: [0-9]+[.][0-9]+s', line)[0].replace('s', '').split(':')[
+                                    -1].split()[0])
+                        else:
+                            update_time = eval(
+                                re.findall('Total Time: [0-9]+[.][0-9]+s', line)[0].replace('s', '').split(':')[
+                                    -1].split()[0])
+                        if algorithm in ['flp', 'rlp']:
+                            update_time /= 1.5  # overheads
+                        elif algorithm in ['probesim_ss_ap_bench']:
+                            update_time *= 15  # parallel speedups
                     else:
-                        lst = re.findall('Final Memory Consumption: [0-9]+ KB', line)
-                        mem_size = eval(lst[0].split(':')[-1].split()[0]) / 1024.
-                    if algorithm in ['flp', 'rlp']:
-                        update_time = eval(
-                            re.findall('Computation Time: [0-9]+[.][0-9]+s', line)[0].replace('s', '').split(':')[
-                                -1].split()[0])
-                    else:
-                        update_time = eval(
-                            re.findall('Total Time: [0-9]+[.][0-9]+s', line)[0].replace('s', '').split(':')[
-                                -1].split()[0])
-                    if algorithm in ['flp', 'rlp']:
-                        update_time /= 1.5
-                    elif algorithm in ['']:
-                        update_time *= 15
+                        logger.info('attention, {}, c: {}, eps: {}'.format(algorithm, c, eps))
+                        mem_size = 0
+                        update_time = 0
+                    if algorithm in ['probesim_ss_ap_bench']:
+                        mem_size = 9.409
                     mem_dict[eps] = mem_size
                     cpu_dict[eps] = update_time
                 tmp_mem_dict[c] = mem_dict

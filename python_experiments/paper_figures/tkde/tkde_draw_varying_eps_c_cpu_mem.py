@@ -17,11 +17,15 @@ time_tag = 'cpu'
 mem_tag = 'mem'
 
 
+def none_if_zero(val):
+    return val if val != 0 else None
+
+
 def get_eps_lst(algorithm: str, info_tag: str, c: str, eps_lst: list):
     assert info_tag in [time_tag, mem_tag]
     with open('parsing_results/varying-eps_{}.json'.format(info_tag)) as ifs:
         data = json.load(ifs)
-    return [data[algorithm][c][eps] for eps in eps_lst]
+    return [none_if_zero(data[algorithm][c][eps]) for eps in eps_lst]
 
 
 def get_c_lst(algorithm: str, info_tag: str, c_lst: list, eps: str):
@@ -31,8 +35,8 @@ def get_c_lst(algorithm: str, info_tag: str, c_lst: list, eps: str):
     return [data[algorithm][c][eps] for c in c_lst]
 
 
-tag_lst = ['rlp', 'flp', 'pcg', 'sling_ss_ap_bench']
-label_lst = ['Opt-LP', 'FLP', 'PCG', 'SLING']
+tag_lst = ['rlp', 'flp', 'pcg', 'sling_ss_ap_bench', 'probesim_ss_ap_bench']
+label_lst = ['Opt-LP', 'FLP', 'PCG', 'SLING', 'ProbeSim']
 color_lst = ['red', 'blue', 'green', '#ceb301', '#fe01b1', 'm', 'brown', 'grey', ]
 shape_lst = ['s--', 'o:', '*-.', 'v-', 'x-', 'P-', '*-', 'v-', '^-', '<-', '>-']
 
@@ -85,8 +89,8 @@ def varying_c_on_caGrQc(update_tag: str, lim: tuple):
 if __name__ == '__main__':
     os.system('mkdir -p {}'.format("./figures/"))
     # varying_epsilon_on_caGrQc()
-    varying_eps_on_caGrQc(time_tag, lim=(10 ** (-2), 10 ** 4 / 2))
-    varying_eps_on_caGrQc(mem_tag, lim=(10 ** 1 / 2, 10 ** 5 / 4))
+    varying_eps_on_caGrQc(time_tag, lim=(10 ** (-2), 10 ** 7 / 2))
+    varying_eps_on_caGrQc(mem_tag, lim=(10 ** 1 / 2, 10 ** 5 * 2))
 
-    varying_c_on_caGrQc(time_tag, lim=(10 ** (-2), 10 ** 4 * 4))
-    varying_c_on_caGrQc(mem_tag, lim=(10 ** 1 / 2, 10 ** 5 / 4))
+    varying_c_on_caGrQc(time_tag, lim=(10 ** (-2), 10 ** 8 * 4))
+    varying_c_on_caGrQc(mem_tag, lim=(10 ** 1 / 2, 10 ** 5 * 2))

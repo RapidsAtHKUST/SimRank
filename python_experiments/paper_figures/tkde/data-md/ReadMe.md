@@ -2,6 +2,9 @@
 
 Unit: seconds, MB
 
+* Single-Source Solutions not Store Results. Only Compute. 
+* Time Budge For Varying EPS Exp: `7200 seconds` (`ProbeSim` timeout for `eps < `)
+
 Exp | Data
 --- | ---
 Accuracy | [accuracy_result.json](accuracy_result.json)

@@ -38,7 +38,7 @@ def run_exp(env_tag=lccpu12_tag, with_c_group=True):
     def one_round(eps_lst, c_lst):
         data_set_name = 'ca-GrQc'
         for our_algorithm in our_exec_name_lst:
-            for eps in eps_lst:
+            for eps in list(reversed(eps_lst)):
                 for c in c_lst:
                     statistics_dir = os.sep.join(
                         map(str, [exp_res_root_name, folder_name, data_set_name, c, eps]))
@@ -97,7 +97,7 @@ def run_exp(env_tag=lccpu12_tag, with_c_group=True):
     logger.info(first_lst)
     logger.info(second_lst)
 
-    one_round(eps_lst=['0.01'], c_lst=second_lst)
+    # one_round(eps_lst=['0.01'], c_lst=second_lst)
     one_round(eps_lst=first_lst, c_lst=['0.6'])
 
 
