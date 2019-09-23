@@ -6,10 +6,12 @@
 #include "../playground/boost_serialization_eigen.h"
 
 string LinearD::get_file_path_base() {
+    mkdir_if_not_exist(LINEAR_D_DIR);
     return LINEAR_D_DIR + str(format("%s-%.3f-%s-%s-%s") % g_name % c % T % L % R);
 }
 
 string LinearD::get_p_file_path_base() {
+    mkdir_if_not_exist(LINEAR_D_DIR);
     return LINEAR_D_DIR + str(format("%s") % g_name);
 }
 

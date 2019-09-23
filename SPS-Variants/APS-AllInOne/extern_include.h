@@ -13,4 +13,7 @@ extern string GROUND_TRUTH_DIR;
 extern string TKDE17_RESULT_DIR;
 extern string LOCAL_PUSH_DIR;
 
+extern string CLOUD_WALKER_DIR;
+extern string LINEAR_D_DIR;
+
 void mkdir_if_not_exist(string &path);

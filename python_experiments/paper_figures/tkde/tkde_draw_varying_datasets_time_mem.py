@@ -11,7 +11,7 @@ relative_data_root_dir_path = '../..'
 algorithm_tag_lst = [prlp_tag, prlp_lock_free_tag, rlp_tag, flp_tag,
                      lin_tag, cw_tag, pcg_tag,
                      vldbj_sling_tag, vldbj_probesim_tag, vldbj_reasd_tag, vldbj_readrq_tag]
-static_label_lst = ["PLB-Opt-LP", "PLF-Opt-LP", 'Opt-LP', 'FLP', "LIN", "MCSP", "PCG",
+static_label_lst = ["PLB-Opt-LP", "PLF-Opt-LP", 'Opt-LP', 'FLP', "LIN", "MCAP", "PCG",
                     "SLING", "ProbeSim", "READS-D", "READS-Rq"]
 
 

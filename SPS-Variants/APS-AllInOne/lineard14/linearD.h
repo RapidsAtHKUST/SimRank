@@ -4,9 +4,7 @@
 #include <memory>
 
 #include "util/graph_ywangby.h"
-
-const string LINEAR_D_DIR = "/homes/ywangby/workspace/LinsysSimRank/datasets/linearD/";
-
+#include "extern_include.h"
 struct LinearD {
     // The Linearization Technique SimRank (Efficient SimRank Computation via Linearization KDD'14)
 public:

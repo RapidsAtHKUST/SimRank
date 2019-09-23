@@ -6,6 +6,7 @@
 #include "../playground/boost_serialization_eigen.h"
 
 string CloudWalker::get_file_path_base() {
+    mkdir_if_not_exist(CLOUD_WALKER_DIR);
     return CLOUD_WALKER_DIR + str(format("%s-%.3f-%s-%s-%s-%s") % g_name % c % T % L % R % R_prime);
 }
 

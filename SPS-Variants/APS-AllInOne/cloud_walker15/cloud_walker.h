@@ -2,9 +2,7 @@
 #define __CLOAD_WALKER_H__
 
 #include "util/graph_ywangby.h"
-
-const string CLOUD_WALKER_DIR = "/homes/ywangby/workspace/LinsysSimRank/datasets/cloudwalker/";
-
+#include "extern_include.h"
 struct CloudWalker {
     // implementation of VLDB'16 paper: Walking in the Cloud: Parallel SimRank at Scale 
     double c;

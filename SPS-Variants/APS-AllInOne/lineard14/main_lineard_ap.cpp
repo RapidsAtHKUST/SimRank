@@ -3,6 +3,7 @@
 //
 
 #include <chrono>
+#include <util/timer.h>
 
 #include "../util/graph_yche.h"
 #include "../ground_truth/simrank.h"
@@ -13,25 +14,23 @@ using namespace std;
 using namespace std::chrono;
 
 int main(int argc, char *argv[]) {
+    FILE *log_f = nullptr;
+    if (argc >= 3) {
+        log_f = fopen(argv[2], "a+");
+        log_set_fp(log_f);
+    }
     double c = 0.6;
     int L = 3;
     int R = 100;
 
     int T = 10;
-    int R_prime = 10000;
-
-//    DirectedG g;
     auto data_name = string(argv[1]);
-//    load_graph(get_edge_list_path(data_name), g);
     srand(static_cast<unsigned int>(time(nullptr))); // random number generator
-    std::chrono::duration<double> elapsed{};
 
     // 1st: indexing
-    auto start = std::chrono::high_resolution_clock::now();
-//    LinearD lin(&g, data_name, c, T, L, R);
+    Timer timer;
     LinearD lin(data_name, c, T, L, R);
-    auto pre_time = std::chrono::high_resolution_clock::now();
-    cout << "constructing time:" << float(duration_cast<microseconds>(pre_time - start).count()) / (pow(10, 6)) << " s\n";
+    log_info("constructing time: %.9lfs", timer.elapsed_and_reset());
 
     // 2nd: query
 #ifdef GROUND_TRUTH
@@ -41,7 +40,7 @@ int main(int argc, char *argv[]) {
     auto max_err = 0.0;
 #endif
 
-    auto tmp_start = std::chrono::high_resolution_clock::now();
+    timer.reset();
 #pragma omp parallel
     {
         // allocate memory in advance
@@ -67,12 +66,15 @@ int main(int argc, char *argv[]) {
             }
         }
 
-    };
-    auto tmp_end = std::chrono::high_resolution_clock::now();
+    }
 
 #ifdef GROUND_TRUTH
     cout << "max err:" << max_err << endl;
 #endif
-    cout << "query time:"
-         << float(duration_cast<microseconds>(tmp_end - tmp_start).count()) / (pow(10, 6)) << " s\n";
+    log_info("query time: %.9lfs", timer.elapsed());
+    if (log_f != nullptr) {
+        log_info("Flush File and Close...");
+        fflush(log_f);
+        fclose(log_f);
+    }
 }
