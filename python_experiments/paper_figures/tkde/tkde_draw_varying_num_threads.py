@@ -62,7 +62,7 @@ def draw_figures():
 
     def draw_overall_time():
         exp_figure, ax_tuple = plt.subplots(1, 4, sharex=True, figsize=(32, 5))
-        algorithm_tag_lst = [prlp_tag, prlp_lock_free_tag, rlp_tag]
+        algorithm_tag_lst = [prlp_tag, prlp_lock_free_tag, rlp_tag, ]
         legend_lst = ['PLB-Opt-LP', 'PLF-Opt-LP', 'Opt-LP']
 
         for ax_idx, ax in enumerate(ax_tuple):

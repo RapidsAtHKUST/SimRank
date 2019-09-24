@@ -8,6 +8,7 @@ matplotlib.use("pdf")
 import matplotlib.pyplot as plt
 from paper_figures.legacy.experimental_config import *
 from paper_figures.tkde.data_legacy.static_data_loader import *
+from paper_figures.tkde.tkde_get_static_reads_time import *
 
 insert_tag = 'ins'
 delete_tag = 'del'
@@ -29,20 +30,24 @@ def get_data_lst(algorithm_tag: str, update_tag: str, type_tag: str):
     assert algorithm_tag in dynamic_algorithm_lst
     assert update_tag in [insert_tag, delete_tag]
     assert type_tag in [mem_tag, cpu_tag]
-    algorithm_tag = name_lookup[algorithm_tag]
+
+    mapped_algorithm_tag = name_lookup[algorithm_tag]
     with open('parsing_results/dynamic_cpu.json') as ifs:
         time = json.load(ifs)
     with open('parsing_results/dynamic_mem.json') as ifs:
         mem = json.load(ifs)
     if type_tag is mem_tag:
-        lst = [mem[algorithm_tag][update_tag][str(update)] for update in updates]
-        if algorithm_tag == 'dynamic-rlp':
+        lst = [mem[mapped_algorithm_tag][update_tag][str(update)] for update in updates]
+        if algorithm_tag == tkde_pdlp_tag:
             lst = [x * 1.2 for x in lst]
         return lst
     elif type_tag is cpu_tag:
-        lst = [time[algorithm_tag][update_tag][str(update)] for update in updates]
-        if algorithm_tag == 'dynamic-rlp':
+        lst = [time[mapped_algorithm_tag][update_tag][str(update)] for update in updates]
+        if algorithm_tag == tkde_pdlp_tag:
             lst = [x / 15. for x in lst]
+        elif algorithm_tag in [vldbj_reasd_tag, vldbj_readrq_tag]:
+            query_time_dict = get_reads_ap_time_dict(algorithm_tag, ['ca-HepTh'])
+            lst = [x + query_time_dict['ca-HepTh'] for x in lst]
         return lst
     return None
 

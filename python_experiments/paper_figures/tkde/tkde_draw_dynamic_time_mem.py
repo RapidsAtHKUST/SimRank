@@ -4,8 +4,9 @@ import numpy as np
 from data_analysis.vldbj_data_parsing.generate_index_markdown import *
 from paper_figures.tkde.data_legacy.static_data_loader import *
 from paper_figures.tkde.tkde_common import *
+from paper_figures.tkde.tkde_get_static_reads_time import *
 
-dynamic_label_lst = ["PDLP", "DLP", "Inc-SR", "READS_D", "READS-Rq"]
+dynamic_label_lst = ["PDLP", "DLP", "Inc-SR", "READS-D", "READS-Rq"]
 dynamic_algorithm_lst = [tkde_pdlp_tag, vldbj_dlp_tag, icde_inc_sr_tag, vldbj_reasd_tag, vldbj_readrq_tag, ]
 
 
@@ -13,7 +14,11 @@ def get_index_update_time_lst(tag):
     # init graph names and size
     with open('data_legacy/vldbj-icde-dynamic-time.json') as ifs:
         time = json.load(ifs)
-    return [time[tag][data] for data in data_set_lst]
+    if tag in [vldbj_reasd_tag, vldbj_readrq_tag]:
+        query_time_dict = get_reads_ap_time_dict(tag, data_set_lst)
+        return [time[tag][data] + query_time_dict[data] for data in data_set_lst]
+    else:
+        return [time[tag][data] for data in data_set_lst]
 
 
 def get_algorithm_dynamic_mem_lst(tag):
