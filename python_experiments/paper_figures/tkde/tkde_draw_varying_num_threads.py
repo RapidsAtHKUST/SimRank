@@ -3,6 +3,7 @@ import matplotlib.pyplot as plt
 from data_analysis.parallel_statistics.generate_parallel_speedup_md import *
 
 relative_data_root_dir_path = '../..'
+vldbj_mcap_tag = 'MCAP'
 
 
 def get_name_dict():
@@ -42,6 +43,24 @@ def draw_figures():
     LEGEND_SIZE = 22
 
     def get_algorithm_time_lst(algorithm, data_set):
+        if algorithm is vldbj_mcap_tag:
+            seq_time_dict = {
+                'web-Stanford': 72311.109,
+                'web-Google': 599341.562,
+                'cit-Patents': 11261417.728,
+                'soc-LiveJournal1': 19675654.326
+            }
+            speedup_dict = {
+                'web-Stanford': [1.0, 1.7400646014827514, 2.9194891475500517, 4.072091551017806, 4.5868406772777135,
+                                 4.849843500626671, 5.59272072157761],
+                'web-Google': [1.0, 1.987263007764831, 3.895067923081627, 6.836399318514805, 9.018087147327826,
+                               8.94730504372183, 8.165748285170773],
+                'cit-Patents': [1.0, 1.998904582109453, 4.036595042409903, 6.9986874388858205, 8.755960077193635,
+                                8.624877859821602, 8.310631628208187],
+                'soc-LiveJournal1': [1, 2, 4, 7, 8, 7.9, 7.6]
+            }
+            seq_time = seq_time_dict[data_set]
+            return [seq_time / speedup for speedup in speedup_dict[data_set]]
         if algorithm in [prlp_tag, prlp_lock_free_tag]:
             return para_algo_dict[algorithm][data_set][time_tag]
         else:
@@ -50,7 +69,7 @@ def draw_figures():
     def get_gen_time_lst(algorithm, data_set):
         return gen_time_dict[algorithm][data_set][task_gen_tag]
 
-    color_lst = ['#fe01b1', '#ceb301', 'red']
+    color_lst = ['#fe01b1', '#ceb301', 'red', 'grey']
     shape_lst = ['D-.', 's--', 'o:', 'x-',
                  'P-', '*-',
                  'v-', '^-', '<-', '>-']
@@ -62,8 +81,8 @@ def draw_figures():
 
     def draw_overall_time():
         exp_figure, ax_tuple = plt.subplots(1, 4, sharex=True, figsize=(32, 5))
-        algorithm_tag_lst = [prlp_tag, prlp_lock_free_tag, rlp_tag, ]
-        legend_lst = ['PLB-Opt-LP', 'PLF-Opt-LP', 'Opt-LP']
+        algorithm_tag_lst = [prlp_tag, prlp_lock_free_tag, rlp_tag, vldbj_mcap_tag]
+        legend_lst = ['PLB-Opt-LP', 'PLF-Opt-LP', 'Opt-LP', 'MCAP']
 
         for ax_idx, ax in enumerate(ax_tuple):
             time_lst_lst = []
@@ -75,7 +94,7 @@ def draw_figures():
                         color=color_lst[idx])
                 ax.set_yscale('log')
                 ax.set_xlabel('Number of Threads\n' + sub_titles[ax_idx], fontsize=LABEL_SIZE + 6)
-                y_lim_lst = [(10, 10 ** 3), (1, 10 ** 2 * 2), (10, 10 ** 3), (10 ** 2, 10 ** 4 * 3)]
+                y_lim_lst = [(10, 10 ** 5 * 4), (1, 10 ** 6 * 4), (10, 10 ** 8 * 4), (10 ** 2, 10 ** 8 * 4)]
 
                 ax.set_xticklabels([0] + thread_lst, fontsize=TICK_SIZE)
                 ax.set_ylim(y_lim_lst[ax_idx])

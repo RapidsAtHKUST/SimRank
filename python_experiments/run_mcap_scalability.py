@@ -13,9 +13,9 @@ def run_exp(env_tag=lccpu12_tag, with_c_group=True):
         my_config_dict = json.load(ifs)[env_tag]
     our_exec_path = my_config_dict[exec_path_tag]
     data_set_lst = [
-        'ca-GrQc',
-        'web-Stanford', 'web-Google', 'cit-Patents',
-        # 'soc-LiveJournal1',
+        # 'ca-GrQc',
+        # 'web-Stanford', 'web-Google', 'cit-Patents',
+        'soc-LiveJournal1',
     ]
 
     thread_num_lst = my_config_dict[thread_num_lst_tag]
@@ -24,7 +24,8 @@ def run_exp(env_tag=lccpu12_tag, with_c_group=True):
     folder_name = 'exp-lind-scalability-2019-09-23' + os.sep + hostname
 
     our_exec_name_lst = [
-        'LinSimBench', 'CloudWalkerBench'
+        # 'LinSimBench',
+        'CloudWalkerBench'
     ]
 
     work_dir = os.sep.join([exp_res_root_name, folder_name])
@@ -62,7 +63,7 @@ def run_exp(env_tag=lccpu12_tag, with_c_group=True):
                                            algorithm_path, data_set_name, statistics_file_path])
                     cmd = ' '.join(params_lst)
                     logger.info('exec-cmd: {}'.format(cmd))
-                    time_out = 18000
+                    time_out = 7200
                     my_env = os.environ.copy()
                     my_env["OMP_NUM_THREADS"] = str(thread_num)
 

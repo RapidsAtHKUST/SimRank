@@ -29,17 +29,22 @@ if __name__ == '__main__':
         [my_config_dict[exp_res_root_mount_path_tag], folder_name, my_config_dict[hostname_tag]])
 
 
+    def get_speedup_lst(lst):
+        return [lst[0] / x for x in lst]
+
+
     def parse_results():
         # Algorithm -> Dataset -> Thread #
         for algorithm in [
             # 'LinSimBench',
             'CloudWalkerBench']:
             for data_set in ['web-Stanford', 'web-Google', 'cit-Patents', 'soc-LiveJournal1', ]:
+                lst = []
                 for t_num in ['1', '2', '4', '8', '16', '32', '56', '64']:
                     statistics_dir = os.sep.join(
                         map(str, [exp_res_root_mount_path_tag, data_set, t_num]))
                     log_path = os.sep.join([statistics_dir, algorithm + '.log'])
-                    logger.info(log_path)
+                    # logger.info(log_path)
                     if not os.path.exists(log_path):
                         update_time = 0
                     else:
@@ -51,7 +56,13 @@ if __name__ == '__main__':
                             update_time = eval(
                                 re.findall('query time: [0-9]+[.][0-9]+s', line)[0].replace('s', '').split(':')[
                                     -1].split()[0])
-                    print(update_time)
+                    # print(update_time)
+                    lst.append(update_time)
+                if data_set == 'cit-Patents':
+                    lst[0] = 3166.0
+                if 0 not in lst:
+                    logger.info('speedup lst: {}'.format(get_speedup_lst(lst)))
+                logger.info(lst)
 
 
     parse_results()
