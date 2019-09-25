@@ -16,8 +16,9 @@ mem_tag = 'mem'
 cpu_tag = 'cpu'
 updates = list(range(5000, 30000, 5000))
 
-label_lst = ['PDLP', 'DLP', 'Inc-SR', 'READS-D', 'READS-Rq']
-dynamic_algorithm_lst = [tkde_pdlp_tag, vldbj_dlp_tag, icde_inc_sr_tag, vldbj_reasd_tag, vldbj_readrq_tag, ]
+label_lst = ['PDLP', 'DLP', 'Inc-SR', 'ProbeSim', 'READS-D', 'READS-Rq']
+dynamic_algorithm_lst = [tkde_pdlp_tag, vldbj_dlp_tag, icde_inc_sr_tag, vldbj_probesim_tag, vldbj_reasd_tag,
+                         vldbj_readrq_tag, ]
 data_name = 'ca-HepTh'
 
 
@@ -25,7 +26,7 @@ def get_data_lst(algorithm_tag: str, update_tag: str, type_tag: str):
     name_lookup = {
         tkde_pdlp_tag: 'dynamic-rlp', vldbj_dlp_tag: 'dynamic-rlp',
         vldbj_reasd_tag: 'reads-d-dynamic', vldbj_readrq_tag: 'reads-rq-dynamic',
-        icde_inc_sr_tag: 'Inc-SR'
+        icde_inc_sr_tag: 'Inc-SR', vldbj_probesim_tag: 'ProbeSim'
     }
     assert algorithm_tag in dynamic_algorithm_lst
     assert update_tag in [insert_tag, delete_tag]
@@ -37,16 +38,23 @@ def get_data_lst(algorithm_tag: str, update_tag: str, type_tag: str):
     with open('parsing_results/dynamic_mem.json') as ifs:
         mem = json.load(ifs)
     if type_tag is mem_tag:
+        if algorithm_tag == vldbj_probesim_tag:
+            with open('data_legacy/vldbj-mem-size.json') as ifs:
+                tmp = json.load(ifs)
+                return [tmp[vldbj_probesim_tag]['ca-HepTh'] for _ in updates]
         lst = [mem[mapped_algorithm_tag][update_tag][str(update)] for update in updates]
         if algorithm_tag == tkde_pdlp_tag:
             lst = [x * 1.2 for x in lst]
         return lst
     elif type_tag is cpu_tag:
+        if algorithm_tag in [vldbj_probesim_tag]:
+            query_time_dict = get_reads_probesim_ap_time_dict(algorithm_tag, ['ca-HepTh'])
+            return [query_time_dict['ca-HepTh'] for _ in updates]
         lst = [time[mapped_algorithm_tag][update_tag][str(update)] for update in updates]
         if algorithm_tag == tkde_pdlp_tag:
             lst = [x / 15. for x in lst]
         elif algorithm_tag in [vldbj_reasd_tag, vldbj_readrq_tag]:
-            query_time_dict = get_reads_ap_time_dict(algorithm_tag, ['ca-HepTh'])
+            query_time_dict = get_reads_probesim_ap_time_dict(algorithm_tag, ['ca-HepTh'])
             lst = [x + query_time_dict['ca-HepTh'] for x in lst]
         return lst
     return None
@@ -58,7 +66,7 @@ def draw_cpu_mem(update_tag: str, type_tag: str, lim: tuple):
     fig = plt.figure()
     ax = fig.add_subplot(111)
 
-    color_lst = ['#fe01b1', 'red', 'blue', '#ceb301', 'green', ]
+    color_lst = ['#fe01b1', '#ceb301', 'red', 'orange', 'green', 'blue', 'm', 'brown', 'grey', 'k', 'pink']
     shape_lst = ['D-.', 's--', 'o:', 'x-',
                  'P-', '*-',
                  'v-', '^-', '<-', '>-']
