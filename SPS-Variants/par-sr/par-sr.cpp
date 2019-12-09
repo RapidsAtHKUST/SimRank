@@ -26,6 +26,8 @@ int main(int argc, char *argv[]) {
     int k = atoi(argv[4]);
     if (argc >= 6) eps = atof(argv[5]);
 
+    stepNum = (int)(ceil(log(eps)/log(c)));
+
     GraphYche g(file_path);
     auto sample_pairs = read_sample_pairs(file_name, pair_num, round_i);
     // vector<pair<int, int>> sample_pairs;
@@ -67,11 +69,13 @@ int main(int argc, char *argv[]) {
         B.insert(sample_pairs[i].second);
     }
     auto as = A.size(), bs = B.size();
+    cout << as << " " << bs << endl;
     
-    vector<double> u[k + 1], v[2], s[as];
+    vector<double> u[stepNum + 1], v[2];
+    map<pair<int, int>, double> s;
     v[0].resize(n); v[1].resize(n);
-    for (auto i = 0; i <= k; i++) u[i].resize(n);
-    for (auto i = 0; i < as; i++) s[i].resize(bs);
+    for (auto i = 0; i <= stepNum; i++) u[i].resize(n);
+    // for (auto i = 0; i < as; i++) s[i].resize(bs);
 
     bool swapped = false;
     if (A.size() < B.size()) {
@@ -79,15 +83,15 @@ int main(int argc, char *argv[]) {
         swapped = true;
     }
 
-    vector<double> d(n);
-    for (auto i = 0; i < n; i++) {
-        int od = g.out_degree(i);
-        if (od == 0) {
-            d[i] = 1;
-        } else {
-            d[i] = 1.0 * (od - 1) / od;
-        }
-    }
+    // vector<double> d(n);
+    // for (auto i = 0; i < n; i++) {
+    //     int od = g.out_degree(i);
+    //     if (od == 0) {
+    //         d[i] = 1;
+    //     } else {
+    //         d[i] = 1.0 * (od - 1) / od;
+    //     }
+    // }
     
     // for (auto i = 0; i < n; i++) {
     //     cout << endl << i << endl << g.in_degree(i);
@@ -127,57 +131,58 @@ int main(int argc, char *argv[]) {
         u[0][vb] = 1.0;
         for (auto l = 1; l <= stepNum; l++) {
             for (auto i = 0; i < n; i++) {
-                // double uv = u[l - 1][i];
-                // if (uv == 0) continue;
-                // for (auto x = g.off_in[i]; x < g.off_in[i + 1]; x++) {
-                for (auto x = g.off_out[i]; x < g.off_out[i + 1]; x++) {
-                    int tmp = g.neighbors_out[x];
-                    u[l][i] += 1.0 / g.in_degree(tmp) * u[l - 1][tmp];
-                    // u[l][g.neighbors_in[x]] += uv * 1.0 / (double)g.in_degree(i);
+                double uv = u[l - 1][i];
+                if (uv == 0) continue;
+                for (auto x = g.off_in[i]; x < g.off_in[i + 1]; x++) {
+                // for (auto x = g.off_out[i]; x < g.off_out[i + 1]; x++) {
+                    // int tmp = g.neighbors_out[x];
+                    // u[l][i] += 1.0 / g.in_degree(tmp) * u[l - 1][tmp];
+                    u[l][g.neighbors_in[x]] += uv * 1.0 / (double)g.in_degree(i);
                 }
             }
         }
         for (auto i = 0; i < n; i++) {
-            // v[0][i] = u[stepNum][i];
-            v[0][i] = u[stepNum][i] * d[i];
+            v[0][i] = u[stepNum][i]; // * d[i];
             // cout << u[k][i] << " ";
         }
         // cout << endl;
         for (auto l = 1; l <= stepNum; l++) {
-            // for (auto i = 0; i < n; i++) {
-                // v[l & 1][i] = u[stepNum - l][i];
-            // }
             for (auto i = 0; i < n; i++) {
-                // if (v[1 - (l & 1)][i] == 0) continue;
-                // for (auto x = g.off_out[i]; x < g.off_out[i + 1]; x++) {
-                    // int tmp = g.neighbors_out[x];
-                    // v[l & 1][tmp] += c * 1.0 / (double)g.in_degree(tmp) * v[1 - (l & 1)][i];
-                // }
-                // v[l & 1][i] = u[stepNum - l][i];
-                v[l & 1][i] = u[stepNum - l][i] * d[i];
-                int ind = g.in_degree(i);
-                for (auto x = g.off_in[i]; x < g.off_in[i + 1]; x++) {
-                    v[l & 1][i] += 1.0 *  c / ind * v[1 - (l & 1)][g.neighbors_in[x]];
+                v[l & 1][i] = u[stepNum - l][i];
+            }
+            for (auto i = 0; i < n; i++) {
+                if (v[1 - (l & 1)][i] == 0) continue;
+                for (auto x = g.off_out[i]; x < g.off_out[i + 1]; x++) {
+                    int tmp = g.neighbors_out[x];
+                    v[l & 1][tmp] += c * 1.0 / (double)g.in_degree(tmp) * v[1 - (l & 1)][i];
                 }
+                // v[l & 1][i] = u[stepNum - l][i]; // * d[i];
+                // int ind = g.in_degree(i);
+                // for (auto x = g.off_in[i]; x < g.off_in[i + 1]; x++) {
+                    // v[l & 1][i] += 1.0 *  c / ind * v[1 - (l & 1)][g.neighbors_in[x]];
+                // }
             }
         }
         for (auto va : A) {
             // double tmp = (va == vb ? 1 : 0);
             // int ind = g.in_degree(va);
             // for (auto x = g.off_in[va]; x < g.off_in[va + 1]; x++) {
-                // tmp += 1.0 * c / ind * v[1 - (stepNum & 1)][g.neighbors_in[x]];
+            //     tmp += 1.0 * c / ind * v[1 - (stepNum & 1)][g.neighbors_in[x]];
             // }
             // tmp *= (1.0 - c);
 
-            double tmp = v[stepNum & 1][va];
+            // tmp = v[stepNum & 1][va];
             // if (va == vb) tmp = 0;
-            // double tmp = (1.0 - c) * v[stepNum & 1][va];
+            double tmp = (1.0 - c) * v[stepNum & 1][va];
             if (va == vb) tmp = 1;
             if (swapped) {
-                s[vb][va] = tmp;
+                // s[vb][va] = tmp;
+                s.insert(make_pair(make_pair(vb, va), tmp));
             } else {
-                s[va][vb] = tmp;
+                // s[va][vb] = tmp;
+                s.insert(make_pair(make_pair(va, vb), tmp));
             }
+            // cout << va << " " << vb << " " << tmp << endl;
         }
     }
 
@@ -185,9 +190,11 @@ int main(int argc, char *argv[]) {
     for (int i = 0; i < pair_num; ++i) {
         auto u = sample_pairs[i].first;
         auto v = sample_pairs[i].second;
-        double res = s[u][v];
+        // double res = s[u][v];
+        double res = s[make_pair(u, v)];
         // cout << sample_pairs[i] << " " << res << endl;
         topk.push_back({i, res});
+        // cout << u << " " << v << " " << res << endl;
     }
     sort(topk.begin(), topk.end(), cmp);
 

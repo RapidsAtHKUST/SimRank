@@ -1,68 +1,62 @@
-#include <cstdlib>
+//
+// Created by yche on 12/23/17.
+//
+
 #include <ctime>
 
-#include <iostream>
-#include <fstream>
-#include <unordered_set>
-
-#include <boost/program_options.hpp>
-
-#include "stat.h"
-#include "bprw.h"
-#include "simrank.h"
-#include <util/graph_yche.h>
-#include <util/random_pair_generator.h>
-#include "rw_hub.h"
-#include "fgi.h"
-#include "phf.h"
-#include "minimal_perfect_hash.h"
-
-using namespace std;
-using namespace std::chrono;
-using namespace boost::program_options;
-using namespace bf;
+#include "../../yche_refactor/flpmc_yche.h"
+#include "../../util/graph_yche.h"
+#include "../../yche_refactor/simrank.h"
+#include "../../util/random_pair_generator.h"
+#include "../../playground/pretty_print.h"
 
 string get_new_graph_path(string data_name){
     return string("/csproject/biggraph/ywangby/yche/git-repos/SimRank/LPMC/build/edge_list/") + data_name + string(".txt");
 }
 
+typedef pair<int, double> QPair;
+
 int main(int argc, char *argv[]) {
-    string data_name = argv[1];
+    string data_name(argv[1]);
     int pair_num = atoi(argv[2]);
     int round_i = atoi(argv[3]);
     int k = atoi(argv[4]);
-    
+
     double c = 0.6;
     double eps = 0.01;
     if (argc >= 6) eps = atof(argv[5]);
     double delta = 0.01;
     if (argc >= 7) delta = atof(argv[6]);
 
-    // string path = get_new_graph_path(data_name);
-    GraphYche g(data_name);
-    int truth_graph_size = 10000;
-
-    BLPMC_Config config;
-    size_t n = g.n;
-    config.is_use_linear_regression_cost_estimation = true;
-    config.is_use_hub_idx = false;
-    config.is_use_fg_idx = false;
-    
+    string path = get_new_graph_path(data_name);
     auto start = std::chrono::high_resolution_clock::now();
-    BackPush bprw(data_name, g, c, eps, delta, config);
+    GraphYche g(data_name);
     auto end = std::chrono::high_resolution_clock::now();
     std::chrono::duration<double> elapsed = end - start;
+    cout << "graph load time: " << elapsed.count() << endl;
+    int truth_graph_size = 10000;
+
+    size_t n = g.n;
+
+    start = std::chrono::high_resolution_clock::now();
+#ifdef VARYING_RMAX
+    auto flpmc = FLPMC(data_name, g, c, eps, delta, 100, 0.14);
+#else
+    auto flpmc = FLPMC(data_name, g, c, eps, delta, 100);
+#endif
+    end = std::chrono::high_resolution_clock::now();
+    elapsed = end - start;
     cout << "indexing time: " << elapsed.count() << endl;
     cout << "mem size: " << getValue() << endl;
 
-    vector<NodePair> queries = read_sample_pairs(data_name, pair_num, round_i);
-    
+    auto queries = read_sample_pairs(data_name, pair_num, round_i); // change path
+
     TruthSim *ts;
     vector<QPair> ts_topk;
     set<NodePair> ts_set;
     double zk = 0.0;
     auto cmp = [](QPair x, QPair y) {return x.second > y.second;};
-    
+
     if (n < truth_graph_size) {
         ts = new TruthSim(data_name, g, c, eps);
         for (int i = 0; i < pair_num; ++i) {
@@ -77,22 +71,24 @@ int main(int argc, char *argv[]) {
 
     double max_err = 0.0;
     start = std::chrono::high_resolution_clock::now();
-    auto topk = bprw.top_k(queries, k);
+    vector<QPair> topk;
+    for (int i = 0; i < queries.size(); ++i) {
+        double r = flpmc.query_one2one(queries[i]);
+        topk.push_back({i, r});
+    }
+    sort(topk.begin(), topk.end(), cmp);
+    topk.resize(k);
     end = std::chrono::high_resolution_clock::now();
     elapsed = end - start;
     cout << "topk cost: " << elapsed.count() << endl;
 
-    /*for (int i = 0; i < k; ++i) {
-        cout << topk[i].second << endl;
-    }*/
-
     if (n < truth_graph_size) {
+        double ndcg = 0.0;
+        int exceed = 0, intersec = 0;
         for (int i = 0; i < k; ++i) {
             topk[i].second = ts->sim(queries[topk[i].first].first, queries[topk[i].first].second);
         }
         sort(topk.begin(), topk.begin() + k, cmp);
-        double ndcg = 0.0;
-        int exceed = 0, intersec = 0;
         for (int i = 0; i < k; ++i) {
             double abs_error = abs(ts_topk[i].second - topk[i].second);
             max_err = max(max_err, abs_error);
@@ -102,7 +98,4 @@ int main(int argc, char *argv[]) {
         }
         cout << "max err: " << max_err << ", precison: " << ((double)intersec / k) << ", ndcg: " << (ndcg / zk) << endl;
     }
-
-    return 0;
 }
-

@@ -27,6 +27,9 @@ string get_new_graph_path(string data_name){
 }
 
 int main(int argc, char *argv[]) {
+    for (int i = 0; i < argc; ++i) {
+        cout << argv[i] << endl;
+    }
     string data_name = argv[1];
     int pair_num = atoi(argv[2]);
     int round_i = atoi(argv[3]);
@@ -36,6 +39,7 @@ int main(int argc, char *argv[]) {
     double eps = 0.01;
     if (argc >= 6) eps = atof(argv[5]);
     double delta = 0.01;
+    if (argc >= 7) delta = atof(argv[6]);
 
     string path = get_new_graph_path(data_name);
     auto start = std::chrono::high_resolution_clock::now();

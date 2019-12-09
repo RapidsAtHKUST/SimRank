@@ -30,6 +30,7 @@ int main(int argc, char *argv[]) {
 
     double c = 0.6;
     double delta = 0.01;
+    if (argc >= 7) delta = atof(argv[6]);
     double b = min(1.0, c / (1 - c));
     auto sampleQueryNum = static_cast<int>(ceil(log(delta / 2) / (-2) / (pow(eps, 2)) * (pow(b - c, 2)) / sampleNum));
     auto sample_pairs = read_sample_pairs(file_name, pair_num, round_i);

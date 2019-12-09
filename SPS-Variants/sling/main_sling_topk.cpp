@@ -25,6 +25,7 @@ int main(int argc, char *argv[]) {
     if (argc >= 6)
         eps = atof(argv[5]);
     double delta = 0.01; // atof(argv[6]);
+    if (argc >= 7) delta = atof(argv[6]);
 
     double half_eps = eps / 2;
     double eps_d = (1 - c) * half_eps;

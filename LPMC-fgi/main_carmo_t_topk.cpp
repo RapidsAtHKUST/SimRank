@@ -32,14 +32,15 @@ int main(int argc, char *argv[]) {
     int round_i = atoi(argv[3]);
     int k = atoi(argv[4]);
     int nt = 3443;
-    if (argc >= 7) {
-        nt = atoi(argv[6]);
+    if (argc >= 8) {
+        nt = atoi(argv[7]);
     }
 
     double c = 0.6;
     double eps = 0.01;
     if (argc >= 6) eps = atof(argv[5]);
     double delta = 0.01;
+    if (argc >= 7) delta = atof(argv[6]);
 
     // string path = get_new_graph_path(data_name);
     GraphYche g(data_name);

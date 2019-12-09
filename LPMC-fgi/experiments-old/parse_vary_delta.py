@@ -1,9 +1,9 @@
 import os, json, decimal
 
-root_path = '/homes/ywangby/workspace/yche/git-repos/SimRank/LPMC-fgi/experiments/exp_results/effective_vary_eps_1'
+root_path = '/homes/ywangby/workspace/yche/git-repos/SimRank/LPMC-fgi/experiments/exp_results/vary_delta'
 
 def get_file_path(q, k, eps, dataset_name, algo_name):
-    return os.sep.join(map(str, [root_path, q, k, eps, dataset_name, algo_name + '.txt']))
+    return os.sep.join(map(str, [root_path, q, k, '0.01', eps, dataset_name, algo_name + '.txt']))
 
 def get_tag_info(file_path, tag, functor):
     if not os.path.exists(file_path):
@@ -23,14 +23,14 @@ if __name__ == '__main__':
             'blpmc', 'carmo', 'carmo-h', 'carmo-t',
             'tsf-topk']
     small_dataset_lst = ['ca-GrQc', 'ca-HepTh', 'p2p-Gnutella06']
-    large_dataset_lst = [
+    large_dataset_lst = ['ca-GrQc', 'ca-HepTh', 'p2p-Gnutella06',
                     'web-Stanford',
                     'web-BerkStan',
                     'web-Google',
                     'cit-Patents',
                     'soc-LiveJournal1',
                     'wiki-Link']
-    tag_lst = ['indexing time', 'topk cost', 'max err', 'precison', 'ndcg', "mem size"]
+    tag_lst = ['indexing time', 'topk cost', "mem size"]
     q_lst = [10 ** 5]
     k_lst = [100, 200, 300, 400, 500]
     eps_lst = [0.002,0.006,0.01,0.014,0.018]
@@ -38,7 +38,7 @@ if __name__ == '__main__':
     algo_data_lst = []
     for algo_name in algo_lst:
         dataset_data_lst = []
-        for dataset_name in small_dataset_lst:
+        for dataset_name in ['ca-GrQc']:
             eps_data_lst = []
             for eps in eps_lst:
                 tag_data_lst = []
@@ -49,10 +49,10 @@ if __name__ == '__main__':
                         tag_data_lst.append(get_tag_info(get_file_path(10 ** 5, 100, eps, dataset_name, algo_name), tag, min))
                 eps_data_lst.append(dict(zip(tag_lst, tag_data_lst)))
             dataset_data_lst.append(dict(zip(eps_lst, eps_data_lst)))
-        algo_data_lst.append(dict(zip(small_dataset_lst, dataset_data_lst)))
+        algo_data_lst.append(dict(zip(large_dataset_lst, dataset_data_lst)))
 
 
-    with open(os.sep.join([data_folder, 'effective_vary_eps_1.json']), 'w') as ofs:
+    with open(os.sep.join([data_folder, 'vary_delta.json']), 'w') as ofs:
         ofs.write(json.dumps(dict(zip(algo_lst, algo_data_lst)), indent=4))
 
 

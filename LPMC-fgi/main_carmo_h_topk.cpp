@@ -36,13 +36,14 @@ int main(int argc, char *argv[]) {
     int k = atoi(argv[4]);
     int h = 2000000;
     int l = 100;
-    if (argc >= 7) h = atoi(argv[6]);
-    if (argc >= 8) l = atoi(argv[7]);
+    if (argc >= 8) h = atoi(argv[7]);
+    if (argc >= 9) l = atoi(argv[8]);
     
     double c = 0.6;
     double eps = 0.01;
     if (argc >= 6) eps = atof(argv[5]);
     double delta = 0.01;
+    if (argc >= 7) delta = atof(argv[6]);
 
     // string path = get_new_graph_path(data_name);
     GraphYche g(data_name);

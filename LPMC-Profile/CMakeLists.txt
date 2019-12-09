@@ -155,6 +155,14 @@ add_executable(flpmc-rand-varying ${FLPMC_SOURCE_FILES_RAND})
 InitFLPMC(flpmc-rand-varying)
 target_compile_definitions(flpmc-rand-varying PRIVATE -DSFMT=1)
 
+set(FLPMC_SOURCE_FILES_RAND ${LPMC_FILES} ${UTIL_FILES} ${GROUND_TRUTH_FILES}
+        playground/topk/main_flpmc_topk.cpp
+        util/random_pair_generator.cpp)
+add_executable(flpmc-topk ${FLPMC_SOURCE_FILES_RAND})
+InitFLPMC(flpmc-topk)
+target_compile_definitions(flpmc-topk PRIVATE -DSFMT=1)
+#target_compile_definitions(flpmc-topk PRIVATE -DVARYING_RMAX=1)
+
 add_executable(flpmc-rand-varying-gt ${FLPMC_SOURCE_FILES_RAND})
 InitFLPMC(flpmc-rand-varying-gt)
 target_compile_definitions(flpmc-rand-varying-gt PRIVATE -DSFMT=1 -DGROUND_TRUTH=1)

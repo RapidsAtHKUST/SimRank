@@ -21,7 +21,8 @@ if __name__ == '__main__':
     algo_lst = [
             'sling-topk',
             'blpmc', 'carmo', 'carmo-h', 'carmo-t',
-            'tsf-topk']
+            'tsf-topk',
+            'par-sr']
     small_dataset_lst = ['ca-GrQc', 'ca-HepTh', 'p2p-Gnutella06']
     large_dataset_lst = ['ca-GrQc', 'ca-HepTh', 'p2p-Gnutella06',
                     'web-Stanford',

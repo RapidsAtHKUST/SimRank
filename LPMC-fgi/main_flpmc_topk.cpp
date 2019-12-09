@@ -7,6 +7,7 @@
 
 #include <boost/program_options.hpp>
 
+#include "flpmc.h"
 #include "stat.h"
 #include "bprw.h"
 #include "simrank.h"
@@ -22,11 +23,16 @@ using namespace std::chrono;
 using namespace boost::program_options;
 using namespace bf;
 
+typedef pair<int, double> QPair;
+
 string get_new_graph_path(string data_name){
     return string("/csproject/biggraph/ywangby/yche/git-repos/SimRank/LPMC/build/edge_list/") + data_name + string(".txt");
 }
 
 int main(int argc, char *argv[]) {
+    for (int i = 0; i < argc; ++i) {
+        cout << argv[i] << endl;
+    }
     string data_name = argv[1];
     int pair_num = atoi(argv[2]);
     int round_i = atoi(argv[3]);
@@ -38,20 +44,25 @@ int main(int argc, char *argv[]) {
     double delta = 0.01;
     if (argc >= 7) delta = atof(argv[6]);
 
-    // string path = get_new_graph_path(data_name);
-    GraphYche g(data_name);
-    int truth_graph_size = 10000;
-
-    BLPMC_Config config;
-    size_t n = g.n;
-    config.is_use_linear_regression_cost_estimation = true;
-    config.is_use_hub_idx = false;
-    config.is_use_fg_idx = false;
-    
+    string path = get_new_graph_path(data_name);
     auto start = std::chrono::high_resolution_clock::now();
-    BackPush bprw(data_name, g, c, eps, delta, config);
+    // GraphYche g(path);
+    GraphYche g(data_name);
     auto end = std::chrono::high_resolution_clock::now();
     std::chrono::duration<double> elapsed = end - start;
+    cout << "graph load time: " << elapsed.count() << endl;
+    int truth_graph_size = 10000;
+
+    //BLPMC_Config config;
+    size_t n = g.n;
+    //config.is_use_linear_regression_cost_estimation = true;
+    //config.is_use_hub_idx = false;
+    //config.is_use_fg_idx = false;
+    
+    start = std::chrono::high_resolution_clock::now();
+    FLPMC flpmc(data_name, g, c, eps, delta);
+    end = std::chrono::high_resolution_clock::now();
+    elapsed = end - start;
     cout << "indexing time: " << elapsed.count() << endl;
     cout << "mem size: " << getValue() << endl;
 
@@ -77,7 +88,14 @@ int main(int argc, char *argv[]) {
 
     double max_err = 0.0;
     start = std::chrono::high_resolution_clock::now();
-    auto topk = bprw.top_k(queries, k);
+    // auto topk = flpmc.top_k_sort(queries, k);
+    vector<QPair> topk;
+    for (int i = 0; i < queries.size(); ++i) {
+        double r = flpmc.query_one2one(queries[i]);
+        topk.push_back({i, r});
+    }
+    sort(topk.begin(), topk.end(), cmp);
+    topk.resize(k);
     end = std::chrono::high_resolution_clock::now();
     elapsed = end - start;
     cout << "topk cost: " << elapsed.count() << endl;
@@ -87,12 +105,12 @@ int main(int argc, char *argv[]) {
     }*/
 
     if (n < truth_graph_size) {
+        double ndcg = 0.0;
+        int exceed = 0, intersec = 0;
         for (int i = 0; i < k; ++i) {
             topk[i].second = ts->sim(queries[topk[i].first].first, queries[topk[i].first].second);
         }
         sort(topk.begin(), topk.begin() + k, cmp);
-        double ndcg = 0.0;
-        int exceed = 0, intersec = 0;
         for (int i = 0; i < k; ++i) {
             double abs_error = abs(ts_topk[i].second - topk[i].second);
             max_err = max(max_err, abs_error);

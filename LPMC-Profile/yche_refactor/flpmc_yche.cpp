@@ -9,6 +9,7 @@
 #include "../playground/pretty_print.h"
 
 #include "parallel_local_push/parallel_local_push_yche.h"
+#include "local_push_yche.h"
 
 using namespace std;
 using namespace boost::program_options;
@@ -51,6 +52,8 @@ FLPMC::FLPMC(string g_name_, GraphYche &g_, double c_, double epsilon_, double d
         // directly compute the index, instead of reading and parsing
         auto start_time = std::chrono::high_resolution_clock::now();
 
+        // auto plp = LocalPush(*g, g_name, c, get_lp_epsilon(), n);
+        // lp->local_push(*g);
         auto plp = PFLP(*g, g_name, c, get_lp_epsilon(), n);
         plp.local_push(*g);
         swap(lp->P, plp.P);

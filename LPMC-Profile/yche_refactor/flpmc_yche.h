@@ -13,9 +13,7 @@ struct FLPMC {
     GraphYche *g; // the pointer to the graph
     LocalPush *lp; // the pointer to the local push index
 
-#ifdef SFMT
     SFMTRand rand_gen;
-#endif
 
 #ifdef VARYING_RMAX
     double r_max;

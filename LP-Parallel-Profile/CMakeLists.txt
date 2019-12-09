@@ -94,3 +94,7 @@ target_compile_definitions(ppflp PRIVATE -DFLP=1 -DPTHREAD=1)
 add_executable(pprlp playground/main_exec_parallel_lp_pthread.cpp ${LPMC_FILES} ${UTIL_FILES} ${GROUND_TRUTH_FILES} ${PPLP_FILES})
 InitFLPMC(pprlp)
 target_compile_definitions(pprlp PRIVATE -DDEBUG=1 -DPTHREAD=1)
+
+add_executable(pprlp playground/main_exec_parallel_lp_.cpp ${LPMC_FILES} ${UTIL_FILES} ${GROUND_TRUTH_FILES} ${PPLP_FILES})
+InitFLPMC(imdb)
+target_compile_definitions(pprlp PRIVATE -DDEBUG=1 -DPTHREAD=1)

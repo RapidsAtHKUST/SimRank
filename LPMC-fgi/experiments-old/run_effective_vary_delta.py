@@ -13,12 +13,14 @@ def write_split(stat_file_path):
 
 def run_exp():
     exec_path_lst = [
-            '/homes/ywangby/workspace/yche/git-repos/SimRank/LPMC-fgi/build/blpmc',
-            '/homes/ywangby/workspace/yche/git-repos/SimRank/LPMC-fgi/build/carmo',
-            '/homes/ywangby/workspace/yche/git-repos/SimRank/LPMC-fgi/build/carmo-h',
-            '/homes/ywangby/workspace/yche/git-repos/SimRank/LPMC-fgi/build/carmo-t',
-            '/homes/ywangby/workspace/yche/git-repos/SimRank/SPS-Variants/sling/build/sling-topk',
-            '/homes/ywangby/workspace/yche/git-repos/SimRank/SPS-Variants/tsf/build/tsf-topk']
+            #'/homes/ywangby/workspace/yche/git-repos/SimRank/LPMC-fgi/build/blpmc',
+            #'/homes/ywangby/workspace/yche/git-repos/SimRank/LPMC-fgi/build/carmo',
+            #'/homes/ywangby/workspace/yche/git-repos/SimRank/LPMC-fgi/build/carmo-h',
+            #'/homes/ywangby/workspace/yche/git-repos/SimRank/LPMC-fgi/build/carmo-t',
+            #'/homes/ywangby/workspace/yche/git-repos/SimRank/SPS-Variants/sling/build/sling-topk',
+            #'/homes/ywangby/workspace/yche/git-repos/SimRank/SPS-Variants/tsf/build/tsf-topk']
+            #'/homes/ywangby/workspace/yche/git-repos/SimRank/SPS-Variants/par-sr/build/par-sr']
+            '/homes/ywangby/workspace/yche/git-repos/SimRank/LPMC-Profile/build/flpmc-topk']
     small_dataset_lst = ['ca-GrQc', 'ca-HepTh', 'p2p-Gnutella06']
     large_dataset_lst = [
             'web-Stanford',
@@ -28,24 +30,24 @@ def run_exp():
             'soc-LiveJournal1',
             'wiki-Link']
     tag = 'exp_results'
-    folder_name = 'effective_vary_eps_1'
+    folder_name = 'effective_vary_delta'
 
     for algo_path in exec_path_lst:
         for dataset_name in small_dataset_lst:
             for q in [10 ** 5]:#, 10 ** 6, 10 ** 7]:
                 for k in [100]:
-                    for eps in [0.002,0.006,0.01,0.014,0.018]:
+                    for delta in [0.002,0.006,0.01,0.014,0.018]:
                         for repeat_cnt in xrange(3):
                             algo_name = algo_path.split('/')[-1]
-                            stat_dir = os.sep.join(map(str, ['.', tag, folder_name, q, k, eps, dataset_name]))
+                            stat_dir = os.sep.join(map(str, ['.', tag, folder_name, q, k, delta, dataset_name]))
                             os.system('mkdir -p ' + stat_dir)
                             stat_file_path = stat_dir + os.sep + algo_name + '.txt'
 
                             os.system(' '.join(['echo', my_splitter + time.ctime() + my_splitter, '>>', stat_file_path]))
-                            params_lst = map(str, [algo_path, dataset_name, q, 1, k, eps, '>>', stat_file_path])
+                            params_lst = map(str, [algo_path, dataset_name, q, 2, k, 0.01, delta, '>>', stat_file_path])
                             cmd = ' '.join(params_lst)
 
-                            time_out = 1200
+                            time_out = 2400
                             tle_flag, info, correct_info = time_out_util.run_with_timeout(cmd, timeout_sec=time_out)
                             write_split(stat_file_path)
                             with open(stat_file_path, 'a+') as ifs:

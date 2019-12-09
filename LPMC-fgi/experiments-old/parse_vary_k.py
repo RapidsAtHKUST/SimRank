@@ -1,6 +1,6 @@
 import os, json, decimal
 
-root_path = '/homes/ywangby/workspace/yche/git-repos/SimRank/LPMC-fgi/experiments/exp_results/vary_k'
+root_path = '/homes/ywangby/workspace/yche/git-repos/SimRank/LPMC-fgi/experiments/exp_results/vary_k_to_q'
 
 def get_file_path(q, k, eps, dataset_name, algo_name):
     return os.sep.join(map(str, [root_path, q, k, eps, dataset_name, algo_name + '.txt']))
@@ -32,7 +32,8 @@ if __name__ == '__main__':
                     'wiki-Link']
     tag_lst = ['indexing time', 'topk cost', "mem size"]
     q_lst = [10 ** 5]
-    k_lst = [100, 200, 300, 400, 500]
+    # k_lst = [100, 200, 300, 400, 500]
+    k_lst = [10 ** 2, 10 ** 3, 10 ** 4, 10 ** 5]
 
     algo_data_lst = []
     for algo_name in algo_lst:
@@ -51,7 +52,7 @@ if __name__ == '__main__':
         algo_data_lst.append(dict(zip(large_dataset_lst, dataset_data_lst)))
 
 
-    with open(os.sep.join([data_folder, 'vary_k.json']), 'w') as ofs:
+    with open(os.sep.join([data_folder, 'vary_k_to_q.json']), 'w') as ofs:
         ofs.write(json.dumps(dict(zip(algo_lst, algo_data_lst)), indent=4))
 
 

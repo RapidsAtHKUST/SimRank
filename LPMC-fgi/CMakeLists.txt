@@ -84,6 +84,11 @@ add_executable(blpmc ${BPRW_SOURCES} main_blpmc_topk.cpp)
 InitDirectories(blpmc)
 InitLibraries(blpmc)
 
+#add_executable(flpmc flpmc.cpp stat.cpp main_flpmc_topk.cpp)
+#add_executable(flpmc ${BPRW_SOURCES} main_flpmc_topk.cpp)
+#InitDirectories(flpmc)
+#InitLibraries(flpmc)
+
 add_executable(blpmc-ap ${BPRW_SOURCES} main_blpmc.cpp)
 InitDirectories(blpmc-ap)
 InitLibraries(blpmc-ap)

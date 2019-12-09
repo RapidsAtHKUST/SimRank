@@ -388,5 +388,70 @@
                 "topk cost": 14.5625
             }
         }
+    }, 
+    "par-sr": {
+        "cit-Patents": {
+            "100": {
+                "indexing time": 0, 
+                "mem size": 0, 
+                "topk cost": 0
+            }
+        }, 
+        "wiki-Link": {
+            "100": {
+                "indexing time": 0, 
+                "mem size": 0, 
+                "topk cost": 0
+            }
+        }, 
+        "web-Stanford": {
+            "100": {
+                "indexing time": 0, 
+                "mem size": 0, 
+                "topk cost": 0
+            }
+        }, 
+        "web-Google": {
+            "100": {
+                "indexing time": 0, 
+                "mem size": 0, 
+                "topk cost": 0
+            }
+        }, 
+        "web-BerkStan": {
+            "100": {
+                "indexing time": 0, 
+                "mem size": 0, 
+                "topk cost": 0
+            }
+        }, 
+        "p2p-Gnutella06": {
+            "100": {
+                "indexing time": null, 
+                "mem size": null, 
+                "topk cost": null
+            }
+        }, 
+        "soc-LiveJournal1": {
+            "100": {
+                "indexing time": 0, 
+                "mem size": 0, 
+                "topk cost": 0
+            }
+        }, 
+        "ca-GrQc": {
+            "100": {
+                "indexing time": null, 
+                "mem size": null, 
+                "topk cost": null
+            }
+        }, 
+        "ca-HepTh": {
+            "100": {
+                "indexing time": null, 
+                "mem size": null, 
+                "topk cost": null
+            }
+        }
     }
 }
