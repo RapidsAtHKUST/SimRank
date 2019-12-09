@@ -1,0 +1,770 @@
+{
+    "carmo-h": {
+        "ca-GrQc": {
+            "200": {
+                "precison": 0.99, 
+                "topk cost": 11.179, 
+                "ndcg": 0.99943, 
+                "max err": 0.0186645, 
+                "indexing time": 52.718, 
+                "mem size": 298768
+            }, 
+            "300": {
+                "precison": 0.98, 
+                "topk cost": 13.4525, 
+                "ndcg": 0.999734, 
+                "max err": 0.00716846, 
+                "indexing time": 52.7087, 
+                "mem size": 296476
+            }, 
+            "400": {
+                "precison": 0.9825, 
+                "topk cost": 14.2413, 
+                "ndcg": 0.999722, 
+                "max err": 0.00335822, 
+                "indexing time": 52.7546, 
+                "mem size": 303604
+            }, 
+            "100": {
+                "precison": 0.99, 
+                "topk cost": 11.4158, 
+                "ndcg": 0.999945, 
+                "max err": 0.00154237, 
+                "indexing time": 52.7805, 
+                "mem size": 297460
+            }, 
+            "500": {
+                "precison": 0.978, 
+                "topk cost": 14.0101, 
+                "ndcg": 0.999737, 
+                "max err": 0.00149966, 
+                "indexing time": 52.5549, 
+                "mem size": 298688
+            }
+        }, 
+        "ca-HepTh": {
+            "200": {
+                "precison": 0.98, 
+                "topk cost": 13.9542, 
+                "ndcg": 0.999886, 
+                "max err": 0.000879966, 
+                "indexing time": 53.7789, 
+                "mem size": 290960
+            }, 
+            "300": {
+                "precison": 0.973333, 
+                "topk cost": 18.8577, 
+                "ndcg": 0.999723, 
+                "max err": 0.00227367, 
+                "indexing time": 53.7202, 
+                "mem size": 290276
+            }, 
+            "400": {
+                "precison": 0.9675, 
+                "topk cost": 21.565, 
+                "ndcg": 0.999629, 
+                "max err": 0.00144278, 
+                "indexing time": 53.5492, 
+                "mem size": 294008
+            }, 
+            "100": {
+                "precison": 0.98, 
+                "topk cost": 14.9464, 
+                "ndcg": 0.999908, 
+                "max err": 0.000732224, 
+                "indexing time": 53.6106, 
+                "mem size": 293456
+            }, 
+            "500": {
+                "precison": 0.966, 
+                "topk cost": 23.2275, 
+                "ndcg": 0.999559, 
+                "max err": 0.00131731, 
+                "indexing time": 53.6232, 
+                "mem size": 293480
+            }
+        }, 
+        "p2p-Gnutella06": {
+            "200": {
+                "precison": 0.995, 
+                "topk cost": 15.5909, 
+                "ndcg": 0.999997, 
+                "max err": 0.00016422, 
+                "indexing time": 53.4854, 
+                "mem size": 456488
+            }, 
+            "300": {
+                "precison": 0.996667, 
+                "topk cost": 16.6795, 
+                "ndcg": 0.999999, 
+                "max err": 4.73447e-05, 
+                "indexing time": 53.3192, 
+                "mem size": 449856
+            }, 
+            "400": {
+                "precison": 0.99, 
+                "topk cost": 16.2019, 
+                "ndcg": 0.999995, 
+                "max err": 6.52336e-05, 
+                "indexing time": 53.4658, 
+                "mem size": 447840
+            }, 
+            "100": {
+                "precison": 1, 
+                "topk cost": 14.0589, 
+                "ndcg": 1, 
+                "max err": 0, 
+                "indexing time": 53.6428, 
+                "mem size": 452660
+            }, 
+            "500": {
+                "precison": 0.998, 
+                "topk cost": 16.445, 
+                "ndcg": 0.999999, 
+                "max err": 1.0347e-05, 
+                "indexing time": 53.3991, 
+                "mem size": 451312
+            }
+        }
+    }, 
+    "tsf-topk": {
+        "ca-GrQc": {
+            "200": {
+                "precison": 0.03, 
+                "topk cost": 38.6537, 
+                "ndcg": 0.156238, 
+                "max err": 0.55209, 
+                "indexing time": 0.00641277, 
+                "mem size": 11044
+            }, 
+            "300": {
+                "precison": 0.0233333, 
+                "topk cost": 38.5037, 
+                "ndcg": 0.148865, 
+                "max err": 0.55209, 
+                "indexing time": 0.00511861, 
+                "mem size": 10504
+            }, 
+            "400": {
+                "precison": 0.02, 
+                "topk cost": 38.5359, 
+                "ndcg": 0.151236, 
+                "max err": 0.548703, 
+                "indexing time": 0.0037233, 
+                "mem size": 11432
+            }, 
+            "100": {
+                "precison": 0.02, 
+                "topk cost": 38.4909, 
+                "ndcg": 0.163991, 
+                "max err": 0.595183, 
+                "indexing time": 0.00669636, 
+                "mem size": 10752
+            }, 
+            "500": {
+                "precison": 0.02, 
+                "topk cost": 38.5299, 
+                "ndcg": 0.148979, 
+                "max err": 0.548703, 
+                "indexing time": 0.00373732, 
+                "mem size": 10536
+            }
+        }, 
+        "ca-HepTh": {
+            "200": {
+                "precison": 0.03, 
+                "topk cost": 40.9593, 
+                "ndcg": 0.0558651, 
+                "max err": 0.539368, 
+                "indexing time": 0.0102341, 
+                "mem size": 13280
+            }, 
+            "300": {
+                "precison": 0.02, 
+                "topk cost": 40.7749, 
+                "ndcg": 0.054474, 
+                "max err": 0.539368, 
+                "indexing time": 0.00652992, 
+                "mem size": 15388
+            }, 
+            "400": {
+                "precison": 0.0175, 
+                "topk cost": 40.4965, 
+                "ndcg": 0.0549538, 
+                "max err": 0.539368, 
+                "indexing time": 0.0109779, 
+                "mem size": 13284
+            }, 
+            "100": {
+                "precison": 0.03, 
+                "topk cost": 40.7584, 
+                "ndcg": 0.0570681, 
+                "max err": 0.539368, 
+                "indexing time": 0.0102745, 
+                "mem size": 12332
+            }, 
+            "500": {
+                "precison": 0.018, 
+                "topk cost": 40.4706, 
+                "ndcg": 0.0554389, 
+                "max err": 0.539368, 
+                "indexing time": 0.0101841, 
+                "mem size": 12624
+            }
+        }, 
+        "p2p-Gnutella06": {
+            "200": {
+                "precison": 0.01, 
+                "topk cost": 37.6718, 
+                "ndcg": 0.151074, 
+                "max err": 0.592683, 
+                "indexing time": 0.0106589, 
+                "mem size": 11940
+            }, 
+            "300": {
+                "precison": 0.00666667, 
+                "topk cost": 37.7509, 
+                "ndcg": 0.144179, 
+                "max err": 0.590853, 
+                "indexing time": 0.0107853, 
+                "mem size": 12016
+            }, 
+            "400": {
+                "precison": 0.005, 
+                "topk cost": 37.7955, 
+                "ndcg": 0.139577, 
+                "max err": 0.590853, 
+                "indexing time": 0.0104621, 
+                "mem size": 12020
+            }, 
+            "100": {
+                "precison": 0.01, 
+                "topk cost": 37.6199, 
+                "ndcg": 0.169452, 
+                "max err": 0.592683, 
+                "indexing time": 0.00620059, 
+                "mem size": 12032
+            }, 
+            "500": {
+                "precison": 0.008, 
+                "topk cost": 37.7906, 
+                "ndcg": 0.139112, 
+                "max err": 0.586852, 
+                "indexing time": 0.0104656, 
+                "mem size": 11712
+            }
+        }
+    }, 
+    "sling-topk": {
+        "ca-GrQc": {
+            "200": {
+                "precison": 1, 
+                "topk cost": 40.9291, 
+                "ndcg": 1, 
+                "max err": 0, 
+                "indexing time": 7.99918, 
+                "mem size": 125276
+            }, 
+            "300": {
+                "precison": 1, 
+                "topk cost": 40.9323, 
+                "ndcg": 1, 
+                "max err": 0, 
+                "indexing time": 8.39205, 
+                "mem size": 125560
+            }, 
+            "400": {
+                "precison": 1, 
+                "topk cost": 40.8623, 
+                "ndcg": 1, 
+                "max err": 0, 
+                "indexing time": 7.91488, 
+                "mem size": 125412
+            }, 
+            "100": {
+                "precison": 1, 
+                "topk cost": 40.9184, 
+                "ndcg": 1, 
+                "max err": 0, 
+                "indexing time": 8.21258, 
+                "mem size": 129036
+            }, 
+            "500": {
+                "precison": 1, 
+                "topk cost": 40.7447, 
+                "ndcg": 1, 
+                "max err": 0, 
+                "indexing time": 7.68595, 
+                "mem size": 128996
+            }
+        }, 
+        "ca-HepTh": {
+            "200": {
+                "precison": 1, 
+                "topk cost": 39.3364, 
+                "ndcg": 1, 
+                "max err": 0, 
+                "indexing time": 12.5971, 
+                "mem size": 193932
+            }, 
+            "300": {
+                "precison": 0.993333, 
+                "topk cost": 39.3534, 
+                "ndcg": 0.999998, 
+                "max err": 4.03626e-05, 
+                "indexing time": 12.7322, 
+                "mem size": 192976
+            }, 
+            "400": {
+                "precison": 0.9975, 
+                "topk cost": 39.3334, 
+                "ndcg": 0.999997, 
+                "max err": 8.52523e-05, 
+                "indexing time": 12.8077, 
+                "mem size": 191968
+            }, 
+            "100": {
+                "precison": 1, 
+                "topk cost": 39.3019, 
+                "ndcg": 1, 
+                "max err": 0, 
+                "indexing time": 12.2589, 
+                "mem size": 192160
+            }, 
+            "500": {
+                "precison": 0.998, 
+                "topk cost": 39.409, 
+                "ndcg": 0.999999, 
+                "max err": 2.32789e-05, 
+                "indexing time": 12.731, 
+                "mem size": 192448
+            }
+        }, 
+        "p2p-Gnutella06": {
+            "200": {
+                "precison": 1, 
+                "topk cost": 27.7756, 
+                "ndcg": 1, 
+                "max err": 0, 
+                "indexing time": 5.61875, 
+                "mem size": 181196
+            }, 
+            "300": {
+                "precison": 1, 
+                "topk cost": 27.7654, 
+                "ndcg": 1, 
+                "max err": 0, 
+                "indexing time": 5.65685, 
+                "mem size": 182052
+            }, 
+            "400": {
+                "precison": 0.9975, 
+                "topk cost": 27.8261, 
+                "ndcg": 1, 
+                "max err": 7.63964e-06, 
+                "indexing time": 5.56306, 
+                "mem size": 181396
+            }, 
+            "100": {
+                "precison": 1, 
+                "topk cost": 27.8973, 
+                "ndcg": 1, 
+                "max err": 0, 
+                "indexing time": 5.62129, 
+                "mem size": 180288
+            }, 
+            "500": {
+                "precison": 1, 
+                "topk cost": 27.8532, 
+                "ndcg": 1, 
+                "max err": 0, 
+                "indexing time": 5.5205, 
+                "mem size": 180192
+            }
+        }
+    }, 
+    "carmo": {
+        "ca-GrQc": {
+            "200": {
+                "precison": 1, 
+                "topk cost": 12.0076, 
+                "ndcg": 1, 
+                "max err": 0, 
+                "indexing time": 1.50669, 
+                "mem size": 64252
+            }, 
+            "300": {
+                "precison": 0.983333, 
+                "topk cost": 10.5098, 
+                "ndcg": 0.999915, 
+                "max err": 0.00138216, 
+                "indexing time": 1.55517, 
+                "mem size": 66896
+            }, 
+            "400": {
+                "precison": 0.985, 
+                "topk cost": 13.6293, 
+                "ndcg": 0.999874, 
+                "max err": 0.00148951, 
+                "indexing time": 1.56898, 
+                "mem size": 68368
+            }, 
+            "100": {
+                "precison": 0.99, 
+                "topk cost": 11.2329, 
+                "ndcg": 0.999973, 
+                "max err": 0.000773497, 
+                "indexing time": 1.54132, 
+                "mem size": 65956
+            }, 
+            "500": {
+                "precison": 0.98, 
+                "topk cost": 16.0815, 
+                "ndcg": 0.999792, 
+                "max err": 0.000913525, 
+                "indexing time": 1.38209, 
+                "mem size": 69204
+            }
+        }, 
+        "ca-HepTh": {
+            "200": {
+                "precison": 0.99, 
+                "topk cost": 14.0159, 
+                "ndcg": 0.999952, 
+                "max err": 0.000807045, 
+                "indexing time": 1.6111, 
+                "mem size": 57404
+            }, 
+            "300": {
+                "precison": 0.98, 
+                "topk cost": 18.3957, 
+                "ndcg": 0.999854, 
+                "max err": 0.000662884, 
+                "indexing time": 1.44126, 
+                "mem size": 56448
+            }, 
+            "400": {
+                "precison": 0.975, 
+                "topk cost": 23.6503, 
+                "ndcg": 0.999759, 
+                "max err": 0.00132678, 
+                "indexing time": 1.58202, 
+                "mem size": 56940
+            }, 
+            "100": {
+                "precison": 1, 
+                "topk cost": 10.7959, 
+                "ndcg": 1, 
+                "max err": 0, 
+                "indexing time": 1.61078, 
+                "mem size": 59328
+            }, 
+            "500": {
+                "precison": 0.97, 
+                "topk cost": 25.2592, 
+                "ndcg": 0.999621, 
+                "max err": 0.000918225, 
+                "indexing time": 1.53445, 
+                "mem size": 55240
+            }
+        }, 
+        "p2p-Gnutella06": {
+            "200": {
+                "precison": 1, 
+                "topk cost": 14.078, 
+                "ndcg": 1, 
+                "max err": 0, 
+                "indexing time": 3.7836, 
+                "mem size": 214168
+            }, 
+            "300": {
+                "precison": 0.996667, 
+                "topk cost": 15.8704, 
+                "ndcg": 0.999999, 
+                "max err": 4.73447e-05, 
+                "indexing time": 3.79506, 
+                "mem size": 216064
+            }, 
+            "400": {
+                "precison": 0.99, 
+                "topk cost": 15.9412, 
+                "ndcg": 0.999996, 
+                "max err": 6.43656e-05, 
+                "indexing time": 3.80167, 
+                "mem size": 218684
+            }, 
+            "100": {
+                "precison": 1, 
+                "topk cost": 15.3727, 
+                "ndcg": 1, 
+                "max err": 0, 
+                "indexing time": 3.79123, 
+                "mem size": 216992
+            }, 
+            "500": {
+                "precison": 0.998, 
+                "topk cost": 17.5896, 
+                "ndcg": 0.999999, 
+                "max err": 1.0347e-05, 
+                "indexing time": 3.8281, 
+                "mem size": 222540
+            }
+        }
+    }, 
+    "blpmc": {
+        "ca-GrQc": {
+            "200": {
+                "precison": 0.995, 
+                "topk cost": 25.4277, 
+                "ndcg": 0.999908, 
+                "max err": 0.00200578, 
+                "indexing time": 1.34207, 
+                "mem size": 64424
+            }, 
+            "300": {
+                "precison": 0.983333, 
+                "topk cost": 25.5753, 
+                "ndcg": 0.999922, 
+                "max err": 0.000721414, 
+                "indexing time": 1.37965, 
+                "mem size": 63716
+            }, 
+            "400": {
+                "precison": 0.9825, 
+                "topk cost": 26.0499, 
+                "ndcg": 0.999781, 
+                "max err": 0.00169653, 
+                "indexing time": 1.37454, 
+                "mem size": 67224
+            }, 
+            "100": {
+                "precison": 1, 
+                "topk cost": 25.61, 
+                "ndcg": 1, 
+                "max err": 0, 
+                "indexing time": 1.32463, 
+                "mem size": 63144
+            }, 
+            "500": {
+                "precison": 0.976, 
+                "topk cost": 25.2574, 
+                "ndcg": 0.999777, 
+                "max err": 0.00138702, 
+                "indexing time": 1.40972, 
+                "mem size": 68028
+            }
+        }, 
+        "ca-HepTh": {
+            "200": {
+                "precison": 0.985, 
+                "topk cost": 29.1201, 
+                "ndcg": 0.999911, 
+                "max err": 0.000762971, 
+                "indexing time": 1.58896, 
+                "mem size": 59916
+            }, 
+            "300": {
+                "precison": 0.98, 
+                "topk cost": 29.4864, 
+                "ndcg": 0.999851, 
+                "max err": 0.000848542, 
+                "indexing time": 1.34983, 
+                "mem size": 54308
+            }, 
+            "400": {
+                "precison": 0.9725, 
+                "topk cost": 28.5754, 
+                "ndcg": 0.999743, 
+                "max err": 0.00117411, 
+                "indexing time": 1.4137, 
+                "mem size": 58972
+            }, 
+            "100": {
+                "precison": 0.99, 
+                "topk cost": 31.0652, 
+                "ndcg": 0.999966, 
+                "max err": 0.000732224, 
+                "indexing time": 1.40269, 
+                "mem size": 54092
+            }, 
+            "500": {
+                "precison": 0.972, 
+                "topk cost": 28.64, 
+                "ndcg": 0.999761, 
+                "max err": 0.00131731, 
+                "indexing time": 1.41736, 
+                "mem size": 57536
+            }
+        }, 
+        "p2p-Gnutella06": {
+            "200": {
+                "precison": 0.995, 
+                "topk cost": 20.6621, 
+                "ndcg": 0.999997, 
+                "max err": 0.00016422, 
+                "indexing time": 3.8839, 
+                "mem size": 219716
+            }, 
+            "300": {
+                "precison": 0.996667, 
+                "topk cost": 20.622, 
+                "ndcg": 0.999997, 
+                "max err": 0.000117449, 
+                "indexing time": 3.77278, 
+                "mem size": 212004
+            }, 
+            "400": {
+                "precison": 0.9875, 
+                "topk cost": 20.8263, 
+                "ndcg": 0.999996, 
+                "max err": 5.1681e-05, 
+                "indexing time": 3.85214, 
+                "mem size": 216808
+            }, 
+            "100": {
+                "precison": 1, 
+                "topk cost": 19.9331, 
+                "ndcg": 1, 
+                "max err": 0, 
+                "indexing time": 3.7772, 
+                "mem size": 214816
+            }, 
+            "500": {
+                "precison": 0.998, 
+                "topk cost": 20.6134, 
+                "ndcg": 0.999999, 
+                "max err": 1.0347e-05, 
+                "indexing time": 3.63527, 
+                "mem size": 215300
+            }
+        }
+    }, 
+    "carmo-t": {
+        "ca-GrQc": {
+            "200": {
+                "precison": 1, 
+                "topk cost": 12.8842, 
+                "ndcg": 1, 
+                "max err": 0, 
+                "indexing time": 1.57157, 
+                "mem size": 63996
+            }, 
+            "300": {
+                "precison": 0.986667, 
+                "topk cost": 9.81615, 
+                "ndcg": 0.999907, 
+                "max err": 0.000959352, 
+                "indexing time": 1.37726, 
+                "mem size": 64492
+            }, 
+            "400": {
+                "precison": 0.99, 
+                "topk cost": 16.3068, 
+                "ndcg": 0.999933, 
+                "max err": 0.00084827, 
+                "indexing time": 1.54379, 
+                "mem size": 65552
+            }, 
+            "100": {
+                "precison": 1, 
+                "topk cost": 10.0723, 
+                "ndcg": 1, 
+                "max err": 0, 
+                "indexing time": 1.52, 
+                "mem size": 64292
+            }, 
+            "500": {
+                "precison": 0.976, 
+                "topk cost": 15.2085, 
+                "ndcg": 0.999727, 
+                "max err": 0.00130229, 
+                "indexing time": 1.44165, 
+                "mem size": 62420
+            }
+        }, 
+        "ca-HepTh": {
+            "200": {
+                "precison": 0.995, 
+                "topk cost": 17.4892, 
+                "ndcg": 0.999962, 
+                "max err": 0.00057168, 
+                "indexing time": 1.5705, 
+                "mem size": 45228
+            }, 
+            "300": {
+                "precison": 0.986667, 
+                "topk cost": 18.7672, 
+                "ndcg": 0.999855, 
+                "max err": 0.00150984, 
+                "indexing time": 1.56526, 
+                "mem size": 56568
+            }, 
+            "400": {
+                "precison": 0.9675, 
+                "topk cost": 23.6619, 
+                "ndcg": 0.999722, 
+                "max err": 0.000762607, 
+                "indexing time": 1.46126, 
+                "mem size": 57432
+            }, 
+            "100": {
+                "precison": 0.98, 
+                "topk cost": 13.904, 
+                "ndcg": 0.999899, 
+                "max err": 0.000905994, 
+                "indexing time": 1.57166, 
+                "mem size": 55940
+            }, 
+            "500": {
+                "precison": 0.972, 
+                "topk cost": 22.3124, 
+                "ndcg": 0.999713, 
+                "max err": 0.000843749, 
+                "indexing time": 1.5452, 
+                "mem size": 56820
+            }
+        }, 
+        "p2p-Gnutella06": {
+            "200": {
+                "precison": 0.995, 
+                "topk cost": 15.8905, 
+                "ndcg": 0.999993, 
+                "max err": 0.000387702, 
+                "indexing time": 3.78851, 
+                "mem size": 216024
+            }, 
+            "300": {
+                "precison": 0.996667, 
+                "topk cost": 16.2494, 
+                "ndcg": 0.999999, 
+                "max err": 4.73447e-05, 
+                "indexing time": 3.6335, 
+                "mem size": 216424
+            }, 
+            "400": {
+                "precison": 0.99, 
+                "topk cost": 15.843, 
+                "ndcg": 0.999995, 
+                "max err": 7.00206e-05, 
+                "indexing time": 3.73704, 
+                "mem size": 210752
+            }, 
+            "100": {
+                "precison": 0.99, 
+                "topk cost": 14.9419, 
+                "ndcg": 0.999992, 
+                "max err": 0.000313304, 
+                "indexing time": 3.85268, 
+                "mem size": 225000
+            }, 
+            "500": {
+                "precison": 0.998, 
+                "topk cost": 16.562, 
+                "ndcg": 0.999999, 
+                "max err": 1.0347e-05, 
+                "indexing time": 3.7366, 
+                "mem size": 219692
+            }
+        }
+    }
+}

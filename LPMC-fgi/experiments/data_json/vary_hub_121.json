@@ -1,0 +1,38 @@
+{
+    "carmo-h-121": {
+        "ca-GrQc": {
+            "100": {
+                "0": {
+                    "indexing time": 0.00442597, 
+                    "mem size": 3708, 
+                    "topk cost": 23.7566
+                }, 
+                "2000000": {
+                    "indexing time": 9.57103, 
+                    "mem size": 50536, 
+                    "topk cost": 22.1667
+                }, 
+                "4000000": {
+                    "indexing time": 19.1612, 
+                    "mem size": 98056, 
+                    "topk cost": 20.4256
+                }, 
+                "6000000": {
+                    "indexing time": 28.88, 
+                    "mem size": 145148, 
+                    "topk cost": 19.816
+                }, 
+                "8000000": {
+                    "indexing time": 38.3992, 
+                    "mem size": 191772, 
+                    "topk cost": 19.3794
+                }, 
+                "10000000": {
+                    "indexing time": 48.0283, 
+                    "mem size": 239128, 
+                    "topk cost": 19.1286
+                }
+            }
+        }
+    }
+}

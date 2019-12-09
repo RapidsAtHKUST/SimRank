@@ -1,0 +1,452 @@
+{
+    "carmo": {
+        "web-Google": {
+            "100000": {
+                "200": {
+                    "indexing time": 1.4845, 
+                    "topk cost": 12.3906
+                }, 
+                "100": {
+                    "indexing time": 1.53501, 
+                    "topk cost": 11.787
+                }
+            }, 
+            "1000000": {
+                "200": {
+                    "indexing time": 1.42805, 
+                    "topk cost": 123.194
+                }, 
+                "100": {
+                    "indexing time": 1.55015, 
+                    "topk cost": 123.866
+                }
+            }
+        }, 
+        "web-Stanford": {
+            "100000": {
+                "200": {
+                    "indexing time": 1.68658, 
+                    "topk cost": 21.0567
+                }, 
+                "100": {
+                    "indexing time": 1.74875, 
+                    "topk cost": 18.0965
+                }
+            }, 
+            "1000000": {
+                "200": {
+                    "indexing time": 1.73777, 
+                    "topk cost": 95.5511
+                }, 
+                "100": {
+                    "indexing time": 1.72926, 
+                    "topk cost": 86.2005
+                }
+            }
+        }, 
+        "web-BerkStan": {
+            "100000": {
+                "200": {
+                    "indexing time": 1.47829, 
+                    "topk cost": 21.2593
+                }, 
+                "100": {
+                    "indexing time": 1.51766, 
+                    "topk cost": 21.849
+                }
+            }, 
+            "1000000": {
+                "200": {
+                    "indexing time": 1.47124, 
+                    "topk cost": 170.57
+                }, 
+                "100": {
+                    "indexing time": 1.54884, 
+                    "topk cost": 109.472
+                }
+            }
+        }, 
+        "cit-Patents": {
+            "100000": {
+                "200": {
+                    "indexing time": 1.9109, 
+                    "topk cost": 6.57528
+                }, 
+                "100": {
+                    "indexing time": 1.91319, 
+                    "topk cost": 6.23239
+                }
+            }, 
+            "1000000": {
+                "200": {
+                    "indexing time": 1.84773, 
+                    "topk cost": 67.6142
+                }, 
+                "100": {
+                    "indexing time": 1.68361, 
+                    "topk cost": 63.7188
+                }
+            }
+        }
+    }, 
+    "blpmc": {
+        "web-Google": {
+            "100000": {
+                "200": {
+                    "indexing time": 1.44254, 
+                    "topk cost": 13.4675
+                }, 
+                "100": {
+                    "indexing time": 1.50326, 
+                    "topk cost": 12.4556
+                }
+            }, 
+            "1000000": {
+                "200": {
+                    "indexing time": 1.426, 
+                    "topk cost": 124.888
+                }, 
+                "100": {
+                    "indexing time": 1.402, 
+                    "topk cost": 124.316
+                }
+            }
+        }, 
+        "web-Stanford": {
+            "100000": {
+                "200": {
+                    "indexing time": 1.71891, 
+                    "topk cost": 22.1189
+                }, 
+                "100": {
+                    "indexing time": 1.74276, 
+                    "topk cost": 20.886
+                }
+            }, 
+            "1000000": {
+                "200": {
+                    "indexing time": 1.71191, 
+                    "topk cost": 223.416
+                }, 
+                "100": {
+                    "indexing time": 1.73463, 
+                    "topk cost": 214.405
+                }
+            }
+        }, 
+        "web-BerkStan": {
+            "100000": {
+                "200": {
+                    "indexing time": 1.54782, 
+                    "topk cost": 22.2258
+                }, 
+                "100": {
+                    "indexing time": 1.46797, 
+                    "topk cost": 22.5413
+                }
+            }, 
+            "1000000": {
+                "200": {
+                    "indexing time": 1.39701, 
+                    "topk cost": 224.448
+                }, 
+                "100": {
+                    "indexing time": 1.47033, 
+                    "topk cost": 213.965
+                }
+            }
+        }, 
+        "cit-Patents": {
+            "100000": {
+                "200": {
+                    "indexing time": 1.71976, 
+                    "topk cost": 6.11681
+                }, 
+                "100": {
+                    "indexing time": 1.86393, 
+                    "topk cost": 6.24933
+                }
+            }, 
+            "1000000": {
+                "200": {
+                    "indexing time": 1.9102, 
+                    "topk cost": 63.8233
+                }, 
+                "100": {
+                    "indexing time": 1.88891, 
+                    "topk cost": 63.1413
+                }
+            }
+        }
+    }, 
+    "carmo-h": {
+        "web-Google": {
+            "100000": {
+                "200": {
+                    "indexing time": 46.2126, 
+                    "topk cost": 11.5776
+                }, 
+                "100": {
+                    "indexing time": 46.2822, 
+                    "topk cost": 12.9041
+                }
+            }, 
+            "1000000": {
+                "200": {
+                    "indexing time": 45.9869, 
+                    "topk cost": 120.387
+                }, 
+                "100": {
+                    "indexing time": 45.9706, 
+                    "topk cost": 126.502
+                }
+            }
+        }, 
+        "web-Stanford": {
+            "100000": {
+                "200": {
+                    "indexing time": 49.8657, 
+                    "topk cost": 21.6006
+                }, 
+                "100": {
+                    "indexing time": 50.0079, 
+                    "topk cost": 16.3726
+                }
+            }, 
+            "1000000": {
+                "200": {
+                    "indexing time": 49.871, 
+                    "topk cost": 37.9487
+                }, 
+                "100": {
+                    "indexing time": 49.6906, 
+                    "topk cost": 114.861
+                }
+            }
+        }, 
+        "web-BerkStan": {
+            "100000": {
+                "200": {
+                    "indexing time": 48.1414, 
+                    "topk cost": 22.8652
+                }, 
+                "100": {
+                    "indexing time": 48.2647, 
+                    "topk cost": 21.9325
+                }
+            }, 
+            "1000000": {
+                "200": {
+                    "indexing time": 47.8697, 
+                    "topk cost": 167.33
+                }, 
+                "100": {
+                    "indexing time": 47.891, 
+                    "topk cost": 135.125
+                }
+            }
+        }, 
+        "cit-Patents": {
+            "100000": {
+                "200": {
+                    "indexing time": 30.8587, 
+                    "topk cost": 6.31547
+                }, 
+                "100": {
+                    "indexing time": 30.889, 
+                    "topk cost": 6.7832
+                }
+            }, 
+            "1000000": {
+                "200": {
+                    "indexing time": 30.8429, 
+                    "topk cost": 62.722
+                }, 
+                "100": {
+                    "indexing time": 30.5183, 
+                    "topk cost": 64.7681
+                }
+            }
+        }
+    }, 
+    "sling-topk": {
+        "web-Google": {
+            "100000": {
+                "200": {
+                    "indexing time": null, 
+                    "topk cost": null
+                }, 
+                "100": {
+                    "indexing time": null, 
+                    "topk cost": null
+                }
+            }, 
+            "1000000": {
+                "200": {
+                    "indexing time": null, 
+                    "topk cost": null
+                }, 
+                "100": {
+                    "indexing time": 602.009, 
+                    "topk cost": 259.63
+                }
+            }
+        }, 
+        "web-Stanford": {
+            "100000": {
+                "200": {
+                    "indexing time": null, 
+                    "topk cost": null
+                }, 
+                "100": {
+                    "indexing time": null, 
+                    "topk cost": null
+                }
+            }, 
+            "1000000": {
+                "200": {
+                    "indexing time": null, 
+                    "topk cost": null
+                }, 
+                "100": {
+                    "indexing time": 358.227, 
+                    "topk cost": 379.768
+                }
+            }
+        }, 
+        "web-BerkStan": {
+            "100000": {
+                "200": {
+                    "indexing time": null, 
+                    "topk cost": null
+                }, 
+                "100": {
+                    "indexing time": null, 
+                    "topk cost": null
+                }
+            }, 
+            "1000000": {
+                "200": {
+                    "indexing time": null, 
+                    "topk cost": null
+                }, 
+                "100": {
+                    "indexing time": 817.131, 
+                    "topk cost": 411.088
+                }
+            }
+        }, 
+        "cit-Patents": {
+            "100000": {
+                "200": {
+                    "indexing time": null, 
+                    "topk cost": null
+                }, 
+                "100": {
+                    "indexing time": null, 
+                    "topk cost": null
+                }
+            }, 
+            "1000000": {
+                "200": {
+                    "indexing time": null, 
+                    "topk cost": null
+                }, 
+                "100": {
+                    "indexing time": 546.246, 
+                    "topk cost": 65.5054
+                }
+            }
+        }
+    }, 
+    "carmo-t": {
+        "web-Google": {
+            "100000": {
+                "200": {
+                    "indexing time": 154.659, 
+                    "topk cost": 14.0299
+                }, 
+                "100": {
+                    "indexing time": 155.42, 
+                    "topk cost": 13.9403
+                }
+            }, 
+            "1000000": {
+                "200": {
+                    "indexing time": 155.564, 
+                    "topk cost": 135.644
+                }, 
+                "100": {
+                    "indexing time": 155.446, 
+                    "topk cost": 135.055
+                }
+            }
+        }, 
+        "web-Stanford": {
+            "100000": {
+                "200": {
+                    "indexing time": 43.1505, 
+                    "topk cost": 20.1243
+                }, 
+                "100": {
+                    "indexing time": 43.1281, 
+                    "topk cost": 18.2917
+                }
+            }, 
+            "1000000": {
+                "200": {
+                    "indexing time": 43.204, 
+                    "topk cost": 78.5168
+                }, 
+                "100": {
+                    "indexing time": 43.0503, 
+                    "topk cost": 118.008
+                }
+            }
+        }, 
+        "web-BerkStan": {
+            "100000": {
+                "200": {
+                    "indexing time": 105.156, 
+                    "topk cost": 23.4151
+                }, 
+                "100": {
+                    "indexing time": 106.415, 
+                    "topk cost": 23.5261
+                }
+            }, 
+            "1000000": {
+                "200": {
+                    "indexing time": 105.685, 
+                    "topk cost": 171.873
+                }, 
+                "100": {
+                    "indexing time": 105.098, 
+                    "topk cost": 130.872
+                }
+            }
+        }, 
+        "cit-Patents": {
+            "100000": {
+                "200": {
+                    "indexing time": 744.205, 
+                    "topk cost": 7.19284
+                }, 
+                "100": {
+                    "indexing time": 746.666, 
+                    "topk cost": 6.93562
+                }
+            }, 
+            "1000000": {
+                "200": {
+                    "indexing time": 746.36, 
+                    "topk cost": 77.9299
+                }, 
+                "100": {
+                    "indexing time": 740.478, 
+                    "topk cost": 66.9903
+                }
+            }
+        }
+    }
+}

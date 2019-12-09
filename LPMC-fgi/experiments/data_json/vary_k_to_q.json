@@ -1,0 +1,626 @@
+{
+    "carmo-h": {
+        "ca-GrQc": {
+            "800": {
+                "indexing time": null, 
+                "mem size": null, 
+                "topk cost": null
+            }, 
+            "2000": {
+                "indexing time": null, 
+                "mem size": null, 
+                "topk cost": null
+            }, 
+            "90000": {
+                "indexing time": null, 
+                "mem size": null, 
+                "topk cost": null
+            }, 
+            "70000": {
+                "indexing time": null, 
+                "mem size": null, 
+                "topk cost": null
+            }, 
+            "100": {
+                "indexing time": 11.7366, 
+                "mem size": 50588, 
+                "topk cost": 8.19708
+            }, 
+            "50000": {
+                "indexing time": null, 
+                "mem size": null, 
+                "topk cost": null
+            }, 
+            "200": {
+                "indexing time": null, 
+                "mem size": null, 
+                "topk cost": null
+            }, 
+            "80000": {
+                "indexing time": null, 
+                "mem size": null, 
+                "topk cost": null
+            }, 
+            "300": {
+                "indexing time": null, 
+                "mem size": null, 
+                "topk cost": null
+            }, 
+            "400": {
+                "indexing time": null, 
+                "mem size": null, 
+                "topk cost": null
+            }, 
+            "1000": {
+                "indexing time": 11.2412, 
+                "mem size": 50644, 
+                "topk cost": 19.6441
+            }, 
+            "5000": {
+                "indexing time": null, 
+                "mem size": null, 
+                "topk cost": null
+            }, 
+            "500": {
+                "indexing time": null, 
+                "mem size": null, 
+                "topk cost": null
+            }, 
+            "20000": {
+                "indexing time": null, 
+                "mem size": null, 
+                "topk cost": null
+            }, 
+            "600": {
+                "indexing time": null, 
+                "mem size": null, 
+                "topk cost": null
+            }, 
+            "900": {
+                "indexing time": null, 
+                "mem size": null, 
+                "topk cost": null
+            }, 
+            "60000": {
+                "indexing time": null, 
+                "mem size": null, 
+                "topk cost": null
+            }, 
+            "100000": {
+                "indexing time": 11.6765, 
+                "mem size": 50632, 
+                "topk cost": 6.65994
+            }, 
+            "700": {
+                "indexing time": null, 
+                "mem size": null, 
+                "topk cost": null
+            }, 
+            "10000": {
+                "indexing time": 11.6007, 
+                "mem size": 50584, 
+                "topk cost": 20.7465
+            }
+        }
+    }, 
+    "tsf-topk": {
+        "ca-GrQc": {
+            "800": {
+                "indexing time": null, 
+                "mem size": null, 
+                "topk cost": null
+            }, 
+            "2000": {
+                "indexing time": null, 
+                "mem size": null, 
+                "topk cost": null
+            }, 
+            "90000": {
+                "indexing time": null, 
+                "mem size": null, 
+                "topk cost": null
+            }, 
+            "70000": {
+                "indexing time": null, 
+                "mem size": null, 
+                "topk cost": null
+            }, 
+            "100": {
+                "indexing time": 0.00597083, 
+                "mem size": 10800, 
+                "topk cost": 43.8775
+            }, 
+            "50000": {
+                "indexing time": null, 
+                "mem size": null, 
+                "topk cost": null
+            }, 
+            "200": {
+                "indexing time": null, 
+                "mem size": null, 
+                "topk cost": null
+            }, 
+            "80000": {
+                "indexing time": null, 
+                "mem size": null, 
+                "topk cost": null
+            }, 
+            "300": {
+                "indexing time": null, 
+                "mem size": null, 
+                "topk cost": null
+            }, 
+            "400": {
+                "indexing time": null, 
+                "mem size": null, 
+                "topk cost": null
+            }, 
+            "1000": {
+                "indexing time": 0.00566449, 
+                "mem size": 11564, 
+                "topk cost": 43.7848
+            }, 
+            "5000": {
+                "indexing time": null, 
+                "mem size": null, 
+                "topk cost": null
+            }, 
+            "500": {
+                "indexing time": null, 
+                "mem size": null, 
+                "topk cost": null
+            }, 
+            "20000": {
+                "indexing time": null, 
+                "mem size": null, 
+                "topk cost": null
+            }, 
+            "600": {
+                "indexing time": null, 
+                "mem size": null, 
+                "topk cost": null
+            }, 
+            "900": {
+                "indexing time": null, 
+                "mem size": null, 
+                "topk cost": null
+            }, 
+            "60000": {
+                "indexing time": null, 
+                "mem size": null, 
+                "topk cost": null
+            }, 
+            "100000": {
+                "indexing time": 0.00555076, 
+                "mem size": 10516, 
+                "topk cost": 43.7964
+            }, 
+            "700": {
+                "indexing time": null, 
+                "mem size": null, 
+                "topk cost": null
+            }, 
+            "10000": {
+                "indexing time": 0.00605861, 
+                "mem size": 10760, 
+                "topk cost": 43.8011
+            }
+        }
+    }, 
+    "sling-topk": {
+        "ca-GrQc": {
+            "800": {
+                "indexing time": null, 
+                "mem size": null, 
+                "topk cost": null
+            }, 
+            "2000": {
+                "indexing time": null, 
+                "mem size": null, 
+                "topk cost": null
+            }, 
+            "90000": {
+                "indexing time": null, 
+                "mem size": null, 
+                "topk cost": null
+            }, 
+            "70000": {
+                "indexing time": null, 
+                "mem size": null, 
+                "topk cost": null
+            }, 
+            "100": {
+                "indexing time": 9.17715, 
+                "mem size": 126516, 
+                "topk cost": 46.1854
+            }, 
+            "50000": {
+                "indexing time": null, 
+                "mem size": null, 
+                "topk cost": null
+            }, 
+            "200": {
+                "indexing time": null, 
+                "mem size": null, 
+                "topk cost": null
+            }, 
+            "80000": {
+                "indexing time": null, 
+                "mem size": null, 
+                "topk cost": null
+            }, 
+            "300": {
+                "indexing time": null, 
+                "mem size": null, 
+                "topk cost": null
+            }, 
+            "400": {
+                "indexing time": null, 
+                "mem size": null, 
+                "topk cost": null
+            }, 
+            "1000": {
+                "indexing time": 9.3116, 
+                "mem size": 126216, 
+                "topk cost": 46.1086
+            }, 
+            "5000": {
+                "indexing time": null, 
+                "mem size": null, 
+                "topk cost": null
+            }, 
+            "500": {
+                "indexing time": null, 
+                "mem size": null, 
+                "topk cost": null
+            }, 
+            "20000": {
+                "indexing time": null, 
+                "mem size": null, 
+                "topk cost": null
+            }, 
+            "600": {
+                "indexing time": null, 
+                "mem size": null, 
+                "topk cost": null
+            }, 
+            "900": {
+                "indexing time": null, 
+                "mem size": null, 
+                "topk cost": null
+            }, 
+            "60000": {
+                "indexing time": null, 
+                "mem size": null, 
+                "topk cost": null
+            }, 
+            "100000": {
+                "indexing time": 9.27951, 
+                "mem size": 126252, 
+                "topk cost": 46.2846
+            }, 
+            "700": {
+                "indexing time": null, 
+                "mem size": null, 
+                "topk cost": null
+            }, 
+            "10000": {
+                "indexing time": 9.08654, 
+                "mem size": 125460, 
+                "topk cost": 46.432
+            }
+        }
+    }, 
+    "carmo": {
+        "ca-GrQc": {
+            "800": {
+                "indexing time": 1.62019, 
+                "mem size": 61656, 
+                "topk cost": 27.8412
+            }, 
+            "2000": {
+                "indexing time": 1.69792, 
+                "mem size": 68608, 
+                "topk cost": 28.1291
+            }, 
+            "90000": {
+                "indexing time": 1.55499, 
+                "mem size": 67916, 
+                "topk cost": 29.4512
+            }, 
+            "70000": {
+                "indexing time": 1.57656, 
+                "mem size": 67968, 
+                "topk cost": 27.1507
+            }, 
+            "100": {
+                "indexing time": 1.55804, 
+                "mem size": 62572, 
+                "topk cost": 13.7018
+            }, 
+            "50000": {
+                "indexing time": 1.55976, 
+                "mem size": 67424, 
+                "topk cost": 28.5964
+            }, 
+            "200": {
+                "indexing time": 1.65156, 
+                "mem size": 66560, 
+                "topk cost": 12.0583
+            }, 
+            "80000": {
+                "indexing time": 1.58697, 
+                "mem size": 63960, 
+                "topk cost": 29.6024
+            }, 
+            "300": {
+                "indexing time": 1.57205, 
+                "mem size": 67416, 
+                "topk cost": 17.9772
+            }, 
+            "400": {
+                "indexing time": 1.5072, 
+                "mem size": 66700, 
+                "topk cost": 19.8734
+            }, 
+            "1000": {
+                "indexing time": 1.61905, 
+                "mem size": 67500, 
+                "topk cost": 27.5112
+            }, 
+            "5000": {
+                "indexing time": 1.60832, 
+                "mem size": 66124, 
+                "topk cost": 28.1839
+            }, 
+            "500": {
+                "indexing time": 1.56548, 
+                "mem size": 63072, 
+                "topk cost": 21.9855
+            }, 
+            "20000": {
+                "indexing time": 1.55975, 
+                "mem size": 64336, 
+                "topk cost": 28.0676
+            }, 
+            "600": {
+                "indexing time": 1.59201, 
+                "mem size": 68920, 
+                "topk cost": 25.5599
+            }, 
+            "900": {
+                "indexing time": 1.69745, 
+                "mem size": 66892, 
+                "topk cost": 26.7946
+            }, 
+            "60000": {
+                "indexing time": 1.69288, 
+                "mem size": 67372, 
+                "topk cost": 28.7728
+            }, 
+            "100000": {
+                "indexing time": 1.55152, 
+                "mem size": 64912, 
+                "topk cost": 9.1858
+            }, 
+            "700": {
+                "indexing time": 1.54453, 
+                "mem size": 68604, 
+                "topk cost": 28.0956
+            }, 
+            "10000": {
+                "indexing time": 1.57349, 
+                "mem size": 64688, 
+                "topk cost": 28.3594
+            }
+        }
+    }, 
+    "blpmc": {
+        "ca-GrQc": {
+            "800": {
+                "indexing time": null, 
+                "mem size": null, 
+                "topk cost": null
+            }, 
+            "2000": {
+                "indexing time": null, 
+                "mem size": null, 
+                "topk cost": null
+            }, 
+            "90000": {
+                "indexing time": null, 
+                "mem size": null, 
+                "topk cost": null
+            }, 
+            "70000": {
+                "indexing time": null, 
+                "mem size": null, 
+                "topk cost": null
+            }, 
+            "100": {
+                "indexing time": 1.55889, 
+                "mem size": 62472, 
+                "topk cost": 28.2634
+            }, 
+            "50000": {
+                "indexing time": null, 
+                "mem size": null, 
+                "topk cost": null
+            }, 
+            "200": {
+                "indexing time": null, 
+                "mem size": null, 
+                "topk cost": null
+            }, 
+            "80000": {
+                "indexing time": null, 
+                "mem size": null, 
+                "topk cost": null
+            }, 
+            "300": {
+                "indexing time": null, 
+                "mem size": null, 
+                "topk cost": null
+            }, 
+            "400": {
+                "indexing time": null, 
+                "mem size": null, 
+                "topk cost": null
+            }, 
+            "1000": {
+                "indexing time": 1.67682, 
+                "mem size": 68484, 
+                "topk cost": 28.3022
+            }, 
+            "5000": {
+                "indexing time": null, 
+                "mem size": null, 
+                "topk cost": null
+            }, 
+            "500": {
+                "indexing time": null, 
+                "mem size": null, 
+                "topk cost": null
+            }, 
+            "20000": {
+                "indexing time": null, 
+                "mem size": null, 
+                "topk cost": null
+            }, 
+            "600": {
+                "indexing time": null, 
+                "mem size": null, 
+                "topk cost": null
+            }, 
+            "900": {
+                "indexing time": null, 
+                "mem size": null, 
+                "topk cost": null
+            }, 
+            "60000": {
+                "indexing time": null, 
+                "mem size": null, 
+                "topk cost": null
+            }, 
+            "100000": {
+                "indexing time": 1.60656, 
+                "mem size": 67148, 
+                "topk cost": 28.4722
+            }, 
+            "700": {
+                "indexing time": null, 
+                "mem size": null, 
+                "topk cost": null
+            }, 
+            "10000": {
+                "indexing time": 1.52406, 
+                "mem size": 65452, 
+                "topk cost": 28.8514
+            }
+        }
+    }, 
+    "carmo-t": {
+        "ca-GrQc": {
+            "800": {
+                "indexing time": null, 
+                "mem size": null, 
+                "topk cost": null
+            }, 
+            "2000": {
+                "indexing time": null, 
+                "mem size": null, 
+                "topk cost": null
+            }, 
+            "90000": {
+                "indexing time": null, 
+                "mem size": null, 
+                "topk cost": null
+            }, 
+            "70000": {
+                "indexing time": null, 
+                "mem size": null, 
+                "topk cost": null
+            }, 
+            "100": {
+                "indexing time": 2.42167, 
+                "mem size": 291380, 
+                "topk cost": 11.1705
+            }, 
+            "50000": {
+                "indexing time": null, 
+                "mem size": null, 
+                "topk cost": null
+            }, 
+            "200": {
+                "indexing time": null, 
+                "mem size": null, 
+                "topk cost": null
+            }, 
+            "80000": {
+                "indexing time": null, 
+                "mem size": null, 
+                "topk cost": null
+            }, 
+            "300": {
+                "indexing time": null, 
+                "mem size": null, 
+                "topk cost": null
+            }, 
+            "400": {
+                "indexing time": null, 
+                "mem size": null, 
+                "topk cost": null
+            }, 
+            "1000": {
+                "indexing time": 2.31163, 
+                "mem size": 291488, 
+                "topk cost": 23.3102
+            }, 
+            "5000": {
+                "indexing time": null, 
+                "mem size": null, 
+                "topk cost": null
+            }, 
+            "500": {
+                "indexing time": null, 
+                "mem size": null, 
+                "topk cost": null
+            }, 
+            "20000": {
+                "indexing time": null, 
+                "mem size": null, 
+                "topk cost": null
+            }, 
+            "600": {
+                "indexing time": null, 
+                "mem size": null, 
+                "topk cost": null
+            }, 
+            "900": {
+                "indexing time": null, 
+                "mem size": null, 
+                "topk cost": null
+            }, 
+            "60000": {
+                "indexing time": null, 
+                "mem size": null, 
+                "topk cost": null
+            }, 
+            "100000": {
+                "indexing time": 2.44054, 
+                "mem size": 291676, 
+                "topk cost": 11.7991
+            }, 
+            "700": {
+                "indexing time": null, 
+                "mem size": null, 
+                "topk cost": null
+            }, 
+            "10000": {
+                "indexing time": 2.3412, 
+                "mem size": 291648, 
+                "topk cost": 21.1405
+            }
+        }
+    }
+}

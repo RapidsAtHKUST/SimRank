@@ -1,0 +1,2218 @@
+{
+    "carmo": {
+        "cit-Patents": {
+            "100000": {
+                "800": {
+                    "indexing time": 1.75759, 
+                    "topk cost": 5.70793
+                }, 
+                "1600": {
+                    "indexing time": 1.86187, 
+                    "topk cost": 5.50845
+                }, 
+                "100": {
+                    "indexing time": 1.77532, 
+                    "topk cost": 5.78879
+                }, 
+                "200": {
+                    "indexing time": 1.79238, 
+                    "topk cost": 6.20759
+                }, 
+                "300": {
+                    "indexing time": 1.86973, 
+                    "topk cost": 5.60253
+                }, 
+                "400": {
+                    "indexing time": 1.71719, 
+                    "topk cost": 5.5437
+                }, 
+                "500": {
+                    "indexing time": 1.78271, 
+                    "topk cost": 5.55199
+                }
+            }, 
+            "1000000": {
+                "800": {
+                    "indexing time": 1.89709, 
+                    "topk cost": 383.279
+                }, 
+                "1600": {
+                    "indexing time": 1.66453, 
+                    "topk cost": 63.1131
+                }, 
+                "100": {
+                    "indexing time": 1.8433, 
+                    "topk cost": 63.3128
+                }, 
+                "200": {
+                    "indexing time": 1.72041, 
+                    "topk cost": 63.5812
+                }, 
+                "300": {
+                    "indexing time": 1.83441, 
+                    "topk cost": 64.6236
+                }, 
+                "400": {
+                    "indexing time": 1.80595, 
+                    "topk cost": 62.0248
+                }, 
+                "500": {
+                    "indexing time": 1.88755, 
+                    "topk cost": 64.3768
+                }
+            }, 
+            "10000000": {
+                "800": {
+                    "indexing time": 1.87779, 
+                    "topk cost": 0
+                }, 
+                "1600": {
+                    "indexing time": 1.83533, 
+                    "topk cost": 0
+                }, 
+                "100": {
+                    "indexing time": 1.65194, 
+                    "topk cost": 0
+                }, 
+                "200": {
+                    "indexing time": 1.7584, 
+                    "topk cost": 0
+                }, 
+                "300": {
+                    "indexing time": 1.72097, 
+                    "topk cost": 0
+                }, 
+                "400": {
+                    "indexing time": 1.83417, 
+                    "topk cost": 0
+                }, 
+                "500": {
+                    "indexing time": 1.81128, 
+                    "topk cost": 0
+                }
+            }
+        }, 
+        "wiki-Link": {
+            "100000": {
+                "800": {
+                    "indexing time": 1.1568, 
+                    "topk cost": 29.5269
+                }, 
+                "1600": {
+                    "indexing time": 1.17527, 
+                    "topk cost": 28.883
+                }, 
+                "100": {
+                    "indexing time": 1.13558, 
+                    "topk cost": 29.0534
+                }, 
+                "200": {
+                    "indexing time": 1.05295, 
+                    "topk cost": 30.6463
+                }, 
+                "300": {
+                    "indexing time": 1.09287, 
+                    "topk cost": 29.8511
+                }, 
+                "400": {
+                    "indexing time": 1.10205, 
+                    "topk cost": 28.9429
+                }, 
+                "500": {
+                    "indexing time": 1.17497, 
+                    "topk cost": 29.1462
+                }
+            }, 
+            "1000000": {
+                "800": {
+                    "indexing time": 1.19719, 
+                    "topk cost": 315.63
+                }, 
+                "1600": {
+                    "indexing time": 1.16699, 
+                    "topk cost": 319.858
+                }, 
+                "100": {
+                    "indexing time": 1.11273, 
+                    "topk cost": 318.365
+                }, 
+                "200": {
+                    "indexing time": 1.17725, 
+                    "topk cost": 314.611
+                }, 
+                "300": {
+                    "indexing time": 1.21582, 
+                    "topk cost": 316.548
+                }, 
+                "400": {
+                    "indexing time": 1.1931, 
+                    "topk cost": 304.636
+                }, 
+                "500": {
+                    "indexing time": 1.22027, 
+                    "topk cost": 318.626
+                }
+            }, 
+            "10000000": {
+                "800": {
+                    "indexing time": 1.14515, 
+                    "topk cost": 0
+                }, 
+                "1600": {
+                    "indexing time": 1.08662, 
+                    "topk cost": 0
+                }, 
+                "100": {
+                    "indexing time": 1.08637, 
+                    "topk cost": 0
+                }, 
+                "200": {
+                    "indexing time": 1.15173, 
+                    "topk cost": 0
+                }, 
+                "300": {
+                    "indexing time": 1.12354, 
+                    "topk cost": 0
+                }, 
+                "400": {
+                    "indexing time": 1.14867, 
+                    "topk cost": 0
+                }, 
+                "500": {
+                    "indexing time": 1.10672, 
+                    "topk cost": 0
+                }
+            }
+        }, 
+        "web-Stanford": {
+            "100000": {
+                "800": {
+                    "indexing time": 1.74663, 
+                    "topk cost": 18.5637
+                }, 
+                "1600": {
+                    "indexing time": 1.79241, 
+                    "topk cost": 20.1857
+                }, 
+                "100": {
+                    "indexing time": 1.77998, 
+                    "topk cost": 13.8646
+                }, 
+                "200": {
+                    "indexing time": 1.70098, 
+                    "topk cost": 15.7789
+                }, 
+                "300": {
+                    "indexing time": 1.65022, 
+                    "topk cost": 17.4091
+                }, 
+                "400": {
+                    "indexing time": 1.74267, 
+                    "topk cost": 18.3074
+                }, 
+                "500": {
+                    "indexing time": 1.76159, 
+                    "topk cost": 17.0688
+                }
+            }, 
+            "1000000": {
+                "800": {
+                    "indexing time": 1.73172, 
+                    "topk cost": 186.614
+                }, 
+                "1600": {
+                    "indexing time": 1.86912, 
+                    "topk cost": 0
+                }, 
+                "100": {
+                    "indexing time": 1.77142, 
+                    "topk cost": 131.863
+                }, 
+                "200": {
+                    "indexing time": 1.89599, 
+                    "topk cost": 121.86
+                }, 
+                "300": {
+                    "indexing time": 1.77796, 
+                    "topk cost": 93.0094
+                }, 
+                "400": {
+                    "indexing time": 1.75914, 
+                    "topk cost": 131.223
+                }, 
+                "500": {
+                    "indexing time": 1.79894, 
+                    "topk cost": 148.507
+                }
+            }, 
+            "10000000": {
+                "800": {
+                    "indexing time": 1.87654, 
+                    "topk cost": 0
+                }, 
+                "1600": {
+                    "indexing time": 1.83771, 
+                    "topk cost": 0
+                }, 
+                "100": {
+                    "indexing time": 1.87549, 
+                    "topk cost": 0
+                }, 
+                "200": {
+                    "indexing time": 1.85166, 
+                    "topk cost": 0
+                }, 
+                "300": {
+                    "indexing time": 1.87839, 
+                    "topk cost": 0
+                }, 
+                "400": {
+                    "indexing time": 1.87978, 
+                    "topk cost": 0
+                }, 
+                "500": {
+                    "indexing time": 1.90052, 
+                    "topk cost": 0
+                }
+            }
+        }, 
+        "web-Google": {
+            "100000": {
+                "800": {
+                    "indexing time": 1.45455, 
+                    "topk cost": 10.6328
+                }, 
+                "1600": {
+                    "indexing time": 1.44229, 
+                    "topk cost": 10.4389
+                }, 
+                "100": {
+                    "indexing time": 1.49829, 
+                    "topk cost": 10.1664
+                }, 
+                "200": {
+                    "indexing time": 1.48687, 
+                    "topk cost": 10.384
+                }, 
+                "300": {
+                    "indexing time": 1.49014, 
+                    "topk cost": 10.711
+                }, 
+                "400": {
+                    "indexing time": 1.45421, 
+                    "topk cost": 11.7896
+                }, 
+                "500": {
+                    "indexing time": 1.55641, 
+                    "topk cost": 10.8533
+                }
+            }, 
+            "1000000": {
+                "800": {
+                    "indexing time": 1.57273, 
+                    "topk cost": 125.522
+                }, 
+                "1600": {
+                    "indexing time": 1.57735, 
+                    "topk cost": 377.539
+                }, 
+                "100": {
+                    "indexing time": 1.60069, 
+                    "topk cost": 143.41
+                }, 
+                "200": {
+                    "indexing time": 1.50883, 
+                    "topk cost": 123.519
+                }, 
+                "300": {
+                    "indexing time": 1.49459, 
+                    "topk cost": 118.742
+                }, 
+                "400": {
+                    "indexing time": 1.5205, 
+                    "topk cost": 124.705
+                }, 
+                "500": {
+                    "indexing time": 1.50727, 
+                    "topk cost": 115.608
+                }
+            }, 
+            "10000000": {
+                "800": {
+                    "indexing time": 1.56224, 
+                    "topk cost": 0
+                }, 
+                "1600": {
+                    "indexing time": 1.48771, 
+                    "topk cost": 0
+                }, 
+                "100": {
+                    "indexing time": 1.67072, 
+                    "topk cost": 0
+                }, 
+                "200": {
+                    "indexing time": 1.6004, 
+                    "topk cost": 0
+                }, 
+                "300": {
+                    "indexing time": 1.5301, 
+                    "topk cost": 0
+                }, 
+                "400": {
+                    "indexing time": 1.46357, 
+                    "topk cost": 0
+                }, 
+                "500": {
+                    "indexing time": 1.34499, 
+                    "topk cost": 0
+                }
+            }
+        }, 
+        "web-BerkStan": {
+            "100000": {
+                "800": {
+                    "indexing time": 1.55342, 
+                    "topk cost": 20.7009
+                }, 
+                "1600": {
+                    "indexing time": 1.49972, 
+                    "topk cost": 19.6951
+                }, 
+                "100": {
+                    "indexing time": 1.4097, 
+                    "topk cost": 19.4028
+                }, 
+                "200": {
+                    "indexing time": 1.51286, 
+                    "topk cost": 19.8338
+                }, 
+                "300": {
+                    "indexing time": 1.48937, 
+                    "topk cost": 20.2228
+                }, 
+                "400": {
+                    "indexing time": 1.45224, 
+                    "topk cost": 20.667
+                }, 
+                "500": {
+                    "indexing time": 1.45642, 
+                    "topk cost": 20.721
+                }
+            }, 
+            "1000000": {
+                "800": {
+                    "indexing time": 1.42588, 
+                    "topk cost": 208.992
+                }, 
+                "1600": {
+                    "indexing time": 1.58108, 
+                    "topk cost": 230.487
+                }, 
+                "100": {
+                    "indexing time": 1.52554, 
+                    "topk cost": 157.349
+                }, 
+                "200": {
+                    "indexing time": 1.46122, 
+                    "topk cost": 186.354
+                }, 
+                "300": {
+                    "indexing time": 1.49413, 
+                    "topk cost": 200.576
+                }, 
+                "400": {
+                    "indexing time": 1.53601, 
+                    "topk cost": 220.524
+                }, 
+                "500": {
+                    "indexing time": 1.47464, 
+                    "topk cost": 225.706
+                }
+            }, 
+            "10000000": {
+                "800": {
+                    "indexing time": 1.61279, 
+                    "topk cost": 0
+                }, 
+                "1600": {
+                    "indexing time": 1.49724, 
+                    "topk cost": 0
+                }, 
+                "100": {
+                    "indexing time": 1.61122, 
+                    "topk cost": 0
+                }, 
+                "200": {
+                    "indexing time": 1.55854, 
+                    "topk cost": 0
+                }, 
+                "300": {
+                    "indexing time": 1.53472, 
+                    "topk cost": 0
+                }, 
+                "400": {
+                    "indexing time": 1.56424, 
+                    "topk cost": 0
+                }, 
+                "500": {
+                    "indexing time": 1.58754, 
+                    "topk cost": 0
+                }
+            }
+        }, 
+        "soc-LiveJournal1": {
+            "100000": {
+                "800": {
+                    "indexing time": 1.69944, 
+                    "topk cost": 59.4412
+                }, 
+                "1600": {
+                    "indexing time": 1.66706, 
+                    "topk cost": 58.0426
+                }, 
+                "100": {
+                    "indexing time": 1.6693, 
+                    "topk cost": 59.1979
+                }, 
+                "200": {
+                    "indexing time": 1.66063, 
+                    "topk cost": 61.7279
+                }, 
+                "300": {
+                    "indexing time": 1.68287, 
+                    "topk cost": 60.6781
+                }, 
+                "400": {
+                    "indexing time": 1.64822, 
+                    "topk cost": 59.26
+                }, 
+                "500": {
+                    "indexing time": 1.67717, 
+                    "topk cost": 58.829
+                }
+            }, 
+            "1000000": {
+                "800": {
+                    "indexing time": 1.72579, 
+                    "topk cost": 0
+                }, 
+                "1600": {
+                    "indexing time": 1.70878, 
+                    "topk cost": 664.084
+                }, 
+                "100": {
+                    "indexing time": 1.67785, 
+                    "topk cost": 682.276
+                }, 
+                "200": {
+                    "indexing time": 1.65634, 
+                    "topk cost": 665.491
+                }, 
+                "300": {
+                    "indexing time": 1.70043, 
+                    "topk cost": 659.941
+                }, 
+                "400": {
+                    "indexing time": 1.68946, 
+                    "topk cost": 0
+                }, 
+                "500": {
+                    "indexing time": 1.79312, 
+                    "topk cost": 651.424
+                }
+            }, 
+            "10000000": {
+                "800": {
+                    "indexing time": 1.67818, 
+                    "topk cost": 0
+                }, 
+                "1600": {
+                    "indexing time": 1.68044, 
+                    "topk cost": 0
+                }, 
+                "100": {
+                    "indexing time": 1.71336, 
+                    "topk cost": 0
+                }, 
+                "200": {
+                    "indexing time": 1.69414, 
+                    "topk cost": 0
+                }, 
+                "300": {
+                    "indexing time": 1.69915, 
+                    "topk cost": 0
+                }, 
+                "400": {
+                    "indexing time": 1.6434, 
+                    "topk cost": 0
+                }, 
+                "500": {
+                    "indexing time": 1.7142, 
+                    "topk cost": 0
+                }
+            }
+        }
+    }, 
+    "blpmc": {
+        "cit-Patents": {
+            "100000": {
+                "800": {
+                    "indexing time": 1.82826, 
+                    "topk cost": 6.09581
+                }, 
+                "1600": {
+                    "indexing time": 1.87475, 
+                    "topk cost": 6.19996
+                }, 
+                "100": {
+                    "indexing time": 1.77616, 
+                    "topk cost": 6.09481
+                }, 
+                "200": {
+                    "indexing time": 1.90278, 
+                    "topk cost": 6.5874
+                }, 
+                "300": {
+                    "indexing time": 1.89125, 
+                    "topk cost": 6.16227
+                }, 
+                "400": {
+                    "indexing time": 1.83731, 
+                    "topk cost": 7.10497
+                }, 
+                "500": {
+                    "indexing time": 1.75968, 
+                    "topk cost": 6.05034
+                }
+            }, 
+            "1000000": {
+                "800": {
+                    "indexing time": 1.97429, 
+                    "topk cost": 70.3163
+                }, 
+                "1600": {
+                    "indexing time": 1.55058, 
+                    "topk cost": 67.6319
+                }, 
+                "100": {
+                    "indexing time": 1.85997, 
+                    "topk cost": 63.4309
+                }, 
+                "200": {
+                    "indexing time": 1.84584, 
+                    "topk cost": 62.9044
+                }, 
+                "300": {
+                    "indexing time": 1.85016, 
+                    "topk cost": 61.0795
+                }, 
+                "400": {
+                    "indexing time": 1.9501, 
+                    "topk cost": 62.5539
+                }, 
+                "500": {
+                    "indexing time": 1.94485, 
+                    "topk cost": 75.1918
+                }
+            }, 
+            "10000000": {
+                "800": {
+                    "indexing time": 1.93772, 
+                    "topk cost": 0
+                }, 
+                "1600": {
+                    "indexing time": 1.93665, 
+                    "topk cost": 0
+                }, 
+                "100": {
+                    "indexing time": 1.80824, 
+                    "topk cost": 0
+                }, 
+                "200": {
+                    "indexing time": 1.85657, 
+                    "topk cost": 0
+                }, 
+                "300": {
+                    "indexing time": 1.76688, 
+                    "topk cost": 0
+                }, 
+                "400": {
+                    "indexing time": 1.65756, 
+                    "topk cost": 0
+                }, 
+                "500": {
+                    "indexing time": 1.86926, 
+                    "topk cost": 0
+                }
+            }
+        }, 
+        "wiki-Link": {
+            "100000": {
+                "800": {
+                    "indexing time": 1.16676, 
+                    "topk cost": 30.4412
+                }, 
+                "1600": {
+                    "indexing time": 1.14121, 
+                    "topk cost": 30.7935
+                }, 
+                "100": {
+                    "indexing time": 1.19362, 
+                    "topk cost": 30.5865
+                }, 
+                "200": {
+                    "indexing time": 1.14825, 
+                    "topk cost": 30.6365
+                }, 
+                "300": {
+                    "indexing time": 1.10766, 
+                    "topk cost": 30.3436
+                }, 
+                "400": {
+                    "indexing time": 1.0712, 
+                    "topk cost": 30.6617
+                }, 
+                "500": {
+                    "indexing time": 1.15861, 
+                    "topk cost": 30.7821
+                }
+            }, 
+            "1000000": {
+                "800": {
+                    "indexing time": 1.13183, 
+                    "topk cost": 298.562
+                }, 
+                "1600": {
+                    "indexing time": 1.12713, 
+                    "topk cost": 299.185
+                }, 
+                "100": {
+                    "indexing time": 1.06693, 
+                    "topk cost": 298.489
+                }, 
+                "200": {
+                    "indexing time": 1.1665, 
+                    "topk cost": 300.14
+                }, 
+                "300": {
+                    "indexing time": 1.12847, 
+                    "topk cost": 304.888
+                }, 
+                "400": {
+                    "indexing time": 1.15899, 
+                    "topk cost": 303.265
+                }, 
+                "500": {
+                    "indexing time": 1.22253, 
+                    "topk cost": 302.643
+                }
+            }, 
+            "10000000": {
+                "800": {
+                    "indexing time": 1.10665, 
+                    "topk cost": 0
+                }, 
+                "1600": {
+                    "indexing time": 1.16101, 
+                    "topk cost": 0
+                }, 
+                "100": {
+                    "indexing time": 1.09926, 
+                    "topk cost": 0
+                }, 
+                "200": {
+                    "indexing time": 1.14648, 
+                    "topk cost": 0
+                }, 
+                "300": {
+                    "indexing time": 1.1426, 
+                    "topk cost": 0
+                }, 
+                "400": {
+                    "indexing time": 1.13413, 
+                    "topk cost": 0
+                }, 
+                "500": {
+                    "indexing time": 1.20806, 
+                    "topk cost": 0
+                }
+            }
+        }, 
+        "web-Stanford": {
+            "100000": {
+                "800": {
+                    "indexing time": 1.70179, 
+                    "topk cost": 19.8763
+                }, 
+                "1600": {
+                    "indexing time": 1.79296, 
+                    "topk cost": 20.2856
+                }, 
+                "100": {
+                    "indexing time": 1.77246, 
+                    "topk cost": 19.998
+                }, 
+                "200": {
+                    "indexing time": 1.84792, 
+                    "topk cost": 19.5575
+                }, 
+                "300": {
+                    "indexing time": 1.77682, 
+                    "topk cost": 19.09
+                }, 
+                "400": {
+                    "indexing time": 1.83029, 
+                    "topk cost": 19.7098
+                }, 
+                "500": {
+                    "indexing time": 1.94388, 
+                    "topk cost": 20.4434
+                }
+            }, 
+            "1000000": {
+                "800": {
+                    "indexing time": 1.87631, 
+                    "topk cost": 195.896
+                }, 
+                "1600": {
+                    "indexing time": 1.79942, 
+                    "topk cost": 197.457
+                }, 
+                "100": {
+                    "indexing time": 1.76772, 
+                    "topk cost": 201.487
+                }, 
+                "200": {
+                    "indexing time": 1.80621, 
+                    "topk cost": 218.393
+                }, 
+                "300": {
+                    "indexing time": 1.70746, 
+                    "topk cost": 194.494
+                }, 
+                "400": {
+                    "indexing time": 1.77353, 
+                    "topk cost": 207.021
+                }, 
+                "500": {
+                    "indexing time": 1.81333, 
+                    "topk cost": 209.664
+                }
+            }, 
+            "10000000": {
+                "800": {
+                    "indexing time": 1.87689, 
+                    "topk cost": 0
+                }, 
+                "1600": {
+                    "indexing time": 1.90747, 
+                    "topk cost": 0
+                }, 
+                "100": {
+                    "indexing time": 1.89358, 
+                    "topk cost": 0
+                }, 
+                "200": {
+                    "indexing time": 1.96573, 
+                    "topk cost": 0
+                }, 
+                "300": {
+                    "indexing time": 1.86862, 
+                    "topk cost": 0
+                }, 
+                "400": {
+                    "indexing time": 1.95543, 
+                    "topk cost": 0
+                }, 
+                "500": {
+                    "indexing time": 1.85332, 
+                    "topk cost": 0
+                }
+            }
+        }, 
+        "web-Google": {
+            "100000": {
+                "800": {
+                    "indexing time": 1.64456, 
+                    "topk cost": 12.2643
+                }, 
+                "1600": {
+                    "indexing time": 1.67464, 
+                    "topk cost": 12.5245
+                }, 
+                "100": {
+                    "indexing time": 1.62489, 
+                    "topk cost": 12.3121
+                }, 
+                "200": {
+                    "indexing time": 1.63759, 
+                    "topk cost": 12.0738
+                }, 
+                "300": {
+                    "indexing time": 1.53775, 
+                    "topk cost": 13.5231
+                }, 
+                "400": {
+                    "indexing time": 1.58152, 
+                    "topk cost": 12.9815
+                }, 
+                "500": {
+                    "indexing time": 1.61176, 
+                    "topk cost": 12.1657
+                }
+            }, 
+            "1000000": {
+                "800": {
+                    "indexing time": 1.6029, 
+                    "topk cost": 136.73
+                }, 
+                "1600": {
+                    "indexing time": 1.63365, 
+                    "topk cost": 121.897
+                }, 
+                "100": {
+                    "indexing time": 1.582, 
+                    "topk cost": 127.599
+                }, 
+                "200": {
+                    "indexing time": 1.59736, 
+                    "topk cost": 128.75
+                }, 
+                "300": {
+                    "indexing time": 1.63288, 
+                    "topk cost": 123.04
+                }, 
+                "400": {
+                    "indexing time": 1.57039, 
+                    "topk cost": 122.585
+                }, 
+                "500": {
+                    "indexing time": 1.46389, 
+                    "topk cost": 125.788
+                }
+            }, 
+            "10000000": {
+                "800": {
+                    "indexing time": 1.68501, 
+                    "topk cost": 0
+                }, 
+                "1600": {
+                    "indexing time": 1.70127, 
+                    "topk cost": 0
+                }, 
+                "100": {
+                    "indexing time": 1.5462, 
+                    "topk cost": 0
+                }, 
+                "200": {
+                    "indexing time": 1.64307, 
+                    "topk cost": 0
+                }, 
+                "300": {
+                    "indexing time": 1.65285, 
+                    "topk cost": 0
+                }, 
+                "400": {
+                    "indexing time": 1.65992, 
+                    "topk cost": 0
+                }, 
+                "500": {
+                    "indexing time": 1.64374, 
+                    "topk cost": 0
+                }
+            }
+        }, 
+        "web-BerkStan": {
+            "100000": {
+                "800": {
+                    "indexing time": 1.60752, 
+                    "topk cost": 21.5139
+                }, 
+                "1600": {
+                    "indexing time": 1.53822, 
+                    "topk cost": 22.1858
+                }, 
+                "100": {
+                    "indexing time": 1.64339, 
+                    "topk cost": 22.2034
+                }, 
+                "200": {
+                    "indexing time": 1.62345, 
+                    "topk cost": 20.7939
+                }, 
+                "300": {
+                    "indexing time": 1.51054, 
+                    "topk cost": 21.7894
+                }, 
+                "400": {
+                    "indexing time": 1.45821, 
+                    "topk cost": 22.5911
+                }, 
+                "500": {
+                    "indexing time": 1.57604, 
+                    "topk cost": 22.2019
+                }
+            }, 
+            "1000000": {
+                "800": {
+                    "indexing time": 1.54246, 
+                    "topk cost": 222.106
+                }, 
+                "1600": {
+                    "indexing time": 1.50391, 
+                    "topk cost": 229.853
+                }, 
+                "100": {
+                    "indexing time": 1.64962, 
+                    "topk cost": 218.968
+                }, 
+                "200": {
+                    "indexing time": 1.56133, 
+                    "topk cost": 215.598
+                }, 
+                "300": {
+                    "indexing time": 1.51227, 
+                    "topk cost": 215.465
+                }, 
+                "400": {
+                    "indexing time": 1.6235, 
+                    "topk cost": 203.279
+                }, 
+                "500": {
+                    "indexing time": 1.54359, 
+                    "topk cost": 219.671
+                }
+            }, 
+            "10000000": {
+                "800": {
+                    "indexing time": 1.56271, 
+                    "topk cost": 0
+                }, 
+                "1600": {
+                    "indexing time": 1.55829, 
+                    "topk cost": 0
+                }, 
+                "100": {
+                    "indexing time": 1.61692, 
+                    "topk cost": 0
+                }, 
+                "200": {
+                    "indexing time": 1.56853, 
+                    "topk cost": 0
+                }, 
+                "300": {
+                    "indexing time": 1.57085, 
+                    "topk cost": 0
+                }, 
+                "400": {
+                    "indexing time": 1.60318, 
+                    "topk cost": 0
+                }, 
+                "500": {
+                    "indexing time": 1.60493, 
+                    "topk cost": 0
+                }
+            }
+        }, 
+        "soc-LiveJournal1": {
+            "100000": {
+                "800": {
+                    "indexing time": 1.75563, 
+                    "topk cost": 62.6892
+                }, 
+                "1600": {
+                    "indexing time": 1.71592, 
+                    "topk cost": 61.8823
+                }, 
+                "100": {
+                    "indexing time": 1.64279, 
+                    "topk cost": 61.5515
+                }, 
+                "200": {
+                    "indexing time": 1.69158, 
+                    "topk cost": 61.6439
+                }, 
+                "300": {
+                    "indexing time": 2.20527, 
+                    "topk cost": 0
+                }, 
+                "400": {
+                    "indexing time": 1.67884, 
+                    "topk cost": 61.5574
+                }, 
+                "500": {
+                    "indexing time": 1.71114, 
+                    "topk cost": 61.2605
+                }
+            }, 
+            "1000000": {
+                "800": {
+                    "indexing time": 1.74924, 
+                    "topk cost": 613.898
+                }, 
+                "1600": {
+                    "indexing time": 1.6975, 
+                    "topk cost": 0
+                }, 
+                "100": {
+                    "indexing time": 1.68729, 
+                    "topk cost": 608.055
+                }, 
+                "200": {
+                    "indexing time": 1.74852, 
+                    "topk cost": 623.534
+                }, 
+                "300": {
+                    "indexing time": 1.70519, 
+                    "topk cost": 0
+                }, 
+                "400": {
+                    "indexing time": 1.72021, 
+                    "topk cost": 0
+                }, 
+                "500": {
+                    "indexing time": 1.74423, 
+                    "topk cost": 0
+                }
+            }, 
+            "10000000": {
+                "800": {
+                    "indexing time": 1.72475, 
+                    "topk cost": 0
+                }, 
+                "1600": {
+                    "indexing time": 1.69455, 
+                    "topk cost": 0
+                }, 
+                "100": {
+                    "indexing time": 1.71038, 
+                    "topk cost": 0
+                }, 
+                "200": {
+                    "indexing time": 1.68282, 
+                    "topk cost": 0
+                }, 
+                "300": {
+                    "indexing time": 1.69012, 
+                    "topk cost": 0
+                }, 
+                "400": {
+                    "indexing time": 1.68094, 
+                    "topk cost": 0
+                }, 
+                "500": {
+                    "indexing time": 1.65815, 
+                    "topk cost": 0
+                }
+            }
+        }
+    }, 
+    "tsf-topk": {
+        "cit-Patents": {
+            "100000": {
+                "800": {
+                    "indexing time": 2.94159, 
+                    "topk cost": 12.9094
+                }, 
+                "1600": {
+                    "indexing time": 2.94299, 
+                    "topk cost": 12.8967
+                }, 
+                "100": {
+                    "indexing time": 2.94337, 
+                    "topk cost": 12.9063
+                }, 
+                "200": {
+                    "indexing time": 2.91622, 
+                    "topk cost": 12.8913
+                }, 
+                "300": {
+                    "indexing time": 2.93772, 
+                    "topk cost": 12.9009
+                }, 
+                "400": {
+                    "indexing time": 2.94105, 
+                    "topk cost": 12.9087
+                }, 
+                "500": {
+                    "indexing time": 2.94252, 
+                    "topk cost": 12.9027
+                }
+            }, 
+            "1000000": {
+                "800": {
+                    "indexing time": 2.93996, 
+                    "topk cost": 129.178
+                }, 
+                "1600": {
+                    "indexing time": 2.91692, 
+                    "topk cost": 129.345
+                }, 
+                "100": {
+                    "indexing time": 2.94251, 
+                    "topk cost": 129.355
+                }, 
+                "200": {
+                    "indexing time": 2.93982, 
+                    "topk cost": 129.282
+                }, 
+                "300": {
+                    "indexing time": 2.9412, 
+                    "topk cost": 129.214
+                }, 
+                "400": {
+                    "indexing time": 2.9398, 
+                    "topk cost": 129.196
+                }, 
+                "500": {
+                    "indexing time": 2.94175, 
+                    "topk cost": 129.352
+                }
+            }, 
+            "10000000": {
+                "800": {
+                    "indexing time": 0, 
+                    "topk cost": 0
+                }, 
+                "1600": {
+                    "indexing time": 0, 
+                    "topk cost": 0
+                }, 
+                "100": {
+                    "indexing time": 0, 
+                    "topk cost": 0
+                }, 
+                "200": {
+                    "indexing time": 0, 
+                    "topk cost": 0
+                }, 
+                "300": {
+                    "indexing time": 0, 
+                    "topk cost": 0
+                }, 
+                "400": {
+                    "indexing time": 0, 
+                    "topk cost": 0
+                }, 
+                "500": {
+                    "indexing time": 0, 
+                    "topk cost": 0
+                }
+            }
+        }, 
+        "wiki-Link": {
+            "100000": {
+                "800": {
+                    "indexing time": 12.656, 
+                    "topk cost": 105.679
+                }, 
+                "1600": {
+                    "indexing time": 12.957, 
+                    "topk cost": 106.546
+                }, 
+                "100": {
+                    "indexing time": 12.9664, 
+                    "topk cost": 106.312
+                }, 
+                "200": {
+                    "indexing time": 12.9284, 
+                    "topk cost": 106.511
+                }, 
+                "300": {
+                    "indexing time": 12.6315, 
+                    "topk cost": 105.566
+                }, 
+                "400": {
+                    "indexing time": 12.5775, 
+                    "topk cost": 105.632
+                }, 
+                "500": {
+                    "indexing time": 12.6255, 
+                    "topk cost": 105.585
+                }
+            }, 
+            "1000000": {
+                "800": {
+                    "indexing time": 14.4957, 
+                    "topk cost": 0
+                }, 
+                "1600": {
+                    "indexing time": 12.9034, 
+                    "topk cost": 0
+                }, 
+                "100": {
+                    "indexing time": 12.9779, 
+                    "topk cost": 0
+                }, 
+                "200": {
+                    "indexing time": 13.3195, 
+                    "topk cost": 0
+                }, 
+                "300": {
+                    "indexing time": 12.8831, 
+                    "topk cost": 0
+                }, 
+                "400": {
+                    "indexing time": 13.0017, 
+                    "topk cost": 0
+                }, 
+                "500": {
+                    "indexing time": 14.3742, 
+                    "topk cost": 0
+                }
+            }, 
+            "10000000": {
+                "800": {
+                    "indexing time": 0, 
+                    "topk cost": 0
+                }, 
+                "1600": {
+                    "indexing time": 0, 
+                    "topk cost": 0
+                }, 
+                "100": {
+                    "indexing time": 0, 
+                    "topk cost": 0
+                }, 
+                "200": {
+                    "indexing time": 0, 
+                    "topk cost": 0
+                }, 
+                "300": {
+                    "indexing time": 0, 
+                    "topk cost": 0
+                }, 
+                "400": {
+                    "indexing time": 0, 
+                    "topk cost": 0
+                }, 
+                "500": {
+                    "indexing time": 0, 
+                    "topk cost": 0
+                }
+            }
+        }, 
+        "web-Stanford": {
+            "100000": {
+                "800": {
+                    "indexing time": 0.205105, 
+                    "topk cost": 36.9589
+                }, 
+                "1600": {
+                    "indexing time": 0.204578, 
+                    "topk cost": 36.9237
+                }, 
+                "100": {
+                    "indexing time": 0.205422, 
+                    "topk cost": 36.9624
+                }, 
+                "200": {
+                    "indexing time": 0.205239, 
+                    "topk cost": 36.9183
+                }, 
+                "300": {
+                    "indexing time": 0.205089, 
+                    "topk cost": 36.9392
+                }, 
+                "400": {
+                    "indexing time": 0.20497, 
+                    "topk cost": 36.916
+                }, 
+                "500": {
+                    "indexing time": 0.204938, 
+                    "topk cost": 36.8978
+                }
+            }, 
+            "1000000": {
+                "800": {
+                    "indexing time": 0.20458, 
+                    "topk cost": 369.561
+                }, 
+                "1600": {
+                    "indexing time": 0.205189, 
+                    "topk cost": 368.104
+                }, 
+                "100": {
+                    "indexing time": 0.204799, 
+                    "topk cost": 365.243
+                }, 
+                "200": {
+                    "indexing time": 0.204398, 
+                    "topk cost": 368.1
+                }, 
+                "300": {
+                    "indexing time": 0.204706, 
+                    "topk cost": 367.18
+                }, 
+                "400": {
+                    "indexing time": 0.204793, 
+                    "topk cost": 368.351
+                }, 
+                "500": {
+                    "indexing time": 0.20458, 
+                    "topk cost": 366.851
+                }
+            }, 
+            "10000000": {
+                "800": {
+                    "indexing time": 0, 
+                    "topk cost": 0
+                }, 
+                "1600": {
+                    "indexing time": 0, 
+                    "topk cost": 0
+                }, 
+                "100": {
+                    "indexing time": 0, 
+                    "topk cost": 0
+                }, 
+                "200": {
+                    "indexing time": 0, 
+                    "topk cost": 0
+                }, 
+                "300": {
+                    "indexing time": 0, 
+                    "topk cost": 0
+                }, 
+                "400": {
+                    "indexing time": 0, 
+                    "topk cost": 0
+                }, 
+                "500": {
+                    "indexing time": 0, 
+                    "topk cost": 0
+                }
+            }
+        }, 
+        "web-Google": {
+            "100000": {
+                "800": {
+                    "indexing time": 0.633626, 
+                    "topk cost": 29.7333
+                }, 
+                "1600": {
+                    "indexing time": 0.634036, 
+                    "topk cost": 29.796
+                }, 
+                "100": {
+                    "indexing time": 0.633281, 
+                    "topk cost": 29.7826
+                }, 
+                "200": {
+                    "indexing time": 0.633094, 
+                    "topk cost": 29.792
+                }, 
+                "300": {
+                    "indexing time": 0.634547, 
+                    "topk cost": 29.7975
+                }, 
+                "400": {
+                    "indexing time": 0.63414, 
+                    "topk cost": 29.8089
+                }, 
+                "500": {
+                    "indexing time": 0.634008, 
+                    "topk cost": 29.8143
+                }
+            }, 
+            "1000000": {
+                "800": {
+                    "indexing time": 0.664802, 
+                    "topk cost": 301.196
+                }, 
+                "1600": {
+                    "indexing time": 0.6652, 
+                    "topk cost": 299.801
+                }, 
+                "100": {
+                    "indexing time": 0.6656, 
+                    "topk cost": 299.967
+                }, 
+                "200": {
+                    "indexing time": 0.663923, 
+                    "topk cost": 301.093
+                }, 
+                "300": {
+                    "indexing time": 0.66358, 
+                    "topk cost": 299.917
+                }, 
+                "400": {
+                    "indexing time": 0.665632, 
+                    "topk cost": 301.313
+                }, 
+                "500": {
+                    "indexing time": 0.665707, 
+                    "topk cost": 301.909
+                }
+            }, 
+            "10000000": {
+                "800": {
+                    "indexing time": 0, 
+                    "topk cost": 0
+                }, 
+                "1600": {
+                    "indexing time": 0, 
+                    "topk cost": 0
+                }, 
+                "100": {
+                    "indexing time": 0, 
+                    "topk cost": 0
+                }, 
+                "200": {
+                    "indexing time": 0, 
+                    "topk cost": 0
+                }, 
+                "300": {
+                    "indexing time": 0, 
+                    "topk cost": 0
+                }, 
+                "400": {
+                    "indexing time": 0, 
+                    "topk cost": 0
+                }, 
+                "500": {
+                    "indexing time": 0, 
+                    "topk cost": 0
+                }
+            }
+        }, 
+        "web-BerkStan": {
+            "100000": {
+                "800": {
+                    "indexing time": 0.464471, 
+                    "topk cost": 36.4971
+                }, 
+                "1600": {
+                    "indexing time": 0.466053, 
+                    "topk cost": 36.6535
+                }, 
+                "100": {
+                    "indexing time": 0.465508, 
+                    "topk cost": 36.7156
+                }, 
+                "200": {
+                    "indexing time": 0.466127, 
+                    "topk cost": 36.702
+                }, 
+                "300": {
+                    "indexing time": 0.465257, 
+                    "topk cost": 36.5471
+                }, 
+                "400": {
+                    "indexing time": 0.465184, 
+                    "topk cost": 36.6328
+                }, 
+                "500": {
+                    "indexing time": 0.465486, 
+                    "topk cost": 36.5607
+                }
+            }, 
+            "1000000": {
+                "800": {
+                    "indexing time": 0.473863, 
+                    "topk cost": 366.737
+                }, 
+                "1600": {
+                    "indexing time": 0.472406, 
+                    "topk cost": 366.133
+                }, 
+                "100": {
+                    "indexing time": 0.473743, 
+                    "topk cost": 365.996
+                }, 
+                "200": {
+                    "indexing time": 0.474013, 
+                    "topk cost": 366.935
+                }, 
+                "300": {
+                    "indexing time": 0.472717, 
+                    "topk cost": 366.755
+                }, 
+                "400": {
+                    "indexing time": 0.473333, 
+                    "topk cost": 368.319
+                }, 
+                "500": {
+                    "indexing time": 0.472774, 
+                    "topk cost": 365.692
+                }
+            }, 
+            "10000000": {
+                "800": {
+                    "indexing time": 0, 
+                    "topk cost": 0
+                }, 
+                "1600": {
+                    "indexing time": 0, 
+                    "topk cost": 0
+                }, 
+                "100": {
+                    "indexing time": 0, 
+                    "topk cost": 0
+                }, 
+                "200": {
+                    "indexing time": 0, 
+                    "topk cost": 0
+                }, 
+                "300": {
+                    "indexing time": 0, 
+                    "topk cost": 0
+                }, 
+                "400": {
+                    "indexing time": 0, 
+                    "topk cost": 0
+                }, 
+                "500": {
+                    "indexing time": 0, 
+                    "topk cost": 0
+                }
+            }
+        }, 
+        "soc-LiveJournal1": {
+            "100000": {
+                "800": {
+                    "indexing time": 4.58214, 
+                    "topk cost": 176.699
+                }, 
+                "1600": {
+                    "indexing time": 4.59037, 
+                    "topk cost": 176.276
+                }, 
+                "100": {
+                    "indexing time": 4.56825, 
+                    "topk cost": 176.828
+                }, 
+                "200": {
+                    "indexing time": 4.56351, 
+                    "topk cost": 176.806
+                }, 
+                "300": {
+                    "indexing time": 4.56496, 
+                    "topk cost": 176.126
+                }, 
+                "400": {
+                    "indexing time": 4.55802, 
+                    "topk cost": 176.857
+                }, 
+                "500": {
+                    "indexing time": 4.56325, 
+                    "topk cost": 176.702
+                }
+            }, 
+            "1000000": {
+                "800": {
+                    "indexing time": 4.61177, 
+                    "topk cost": 0
+                }, 
+                "1600": {
+                    "indexing time": 4.57588, 
+                    "topk cost": 0
+                }, 
+                "100": {
+                    "indexing time": 4.61151, 
+                    "topk cost": 0
+                }, 
+                "200": {
+                    "indexing time": 4.59265, 
+                    "topk cost": 0
+                }, 
+                "300": {
+                    "indexing time": 4.60298, 
+                    "topk cost": 0
+                }, 
+                "400": {
+                    "indexing time": 4.60241, 
+                    "topk cost": 0
+                }, 
+                "500": {
+                    "indexing time": 4.6007, 
+                    "topk cost": 0
+                }
+            }, 
+            "10000000": {
+                "800": {
+                    "indexing time": 0, 
+                    "topk cost": 0
+                }, 
+                "1600": {
+                    "indexing time": 0, 
+                    "topk cost": 0
+                }, 
+                "100": {
+                    "indexing time": 0, 
+                    "topk cost": 0
+                }, 
+                "200": {
+                    "indexing time": 0, 
+                    "topk cost": 0
+                }, 
+                "300": {
+                    "indexing time": 0, 
+                    "topk cost": 0
+                }, 
+                "400": {
+                    "indexing time": 0, 
+                    "topk cost": 0
+                }, 
+                "500": {
+                    "indexing time": 0, 
+                    "topk cost": 0
+                }
+            }
+        }
+    }, 
+    "sling-topk": {
+        "cit-Patents": {
+            "100000": {
+                "800": {
+                    "indexing time": 528.456, 
+                    "topk cost": 6.40773
+                }, 
+                "1600": {
+                    "indexing time": 527.171, 
+                    "topk cost": 6.61701
+                }, 
+                "100": {
+                    "indexing time": 544.569, 
+                    "topk cost": 6.4301
+                }, 
+                "200": {
+                    "indexing time": 522.526, 
+                    "topk cost": 6.57073
+                }, 
+                "300": {
+                    "indexing time": 518.741, 
+                    "topk cost": 6.61571
+                }, 
+                "400": {
+                    "indexing time": 537.12, 
+                    "topk cost": 6.56366
+                }, 
+                "500": {
+                    "indexing time": 532.597, 
+                    "topk cost": 6.63214
+                }
+            }, 
+            "1000000": {
+                "800": {
+                    "indexing time": 516.204, 
+                    "topk cost": 64.3869
+                }, 
+                "1600": {
+                    "indexing time": 510.266, 
+                    "topk cost": 64.4867
+                }, 
+                "100": {
+                    "indexing time": 531.726, 
+                    "topk cost": 64.3228
+                }, 
+                "200": {
+                    "indexing time": 526.565, 
+                    "topk cost": 64.7985
+                }, 
+                "300": {
+                    "indexing time": 523.848, 
+                    "topk cost": 63.9976
+                }, 
+                "400": {
+                    "indexing time": 534.566, 
+                    "topk cost": 64.51
+                }, 
+                "500": {
+                    "indexing time": 524.744, 
+                    "topk cost": 64.2868
+                }
+            }, 
+            "10000000": {
+                "800": {
+                    "indexing time": 530.975, 
+                    "topk cost": 0
+                }, 
+                "1600": {
+                    "indexing time": 533.324, 
+                    "topk cost": 0
+                }, 
+                "100": {
+                    "indexing time": 533.899, 
+                    "topk cost": 0
+                }, 
+                "200": {
+                    "indexing time": 537.588, 
+                    "topk cost": 0
+                }, 
+                "300": {
+                    "indexing time": 528.864, 
+                    "topk cost": 0
+                }, 
+                "400": {
+                    "indexing time": 514.843, 
+                    "topk cost": 0
+                }, 
+                "500": {
+                    "indexing time": 523.999, 
+                    "topk cost": 0
+                }
+            }
+        }, 
+        "wiki-Link": {
+            "100000": {
+                "800": {
+                    "indexing time": 0, 
+                    "topk cost": 0
+                }, 
+                "1600": {
+                    "indexing time": 0, 
+                    "topk cost": 0
+                }, 
+                "100": {
+                    "indexing time": 0, 
+                    "topk cost": 0
+                }, 
+                "200": {
+                    "indexing time": 0, 
+                    "topk cost": 0
+                }, 
+                "300": {
+                    "indexing time": 0, 
+                    "topk cost": 0
+                }, 
+                "400": {
+                    "indexing time": 0, 
+                    "topk cost": 0
+                }, 
+                "500": {
+                    "indexing time": 0, 
+                    "topk cost": 0
+                }
+            }, 
+            "1000000": {
+                "800": {
+                    "indexing time": 0, 
+                    "topk cost": 0
+                }, 
+                "1600": {
+                    "indexing time": 0, 
+                    "topk cost": 0
+                }, 
+                "100": {
+                    "indexing time": 0, 
+                    "topk cost": 0
+                }, 
+                "200": {
+                    "indexing time": 0, 
+                    "topk cost": 0
+                }, 
+                "300": {
+                    "indexing time": 0, 
+                    "topk cost": 0
+                }, 
+                "400": {
+                    "indexing time": 0, 
+                    "topk cost": 0
+                }, 
+                "500": {
+                    "indexing time": 0, 
+                    "topk cost": 0
+                }
+            }, 
+            "10000000": {
+                "800": {
+                    "indexing time": 0, 
+                    "topk cost": 0
+                }, 
+                "1600": {
+                    "indexing time": 0, 
+                    "topk cost": 0
+                }, 
+                "100": {
+                    "indexing time": 0, 
+                    "topk cost": 0
+                }, 
+                "200": {
+                    "indexing time": 0, 
+                    "topk cost": 0
+                }, 
+                "300": {
+                    "indexing time": 0, 
+                    "topk cost": 0
+                }, 
+                "400": {
+                    "indexing time": 0, 
+                    "topk cost": 0
+                }, 
+                "500": {
+                    "indexing time": 0, 
+                    "topk cost": 0
+                }
+            }
+        }, 
+        "web-Stanford": {
+            "100000": {
+                "800": {
+                    "indexing time": 366.752, 
+                    "topk cost": 38.2557
+                }, 
+                "1600": {
+                    "indexing time": 359.409, 
+                    "topk cost": 38.1221
+                }, 
+                "100": {
+                    "indexing time": 355.344, 
+                    "topk cost": 37.9979
+                }, 
+                "200": {
+                    "indexing time": 356.269, 
+                    "topk cost": 38.1402
+                }, 
+                "300": {
+                    "indexing time": 348.921, 
+                    "topk cost": 37.8279
+                }, 
+                "400": {
+                    "indexing time": 361.422, 
+                    "topk cost": 38.0347
+                }, 
+                "500": {
+                    "indexing time": 350.649, 
+                    "topk cost": 38.3637
+                }
+            }, 
+            "1000000": {
+                "800": {
+                    "indexing time": 350.451, 
+                    "topk cost": 378.512
+                }, 
+                "1600": {
+                    "indexing time": 354.399, 
+                    "topk cost": 380.219
+                }, 
+                "100": {
+                    "indexing time": 334.706, 
+                    "topk cost": 379.858
+                }, 
+                "200": {
+                    "indexing time": 355.575, 
+                    "topk cost": 381.615
+                }, 
+                "300": {
+                    "indexing time": 356.904, 
+                    "topk cost": 380.713
+                }, 
+                "400": {
+                    "indexing time": 337.726, 
+                    "topk cost": 381.125
+                }, 
+                "500": {
+                    "indexing time": 363.736, 
+                    "topk cost": 379.83
+                }
+            }, 
+            "10000000": {
+                "800": {
+                    "indexing time": 353.21, 
+                    "topk cost": 0
+                }, 
+                "1600": {
+                    "indexing time": 347.237, 
+                    "topk cost": 0
+                }, 
+                "100": {
+                    "indexing time": 343.839, 
+                    "topk cost": 0
+                }, 
+                "200": {
+                    "indexing time": 339.939, 
+                    "topk cost": 0
+                }, 
+                "300": {
+                    "indexing time": 352.143, 
+                    "topk cost": 0
+                }, 
+                "400": {
+                    "indexing time": 349.738, 
+                    "topk cost": 0
+                }, 
+                "500": {
+                    "indexing time": 345.067, 
+                    "topk cost": 0
+                }
+            }
+        }, 
+        "web-Google": {
+            "100000": {
+                "800": {
+                    "indexing time": 622.681, 
+                    "topk cost": 25.929
+                }, 
+                "1600": {
+                    "indexing time": 602.783, 
+                    "topk cost": 26.1961
+                }, 
+                "100": {
+                    "indexing time": 632.123, 
+                    "topk cost": 25.9996
+                }, 
+                "200": {
+                    "indexing time": 616.844, 
+                    "topk cost": 25.8587
+                }, 
+                "300": {
+                    "indexing time": 628.098, 
+                    "topk cost": 25.8698
+                }, 
+                "400": {
+                    "indexing time": 611.972, 
+                    "topk cost": 25.8861
+                }, 
+                "500": {
+                    "indexing time": 583.272, 
+                    "topk cost": 26.1119
+                }
+            }, 
+            "1000000": {
+                "800": {
+                    "indexing time": 615.879, 
+                    "topk cost": 257.969
+                }, 
+                "1600": {
+                    "indexing time": 589.488, 
+                    "topk cost": 259.3
+                }, 
+                "100": {
+                    "indexing time": 601.82, 
+                    "topk cost": 256.184
+                }, 
+                "200": {
+                    "indexing time": 639.723, 
+                    "topk cost": 257.819
+                }, 
+                "300": {
+                    "indexing time": 607.709, 
+                    "topk cost": 257.804
+                }, 
+                "400": {
+                    "indexing time": 591.677, 
+                    "topk cost": 258.847
+                }, 
+                "500": {
+                    "indexing time": 601.802, 
+                    "topk cost": 259.301
+                }
+            }, 
+            "10000000": {
+                "800": {
+                    "indexing time": 633.714, 
+                    "topk cost": 0
+                }, 
+                "1600": {
+                    "indexing time": 598.081, 
+                    "topk cost": 0
+                }, 
+                "100": {
+                    "indexing time": 621.939, 
+                    "topk cost": 0
+                }, 
+                "200": {
+                    "indexing time": 588.992, 
+                    "topk cost": 0
+                }, 
+                "300": {
+                    "indexing time": 604.186, 
+                    "topk cost": 0
+                }, 
+                "400": {
+                    "indexing time": 633.566, 
+                    "topk cost": 0
+                }, 
+                "500": {
+                    "indexing time": 608.436, 
+                    "topk cost": 0
+                }
+            }
+        }, 
+        "web-BerkStan": {
+            "100000": {
+                "800": {
+                    "indexing time": 830.862, 
+                    "topk cost": 41.3899
+                }, 
+                "1600": {
+                    "indexing time": 846.129, 
+                    "topk cost": 41.774
+                }, 
+                "100": {
+                    "indexing time": 807.165, 
+                    "topk cost": 41.3471
+                }, 
+                "200": {
+                    "indexing time": 799.285, 
+                    "topk cost": 41.436
+                }, 
+                "300": {
+                    "indexing time": 846.425, 
+                    "topk cost": 41.6241
+                }, 
+                "400": {
+                    "indexing time": 848.516, 
+                    "topk cost": 41.7664
+                }, 
+                "500": {
+                    "indexing time": 831.835, 
+                    "topk cost": 41.5928
+                }
+            }, 
+            "1000000": {
+                "800": {
+                    "indexing time": 851.969, 
+                    "topk cost": 0
+                }, 
+                "1600": {
+                    "indexing time": 850.401, 
+                    "topk cost": 0
+                }, 
+                "100": {
+                    "indexing time": 878.354, 
+                    "topk cost": 0
+                }, 
+                "200": {
+                    "indexing time": 899.245, 
+                    "topk cost": 0
+                }, 
+                "300": {
+                    "indexing time": 920.694, 
+                    "topk cost": 0
+                }, 
+                "400": {
+                    "indexing time": 868.446, 
+                    "topk cost": 0
+                }, 
+                "500": {
+                    "indexing time": 807.695, 
+                    "topk cost": 0
+                }
+            }, 
+            "10000000": {
+                "800": {
+                    "indexing time": 829.394, 
+                    "topk cost": 0
+                }, 
+                "1600": {
+                    "indexing time": 813.809, 
+                    "topk cost": 0
+                }, 
+                "100": {
+                    "indexing time": 837.889, 
+                    "topk cost": 0
+                }, 
+                "200": {
+                    "indexing time": 817.45, 
+                    "topk cost": 0
+                }, 
+                "300": {
+                    "indexing time": 845.382, 
+                    "topk cost": 0
+                }, 
+                "400": {
+                    "indexing time": 837.852, 
+                    "topk cost": 0
+                }, 
+                "500": {
+                    "indexing time": 848.177, 
+                    "topk cost": 0
+                }
+            }
+        }, 
+        "soc-LiveJournal1": {
+            "100000": {
+                "800": {
+                    "indexing time": 0, 
+                    "topk cost": 0
+                }, 
+                "1600": {
+                    "indexing time": 0, 
+                    "topk cost": 0
+                }, 
+                "100": {
+                    "indexing time": 0, 
+                    "topk cost": 0
+                }, 
+                "200": {
+                    "indexing time": 0, 
+                    "topk cost": 0
+                }, 
+                "300": {
+                    "indexing time": 0, 
+                    "topk cost": 0
+                }, 
+                "400": {
+                    "indexing time": 0, 
+                    "topk cost": 0
+                }, 
+                "500": {
+                    "indexing time": 0, 
+                    "topk cost": 0
+                }
+            }, 
+            "1000000": {
+                "800": {
+                    "indexing time": 0, 
+                    "topk cost": 0
+                }, 
+                "1600": {
+                    "indexing time": 0, 
+                    "topk cost": 0
+                }, 
+                "100": {
+                    "indexing time": 0, 
+                    "topk cost": 0
+                }, 
+                "200": {
+                    "indexing time": 0, 
+                    "topk cost": 0
+                }, 
+                "300": {
+                    "indexing time": 0, 
+                    "topk cost": 0
+                }, 
+                "400": {
+                    "indexing time": 0, 
+                    "topk cost": 0
+                }, 
+                "500": {
+                    "indexing time": 0, 
+                    "topk cost": 0
+                }
+            }, 
+            "10000000": {
+                "800": {
+                    "indexing time": 0, 
+                    "topk cost": 0
+                }, 
+                "1600": {
+                    "indexing time": 0, 
+                    "topk cost": 0
+                }, 
+                "100": {
+                    "indexing time": 0, 
+                    "topk cost": 0
+                }, 
+                "200": {
+                    "indexing time": 0, 
+                    "topk cost": 0
+                }, 
+                "300": {
+                    "indexing time": 0, 
+                    "topk cost": 0
+                }, 
+                "400": {
+                    "indexing time": 0, 
+                    "topk cost": 0
+                }, 
+                "500": {
+                    "indexing time": 0, 
+                    "topk cost": 0
+                }
+            }
+        }
+    }
+}

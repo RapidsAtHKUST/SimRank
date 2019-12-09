@@ -1,0 +1,182 @@
+{
+    "carmo-t": {
+        "ca-GrQc": {
+            "1000": {
+                "0": {
+                    "MC time": 11.6566, 
+                    "indexing time": 0.00402575, 
+                    "mem size": 2652, 
+                    "topk cost": 18.4387
+                }, 
+                "2500": {
+                    "MC time": 10.0172, 
+                    "indexing time": 0.526326, 
+                    "mem size": 207780, 
+                    "topk cost": 16.8
+                }, 
+                "1000": {
+                    "MC time": 10.253, 
+                    "indexing time": 0.242746, 
+                    "mem size": 84756, 
+                    "topk cost": 17.0717
+                }, 
+                "2000": {
+                    "MC time": 9.92096, 
+                    "indexing time": 0.442512, 
+                    "mem size": 166860, 
+                    "topk cost": 16.6775
+                }, 
+                "500": {
+                    "MC time": 10.7016, 
+                    "indexing time": 0.142806, 
+                    "mem size": 43836, 
+                    "topk cost": 17.467
+                }, 
+                "3000": {
+                    "MC time": 10.0922, 
+                    "indexing time": 0.618567, 
+                    "mem size": 248964, 
+                    "topk cost": 16.9445
+                }, 
+                "1500": {
+                    "MC time": 9.93684, 
+                    "indexing time": 0.420639, 
+                    "mem size": 125676, 
+                    "topk cost": 16.7076
+                }
+            }, 
+            "5000": {
+                "0": {
+                    "MC time": 11.6039, 
+                    "indexing time": 0.00346609, 
+                    "mem size": 2652, 
+                    "topk cost": 18.4022
+                }, 
+                "2500": {
+                    "MC time": 10.0419, 
+                    "indexing time": 0.536689, 
+                    "mem size": 207776, 
+                    "topk cost": 16.8232
+                }, 
+                "1000": {
+                    "MC time": 10.2103, 
+                    "indexing time": 0.203345, 
+                    "mem size": 84752, 
+                    "topk cost": 16.9787
+                }, 
+                "2000": {
+                    "MC time": 9.93531, 
+                    "indexing time": 0.402233, 
+                    "mem size": 166860, 
+                    "topk cost": 16.7321
+                }, 
+                "500": {
+                    "MC time": 10.677, 
+                    "indexing time": 0.162878, 
+                    "mem size": 43832, 
+                    "topk cost": 17.588
+                }, 
+                "3000": {
+                    "MC time": 10.1473, 
+                    "indexing time": 0.621283, 
+                    "mem size": 248960, 
+                    "topk cost": 16.9402
+                }, 
+                "1500": {
+                    "MC time": 9.94595, 
+                    "indexing time": 0.312532, 
+                    "mem size": 125676, 
+                    "topk cost": 16.7524
+                }
+            }, 
+            "500": {
+                "0": {
+                    "MC time": 7.26683, 
+                    "indexing time": 0.0047572, 
+                    "mem size": 2652, 
+                    "topk cost": 13.9433
+                }, 
+                "2500": {
+                    "MC time": 5.89106, 
+                    "indexing time": 0.540602, 
+                    "mem size": 207776, 
+                    "topk cost": 12.5252
+                }, 
+                "1000": {
+                    "MC time": 5.8999, 
+                    "indexing time": 0.202622, 
+                    "mem size": 84756, 
+                    "topk cost": 12.5508
+                }, 
+                "2000": {
+                    "MC time": 5.88186, 
+                    "indexing time": 0.40093, 
+                    "mem size": 166856, 
+                    "topk cost": 12.5141
+                }, 
+                "500": {
+                    "MC time": 6.45931, 
+                    "indexing time": 0.148597, 
+                    "mem size": 43836, 
+                    "topk cost": 13.0919
+                }, 
+                "3000": {
+                    "MC time": 5.961, 
+                    "indexing time": 0.621239, 
+                    "mem size": 248964, 
+                    "topk cost": 12.59
+                }, 
+                "1500": {
+                    "MC time": 5.96347, 
+                    "indexing time": 0.30229, 
+                    "mem size": 125676, 
+                    "topk cost": 12.6304
+                }
+            }, 
+            "10000": {
+                "0": {
+                    "MC time": 11.6148, 
+                    "indexing time": 0.00415464, 
+                    "mem size": 2652, 
+                    "topk cost": 18.4391
+                }, 
+                "2500": {
+                    "MC time": 10.0264, 
+                    "indexing time": 0.529033, 
+                    "mem size": 207780, 
+                    "topk cost": 16.8202
+                }, 
+                "1000": {
+                    "MC time": 10.2234, 
+                    "indexing time": 0.213339, 
+                    "mem size": 84756, 
+                    "topk cost": 17.0194
+                }, 
+                "2000": {
+                    "MC time": 9.90161, 
+                    "indexing time": 0.435773, 
+                    "mem size": 166860, 
+                    "topk cost": 16.7348
+                }, 
+                "500": {
+                    "MC time": 10.7108, 
+                    "indexing time": 0.137368, 
+                    "mem size": 43836, 
+                    "topk cost": 17.5351
+                }, 
+                "3000": {
+                    "MC time": 10.1646, 
+                    "indexing time": 0.607796, 
+                    "mem size": 248964, 
+                    "topk cost": 16.9419
+                }, 
+                "1500": {
+                    "MC time": 9.98332, 
+                    "indexing time": 0.302715, 
+                    "mem size": 125672, 
+                    "topk cost": 16.8027
+                }
+            }
+        }
+    }
+}

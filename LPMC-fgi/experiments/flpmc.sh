@@ -1,0 +1,6 @@
+python2 run_effective_vary_k.py
+python2 run_effective_vary_eps.py
+python2 run_effective_vary_delta.py
+python2 parse_effective_vary_delta.py
+python2 parse_effective_vary_eps.py
+python2 parse_effective_vary_k.py
