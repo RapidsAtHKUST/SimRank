@@ -62,3 +62,13 @@ If you use the codes in your research, please kindly cite the following papers.
   publisher={Springer-Verlag}
 }
 ```
+
+```
+@article{wang2020fast,
+  title={Fast and Accurate SimRank Computation via Forward Local Push and Its Parallelization},
+  author={Wang, Yue and Che, Yulin and Lian, Xiang and Chen, Lei and Luo, Qiong},
+  journal={IEEE Transactions on Knowledge and Data Engineering},
+  year={2020},
+  publisher={IEEE}
+}
+```
