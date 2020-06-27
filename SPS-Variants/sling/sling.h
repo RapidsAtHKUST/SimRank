@@ -12,6 +12,8 @@
 #include <thread>
 #include <mutex>
 
+#include "tbb/concurrent_vector.h"
+
 #include <sparsehash/sparse_hash_map>
 #include <sparsehash/sparse_hash_set>
 
@@ -29,7 +31,8 @@ using gmap = google::sparse_hash_map<Key, Value, HashFcn>;
 template<typename Key>
 using gset = google::sparse_hash_set<Key>;
 
-const string SLING_INDEX_DIR = "/export/data/ywangby_datasets/sling";
+//const string SLING_INDEX_DIR = "/export/data/ywangby_datasets/sling";
+const string SLING_INDEX_DIR = string(DATA_ROOT) + "/sling";
 
 class Sling {
 // two thread functions
@@ -57,6 +60,7 @@ public:
     double theta;
 
     vector<tuple<int, int, int, double>> p;
+    tbb::concurrent_vector<tuple<int, int, int, double>> con_vec_p;
     vector<long long> pstart;
     double *d;
 

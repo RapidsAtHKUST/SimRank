@@ -3,16 +3,17 @@
 
 #include <boost/format.hpp>
 #include <boost/multi_array.hpp>
+#include "util/util.h"
 
 #include "graph_yche.h"
 #include "sparse_matrix_utils.h"
 
-using SimRank_matrix= boost::multi_array<double, 2>;
+using SimRank_matrix = boost::multi_array<double, 2>;
 
 //extern void basic_simrank(GraphYche &g, double c, SimRank_matrix &);
 
 const string GROUND_TRUTH_DIR(
-        "/homes/ywangby/workspace/yche/git-repos/SimRank/LPMC-Profile/build/datasets/ground_truth/");
+        string(DATA_ROOT) + "/ground_truth/");
 
 extern void indegree_mat(const GraphYche &g, SparseMatrix<float> &P);// column normalized adjacency matrix
 
@@ -40,7 +41,9 @@ struct TruthSim {
     }
 
     string get_file_path() { // file path to save and load
-        return GROUND_TRUTH_DIR + str(format("GROUND_%s-%.3f.bin") % g_name % c);
+        exec(string("mkdir -p " + GROUND_TRUTH_DIR).c_str());
+        string file_path = GROUND_TRUTH_DIR + str(format("GROUND_%s-%.3f.bin") % g_name % c);
+        return file_path;
     }
 };
 

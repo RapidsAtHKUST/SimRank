@@ -1,7 +1,21 @@
 cmake_minimum_required(VERSION 3.6)
 project(sling)
 
+## To allow CMake to locate our Find*.cmake files
+set(CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/cmake ${CMAKE_MODULE_PATH})
+
 set(CMAKE_CXX_STANDARD 11)
+find_package(TBB REQUIRED)
+include_directories(${TBB_INCLUDE_DIRS})
+link_libraries(${TBB_LIBRARIES})
+
+if (NOT DATA_ROOT_PATH)
+    message("not given")
+    set(DATA_ROOT_PATH ".")
+endif ()
+add_compile_definitions(DATA_ROOT="${DATA_ROOT_PATH}")
+add_compile_definitions(USE_LOG)
+message("Data Root Dir: ${DATA_ROOT_PATH}")
 
 set(FAKE_FILES ground_truth/graph_yche.h
         ground_truth/sparse_matrix_utils.h ground_truth/file_serialization.h ground_truth/stat.h

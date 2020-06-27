@@ -30,7 +30,7 @@ int main(int argc, char *argv[]) {
     Timer timer;
     Graph g;
     string file_name = argv[1];
-    string file_path = "/homes/ywangby/workspace/LinsysSimRank/datasets/edge_list/" + file_name + ".txt";
+    string file_path = string(DATA_ROOT) + "/edge_list/" + file_name + ".txt";
     g.inputGraph(file_path);
     log_info("Loading Time: %.9lfs", timer.elapsed_and_reset());
 

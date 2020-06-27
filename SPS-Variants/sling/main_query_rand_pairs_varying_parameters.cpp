@@ -35,7 +35,7 @@ int main(int argc, char *argv[]) {
     double theta = half_eps / (denominator);
     cout << "eps_d:" << eps_d << ", theta:" << theta << endl;
 
-    string file_path = "/homes/ywangby/workspace/LinsysSimRank/datasets/edge_list/" + file_name + ".txt";
+    string file_path = string(DATA_ROOT) + "/edge_list/" + file_name + ".txt";
     g.inputGraph(file_path);
 
     // 2nd: construct sling algorithm, indexing

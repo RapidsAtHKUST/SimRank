@@ -20,7 +20,7 @@ int main(int argc, char *argv[]) {
     // 1st: load graph
     Graph g;
     string file_name = argv[1];
-    string file_path = "/homes/ywangby/workspace/LinsysSimRank/datasets/edge_list/" + file_name + ".txt";
+    string file_path = string(DATA_ROOT) + "/edge_list/" + file_name + ".txt";
     g.inputGraph(file_path);
 
     // 2nd: construct sling algorithm, indexing

@@ -5,10 +5,13 @@
 
 #include <boost/format.hpp>
 
+#include "tbb/parallel_sort.h"
+
 #include "ground_truth/stat.h"
 #include "ground_truth/graph_yche.h"
 #include "ground_truth/yche_serialization.h"
 #include "util/log.h"
+#include "util/util.h"
 
 const double Sling::BACKEPS = 7.28e-4; //EPS / 23.;
 const double Sling::K = 10.;
@@ -190,9 +193,9 @@ map<pair<int, int>, double, PairCmp> Sling::pushback(int u, double eps, int tid)
 
 void Sling::t_backward(double eps, mutex *tasklock, int *cursor, int tid, mutex *plock) {
     int s, t;
-    vector<tuple<int, int, int, double>> vec;
+//    vector<tuple<int, int, int, double>> vec;
     while (true) {
-        vec.clear();
+//        vec.clear();
         tasklock->lock();
         s = *cursor;
         t = ((*cursor) += BLOCKSIZE);
@@ -211,7 +214,9 @@ void Sling::t_backward(double eps, mutex *tasklock, int *cursor, int tid, mutex 
                     if (t == 1 && first[u]) continue;
                     if (t == 2 && second[u]) continue;
 
-                    p.push_back(make_tuple(u, t, v, value));
+//                    p.push_back(make_tuple(u, t, v, value));
+                    con_vec_p.push_back(make_tuple(u, t, v, value));
+//                    con_vec_p.emplace_back(u, t, v, value);
                 }
             }
         }
@@ -223,13 +228,18 @@ void __Sling_t_backward(Sling *sim, double eps, mutex *tasklock, int *cursor, in
 }
 
 void Sling::backward(double eps) {
-    Sling::NUMTHREAD = 1;
+//    Sling::NUMTHREAD = 1;
+    log_info("Backward Multi Threading: %d", Sling::NUMTHREAD);
     int plockNum = (g->n - 1) / BLOCKSIZE + 1;
     auto *plock = new mutex[plockNum];
     mutex tasklock;
     int cursor = 0;
-    if (!p.empty()) { p.clear(); }
-    p.reserve(2339768660l);
+//    if (!p.empty()) { p.clear(); }
+//    p.reserve(2339768660l);
+
+    if (!con_vec_p.empty()) { con_vec_p.clear(); }
+//    con_vec_p.reserve(2339768660l);
+    con_vec_p.reserve(233976866l);
 
     vector<thread> threads;
     for (int i = 0; i < NUMTHREAD - 1; ++i)
@@ -239,19 +249,21 @@ void Sling::backward(double eps) {
         threads[t].join();
     delete[] plock;
     cerr << "sort" << endl;
-    sort(p.begin(), p.end(), cmpTuple);
+//    sort(p.begin(), p.end(), cmpTuple);
+    tbb::parallel_sort(con_vec_p.begin(), con_vec_p.end(), cmpTuple);
     cerr << "sort finished" << endl;
     pstart.resize(g->n + 1);
     pstart[0] = 0;
     int x = 1;
-    for (long long i = 0; i < p.size(); ++i) {
-        if (std::get<0>(p[i]) >= x) {
-            for (; x <= std::get<0>(p[i]); ++x)
+    for (long long i = 0; i < con_vec_p.size(); ++i) {
+        if (std::get<0>(con_vec_p[i]) >= x) {
+            for (; x <= std::get<0>(con_vec_p[i]); ++x)
                 pstart[x] = i;
         }
     }
     for (; x <= g->n; ++x)
-        pstart[x] = p.size();
+        pstart[x] = con_vec_p.size();
+    p = vector<tuple<int, int, int, double>>{begin(con_vec_p), end(con_vec_p)};
 }
 
 ///----------------------------- 1st: single pair
@@ -448,7 +460,10 @@ vector<double> Sling::simrank(int u) {
 }
 
 string Sling::get_file_path_base() {
-    return SLING_INDEX_DIR + "/" + boost::str(boost::format("RLP_%s-%.3f-%.6f-%.6f") % g_name % c % eps_d % theta);
+    exec(string("mkdir -p " + SLING_INDEX_DIR).c_str());
+    string file_path =
+            SLING_INDEX_DIR + "/" + boost::str(boost::format("RLP_%s-%.3f-%.6f-%.6f") % g_name % c % eps_d % theta);
+    return file_path;
 }
 
 void Sling::build_or_load_index() {

@@ -36,6 +36,10 @@ TruthSim::TruthSim(string name, GraphYche &g, double c_, double epsilon_) {
         for (size_t i = 0; i < n; i++) {
             sim(i, i) = 1;
         }
+        if (n < 10000) {
+            run(g);
+            save();
+        }
     }
     // cout << "simrank matrix size: " << sim.size() << endl;
 }
