@@ -4,6 +4,8 @@
 
 #include <iostream>
 #include <unordered_map>
+
+#include <util/timer.h>
 #include "ground_truth/simrank.h"
 
 #include "sling.h"
@@ -13,6 +15,7 @@ using namespace std;
 using namespace std::chrono;
 
 int main(int argc, char *argv[]) {
+    Timer timer;
     // 1st: load graph
     Graph g;
     string file_name = argv[1];
@@ -64,6 +67,7 @@ int main(int argc, char *argv[]) {
     cout << "finish calcD " << float(duration_cast<microseconds>(tmp_end - tmp_start).count()) / (pow(10, 6)) << " s\n";
     tmp_start = std::chrono::high_resolution_clock::now();
     sling_algo.backward(theta);
+    log_info("Pre-Processing: %.6lfs, Mem Usage: %s", timer.elapsed_and_reset(), FormatWithCommas(getValue()).c_str());
     tmp_end = std::chrono::high_resolution_clock::now();
 
     cout << "finish backward " << float(duration_cast<microseconds>(tmp_end - tmp_start).count()) / (pow(10, 6))
@@ -74,7 +78,7 @@ int main(int argc, char *argv[]) {
 
     // 3rd: querying pairs
     sling_algo.simrank(u);
-
+    log_info("Query Time: %.6lfs, Mem Usage: %s", timer.elapsed(), FormatWithCommas(getValue()).c_str());
     auto end = std::chrono::high_resolution_clock::now();
     auto clock_end = clock();
     cout << "total query cpu time:" << static_cast<double>(clock_end - clock_start) / CLOCKS_PER_SEC << "s" << endl;

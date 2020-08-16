@@ -67,6 +67,7 @@ endmacro()
 
 add_executable(sling_ss ${SOURCE_FILES} ${GROUND_TRUTH_FILES} main_ss.cpp)
 InitSlingAP(sling_ss)
+target_compile_definitions(sling_ss PRIVATE -DALWAYS_REBUILD=1)
 
 #add_executable(sling_ss_ap ${SOURCE_FILES} ${GROUND_TRUTH_FILES} main_single_source_all_pair.cpp)
 #InitSlingAP(sling_ss_ap)
