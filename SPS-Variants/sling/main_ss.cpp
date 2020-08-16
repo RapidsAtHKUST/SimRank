@@ -30,14 +30,15 @@ int main(int argc, char *argv[]) {
     cout << "eps_d:" << eps_d << ", theta:" << theta << endl;
 
     unordered_map<string, string> file_mapping{
-            {"friendster", "fs.ebin"},
-            {"fs", "fs.ebin"},
+            {"friendster",  "fs.ebin"},
+            {"fr",          "fs.ebin"},
+            {"fs",          "fs.ebin"},
             {"livejournal", "lj.e.bin"},
-            {"lj", "lj.e.bin"},
-            {"twitter", "tw.e.bin"},
-            {"tw", "tw.e.bin"},
-            {"uk-2007-05", "uk.e.bin"},
-            { "uk", "uk.e.bin" }
+            {"lj",          "lj.e.bin"},
+            {"twitter",     "tw.e.bin"},
+            {"tw",          "tw.e.bin"},
+            {"uk-2007-05",  "uk.e.bin"},
+            {"uk",          "uk.e.bin"}
     };
     string file_path = string(DATA_ROOT) + "/" + file_mapping[file_name];
     g.inputGraph2(file_path);

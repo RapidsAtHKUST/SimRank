@@ -8,6 +8,7 @@
 #include <algorithm>
 #include <iostream>
 
+#include <omp.h>
 #include "input_output.h"
 #include "util/log.h"
 
@@ -62,6 +63,8 @@ public:
         auto edge_lst = edge_lst_size.first;
         m = edge_lst_size.second;
         n = 0;
+        log_info("Finish Loading");
+#pragma omp parallel for reduction(max:n)
         for (size_t i = 0; i < m; ++i) {
             auto edge = edge_lst[i];
             n = max<int>(n, edge.first);
@@ -73,19 +76,34 @@ public:
 
         edge = new std::vector<int>[n];
         inedge = new std::vector<int>[n];
+        omp_lock_t *locks = (omp_lock_t *) malloc(sizeof(omp_lock_t) * n);
+        for (auto i = 0; i < n; i++) {
+            omp_init_lock(&locks[i]);
+        }
+#pragma omp parallel for
         for (size_t i = 0; i < m; ++i) {
             int src, dst;
             std::tie(src, dst) = edge_lst[i];
+            omp_set_lock(&locks[src]);
             edge[src].push_back(dst);
+            omp_unset_lock(&locks[src]);
+
+            omp_set_lock(&locks[dst]);
             inedge[dst].push_back(src);
+            omp_unset_lock(&locks[dst]);
         }
+        for (auto i = 0; i < n; i++) {
+            omp_destroy_lock(&locks[i]);
+        }
+        free(locks);
+        log_info("Finish CSR");
 
 #pragma omp parallel for
         for (int i = 0; i < n; ++i) {
             sort(edge[i].begin(), edge[i].end());
             sort(inedge[i].begin(), inedge[i].end());
         }
-
+        log_info("Finish Sort");
         free(edge_lst);
     }
 };

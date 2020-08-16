@@ -32,7 +32,7 @@ template<typename Key>
 using gset = google::sparse_hash_set<Key>;
 
 //const string SLING_INDEX_DIR = "/export/data/ywangby_datasets/sling";
-const string SLING_INDEX_DIR = string(DATA_ROOT) + "/sling";
+const string SLING_INDEX_DIR = string(DATA_ROOT) + "/../sling";
 
 class Sling {
 // two thread functions
