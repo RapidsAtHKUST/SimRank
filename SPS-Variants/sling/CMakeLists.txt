@@ -55,9 +55,9 @@ macro(InitHashSFMTEigenPthread exec_name)
     target_compile_options(${exec_name} PRIVATE -O3 -g -DSFMT_MEXP=607 -msse2 -DHAVE_SSE2)
 endmacro()
 
-# 1st: sling single pair
-add_executable(sling ${SOURCE_FILES} main.cpp)
-InitHashSFMTEigenPthread(sling)
+## 1st: sling single pair
+#add_executable(sling ${SOURCE_FILES} main.cpp)
+#InitHashSFMTEigenPthread(sling)
 
 # 2nd: sling all pair
 macro(InitSlingAP exec_name)
@@ -65,35 +65,38 @@ macro(InitSlingAP exec_name)
     InitHashSFMTEigenPthread(${exec_name})
 endmacro()
 
-add_executable(sling_ss_ap ${SOURCE_FILES} ${GROUND_TRUTH_FILES} main_single_source_all_pair.cpp)
-InitSlingAP(sling_ss_ap)
+add_executable(sling_ss ${SOURCE_FILES} ${GROUND_TRUTH_FILES} main_ss.cpp)
+InitSlingAP(sling_ss)
 
-add_executable(sling_all ${SOURCE_FILES} ${GROUND_TRUTH_FILES} main_query_all_vertices.cpp)
-InitSlingAP(sling_all)
-target_compile_definitions(sling_all PRIVATE -DGROUND_TRUTH=1 -DALL_PAIR=1)
-#target_compile_definitions(sling_all PRIVATE -DGROUND_TRUTH=1)
-
-########## benchmark
-add_executable(sling_bench ${SOURCE_FILES} ${GROUND_TRUTH_FILES} main_query_all_vertices.cpp)
-InitSlingAP(sling_bench)
-
-#### sling (random pairs)
-add_executable(sling-rand-bench ${SOURCE_FILES} ${GROUND_TRUTH_FILES} main_query_rand_pairs.cpp ground_truth/random_pair_generator.cpp)
-InitSlingAP(sling-rand-bench)
-
-add_executable(sling-rand-bench-gt ${SOURCE_FILES} ${GROUND_TRUTH_FILES} main_query_rand_pairs.cpp ground_truth/random_pair_generator.cpp)
-InitSlingAP(sling-rand-bench-gt)
-target_compile_definitions(sling-rand-bench-gt PRIVATE -DGROUND_TRUTH=1)
-
-#### sling (random pairs, varying parameters)
-add_executable(sling-rand-varying ${SOURCE_FILES} ${GROUND_TRUTH_FILES} main_query_rand_pairs_varying_parameters.cpp ground_truth/random_pair_generator.cpp)
-InitSlingAP(sling-rand-varying)
-target_compile_definitions(sling-rand-varying PRIVATE -DALWAYS_REBUILD=1)
-
-add_executable(sling-rand-varying-gt ${SOURCE_FILES} ${GROUND_TRUTH_FILES} main_query_rand_pairs_varying_parameters.cpp ground_truth/random_pair_generator.cpp)
-InitSlingAP(sling-rand-varying-gt)
-target_compile_definitions(sling-rand-varying-gt PRIVATE -DALWAYS_REBUILD=1 -DGROUND_TRUTH=1)
-
-############# playground
-add_subdirectory(playground)
+#add_executable(sling_ss_ap ${SOURCE_FILES} ${GROUND_TRUTH_FILES} main_single_source_all_pair.cpp)
+#InitSlingAP(sling_ss_ap)
+#
+#add_executable(sling_all ${SOURCE_FILES} ${GROUND_TRUTH_FILES} main_query_all_vertices.cpp)
+#InitSlingAP(sling_all)
+#target_compile_definitions(sling_all PRIVATE -DGROUND_TRUTH=1 -DALL_PAIR=1)
+##target_compile_definitions(sling_all PRIVATE -DGROUND_TRUTH=1)
+#
+########### benchmark
+#add_executable(sling_bench ${SOURCE_FILES} ${GROUND_TRUTH_FILES} main_query_all_vertices.cpp)
+#InitSlingAP(sling_bench)
+#
+##### sling (random pairs)
+#add_executable(sling-rand-bench ${SOURCE_FILES} ${GROUND_TRUTH_FILES} main_query_rand_pairs.cpp ground_truth/random_pair_generator.cpp)
+#InitSlingAP(sling-rand-bench)
+#
+#add_executable(sling-rand-bench-gt ${SOURCE_FILES} ${GROUND_TRUTH_FILES} main_query_rand_pairs.cpp ground_truth/random_pair_generator.cpp)
+#InitSlingAP(sling-rand-bench-gt)
+#target_compile_definitions(sling-rand-bench-gt PRIVATE -DGROUND_TRUTH=1)
+#
+##### sling (random pairs, varying parameters)
+#add_executable(sling-rand-varying ${SOURCE_FILES} ${GROUND_TRUTH_FILES} main_query_rand_pairs_varying_parameters.cpp ground_truth/random_pair_generator.cpp)
+#InitSlingAP(sling-rand-varying)
+#target_compile_definitions(sling-rand-varying PRIVATE -DALWAYS_REBUILD=1)
+#
+#add_executable(sling-rand-varying-gt ${SOURCE_FILES} ${GROUND_TRUTH_FILES} main_query_rand_pairs_varying_parameters.cpp ground_truth/random_pair_generator.cpp)
+#InitSlingAP(sling-rand-varying-gt)
+#target_compile_definitions(sling-rand-varying-gt PRIVATE -DALWAYS_REBUILD=1 -DGROUND_TRUTH=1)
+#
+############## playground
+#add_subdirectory(playground)
 

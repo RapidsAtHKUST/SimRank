@@ -14,4 +14,6 @@ using namespace std;
 
 vector<pair<uint32_t, uint32_t>> GetEdgeList(string &file_path);
 
+pair<pair<uint32_t, uint32_t> *, size_t> GetEdgeListBin(string &file_path);
+
 #endif //ISP_YCHE_INPUT_OUTPUT_H
