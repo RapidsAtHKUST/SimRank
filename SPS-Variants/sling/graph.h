@@ -15,7 +15,7 @@
 class Graph {
 public:
     int n;                          // # of nodes
-    int m;                          // # of edges
+    size_t m;                          // # of edges
     std::vector<int> *edge;         // list of edges, original graph
     std::vector<int> *inedge;       // list of in-neighbors, reversed graph
 
@@ -39,7 +39,7 @@ public:
             n = max<int>(n, edge.second);
         }
         n += 1;
-        m = static_cast<int>(edge_lst.size());
+        m = static_cast<size_t>(edge_lst.size());
         log_info("total vertex#: %d", n);
         log_info("total edge#: %d", m);
 
@@ -72,7 +72,7 @@ public:
         }
         n += 1;
         log_info("total vertex#: %d", n);
-        log_info("total edge#: %d", m);
+        log_info("total edge#: %zu", m);
 
         edge = new std::vector<int>[n];
         inedge = new std::vector<int>[n];
