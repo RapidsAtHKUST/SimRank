@@ -1,0 +1,15 @@
+dblp; numQ: 50; topK: 50; eps: 0.05
+avg error: 0
+avg precision: 1
+dblp; numQ: 50; topK: 50; eps: 0.02
+avg error: 0
+avg precision: 1
+dblp; numQ: 50; topK: 50; eps: 0.01
+avg error: 0
+avg precision: 1
+dblp; numQ: 50; topK: 50; eps: 0.005
+avg error: 0
+avg precision: 1
+dblp; numQ: 50; topK: 50; eps: 0.002
+avg error: 0
+avg precision: 1
