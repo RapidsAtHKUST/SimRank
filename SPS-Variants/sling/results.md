@@ -25,3 +25,30 @@ total query cpu time:0.213232s
 total query cost: 0.21326 s
 
 ```
+
+## UND-LJ
+
+```
+eps_d:0.004, theta:0.000581989
+2020-08-29 07:24:07 ERROR (ts: 1598711047.603055 s, et: 4.724424 s)  input_output.cpp:63: Err, 554827776, 554827776, 131072,
+71248
+2020-08-29 07:24:07 INFO  (ts: 1598711047.603270 s, et: 4.724639 s)  input_output.cpp:69: 554827776, 554899024
+2020-08-29 07:24:07 INFO  (ts: 1598711047.603363 s, et: 4.724732 s)  graph.h:66: Finish Loading
+2020-08-29 07:24:07 INFO  (ts: 1598711047.638035 s, et: 4.759404 s)  graph.h:74: total vertex#: 4036538
+2020-08-29 07:24:07 INFO  (ts: 1598711047.638404 s, et: 4.759773 s)  graph.h:75: total edge#: 69362378
+2020-08-29 07:24:08 INFO  (ts: 1598711048.643219 s, et: 5.764588 s)  graph.h:99: Finish CSR
+2020-08-29 07:24:09 INFO  (ts: 1598711049.257337 s, et: 6.378706 s)  graph.h:106: Finish Sort
+delta(fail-prob):0.01
+finish input graph: 1249 ms
+total calD cpu time:27822.1s
+finish calcD 872.522 s
+2020-08-29 07:38:43 INFO  (ts: 1598711923.063822 s, et: 880.185191 s)  sling.cpp:232: Backward Multi Threading: 32
+sort
+sort finished
+tcmalloc: large alloc 19412205568 bytes == 0x55b8991b4000 @  0x7f32a7966887 0x55b839b30140 0x55b839b2bdc7 0x7f32a69f3b97 0x55b839b2ca3a
+2020-08-29 07:44:13 INFO  (ts: 1598712253.297739 s, et: 1210.419108 s)  main_ss.cpp:71: Pre-Processing: 1210.418908s, Mem Usage: 39,460,960
+finish backward 330.234 s
+2020-08-29 07:44:13 INFO  (ts: 1598712253.433564 s, et: 1210.554933 s)  main_ss.cpp:82: Query Time: 0.135825s, Mem Usage: 39,461,064
+total query cpu time:0.13579s
+total query cost: 0.135789 s
+```

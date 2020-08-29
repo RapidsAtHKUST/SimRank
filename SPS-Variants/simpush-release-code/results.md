@@ -6,6 +6,29 @@
 /usr/bin/time -v ./simpush -f /mnt/storage-praha16/dataset/lj.e.bin -qn 5
 ```
 
+* `./simpush -f /mnt/storage-praha16/dataset/com-lj.ud.bin -qn 5`
+
+```
+2020-08-29 07:11:25 ERROR (ts: 1598710285.799132 s, et: 4.722694 s)  Graph.h:44: Err, 554827776, 554827776, 131072, 71248
+2020-08-29 07:11:25 INFO  (ts: 1598710285.799379 s, et: 4.722940 s)  Graph.h:50: 554827776, 554899024
+2020-08-29 07:11:25 INFO  (ts: 1598710285.799484 s, et: 4.723045 s)  Graph.h:167: Finish Loading
+2020-08-29 07:11:25 INFO  (ts: 1598710285.830694 s, et: 4.754256 s)  Graph.h:175: total vertex#: 4036538
+2020-08-29 07:11:25 INFO  (ts: 1598710285.831169 s, et: 4.754730 s)  Graph.h:176: total edge#: 69362378
+: loaded graph data
+2020-08-29 07:11:27 INFO  (ts: 1598710287.819439 s, et: 6.743001 s)  Graph.h:220: Finish CSR
+2020-08-29 07:11:28 INFO  (ts: 1598710288.337106 s, et: 7.260667 s)  Graph.h:227: Finish Sort
+query node: 5
+REPEAT: 3
+eps: 0.02
+2020-08-29 07:11:28 INFO  (ts: 1598710288.414332 s, et: 7.337893 s)  main_ss_yche.cpp:69: PreProcessing Time: 7.337735s, Mem
+Usage: 950,240
+2020-08-29 07:11:28 INFO  (ts: 1598710288.414395 s, et: 7.337957 s)  main_ss_yche.cpp:73: Clock Time: 33.723320s, Mem Usage:
+950,240
+2020-08-29 07:11:28 INFO  (ts: 1598710288.538028 s, et: 7.461590 s)  main_ss_yche.cpp:85: Query Time: 0.123607s, Mem Usage: 966,260 KB
+2020-08-29 07:11:28 INFO  (ts: 1598710288.655993 s, et: 7.579554 s)  main_ss_yche.cpp:85: Query Time: 0.117920s, Mem Usage: 968,820 KB
+2020-08-29 07:11:28 INFO  (ts: 1598710288.765516 s, et: 7.689078 s)  main_ss_yche.cpp:85: Query Time: 0.109481s, Mem Usage: 968,820 KB
+```
+
 * `./simpush -f /mnt/storage-praha16/dataset/lj.e.bin -qn 5`
 
 ```

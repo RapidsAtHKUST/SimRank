@@ -41,7 +41,8 @@ int main(int argc, char *argv[]) {
             {"twitter",     "tw.e.bin"},
             {"tw",          "tw.e.bin"},
             {"uk-2007-05",  "uk.e.bin"},
-            {"uk",          "uk.e.bin"}
+            {"uk",          "uk.e.bin"},
+            {"comlj",        "com-lj.ud.bin"}
     };
     string file_path = string(DATA_ROOT) + "/" + file_mapping[file_name];
     g.inputGraph2(file_path);
